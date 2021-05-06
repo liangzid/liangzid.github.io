@@ -1,0 +1,79 @@
+#+title: python相关笔记整理
+#+author: 梁子
+#+mail: 2273067585@qq.com
+#+date: <2021-04-27 周二>
+
+参考链接： https://zhuanlan.zhihu.com/p/59657729
+
+
+
+
+* python library
+
+** python 日志logging模块 
+
+参考链接：https://www.jb51.net/article/184398.htm
+
+比较复杂，为python中记录日志信息的模块；
+
+所包含的基本类：
+
+1. Loggers ：日志器，负责开放接口来调用功能，比如它负责添加Handlers和Filters 。有默认的Loggers 对象
+2. Handlers  ：负责日志记录的传输目的地，比如有FileHandler(写入目标为文件)和StreamHandler（写入目标为流，默认为标准输出流）
+3. Filters ：负责过滤哪些日志是要输出的 。
+4. Formatters ：负责对日志输出格式的格式化。
+
+** python colorlog 模块，辅助logging的使用
+
+参考链接： https://www.jb51.net/article/164711.htm
+
+
+最基本使用方式
+#+BEGIN_SRC python
+  from colorlog import ColoredFormatter
+ 
+  formatter = ColoredFormatter(
+   "%(log_color)s%(levelname)-8s%(reset)s %(blue)s%(message)s",
+   datefmt=None,
+   reset=True,
+   log_colors={
+    'DEBUG': 'cyan',
+    'INFO':  'green',
+    'WARNING': 'yellow',
+    'ERROR': 'red',
+    'CRITICAL': 'red,bg_white',
+   },
+   secondary_log_colors={},
+   style='%'
+  )
+#+END_SRC
+
+导入方式：
+
+#+BEGIN_SRC python
+  import logging, colorlog
+  TRACE = 5
+  logging.addLevelName(TRACE, 'TRACE')
+  formatter = colorlog.ColoredFormatter(log_colors={'TRACE': 'yellow'})
+  handler = logging.StreamHandler()
+  handler.setFormatter(formatter)
+  logger = logging.getLogger('example')
+  logger.addHandler(handler)
+  logger.setLevel('TRACE')
+  logger.log(TRACE, 'a message using a custom level')
+#+END_SRC
+
+
+* Other famous library
+
+** transformers.pipelines pipeline()
+
+粗略看了一下，大概是用来生成一个基本的流程pipeline，内容见：
+https://huggingface.co/transformers/main_classes/pipelines.html
+
+
+
+
+
+
+

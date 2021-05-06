@@ -1,0 +1,66 @@
+* 李润东学长 KDD2019 
+** 什么是KD-Tree？
+1) 首先，根据方差比较大进行分割维度的选择。
+2) 之后，在那个分割维度上，选择中位数所在的那个点，作为分割的点。
+3) 对于被分割的区域，采取1)中的做法,直到没有数据为止.
+advantage: strong theoretical guarantees.
+1. Query is fast.O(n logn)
+2. Construction is Fast. O(logn)~O(n)
+
+Curse of dimensionality.
+
+only can be used when n>> 2^d, usually for d=20左右。
+对于高维数据，对树结构进行改进。
+** Randomized Partition Tree
+thinking:随机生成一个正态分布的n维向量w（w \in R^d,w ~ N(0,1)），将之与其他数据点做内积，并以之作为partition。
+1. High-dimensional NNS.
+2. Query O(d logn) [Here d is not so good because when d is huge, that's not so good.]
+
+** Random Rotation + KD-tree.
+\Gammar \in R^{d*d},\Gammar_ij ~ N(0,1)
+
+Query complexity: O(d^2+logn)
+
+destination: based on tree do NNS.
+** application scene.                                                                                        
+KD-Tree: 3D point
+LSH or others： search engine.
+
+* 张朔学长 ICLR 2019.  Relational Graph Attention Network
+** background(spectral based vs spatial based)
+relation: in graph, node A with other nodes has many relation.
+In other words, the type of edges is mutiplying.
+
+from Relational GCN to relational GAT.
+** two Relation GAT  
+一种是within,把相同类型的在内部进行attention;
+一种是across,把所有类型的整体进行softmax.
+
+当然,attention方法有两种:
+1. 加的方法.
+2. 乘的方法.
+
+** 结论
+在tranductive问题上,乘性的效果比加性要好.
+
+destination: need to used it.
+
+* 刘祎彤 CKMI2019 Mutiple Rumor Source Detection with GCN
+** related works AAAI2017
+give a RecGNN-style function.
+** main
+1. source prominence.
+the source is importance.
+
+2. rumor centrality.
+the node near souce is easy get rumor.
+
+** 节点数据的升维
+为了让每个节点的特征丰富,可以让原来一个点升维成一个向量.
+
+destination: find source.
+
+
+
+
+

@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-07-07 周二 08:05 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>search on graph系列算法笔记</title>
+<meta name="generator" content="Org mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">search on graph系列算法笔记</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org33db60f">1. search on graph问题的两个步骤</a>
+<ul>
+<li><a href="#org42c0a44">1.1. Delaunay graph 与 voronoi Diagram</a></li>
+<li><a href="#orgfebbb12">1.2. 图的贪婪搜索与度量函数的凸特性</a></li>
+</ul>
+</li>
+<li><a href="#org6cc9516">2. NSW Navigation Small World</a></li>
+<li><a href="#org880d83c">3. HNSW Hierarchical NSW</a></li>
+<li><a href="#org4a98d72">4. BFSG Binary Function Search on Graph</a></li>
+<li><a href="#org4ee0f30">5. our method NISG: Neural interface metric search on Graph</a></li>
+</ul>
+</div>
+</div>
+<p>
+今天阅读一篇需要复现的论文,发现自己对"search on graph"一直没有足够的了解.因此专门抽出一天时间学习这一类解决ANNS问题的方法,算是为以后的工作铺平道路吧.
+</p>
+<div id="outline-container-org33db60f" class="outline-2">
+<h2 id="org33db60f"><span class="section-number-2">1</span> search on graph问题的两个步骤</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+一般而言,所有的search on graph算法都包含两个基本的环节:graph construction 与 graph search.正如LSH等算法需要建设一个向量点的sketch一样,search on graph的算法侧重于捕捉节点与节点之间的连接关系,即通过一张"图"去存储点集的预信息,而非存储哈希表.因此,这两个环节的基本功能是:
+</p>
+<ol class="org-ol">
+<li>图的构建. 对于一个点集合,通过增量式的点添加去生成一个张Delaunay Graph.</li>
+<li>图的搜索. 对于一个被建了图的点集合,每个查询$q$其本身可以通过一种贪婪的迭代算法进行快速地K个最近邻选取.</li>
+</ol>
+
+<p>
+为了澄清上述描述中的一些问题,需要对Delaunay graph进行一个简单的说明.
+</p>
+</div>
+<div id="outline-container-org42c0a44" class="outline-3">
+<h3 id="org42c0a44"><span class="section-number-3">1.1</span> Delaunay graph 与 voronoi Diagram</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+你可以在<a href="https://www.bilibili.com/video/BV1Ck4y1z7VT?from=search&amp;seid=11009589865241430903">bilibili-delaunay三角</a>找到对delaunay划分的一些直观理解.
+当然,这个视频里仅仅给出了二维空间里点集合的基本形态,因而会通过"三角形"实现最少连接同时最近连接.
+</p>
+
+<p>
+直观上讲,Delaunay graph是一种特殊的图结构.对于搜索来说,这种图结构的特殊性在于:
+</p>
+<ol class="org-ol">
+<li>图是连通的.也就是说,任意两点之间都存在一条通路;</li>
+<li>图中每个节点的最近邻们为其一阶邻居节点.这个性质大大有益于最近邻搜索.</li>
+<li>图中每个节点的度被严格控制.这样就保证了搜索的效率.</li>
+</ol>
+
+<p>
+当然,如果从数学的角度看,还有其他性质:
+</p>
+<ol class="org-ol">
+<li>不相交性.得劳内图中边与边只在节点处相交,这是由于它总是将最近的点连接造成的.</li>
+<li>唯一性.只要满足得劳内图的要求(后面会提到),那么对于一个固定的点集将产生唯一的Delaunay graph</li>
+<li>最优性.点与点之间的边连接永远都是最优的.</li>
+<li>规则性.平缓性.得劳内图中,在每个节点处,边与边构成的夹角,总体来看其方差是最小的,相比较于其他的图连接生成方法.</li>
+<li>区域性.增,删,移动节点仅仅会对周围节点的连接关系产生影响.</li>
+<li>凸外壳.外面是一个凸包.</li>
+</ol>
+
+<p>
+那么,这样的一种得劳内图,它的定义是什么呢?
+</p>
+
+<p>
+我们大可以把这些性质看作某类定义,不过他们太过冗余了.二维平面的得劳三角化生成的图完全可以通过所谓"空圆特性"进行表达.
+</p>
+
+<p>
+引理: 三点可以唯一确定一个圆.
+</p>
+
+<p>
+如果一张图完全由三角形构成,并且里面每个三角形的外接圆内都不存在该图中的任何节点,那么这张图被称为是这些节点的一个得劳内三角化了的图.
+</p>
+
+<p>
+一般来说,当构建完成一个二维的delaunay图之后,随机落入的一个query点,它的最近邻就是它所在的三角形的顶点.
+</p>
+
+<p>
+建立delaunay图比较严格的方法是Bowyer-Watson算法.该算法可以通过下图的计算步骤表示.
+</p>
+
+
+<div class="figure">
+<p><img src="./images/20200622160517.png" alt="20200622160517.png" />
+</p>
+</div>
+
+<p>
+关于三角链表的数据结构问题,可以在本文开头给出的视频中获得详细的说明.由于这些都不是本文的重点,因此不给予特殊的关注.
+</p>
+
+<p>
+总之,delaunay图是一种很严格同时很复杂的东西,现实中一般都会采用随机采样的方式去规避这种复杂性,同时放宽这种严格的风气.这类算法才是需要重点关注的东西.
+</p>
+</div>
+</div>
+<div id="outline-container-orgfebbb12" class="outline-3">
+<h3 id="orgfebbb12"><span class="section-number-3">1.2</span> 图的贪婪搜索与度量函数的凸特性</h3>
+</div>
+</div>
+
+
+<div id="outline-container-org6cc9516" class="outline-2">
+<h2 id="org6cc9516"><span class="section-number-2">2</span> NSW Navigation Small World</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+那么,怎么去做这件事呢?!常见的一个思路是,NSW.在这一章,将从直观上先说一说NSW的基本思路,而后再给出该算法详细的伪代码.
+</p>
+
+<p>
+基本假设:Small world. small word是进行社交网络研究时发现的一个有趣现象.其大致意思是:自然界社会界很多的图都是聚类性质+类与类之间连接性质的一张庞大的连通图.这种现象来自于一个实验,该实验是从广东的一些人开始,这些人通过社交关系的连接,总能找到一条通往黑龙江地区的人的社交关系链条.这种无论如何都能找到通路的特性,给与了基于SW的各类算法一种灵感.也让随机找到一个进入点(enter point or entry point)的思路变得可行.
+</p>
+
+<p>
+NSW基本想法:在进行delaunay graph construction时,对于需要插入的点q,随机选择一个入口c,然后对比入口以及其邻居节点到插入点q的距离,从而沿着贪婪的"最小距离"形成一条通路,最后得到结果.这个"距离",便起到了所谓"navigation(导航)"的作用.
+</p>
+
+<p>
+NSW算法自然语言描述:
+</p>
+
+<ol class="org-ol">
+<li>首先,初始化三个空的集合,分别是candidate, visitedset,以及results.
+<ul class="org-ul">
+<li>candidate. 候选的点构成的集合.候选的点就是需要考察和插入点"q"的距离以及其邻居性质,从而确定是否可以进入results的哪些点.</li>
+<li>visited set. 被计算过的点构成的集合. 顾名思义,如果一个点已经被算过距离了,那么它就会落到这里面.这个集合是为了节点间的邻居节点的重合现象定义的.</li>
+<li>results. 这个集合里面存储着对于插入点q的x个最近邻.一般,对于K-ANNS问题,x&gt;k.</li>
+</ul></li>
+<li>随机在当前的图上选取一个节点作为entry point.将其加入candidate中,加入visited set中.</li>
+<li>遍历所有的candidates,计算该集合内所有节点与插入点q的距离,并找到具有最小的距离的点c.</li>
+<li>对于c,进行如下判定:如果d(c,q)比results中的点和q最大的距离还要大,那么就停止算法,输出results.[这是因为本算法是完全贪婪的,因而只要算法的效果开始变差,就意味着寻找的结束.当然,candidates为空时,也是表示算法结束]否则,继续.</li>
+<li>从candidate中删除点c,将c加入到results里面.</li>
+<li>对于c的所有邻居节点,将其并入集合visitedset里面.计算c的所有邻居节点e与q的距离,对于距离q比results中的最远距离要近的节点,将之加入到candidates,results里面.</li>
+</ol>
+
+<p>
+这个描述或与真实的NSW算法有所不同,不同主要主要体现在5中是否将c加入到results里面.在第一次循环时,我觉得将之加入是必要的.(欢迎讨论)
+</p>
+
+
+<p>
+这部分伪代码可以表示为: (感谢<a href="https://zhuanlan.zhihu.com/p/80552211">这个笔记</a>)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++">K-NNSearch<span style="color: #AE81FF;">(</span><span style="color: #66D9EF;">object</span> <span style="color: #FD971F;">q</span>, integer: m, k<span style="color: #AE81FF;">)</span>
+TreeSet <span style="color: #AE81FF;">[</span>object<span style="color: #AE81FF;">]</span> tempRes, candidates, visitedSet, result 
+<span style="color: #75715E;">// </span><span style="color: #75715E;">&#36827;&#34892;m&#27425;&#24490;&#29615;&#65292;&#36991;&#20813;&#38543;&#26426;&#24615;</span>
+<span style="color: #F92672;">for</span> <span style="color: #AE81FF;">(</span>i&#8592;0; i &lt; m; i++<span style="color: #AE81FF;">)</span> <span style="color: #F92672;">do</span>:
+    put random entry point in candidates
+    tempRes&#8592;null
+    repeat:
+        <span style="color: #75715E;">// </span><span style="color: #75715E;">&#21033;&#29992;&#19978;&#36848;&#25552;&#21040;&#30340;&#36138;&#23146;&#25628;&#32034;&#31639;&#27861;&#25214;&#21040;&#36317;&#31163;q&#26368;&#36817;&#30340;&#28857;c</span>
+        get element c closest from candidates to q
+        remove c from candidates
+        <span style="color: #75715E;">// </span><span style="color: #75715E;">&#21028;&#26029;&#32467;&#26463;&#26465;&#20214;</span>
+        <span style="color: #F92672;">if</span> c is further than k-th element from result then
+            <span style="color: #F92672;">break</span> repeat
+        <span style="color: #75715E;">// </span><span style="color: #75715E;">&#26356;&#26032;&#21518;&#36873;&#25321;&#21015;&#34920;</span>
+        <span style="color: #F92672;">for</span> every element e from friends of c <span style="color: #F92672;">do</span>:
+            <span style="color: #F92672;">if</span> e is <span style="color: #F92672;">not</span> in visitedSet then
+                add e to visitedSet, candidates, tempRes
+    end repeat
+    <span style="color: #75715E;">// </span><span style="color: #75715E;">&#27719;&#24635;&#32467;&#26524;</span>
+    add objects from tempRes to <span style="color: #66D9EF;">result</span> 
+<span style="color: #FD971F;">end</span> <span style="color: #F92672;">for</span> 
+<span style="color: #F92672;">return</span> best k elements from result
+
+</pre>
+</div>
+<p>
+可以看出,为了减弱采样的随机性带来的影响,算法中进行了多次重复.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org880d83c" class="outline-2">
+<h2 id="org880d83c"><span class="section-number-2">3</span> HNSW Hierarchical NSW</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+学长就让我看到HNSW.或许这就是目前比较好的算法了吧!其实,HNSW本质上就是对NSW的增量研究,因而解释起来应该比较简单.
+</p>
+
+<p>
+直观上讲,HNSW主要做了以下改进以提升算法效率.以前(也就是NSW)是在一张Delaunay图上,选取m个随机的entry point进行最近邻的查找,最后取一个并集,然后选出最小的k个节点作为结果输出;而HNSW,则是生成了多张图(当然图的节点个数随着层数的增加而减小),而后在每张图上都选取1个enter point(这个enter point在顶层是随机的,而下面的每层都是上一层的最近邻结果)进行最近邻的查找,最后取并集,选出最小的k个接待你作为输出.由于这多张图中,仅仅是底层图具有和NSW一样的节点个数,而越往上节点的数量就越小,所以HNSW通过这种方式减少了计算量,实现了算法的性能提升.除此之外,enter point的非随机性,也使得每次的迭代速度快了很多.当然,这种性能提升的代价就是,生成这样一种层次的多,图比以往简单生成一张图,要复杂一些.换句话说,HNSW通过加大了graph construction的负担来提升graph search的性能.所以还是比较靠谱的.
+</p>
+
+<p>
+下文就重点对graph constrcution流程进行介绍.也就是,探究如何去生成这种层次的图.
+</p>
+
+<p>
+首先,下图是HNSW生成的层次图的示意.
+</p>
+
+
+<div class="figure">
+<p><img src="images/20200622165904.png" alt="20200622165904.png" />
+</p>
+</div>
+
+<p>
+建议不要按照图例中的描述去理解,因为它的讲述方式本身不太好理解.从上图中,可以发现:第0层的图,是完整的,也就是包含所有节点.随着层数的增加,节点的数量越来越少(实际上,这种减少遵循指数衰减).
+</p>
+
+<p>
+生成这样一种层次图的基本步骤是:
+</p>
+
+<ol class="org-ol">
+<li>对于一个新插入的节点q,分析q可以最高在第l=floor(-ln(uniform(0,1)*ml))层中出现.其中,floor是向下取整.uniform用于生成(0,1)的随机数,该随机数通过负对数函数可以生成(0,inf)的任何数,而ml是确定一个固定的上界,本质上也就是圈定了层次图的层数.</li>
+<li>从最高层依次往下,一直到l+1,每一层中执行操作:选取enter point(如果是最高层,那么随机从选择;如果是其他层,那么就是上一层的最近邻),然后在当前层寻找和q最近的1个最近邻,将之加入到候选集合W中.</li>
+<li>从第l层一直下降到底层,每一层中执行操作:通过enter point(不是随机的,而是步骤2中最后的最近邻)找到一个最近邻集合W作为candidate,在当前层找到这些candidate下的对于节点q可能的M个最近邻.并在当前层构筑q和这M个最近邻的连接.</li>
+<li>如果连接过多,剪掉一些.</li>
+</ol>
+
+<p>
+这个思路可以用下面的伪代码进行表达:
+</p>
+
+
+<div class="figure">
+<p><img src="images/20200622172455.png" alt="20200622172455.png" />
+</p>
+</div>
+
+
+<p>
+其中,搜索的算法为:
+</p>
+
+
+<div class="figure">
+<p><img src="images/20200622172615.png" alt="20200622172615.png" />
+</p>
+</div>
+
+<p>
+选择最近邻的方法有两种,分别是简单粗暴的和启发式的,分别为:
+</p>
+
+
+<div class="figure">
+<p><img src="images/20200622172709.png" alt="20200622172709.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="images/20200622172743.png" alt="20200622172743.png" />
+</p>
+</div>
+
+<p>
+在进行search时,方法就简单了许多:
+</p>
+
+
+<div class="figure">
+<p><img src="images/20200622173018.png" alt="20200622173018.png" />
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org4a98d72" class="outline-2">
+<h2 id="org4a98d72"><span class="section-number-2">4</span> BFSG Binary Function Search on Graph</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Binary function是指以两个输入为自变量的神经网络函数.从某意义上讲,这种函数也可以被认为是一种勉强而特殊的距离度量.当然,与L2,consine等不同的是,这种距离度量是非凸的,因此直接的search on graph 方法或许无法使用.
+</p>
+
+<p>
+WSDM2020中的Fast item ranking一文中给出了一种基于search on graph的中和性质的算法,BFSG.该算法的基本思路非常简单:
+</p>
+<ol class="org-ol">
+<li>在graph的构建环节,不使用神经网络,而是直接采用L2距离进行HNSW图的构建,这个过程与之前介绍的HNSW算法并无区别.</li>
+<li>在graph的search环节,使用神经网络(也就是所谓的度量函数f)进行一切距离度量的准则,以之作为Navigation的基准.</li>
+</ol>
+
+<p>
+那么针对这种非凸的度量函数,能否寻找到全局的最优解呢?作者认为下面两点使得"摆脱局部最优"变得有效.
+</p>
+<ol class="org-ol">
+<li>多个candidate节点的寻找,而非一次寻找,因此可以找到众多的局部最优.</li>
+<li>HNSW作为small word的性质,可以供其产生"long-range edges",这种长程的连接可以减小局部最优的出现概率.</li>
+</ol>
+
+<p>
+下面是BFSG论文中给出的算法伪代码:
+</p>
+
+<ol class="org-ol">
+<li>construciton:</li>
+</ol>
+
+
+<div class="figure">
+<p><img src="images/20200623095623.png" alt="20200623095623.png" />
+</p>
+</div>
+
+<ol class="org-ol">
+<li>search:</li>
+</ol>
+
+
+<div class="figure">
+<p><img src="images/20200623095658.png" alt="20200623095658.png" />
+</p>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-org4ee0f30" class="outline-2">
+<h2 id="org4ee0f30"><span class="section-number-2">5</span> our method NISG: Neural interface metric search on Graph</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+在进行graph construction的过程中,单纯使用L2距离并不是一个美妙的决定,同时,使用神经网络作为search函数又难以满足众多非凸的性质.为了解决这个问题,我们采用了一种新的方法,
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2020-07-07 周二 08:05</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

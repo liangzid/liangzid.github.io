@@ -1,0 +1,87 @@
+
+\documentclass{article}
+\usepackage{tikz}
+\begin{document}
+% \usetikzlibrary{positioning,shapes.misc}
+\usetikzlibrary{arrows,  % 箭头的library
+  decorations.pathmorphing, % snake-line
+  backgrounds,              % 背景
+  positioning,              % 相对地放置节点
+  fit,                      % 计算size的东西
+  petri}
+\begin{tikzpicture}[
+  node distance=14mm,
+  on grid,
+  % >={Stealth[round]},
+  bend angle=20,
+  % auto,
+  stl1/.style={
+  rectangle, %shape
+  minimum size =6mm,  %最小尺寸
+  very thick,         %边的线条粗细
+  draw=red!50!black!50, % 边的颜色：50%红，50%黑，50%白
+  top color=white,  %渐变色设计
+  bottom color =red!50!black!20,
+  font=\itshape
+},
+stl2/.style={
+  rectangle, minimum size=6mm, rounded corners=3mm,
+  very thick, draw=black!50,
+  top color =white,bottom color =black!20,
+  font=\ttfamily
+}
+]
+
+\node (Hinput) [stl1] {Input of Hidden Matrix};
+
+\node (Wq) [stl2, above=of Hinput.west]   { $W_{Q}$ };
+\node (Wk) [stl2, above=of Hinput.east] { $W_{K}$ };
+\node (Wv) [stl2, right=of Wk] { $W_{v}$ };
+
+\draw [->, very thick] (Hinput)  to [pre,bend left] (Wq);
+\draw [->, very thick] (Hinput)  to [pre,bend left] (Wk);
+\draw [->, very thick] (Hinput)  to [pre,bend right] (Wv);
+
+
+% \draw [->] (Hinput) [pre,bend left,very thick] to (Wq);
+% \draw [->] (Hinput) [pre,bend left,very thick] to (Wk);
+% \draw [->] (Hinput) [pre,bend right,very thick] to (Wv);
+
+
+% edge [pre,bend left] (Wq)
+% edge [pre] (Wk)
+% edge [pre,bend right] (Wv);
+
+
+
+
+% \path (Hinput) edge [stedge,->] (Wq);
+% \path (Hinput) edge [stedge,->] (Wk);
+% \path (Hinput) edge [stedge,->] (Wv);
+
+% \node (node2) [stl2,right = of node1]  {float};
+
+% \path (node1) edge [->] (node2);
+
+
+
+
+
+\end{tikzpicture}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
