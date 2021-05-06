@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-05-06 周四 17:17 -->
+<!-- 2021-05-06 周四 17:18 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>创新港科创月报告笔记</title>
+<title>python相关笔记整理</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="梁子" />
 <style type="text/css">
@@ -229,124 +229,132 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
-<h1 class="title">创新港科创月报告笔记</h1>
+<h1 class="title">python相关笔记整理</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org5e219af">报告1：模块化数据中心——像乐高一样搭建大规模计算机 李超 上海交大</a>
+<li><a href="#org7734c69">python library</a>
 <ul>
-<li><a href="#orge154d87">Key Design</a></li>
+<li><a href="#org3752389">python 日志logging模块</a></li>
+<li><a href="#orgeadf280">python colorlog 模块，辅助logging的使用</a></li>
 </ul>
 </li>
-<li><a href="#org6a4dfa2">报告二： 受人脑启发的机器学习方法 龚怡宏 仙交软院 Brain-inspired Machine learning methods</a>
+<li><a href="#orgbdf0f16">Other famous library</a>
 <ul>
-<li><a href="#orgdfe90fd">main problems of DCNN</a></li>
+<li><a href="#org571e290">transformers.pipelines pipeline()</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org5e219af" class="outline-2">
-<h2 id="org5e219af">报告1：模块化数据中心——像乐高一样搭建大规模计算机 李超 上海交大</h2>
-<div class="outline-text-2" id="text-org5e219af">
 <p>
-<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-09-15 周二&gt;  </span></span>  chaol@sjtu.edu.cn
-</p>
-
-<p>
-Computer Architecture and System Design
+参考链接： <a href="https://zhuanlan.zhihu.com/p/59657729">https://zhuanlan.zhihu.com/p/59657729</a>
 </p>
 
 
 
 
+<div id="outline-container-org7734c69" class="outline-2">
+<h2 id="org7734c69">python library</h2>
+<div class="outline-text-2" id="text-org7734c69">
+</div>
+<div id="outline-container-org3752389" class="outline-3">
+<h3 id="org3752389">python 日志logging模块</h3>
+<div class="outline-text-3" id="text-org3752389">
 <p>
-Big data center:
+参考链接：<a href="https://www.jb51.net/article/184398.htm">https://www.jb51.net/article/184398.htm</a>
 </p>
+
+<p>
+比较复杂，为python中记录日志信息的模块；
+</p>
+
+<p>
+所包含的基本类：
+</p>
+
 <ol class="org-ol">
-<li>IT space</li>
-<li>power plant</li>
-<li>cooliing plant</li>
+<li>Loggers ：日志器，负责开放接口来调用功能，比如它负责添加Handlers和Filters 。有默认的Loggers 对象</li>
+<li>Handlers  ：负责日志记录的传输目的地，比如有FileHandler(写入目标为文件)和StreamHandler（写入目标为流，默认为标准输出流）</li>
+<li>Filters ：负责过滤哪些日志是要输出的 。</li>
+<li>Formatters ：负责对日志输出格式的格式化。</li>
 </ol>
-
-<p>
-这种方法的太慢,也难以维护
-</p>
-
-<p>
-能否构建一种可扩展性更好的硬件系统  &#x2013;&gt; modularization
-</p>
-
-<p>
-Enclosure, ISO standard
-</p>
-
-
-<p>
-prefabricated modules
-</p>
-
-<p>
-unified systems(含有三个主要组件)
-</p>
-
-<p>
-优点: cost-effectrness, highly flexible
-</p>
 </div>
-<div id="outline-container-orge154d87" class="outline-3">
-<h3 id="orge154d87">Key Design</h3>
-<div class="outline-text-3" id="text-orge154d87">
-<p>
-PUE(Power Usage Effectiveness)=Total Facility power/ITequipment power 
-降低PUE需要降低非IT能量
-</p>
+</div>
 
+<div id="outline-container-orgeadf280" class="outline-3">
+<h3 id="orgeadf280">python colorlog 模块，辅助logging的使用</h3>
+<div class="outline-text-3" id="text-orgeadf280">
 <p>
-针对冷却设计,有很多种.
-</p>
-
-<p>
-运行
-短时间休息
-长时间休息
-关机
-</p>
-
-<p>
-------&#x2013;&#x2014;&gt;通过时间峰值来动态调整MDC 的状态
+参考链接： <a href="https://www.jb51.net/article/164711.htm">https://www.jb51.net/article/164711.htm</a>
 </p>
 
 
 <p>
-像乐高一样结合,不是指的将每个小组织结合起来,而是将之抽象成一个玩这个的超级计算机.
+最基本使用方式
 </p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #F92672;">from</span> colorlog <span style="color: #F92672;">import</span> ColoredFormatter
+
+<span style="color: #FD971F;">formatter</span> = ColoredFormatter<span style="color: #AE81FF;">(</span>
+ <span style="color: #E6DB74;">"%(log_color)s%(levelname)-8s%(reset)s %(blue)s%(message)s"</span>,
+ datefmt=<span style="color: #AE81FF;">None</span>,
+ reset=<span style="color: #AE81FF;">True</span>,
+ log_colors=<span style="color: #66D9EF;">{</span>
+  <span style="color: #E6DB74;">'DEBUG'</span>: <span style="color: #E6DB74;">'cyan'</span>,
+  <span style="color: #E6DB74;">'INFO'</span>:  <span style="color: #E6DB74;">'green'</span>,
+  <span style="color: #E6DB74;">'WARNING'</span>: <span style="color: #E6DB74;">'yellow'</span>,
+  <span style="color: #E6DB74;">'ERROR'</span>: <span style="color: #E6DB74;">'red'</span>,
+  <span style="color: #E6DB74;">'CRITICAL'</span>: <span style="color: #E6DB74;">'red,bg_white'</span>,
+ <span style="color: #66D9EF;">}</span>,
+ secondary_log_colors=<span style="color: #66D9EF;">{}</span>,
+ style=<span style="color: #E6DB74;">'%'</span>
+<span style="color: #AE81FF;">)</span>
+</pre>
+</div>
+
+<p>
+导入方式：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #F92672;">import</span> logging, colorlog
+<span style="color: #FD971F;">TRACE</span> = 5
+logging.addLevelName<span style="color: #AE81FF;">(</span>TRACE, <span style="color: #E6DB74;">'TRACE'</span><span style="color: #AE81FF;">)</span>
+<span style="color: #FD971F;">formatter</span> = colorlog.ColoredFormatter<span style="color: #AE81FF;">(</span>log_colors=<span style="color: #66D9EF;">{</span><span style="color: #E6DB74;">'TRACE'</span>: <span style="color: #E6DB74;">'yellow'</span><span style="color: #66D9EF;">}</span><span style="color: #AE81FF;">)</span>
+<span style="color: #FD971F;">handler</span> = logging.StreamHandler<span style="color: #AE81FF;">()</span>
+handler.setFormatter<span style="color: #AE81FF;">(</span>formatter<span style="color: #AE81FF;">)</span>
+<span style="color: #FD971F;">logger</span> = logging.getLogger<span style="color: #AE81FF;">(</span><span style="color: #E6DB74;">'example'</span><span style="color: #AE81FF;">)</span>
+logger.addHandler<span style="color: #AE81FF;">(</span>handler<span style="color: #AE81FF;">)</span>
+logger.setLevel<span style="color: #AE81FF;">(</span><span style="color: #E6DB74;">'TRACE'</span><span style="color: #AE81FF;">)</span>
+logger.log<span style="color: #AE81FF;">(</span>TRACE, <span style="color: #E6DB74;">'a message using a custom level'</span><span style="color: #AE81FF;">)</span>
+</pre>
+</div>
 </div>
 </div>
 </div>
 
 
-
-<div id="outline-container-org6a4dfa2" class="outline-2">
-<h2 id="org6a4dfa2">报告二： 受人脑启发的机器学习方法 龚怡宏 仙交软院 Brain-inspired Machine learning methods</h2>
-<div class="outline-text-2" id="text-org6a4dfa2">
+<div id="outline-container-orgbdf0f16" class="outline-2">
+<h2 id="orgbdf0f16">Other famous library</h2>
+<div class="outline-text-2" id="text-orgbdf0f16">
 </div>
-<div id="outline-container-orgdfe90fd" class="outline-3">
-<h3 id="orgdfe90fd">main problems of DCNN</h3>
-<div class="outline-text-3" id="text-orgdfe90fd">
-<ol class="org-ol">
-<li>explicability   效果的提升依赖于神经网络的复杂度提升</li>
-<li>texture biases</li>
-<li>catastrophic forgetting 学习新的忘记旧的</li>
-</ol>
+<div id="outline-container-org571e290" class="outline-3">
+<h3 id="org571e290">transformers.pipelines pipeline()</h3>
+<div class="outline-text-3" id="text-org571e290">
+<p>
+粗略看了一下，大概是用来生成一个基本的流程pipeline，内容见：
+<a href="https://huggingface.co/transformers/main_classes/pipelines.html">https://huggingface.co/transformers/main_classes/pipelines.html</a>
+</p>
 </div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
+<p class="date">Date: 2021-04-27 周二 00:00</p>
 <p class="author">Author: 梁子</p>
-<p class="date">Created: 2021-05-06 周四 17:17</p>
+<p class="date">Created: 2021-05-06 周四 17:18</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

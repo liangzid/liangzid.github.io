@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-05-06 周四 16:31 -->
+<!-- 2021-05-06 周四 17:17 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>emacs lisp 语法的学习与使用</title>
@@ -256,43 +256,43 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org868707a">变量声明与函数定义</a>
+<li><a href="#orga751ab6">变量声明与函数定义</a>
 <ul>
-<li><a href="#org2b67c96">通过setq声明变量</a></li>
-<li><a href="#org4a2639a">通过defvar定义不会改变声明的变量</a></li>
-<li><a href="#orgd13097b">通过defun定义函数.</a></li>
-<li><a href="#orgb53e9b9">使用局部作用域</a></li>
-<li><a href="#orgb5b8ebe">在对函数和变量观察时的技巧(使用C-h)</a></li>
-<li><a href="#org7368155">匿名函数表达式lambda</a></li>
+<li><a href="#org9d80de6">通过setq声明变量</a></li>
+<li><a href="#orgff2668c">通过defvar定义不会改变声明的变量</a></li>
+<li><a href="#org23b934c">通过defun定义函数.</a></li>
+<li><a href="#orgbd78855">使用局部作用域</a></li>
+<li><a href="#org4d4247b">在对函数和变量观察时的技巧(使用C-h)</a></li>
+<li><a href="#orgf34d4a7">匿名函数表达式lambda</a></li>
 </ul>
 </li>
-<li><a href="#org3350932">基本逻辑顺序</a>
+<li><a href="#org66a347b">基本逻辑顺序</a>
 <ul>
-<li><a href="#orgeaddec4">顺序执行</a></li>
-<li><a href="#orgf67610e">if 与cond</a></li>
-<li><a href="#org78dd292">while 控制循环</a></li>
-<li><a href="#org3d02488">逻辑运算 and or not</a></li>
+<li><a href="#org6197be0">顺序执行</a></li>
+<li><a href="#orga8018fc">if 与cond</a></li>
+<li><a href="#orgb10d52e">while 控制循环</a></li>
+<li><a href="#org0a56557">逻辑运算 and or not</a></li>
 </ul>
 </li>
-<li><a href="#org2b2d539">数据结构</a>
+<li><a href="#org0ddbf2e">数据结构</a>
 <ul>
-<li><a href="#org04435e1">数字</a></li>
-<li><a href="#org8fe2e5d">字符与字符串</a>
+<li><a href="#orgc667f46">数字</a></li>
+<li><a href="#org849ce02">字符与字符串</a>
 <ul>
-<li><a href="#org3b5b6b5">字符的表示</a></li>
-<li><a href="#org425954e">由字符产生字符串的一些函数</a></li>
-<li><a href="#org4d22b79">对字符串的简单处理,查找和替换</a>
+<li><a href="#org1f3ebd7">字符的表示</a></li>
+<li><a href="#org57520a2">由字符产生字符串的一些函数</a></li>
+<li><a href="#org22d81bc">对字符串的简单处理,查找和替换</a>
 <ul>
-<li><a href="#org89b33b6">查找</a></li>
-<li><a href="#orgb5208df">替换</a></li>
+<li><a href="#orgd110258">查找</a></li>
+<li><a href="#orgdab1d48">替换</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgc243d65">cons cell and list</a>
+<li><a href="#org9910f7e">cons cell and list</a>
 <ul>
-<li><a href="#org0542829">cons cell</a></li>
-<li><a href="#org3d72c96">list</a></li>
+<li><a href="#orgcffb691">cons cell</a></li>
+<li><a href="#org1484e47">list</a></li>
 </ul>
 </li>
 </ul>
@@ -301,13 +301,13 @@ for the JavaScript code in this tag.
 </div>
 </div>
 
-<div id="outline-container-org868707a" class="outline-2">
-<h2 id="org868707a">变量声明与函数定义</h2>
-<div class="outline-text-2" id="text-org868707a">
+<div id="outline-container-orga751ab6" class="outline-2">
+<h2 id="orga751ab6">变量声明与函数定义</h2>
+<div class="outline-text-2" id="text-orga751ab6">
 </div>
-<div id="outline-container-org2b67c96" class="outline-3">
-<h3 id="org2b67c96">通过setq声明变量</h3>
-<div class="outline-text-3" id="text-org2b67c96">
+<div id="outline-container-org9d80de6" class="outline-3">
+<h3 id="org9d80de6">通过setq声明变量</h3>
+<div class="outline-text-3" id="text-org9d80de6">
 <p>
 setq是声明变量的关键词，用法如下：
 </p>
@@ -331,9 +331,9 @@ message函数起到了将变量输出到缓冲区的作用.
 </div>
 </div>
 
-<div id="outline-container-org4a2639a" class="outline-3">
-<h3 id="org4a2639a">通过defvar定义不会改变声明的变量</h3>
-<div class="outline-text-3" id="text-org4a2639a">
+<div id="outline-container-orgff2668c" class="outline-3">
+<h3 id="orgff2668c">通过defvar定义不会改变声明的变量</h3>
+<div class="outline-text-3" id="text-orgff2668c">
 <p>
 用法和setq一致,但是定义的变量数值不会发生改变.如果定义的变量已经被定义,那么赋值将会失败.
 比如说:
@@ -351,9 +351,9 @@ message函数起到了将变量输出到缓冲区的作用.
 </div>
 </div>
 
-<div id="outline-container-orgd13097b" class="outline-3">
-<h3 id="orgd13097b">通过defun定义函数.</h3>
-<div class="outline-text-3" id="text-orgd13097b">
+<div id="outline-container-org23b934c" class="outline-3">
+<h3 id="org23b934c">通过defun定义函数.</h3>
+<div class="outline-text-3" id="text-org23b934c">
 <p>
 比如,我想定义一个求圆的面积的函数,我可以这么去写:
 </p>
@@ -384,9 +384,9 @@ message函数起到了将变量输出到缓冲区的作用.
 </div>
 </div>
 
-<div id="outline-container-orgb53e9b9" class="outline-3">
-<h3 id="orgb53e9b9">使用局部作用域</h3>
-<div class="outline-text-3" id="text-orgb53e9b9">
+<div id="outline-container-orgbd78855" class="outline-3">
+<h3 id="orgbd78855">使用局部作用域</h3>
+<div class="outline-text-3" id="text-orgbd78855">
 <p>
 对于刚刚的函数,我们把pi定义在了函数外面,这样并不好.并且,在函数内部我们没有定义任何的局部变量.这在一个较长的函数里面是难以实现的.下面就介绍如何使用let进行局部作用域的定义.并在此基础上,考虑局部变量的声明问题.
 </p>
@@ -426,18 +426,18 @@ message函数起到了将变量输出到缓冲区的作用.
 </div>
 </div>
 
-<div id="outline-container-orgb5b8ebe" class="outline-3">
-<h3 id="orgb5b8ebe">在对函数和变量观察时的技巧(使用C-h)</h3>
-<div class="outline-text-3" id="text-orgb5b8ebe">
+<div id="outline-container-org4d4247b" class="outline-3">
+<h3 id="org4d4247b">在对函数和变量观察时的技巧(使用C-h)</h3>
+<div class="outline-text-3" id="text-org4d4247b">
 <p>
 我们可以通过C-h f来查询一个函数相关的信息,或者通过C-h v来擦汗寻一个变量的信息.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org7368155" class="outline-3">
-<h3 id="org7368155">匿名函数表达式lambda</h3>
-<div class="outline-text-3" id="text-org7368155">
+<div id="outline-container-orgf34d4a7" class="outline-3">
+<h3 id="orgf34d4a7">匿名函数表达式lambda</h3>
+<div class="outline-text-3" id="text-orgf34d4a7">
 <p>
 lambda表达式的格式和寻常的函数定义比较相似(只不过它没有名字而已.)
 下面是一个简单的例子:
@@ -480,17 +480,17 @@ lambda表达式的格式和寻常的函数定义比较相似(只不过它没有�
 </div>
 </div>
 
-<div id="outline-container-org3350932" class="outline-2">
-<h2 id="org3350932">基本逻辑顺序</h2>
-<div class="outline-text-2" id="text-org3350932">
+<div id="outline-container-org66a347b" class="outline-2">
+<h2 id="org66a347b">基本逻辑顺序</h2>
+<div class="outline-text-2" id="text-org66a347b">
 <p>
 下面对每门语言基本存在的逻辑顺序进行简单的介绍.
 </p>
 </div>
 
-<div id="outline-container-orgeaddec4" class="outline-3">
-<h3 id="orgeaddec4">顺序执行</h3>
-<div class="outline-text-3" id="text-orgeaddec4">
+<div id="outline-container-org6197be0" class="outline-3">
+<h3 id="org6197be0">顺序执行</h3>
+<div class="outline-text-3" id="text-org6197be0">
 <p>
 顺序执行在函数里是默认的.这毫无疑问,也毫无问题.显式地确定顺序执行的方法是使用progn,如:
 </p>
@@ -507,9 +507,9 @@ lambda表达式的格式和寻常的函数定义比较相似(只不过它没有�
 </div>
 </div>
 
-<div id="outline-container-orgf67610e" class="outline-3">
-<h3 id="orgf67610e">if 与cond</h3>
-<div class="outline-text-3" id="text-orgf67610e">
+<div id="outline-container-orga8018fc" class="outline-3">
+<h3 id="orga8018fc">if 与cond</h3>
+<div class="outline-text-3" id="text-orga8018fc">
 <p>
 if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个例子作为介绍:
 </p>
@@ -536,9 +536,9 @@ if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个�
 </div>
 </div>
 
-<div id="outline-container-org78dd292" class="outline-3">
-<h3 id="org78dd292">while 控制循环</h3>
-<div class="outline-text-3" id="text-org78dd292">
+<div id="outline-container-orgb10d52e" class="outline-3">
+<h3 id="orgb10d52e">while 控制循环</h3>
+<div class="outline-text-3" id="text-orgb10d52e">
 <p>
 事实证明，这个while循环很危险,经历一次死机之后,此处的所有文档全部消失了.
 </p>
@@ -556,9 +556,9 @@ if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个�
 </div>
 </div>
 
-<div id="outline-container-org3d02488" class="outline-3">
-<h3 id="org3d02488">逻辑运算 and or not</h3>
-<div class="outline-text-3" id="text-org3d02488">
+<div id="outline-container-org0a56557" class="outline-3">
+<h3 id="org0a56557">逻辑运算 and or not</h3>
+<div class="outline-text-3" id="text-org0a56557">
 <p>
 不消多说,直接上例子:
 </p>
@@ -586,13 +586,13 @@ if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个�
 </div>
 </div>
 
-<div id="outline-container-org2b2d539" class="outline-2">
-<h2 id="org2b2d539">数据结构</h2>
-<div class="outline-text-2" id="text-org2b2d539">
+<div id="outline-container-org0ddbf2e" class="outline-2">
+<h2 id="org0ddbf2e">数据结构</h2>
+<div class="outline-text-2" id="text-org0ddbf2e">
 </div>
-<div id="outline-container-org04435e1" class="outline-3">
-<h3 id="org04435e1">数字</h3>
-<div class="outline-text-3" id="text-org04435e1">
+<div id="outline-container-orgc667f46" class="outline-3">
+<h3 id="orgc667f46">数字</h3>
+<div class="outline-text-3" id="text-orgc667f46">
 <p>
 下面简单列一下数字相关的函数,详情可以来<a href="http://smacs.github.io/elisp/03-number.html">这里</a>学习.
 </p>
@@ -647,13 +647,13 @@ if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个�
 </div>
 </div>
 
-<div id="outline-container-org8fe2e5d" class="outline-3">
-<h3 id="org8fe2e5d">字符与字符串</h3>
-<div class="outline-text-3" id="text-org8fe2e5d">
+<div id="outline-container-org849ce02" class="outline-3">
+<h3 id="org849ce02">字符与字符串</h3>
+<div class="outline-text-3" id="text-org849ce02">
 </div>
-<div id="outline-container-org3b5b6b5" class="outline-4">
-<h4 id="org3b5b6b5">字符的表示</h4>
-<div class="outline-text-4" id="text-org3b5b6b5">
+<div id="outline-container-org1f3ebd7" class="outline-4">
+<h4 id="org1f3ebd7">字符的表示</h4>
+<div class="outline-text-4" id="text-org1f3ebd7">
 <p>
 elisp里面的字符和C一样，都是用单引号表示，同时与一个整型数字挂钩（比如ASCII值）. 此处给出一个简单的示例:
 </p>
@@ -702,9 +702,9 @@ elisp里面的字符和C一样，都是用单引号表示，同时与一个整�
 </div>
 </div>
 
-<div id="outline-container-org425954e" class="outline-4">
-<h4 id="org425954e">由字符产生字符串的一些函数</h4>
-<div class="outline-text-4" id="text-org425954e">
+<div id="outline-container-org57520a2" class="outline-4">
+<h4 id="org57520a2">由字符产生字符串的一些函数</h4>
+<div class="outline-text-4" id="text-org57520a2">
 <p>
 这部分的内容还挺无聊的,总结一下就是:
 </p>
@@ -723,13 +723,13 @@ elisp里面的字符和C一样，都是用单引号表示，同时与一个整�
 </div>
 </div>
 
-<div id="outline-container-org4d22b79" class="outline-4">
-<h4 id="org4d22b79">对字符串的简单处理,查找和替换</h4>
-<div class="outline-text-4" id="text-org4d22b79">
+<div id="outline-container-org22d81bc" class="outline-4">
+<h4 id="org22d81bc">对字符串的简单处理,查找和替换</h4>
+<div class="outline-text-4" id="text-org22d81bc">
 </div>
-<div id="outline-container-org89b33b6" class="outline-5">
-<h5 id="org89b33b6">查找</h5>
-<div class="outline-text-5" id="text-org89b33b6">
+<div id="outline-container-orgd110258" class="outline-5">
+<h5 id="orgd110258">查找</h5>
+<div class="outline-text-5" id="text-orgd110258">
 <p>
 下面是进行查找的一个示例:
 </p>
@@ -762,9 +762,9 @@ elisp里面的字符和C一样，都是用单引号表示，同时与一个整�
 </div>
 </div>
 
-<div id="outline-container-orgb5208df" class="outline-5">
-<h5 id="orgb5208df">替换</h5>
-<div class="outline-text-5" id="text-orgb5208df">
+<div id="outline-container-orgdab1d48" class="outline-5">
+<h5 id="orgdab1d48">替换</h5>
+<div class="outline-text-5" id="text-orgdab1d48">
 <p>
 替换的功能需要稍微依据查找来实现,比如:
 </p>
@@ -786,13 +786,13 @@ elisp里面的字符和C一样，都是用单引号表示，同时与一个整�
 </div>
 </div>
 
-<div id="outline-container-orgc243d65" class="outline-3">
-<h3 id="orgc243d65">cons cell and list</h3>
-<div class="outline-text-3" id="text-orgc243d65">
+<div id="outline-container-org9910f7e" class="outline-3">
+<h3 id="org9910f7e">cons cell and list</h3>
+<div class="outline-text-3" id="text-org9910f7e">
 </div>
-<div id="outline-container-org0542829" class="outline-4">
-<h4 id="org0542829">cons cell</h4>
-<div class="outline-text-4" id="text-org0542829">
+<div id="outline-container-orgcffb691" class="outline-4">
+<h4 id="orgcffb691">cons cell</h4>
+<div class="outline-text-4" id="text-orgcffb691">
 <p>
 cons cell 就是一个二元组. 这个二元组主要可以分成两部分,(CAR CDR). 一般而言, 初始化一个cons cell的基本语法是:
 </p>
@@ -821,9 +821,9 @@ cons cell 就是一个二元组. 这个二元组主要可以分成两部分,(CAR
 </div>
 </div>
 
-<div id="outline-container-org3d72c96" class="outline-4">
-<h4 id="org3d72c96">list</h4>
-<div class="outline-text-4" id="text-org3d72c96">
+<div id="outline-container-org1484e47" class="outline-4">
+<h4 id="org1484e47">list</h4>
+<div class="outline-text-4" id="text-org1484e47">
 <p>
 list常常是指由cons cell生成的一些东西. 我们来看一些特殊的list吧.
 </p>
@@ -845,7 +845,7 @@ list常常是指由cons cell生成的一些东西. 我们来看一些特殊的li
 <div id="postamble" class="status">
 <p class="date">Date: 2020-07-07 周二 00:00</p>
 <p class="author">Author: 梁子</p>
-<p class="date">Created: 2021-05-06 周四 16:31</p>
+<p class="date">Created: 2021-05-06 周四 17:17</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
