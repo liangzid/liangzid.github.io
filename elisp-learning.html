@@ -1,0 +1,842 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-11-15 Mon 20:45 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>emacs lisp 语法的学习与使用</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="梁子" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="~/liangzid.github.io/notes/css/worg.css"/>
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">emacs lisp 语法的学习与使用</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org0225df3">1. 变量声明与函数定义</a>
+<ul>
+<li><a href="#orge39ef12">1.1. 通过setq声明变量</a></li>
+<li><a href="#org813820e">1.2. 通过defvar定义不会改变声明的变量</a></li>
+<li><a href="#orga5dbff6">1.3. 通过defun定义函数.</a></li>
+<li><a href="#org61b1ad2">1.4. 使用局部作用域</a></li>
+<li><a href="#orgef1eb10">1.5. 在对函数和变量观察时的技巧(使用C-h)</a></li>
+<li><a href="#orga800be7">1.6. 匿名函数表达式lambda</a></li>
+</ul>
+</li>
+<li><a href="#org1776886">2. 基本逻辑顺序</a>
+<ul>
+<li><a href="#org8e3755f">2.1. 顺序执行</a></li>
+<li><a href="#org9284e39">2.2. if 与cond</a></li>
+<li><a href="#org3a32101">2.3. while 控制循环</a></li>
+<li><a href="#org2e2ae58">2.4. 逻辑运算 and or not</a></li>
+</ul>
+</li>
+<li><a href="#org2c6d1d0">3. 数据结构</a>
+<ul>
+<li><a href="#org0a49b8c">3.1. 数字</a></li>
+<li><a href="#org074710c">3.2. 字符与字符串</a>
+<ul>
+<li><a href="#orgb4eb24a">3.2.1. 字符的表示</a></li>
+<li><a href="#org581d9c1">3.2.2. 由字符产生字符串的一些函数</a></li>
+<li><a href="#org58b7478">3.2.3. 对字符串的简单处理,查找和替换</a>
+<ul>
+<li><a href="#orgf02bcef">3.2.3.1. 查找</a></li>
+<li><a href="#orgbdde74d">3.2.3.2. 替换</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgd15b07f">3.3. cons cell and list</a>
+<ul>
+<li><a href="#org29d01e6">3.3.1. cons cell</a></li>
+<li><a href="#org77c99e3">3.3.2. list</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0225df3" class="outline-2">
+<h2 id="org0225df3"><span class="section-number-2">1</span> 变量声明与函数定义</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orge39ef12" class="outline-3">
+<h3 id="orge39ef12"><span class="section-number-3">1.1</span> 通过setq声明变量</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+setq是声明变量的关键词，用法如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> foo <span style="color: #CDC673;">"bushiwo"</span><span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>message foo<span style="color: #AF87FF;">)</span>
+</pre>
+</div>
+<p>
+输出结果是：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #CDC673;">"bushiwo"</span>
+</pre>
+</div>
+<p>
+message函数起到了将变量输出到缓冲区的作用.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org813820e" class="outline-3">
+<h3 id="org813820e"><span class="section-number-3">1.2</span> 通过defvar定义不会改变声明的变量</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+用法和setq一致,但是定义的变量数值不会发生改变.如果定义的变量已经被定义,那么赋值将会失败.
+比如说:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#22312;&#21069;&#38754;&#24050;&#32463;&#36890;&#36807;setq&#23450;&#20041;&#20102;foo&#30340;&#21069;&#25552;&#19979;</span>
+<span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defvar</span> <span style="color: #FF8C00;">foo</span> <span style="color: #CDC673;">"liangzi"</span>
+  <span style="color: #CDC673;">"This value will say who is a foo."</span><span style="color: #AF87FF;">)</span> <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#36825;&#19968;&#34892;&#26159;&#23545;document&#36827;&#34892;&#35299;&#37322;.</span>
+</pre>
+</div>
+<p>
+当我们使用message对其进行打印时,其输出结果同样是"bushiwo".
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga5dbff6" class="outline-3">
+<h3 id="orga5dbff6"><span class="section-number-3">1.3</span> 通过defun定义函数.</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+比如,我想定义一个求圆的面积的函数,我可以这么去写:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#39318;&#20808;,&#22768;&#26126;PI&#30340;&#20540;</span>
+<span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> pi 3.14<span style="color: #AF87FF;">)</span>
+<span style="color: #8B8878;">;;;</span><span style="color: #8B8878;">3.14</span>
+
+<span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defun</span> <span style="color: #87D700;">get-circle-sq</span> <span style="color: #5FD7FF;">(</span>rr<span style="color: #5FD7FF;">)</span>
+  <span style="color: #CDC673;">"&#36825;&#26159;&#19968;&#20010;&#27714;&#22278;&#30340;&#38754;&#31215;&#30340;&#20989;&#25968;"</span> <span style="color: #8B8878;">;;</span><span style="color: #8B8878;">&#36825;&#26159;&#19968;&#34892;&#27880;&#37322;,&#34920;&#26126;&#36825;&#20010;&#20989;&#25968;&#22312;&#24178;&#20160;&#20040;</span>
+  <span style="color: #5FD7FF;">(</span>message <span style="color: #CDC673;">"&#22278;&#30340;&#38754;&#31215;&#26159;%.2f"</span> <span style="color: #87D700;">(</span>* pi <span style="color: #CDC673;">(</span>* rr rr<span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span>* pi <span style="color: #87D700;">(</span>* rr rr<span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span>
+  <span style="color: #AF87FF;">)</span>
+<span style="color: #8B8878;">;;;</span><span style="color: #8B8878;">get-circle-sq</span>
+
+<span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> r 2<span style="color: #AF87FF;">)</span>
+<span style="color: #8B8878;">;;;</span><span style="color: #8B8878;">2</span>
+
+<span style="color: #AF87FF;">(</span>get-circle-sq r<span style="color: #AF87FF;">)</span>
+<span style="color: #8B8878;">;;;</span><span style="color: #8B8878;">12.56</span>
+
+<span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> cc <span style="color: #5FD7FF;">(</span>get-circle-sq r<span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+<span style="color: #8B8878;">;;;</span><span style="color: #8B8878;">12.56</span>
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org61b1ad2" class="outline-3">
+<h3 id="org61b1ad2"><span class="section-number-3">1.4</span> 使用局部作用域</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+对于刚刚的函数,我们把pi定义在了函数外面,这样并不好.并且,在函数内部我们没有定义任何的局部变量.这在一个较长的函数里面是难以实现的.下面就介绍如何使用let进行局部作用域的定义.并在此基础上,考虑局部变量的声明问题.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defun</span> <span style="color: #87D700;">get-circle-sq</span> <span style="color: #5FD7FF;">(</span>r<span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">let</span> <span style="color: #87D700;">(</span>
+        <span style="color: #CDC673;">(</span>pi 3.1415926<span style="color: #CDC673;">)</span>
+        sq
+        <span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span><span style="color: #FF1493;">setq</span> sq <span style="color: #CDC673;">(</span>* pi <span style="color: #FF8C00;">(</span>* r r<span style="color: #FF8C00;">)</span><span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span>message <span style="color: #CDC673;">"the sq of [%.2f]r is %.2f"</span> r sq<span style="color: #87D700;">)</span>
+    <span style="color: #5FD7FF;">)</span>
+  sq<span style="color: #AF87FF;">)</span>
+
+
+<span style="color: #8B8878;">;;;</span><span style="color: #8B8878;">get-circle-sq</span>
+
+<span style="color: #AF87FF;">(</span>get-circle-sq 2<span style="color: #AF87FF;">)</span>
+<span style="color: #8B8878;">;;;</span><span style="color: #8B8878;">12.56</span>
+
+</pre>
+</div>
+
+<p>
+当然,也可以用let* 让表达式更加精简,比如:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defun</span> <span style="color: #87D700;">circle-area</span> <span style="color: #5FD7FF;">(</span>radix<span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">let*</span> <span style="color: #87D700;">(</span><span style="color: #CDC673;">(</span>pi 3.1415926<span style="color: #CDC673;">)</span>
+         <span style="color: #CDC673;">(</span>area <span style="color: #FF8C00;">(</span>* pi radix radix<span style="color: #FF8C00;">)</span><span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span>message <span style="color: #CDC673;">"&#30452;&#24452;&#20026; %.2f &#30340;&#22278;&#38754;&#31215;&#26159; %.2f"</span> radix area<span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgef1eb10" class="outline-3">
+<h3 id="orgef1eb10"><span class="section-number-3">1.5</span> 在对函数和变量观察时的技巧(使用C-h)</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+我们可以通过C-h f来查询一个函数相关的信息,或者通过C-h v来擦汗寻一个变量的信息.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga800be7" class="outline-3">
+<h3 id="orga800be7"><span class="section-number-3">1.6</span> 匿名函数表达式lambda</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+lambda表达式的格式和寻常的函数定义比较相似(只不过它没有名字而已.)
+下面是一个简单的例子:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">lambda</span> <span style="color: #5FD7FF;">(</span>r<span style="color: #5FD7FF;">)</span>
+  <span style="color: #CDC673;">"find the sq of r"</span>
+  <span style="color: #5FD7FF;">(</span>* r r<span style="color: #5FD7FF;">)</span>
+  <span style="color: #AF87FF;">)</span>
+</pre>
+</div>
+
+<p>
+在对函数进行调用时,可以简单地使用funcall.
+下面是一个例子:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span>funcall <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">lambda</span> <span style="color: #87D700;">(</span>r<span style="color: #87D700;">)</span>
+           <span style="color: #87D700;">(</span>* r r<span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span> <span style="color: #FF8C00; font-weight: bold; font-style: italic; text-decoration: underline;">2</span><span style="color: #AF87FF; font-weight: bold; font-style: italic; text-decoration: underline;">)</span>
+</pre>
+</div>
+<p>
+或者把它赋值给一个变量:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> sq <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">lambda</span> <span style="color: #87D700;">(</span>r<span style="color: #87D700;">)</span>
+        <span style="color: #87D700;">(</span>* r r<span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+
+<span style="color: #AF87FF;">(</span>funcall sq 2 <span style="color: #AF87FF;">)</span>
+</pre>
+</div>
+
+<p>
+除此之外, lambda主要被用于作为参数在函数之间进行传递.这也是函数式编程的主打卖点吧.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1776886" class="outline-2">
+<h2 id="org1776886"><span class="section-number-2">2</span> 基本逻辑顺序</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+下面对每门语言基本存在的逻辑顺序进行简单的介绍.
+</p>
+</div>
+
+<div id="outline-container-org8e3755f" class="outline-3">
+<h3 id="org8e3755f"><span class="section-number-3">2.1</span> 顺序执行</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+顺序执行在函数里是默认的.这毫无疑问,也毫无问题.显式地确定顺序执行的方法是使用progn,如:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">progn</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">setq</span> a 3<span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">setq</span> b 4<span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span>message <span style="color: #CDC673;">"b-a=%d"</span> <span style="color: #87D700;">(</span>- b a<span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+
+<span style="color: #8B8878;">;;;</span><span style="color: #8B8878;">b-a=1</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9284e39" class="outline-3">
+<h3 id="org9284e39"><span class="section-number-3">2.2</span> if 与cond</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个例子作为介绍:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defun</span> <span style="color: #87D700;">myabs</span> <span style="color: #5FD7FF;">(</span>x<span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">if</span> <span style="color: #87D700;">(</span>&gt; x 0<span style="color: #87D700;">)</span>
+      x
+    <span style="color: #87D700;">(</span>* -1 x<span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+
+<span style="color: #AF87FF;">(</span>myabs -1<span style="color: #AF87FF;">)</span>
+<span style="color: #8B8878;">;;;</span><span style="color: #8B8878;">1</span>
+
+<span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defun</span> <span style="color: #87D700;">good-abs</span><span style="color: #5FD7FF;">(</span>x<span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">cond</span> <span style="color: #87D700;">(</span><span style="color: #CDC673;">(</span>&gt; x 0<span style="color: #CDC673;">)</span> x<span style="color: #87D700;">)</span>
+        <span style="color: #87D700;">(</span><span style="color: #CDC673;">(</span>&lt; x 0<span style="color: #CDC673;">)</span> <span style="color: #CDC673;">(</span>- 0 x<span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span>
+        <span style="color: #87D700;">(</span><span style="color: #CDC673;">(</span>= x 0<span style="color: #CDC673;">)</span> 0<span style="color: #87D700;">)</span>
+        <span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+
+<span style="color: #AF87FF;">(</span>good-abs -3<span style="color: #AF87FF;">)</span>
+<span style="color: #8B8878;">;;;</span><span style="color: #8B8878;">3</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3a32101" class="outline-3">
+<h3 id="org3a32101"><span class="section-number-3">2.3</span> while 控制循环</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+事实证明，这个while循环很危险,经历一次死机之后,此处的所有文档全部消失了.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defun</span> <span style="color: #87D700;">factorial</span> <span style="color: #5FD7FF;">(</span>n<span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">let</span> <span style="color: #87D700;">(</span><span style="color: #CDC673;">(</span>res 1<span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span><span style="color: #FF1493;">while</span> <span style="color: #CDC673;">(</span>&gt; n 1<span style="color: #CDC673;">)</span>
+      <span style="color: #CDC673;">(</span><span style="color: #FF1493;">setq</span> res <span style="color: #FF8C00;">(</span>* res n<span style="color: #FF8C00;">)</span>
+            n <span style="color: #FF8C00;">(</span>- n 1<span style="color: #FF8C00;">)</span><span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span>
+    res<span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>factorial 10<span style="color: #AF87FF;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2e2ae58" class="outline-3">
+<h3 id="org2e2ae58"><span class="section-number-3">2.4</span> 逻辑运算 and or not</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+不消多说,直接上例子:
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defun</span> <span style="color: #87D700;">get-rectangle-sq</span> <span style="color: #5FD7FF;">(</span>a <span style="color: #5FD7FF;">&amp;optional</span> b<span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">or</span> b <span style="color: #87D700;">(</span><span style="color: #FF1493;">setq</span> b a<span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span>
+
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">if</span> <span style="color: #87D700;">(</span>= a b<span style="color: #87D700;">)</span>
+      <span style="color: #87D700;">(</span><span style="color: #FF1493;">progn</span>
+        <span style="color: #CDC673;">(</span>message <span style="color: #CDC673;">"&#36825;&#26159;&#19968;&#20010;&#27491;&#26041;&#24418;"</span><span style="color: #CDC673;">)</span>
+        <span style="color: #CDC673;">(</span>* a a<span style="color: #CDC673;">)</span>
+        <span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span><span style="color: #FF1493;">progn</span>
+      <span style="color: #CDC673;">(</span>* a b<span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span>
+      <span style="color: #5FD7FF;">)</span>
+  <span style="color: #AF87FF;">)</span>
+
+<span style="color: #AF87FF;">(</span>get-rectangle-sq 2<span style="color: #AF87FF;">)</span>
+<span style="color: #8B8878;">;;;</span><span style="color: #8B8878;">4</span>
+<span style="color: #AF87FF;">(</span>get-rectangle-sq 2 3<span style="color: #AF87FF;">)</span>
+<span style="color: #8B8878;">;;;</span><span style="color: #8B8878;">6</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2c6d1d0" class="outline-2">
+<h2 id="org2c6d1d0"><span class="section-number-2">3</span> 数据结构</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org0a49b8c" class="outline-3">
+<h3 id="org0a49b8c"><span class="section-number-3">3.1</span> 数字</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+下面简单列一下数字相关的函数,详情可以来<a href="http://smacs.github.io/elisp/03-number.html">这里</a>学习.
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#27979;&#35797;&#20989;&#25968;</span>
+<span style="color: #AF87FF;">(</span>integerp OBJECT<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>floatp OBJECT<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>numberp OBJECT<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>zerop NUMBER<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>wholenump OBJECT<span style="color: #AF87FF;">)</span>
+<span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#27604;&#36739;&#20989;&#25968;</span>
+<span style="color: #AF87FF;">(</span>&gt; NUM1 NUM2<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>&lt; NUM1 NUM2<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>&gt;= NUM1 NUM2<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>&lt;= NUM1 NUM2<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>= NUM1 NUM2<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>eql OBJ1 OBJ2<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>/= NUM1 NUM2<span style="color: #AF87FF;">)</span>
+<span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#36716;&#25442;&#20989;&#25968;</span>
+<span style="color: #AF87FF;">(</span>float ARG<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>truncate ARG <span style="color: #5FD7FF;">&amp;optional</span> DIVISOR<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>floor ARG <span style="color: #5FD7FF;">&amp;optional</span> DIVISOR<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>ceiling ARG <span style="color: #5FD7FF;">&amp;optional</span> DIVISOR<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>round ARG <span style="color: #5FD7FF;">&amp;optional</span> DIVISOR<span style="color: #AF87FF;">)</span>
+<span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#36816;&#31639;</span>
+<span style="color: #AF87FF;">(</span>+ <span style="color: #5FD7FF;">&amp;rest</span> NUMBERS-OR-MARKERS<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>- <span style="color: #5FD7FF;">&amp;optional</span> NUMBER-OR-MARKER <span style="color: #5FD7FF;">&amp;rest</span> MORE-NUMBERS-OR-MARKERS<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>* <span style="color: #5FD7FF;">&amp;rest</span> NUMBERS-OR-MARKERS<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>/ DIVIDEND DIVISOR <span style="color: #5FD7FF;">&amp;rest</span> DIVISORS<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>1+ NUMBER<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>1- NUMBER<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>abs ARG<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>% X Y<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>mod X Y<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>sin ARG<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>cos ARG<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>tan ARG<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>asin ARG<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>acos ARG<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>atan Y <span style="color: #5FD7FF;">&amp;optional</span> X<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>sqrt ARG<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>exp ARG<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>expt ARG1 ARG2<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>log ARG <span style="color: #5FD7FF;">&amp;optional</span> BASE<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>log10 ARG<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>logb ARG<span style="color: #AF87FF;">)</span>
+<span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#38543;&#26426;&#25968;</span>
+<span style="color: #AF87FF;">(</span>random <span style="color: #5FD7FF;">&amp;optional</span> N<span style="color: #AF87FF;">)</span>
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org074710c" class="outline-3">
+<h3 id="org074710c"><span class="section-number-3">3.2</span> 字符与字符串</h3>
+<div class="outline-text-3" id="text-3-2">
+</div>
+<div id="outline-container-orgb4eb24a" class="outline-4">
+<h4 id="orgb4eb24a"><span class="section-number-4">3.2.1</span> 字符的表示</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<p>
+elisp里面的字符和C一样，都是用单引号表示，同时与一个整型数字挂钩（比如ASCII值）. 此处给出一个简单的示例:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #8B8878;">;; </span><span style="color: #8B8878;">'A'</span>
+?A <span style="color: #8B8878;">;;</span><span style="color: #8B8878;">-&gt; 65</span>
+</pre>
+</div>
+
+<p>
+除此之外, 对于一些自身包含意义的符号, 可以使用转义字符进行表达. 比如, 对于( 可以用?\(进行表达.
+</p>
+
+<p>
+除此之外引申出来的就是一些控制字符, 如:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">?\a =&gt; 7                 <span style="color: #8B8878;">; </span><span style="color: #8B8878;">control-g, `</span><span style="color: #AF87FF;">C-g</span><span style="color: #8B8878;">'</span>
+?\b =&gt; 8                 <span style="color: #8B8878;">; </span><span style="color: #8B8878;">backspace, &lt;BS&gt;, `</span><span style="color: #AF87FF;">C-h</span><span style="color: #8B8878;">'</span>
+?\t =&gt; 9                 <span style="color: #8B8878;">; </span><span style="color: #8B8878;">tab, &lt;TAB&gt;, `</span><span style="color: #AF87FF;">C-i</span><span style="color: #8B8878;">'</span>
+?\n =&gt; 10                <span style="color: #8B8878;">; </span><span style="color: #8B8878;">newline, `</span><span style="color: #AF87FF;">C-j</span><span style="color: #8B8878;">'</span>
+?\v =&gt; 11                <span style="color: #8B8878;">; </span><span style="color: #8B8878;">vertical tab, `</span><span style="color: #AF87FF;">C-k</span><span style="color: #8B8878;">'</span>
+?\f =&gt; 12                <span style="color: #8B8878;">; </span><span style="color: #8B8878;">formfeed character, `</span><span style="color: #AF87FF;">C-l</span><span style="color: #8B8878;">'</span>
+?\r =&gt; 13                <span style="color: #8B8878;">; </span><span style="color: #8B8878;">carriage return, &lt;RET&gt;, `</span><span style="color: #AF87FF;">C-m</span><span style="color: #8B8878;">'</span>
+?\e =&gt; 27                <span style="color: #8B8878;">; </span><span style="color: #8B8878;">escape character, &lt;ESC&gt;, `C-['</span>
+?\s =&gt; 32                <span style="color: #8B8878;">; </span><span style="color: #8B8878;">space character, &lt;SPC&gt;</span>
+?\\ =&gt; 92                <span style="color: #8B8878;">; </span><span style="color: #8B8878;">backslash character, `\'</span>
+?\d =&gt; 127               <span style="color: #8B8878;">; </span><span style="color: #8B8878;">delete character, &lt;DEL&gt;</span>
+
+</pre>
+</div>
+
+<p>
+另一种更寻常的控制字符的生成格式是:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">?\^I ?\^i ?\C-I ?\C-i
+</pre>
+</div>
+<p>
+类比之,Meta键的控制为?\M-\C-b这种风格.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org581d9c1" class="outline-4">
+<h4 id="org581d9c1"><span class="section-number-4">3.2.2</span> 由字符产生字符串的一些函数</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<p>
+这部分的内容还挺无聊的,总结一下就是:
+</p>
+
+<ol class="org-ol">
+<li>由重复的字符构造字符串 make-string</li>
+<li>连接若干个字符构成字符串 string</li>
+<li>从一个字符串中按照索引提取一部分字符 substring</li>
+<li>字符转成字符串 char-to-string</li>
+<li>整型数字转成字符串 number-to-string</li>
+<li>连接字符形成字符串 concat</li>
+<li>全部小写化 downcase</li>
+<li>全部大写化 upcase</li>
+<li>首字母大写 capitalize, upcase-initials</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org58b7478" class="outline-4">
+<h4 id="org58b7478"><span class="section-number-4">3.2.3</span> 对字符串的简单处理,查找和替换</h4>
+<div class="outline-text-4" id="text-3-2-3">
+</div>
+<div id="outline-container-orgf02bcef" class="outline-5">
+<h5 id="orgf02bcef"><span class="section-number-5">3.2.3.1</span> 查找</h5>
+<div class="outline-text-5" id="text-3-2-3-1">
+<p>
+下面是进行查找的一个示例:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span>string-match <span style="color: #CDC673;">"34"</span> <span style="color: #CDC673;">"01234567890123456789"</span><span style="color: #AF87FF;">)</span>    <span style="color: #8B8878;">; </span><span style="color: #8B8878;">=&gt; 3</span>
+<span style="color: #AF87FF;">(</span>string-match <span style="color: #CDC673;">"34"</span> <span style="color: #CDC673;">"01234567890123456789"</span> 10<span style="color: #AF87FF;">)</span> <span style="color: #8B8878;">; </span><span style="color: #8B8878;">=&gt; 13</span>
+</pre>
+</div>
+<p>
+在这个例子中,"34"作为一个被匹配的字符串,函数将会返回该字符串匹配的第一个索引,当然,也可以使用数字来确定从哪里开始搜索,比如下面的那行所确定.
+实际上,string-match所接受的被查找参数是可以出现字符串的.
+</p>
+
+<p>
+在此函数的基础上,可以构造出一个连续查找的函数,如下所示:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">let</span> <span style="color: #5FD7FF;">(</span><span style="color: #87D700;">(</span>start 0<span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">while</span> <span style="color: #87D700;">(</span>string-match <span style="color: #CDC673;">"34"</span> <span style="color: #CDC673;">"01234567890123456789"</span> start<span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span>princ <span style="color: #CDC673;">(</span>format <span style="color: #CDC673;">"find at %d\n"</span> <span style="color: #FF8C00;">(</span>match-beginning 0<span style="color: #FF8C00;">)</span><span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span><span style="color: #FF1493;">setq</span> start <span style="color: #CDC673;">(</span>match-end 0<span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+
+</pre>
+</div>
+<p>
+其中,match-beginning与match-end都是常见的两个东西.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbdde74d" class="outline-5">
+<h5 id="orgbdde74d"><span class="section-number-5">3.2.3.2</span> 替换</h5>
+<div class="outline-text-5" id="text-3-2-3-2">
+<p>
+替换的功能需要稍微依据查找来实现,比如:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">let</span> <span style="color: #5FD7FF;">(</span><span style="color: #87D700;">(</span>str <span style="color: #CDC673;">"01234567890123456789"</span><span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span>string-match <span style="color: #CDC673;">"34"</span> str<span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span>princ <span style="color: #87D700;">(</span>replace-match <span style="color: #CDC673;">"x"</span> nil nil str 0<span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span>princ <span style="color: #CDC673;">"\n"</span><span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span>princ str<span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+
+</pre>
+</div>
+<p>
+其中,replace-match函数实现了复现的效果.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd15b07f" class="outline-3">
+<h3 id="orgd15b07f"><span class="section-number-3">3.3</span> cons cell and list</h3>
+<div class="outline-text-3" id="text-3-3">
+</div>
+<div id="outline-container-org29d01e6" class="outline-4">
+<h4 id="org29d01e6"><span class="section-number-4">3.3.1</span> cons cell</h4>
+<div class="outline-text-4" id="text-3-3-1">
+<p>
+cons cell 就是一个二元组. 这个二元组主要可以分成两部分,(CAR CDR). 一般而言, 初始化一个cons cell的基本语法是:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">'<span style="color: #AF87FF;">(</span>1 . 2<span style="color: #AF87FF;">)</span>                                <span style="color: #8B8878;">; </span><span style="color: #8B8878;">=&gt; (1 . 2)</span>
+'<span style="color: #AF87FF;">(</span>?a . 1<span style="color: #AF87FF;">)</span>                               <span style="color: #8B8878;">; </span><span style="color: #8B8878;">=&gt; (97 . 1)</span>
+'<span style="color: #AF87FF;">(</span>1 . <span style="color: #CDC673;">"a"</span><span style="color: #AF87FF;">)</span>                              <span style="color: #8B8878;">; </span><span style="color: #8B8878;">=&gt; (1 . "a")</span>
+'<span style="color: #AF87FF;">(</span>1 . nil<span style="color: #AF87FF;">)</span>                              <span style="color: #8B8878;">; </span><span style="color: #8B8878;">=&gt; (1)</span>
+'<span style="color: #AF87FF;">(</span>nil . nil<span style="color: #AF87FF;">)</span>                            <span style="color: #8B8878;">; </span><span style="color: #8B8878;">=&gt; (nil)</span>
+
+</pre>
+</div>
+
+<p>
+可以看出,任何不同类型的两个东西都可以通过这种方式汇聚在一起. 所以说, cons cell本质上是通过一种指针式的索引构造出来的. 这也是cell的由来.
+</p>
+
+<p>
+有一个问题,就是括号前面的单引号. 我们为什么要在括号前面放一个单引号呢? 是这样的, 我们知道在elisp的语法里括号里面的第一项都是一个可以被执行的函数, 而我们构造的cons cell 显然不是这种情况. 所以, 我们就使用一个单引号来将之符号化, 所谓的符号化就是指的"引用化", 也就是暂时不对其进行解析. 这个单引号的作用近似于(quote (1 . 2)).
+</p>
+
+<p>
+通过这样的定义,我们对一个cons cell的输出显然也就是其输入了.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org77c99e3" class="outline-4">
+<h4 id="org77c99e3"><span class="section-number-4">3.3.2</span> list</h4>
+<div class="outline-text-4" id="text-3-3-2">
+<p>
+list常常是指由cons cell生成的一些东西. 我们来看一些特殊的list吧.
+</p>
+<ul class="org-ul">
+<li>空列表. 就是nil,或者'(). 显然空列表不是cons cell,因为没有CAR和CDR. 但是我们如果用CAR与CDR对其进行访问,都可以得到nil,所以我们认为它是conscell未尝不可.</li>
+<li>true list. 对一个list无数求cdr,最后得到的是nil.</li>
+<li>dotted list. 求cdr的结果是一个非cons cell的东西.</li>
+<li>circular list. 环形列表.</li>
+</ul>
+
+<p>
+<a href="http://smacs.github.io/elisp/05-cons-cell.html">参考链接</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2020-07-07 Tue 00:00</p>
+<p class="author">Author: 梁子</p>
+<p class="date">Created: 2021-11-15 Mon 20:45</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-11-15 Mon 20:45 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>C++中template模板的学习</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="LiangZi" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="~/liangzid.github.io/notes/css/worg.css"/>
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">C++中template模板的学习</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgda4419a">1. 模板的定义</a>
+<ul>
+<li><a href="#orgd370aa8">1.1. 函数模板</a>
+<ul>
+<li><a href="#org30b20f5">1.1.1. 基本的函数模板定义与调用形式</a></li>
+<li><a href="#org5920f8a">1.1.2. 函数模板的参数问题(类型参数与非类型参数)</a></li>
+</ul>
+</li>
+<li><a href="#orgf9a2dd0">1.2. 类模板</a></li>
+</ul>
+</li>
+<li><a href="#org3b32efb">2. 模板的实参推断</a></li>
+<li><a href="#org1a161bd">3. 重载与模板</a></li>
+<li><a href="#orgd327361">4. 模板的特例化</a></li>
+</ul>
+</div>
+</div>
+<p>
+今天遇到了一些学习C++的困难,主要在于,如何去使用template.
+</p>
+
+<p>
+primer中说:"一个模板就是一个创建类或函数的蓝图(公式)".
+</p>
+<div id="outline-container-orgda4419a" class="outline-2">
+<h2 id="orgda4419a"><span class="section-number-2">1</span> 模板的定义</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+模板的灵活性,多是体现在"对类型的推断上".比如,针对一个比较两个数谁大谁小的函数,我们哪里知道这两个数是什么类型的呢?因此可以用到模板.
+</p>
+</div>
+
+<div id="outline-container-orgd370aa8" class="outline-3">
+<h3 id="orgd370aa8"><span class="section-number-3">1.1</span> 函数模板</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="outline-container-org30b20f5" class="outline-4">
+<h4 id="org30b20f5"><span class="section-number-4">1.1.1</span> 基本的函数模板定义与调用形式</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+顾名思义,就是通过一个固定的架构来生成一堆函数.
+比如刚刚提到的:
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #FF1493;">template</span><span style="color: #AF87FF;">&lt;</span><span style="color: #FF1493;">typename</span> <span style="color: #5FD7FF;">T</span><span style="color: #AF87FF;">&gt;</span>
+<span style="color: #5FD7FF;">int</span> <span style="color: #87D700;">compare</span><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">const</span> <span style="color: #5FD7FF;">T</span> &amp;<span style="color: #FF8C00;">a</span>, <span style="color: #FF1493;">const</span> <span style="color: #5FD7FF;">T</span> &amp;<span style="color: #FF8C00;">b</span><span style="color: #AF87FF;">){</span>
+  <span style="color: #FF1493;">if</span> <span style="color: #5FD7FF;">(</span>a&lt;b<span style="color: #5FD7FF;">)</span> <span style="color: #FF1493;">return</span> -1;
+  <span style="color: #FF1493;">if</span> <span style="color: #5FD7FF;">(</span>a&gt;b<span style="color: #5FD7FF;">)</span> <span style="color: #FF1493;">return</span> +1;
+  <span style="color: #FF1493;">return</span> 0;
+<span style="color: #AF87FF;">}</span>
+</pre>
+</div>
+<p>
+只要记住这个基本的格式就行了.在实际使用的时候,只需要调用这样一个template,比如
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #5FD7FF;">int</span> <span style="color: #FF8C00;">a</span>=1;
+<span style="color: #5FD7FF;">int</span> <span style="color: #FF8C00;">b</span>=0;
+<span style="color: #5FD7FF;">int</span> <span style="color: #FF8C00;">c</span>;
+c=compare<span style="color: #AF87FF;">(</span>a,b<span style="color: #AF87FF;">)</span>
+</pre>
+</div>
+<p>
+就可以直接调用了.剩下的活全部都交给了编译器,是不是非常简单.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5920f8a" class="outline-4">
+<h4 id="org5920f8a"><span class="section-number-4">1.1.2</span> 函数模板的参数问题(类型参数与非类型参数)</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<ol class="org-ol">
+<li>类型参数. 类型参数就是单指对"对象"的"类型"进行确定的参数.每一个类型参数前面都需要加一个"typename",或者"class".这样被定义的类型一般可以被使用在函数的任何地方.</li>
+<li><p>
+非类型参数. 非类型参数的定义,都会使用固定的,已知的类型.比如下面的代码
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #8B8878;">//</span><span style="color: #8B8878;">&#19979;&#38754;&#30340;T,A&#26159;&#31867;&#22411;&#21442;&#25968;,m,n&#26159;&#38750;&#31867;&#22411;&#21442;&#25968;.</span>
+<span style="color: #FF1493;">template</span><span style="color: #AF87FF;">&lt;</span><span style="color: #FF1493;">typename</span> <span style="color: #5FD7FF;">T</span>, <span style="color: #FF1493;">class</span> <span style="color: #5FD7FF;">A</span>, <span style="color: #5FD7FF;">unsigned</span> <span style="color: #5FD7FF;">int</span> <span style="color: #FF8C00;">m</span>, <span style="color: #5FD7FF;">unsigned</span> <span style="color: #5FD7FF;">int</span> <span style="color: #FF8C00;">n</span><span style="color: #AF87FF;">&gt;</span>
+<span style="color: #5FD7FF;">int</span> <span style="color: #87D700;">concat</span><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">const</span> <span style="color: #5FD7FF;">T</span> &amp;<span style="color: #FF8C00;">a</span><span style="color: #5FD7FF;">[</span>m<span style="color: #5FD7FF;">]</span>, <span style="color: #FF1493;">const</span> <span style="color: #5FD7FF;">T</span> &amp;<span style="color: #FF8C00;">b</span><span style="color: #5FD7FF;">[</span>n<span style="color: #5FD7FF;">]</span>, <span style="color: #FF1493;">const</span> <span style="color: #5FD7FF;">A</span> <span style="color: #FF8C00;">c</span><span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">{</span>
+  something;
+  <span style="color: #FF1493;">return</span> 0
+<span style="color: #AF87FF;">}</span>
+#+BEGIN_SRC C++
+
+</pre>
+</div></li>
+</ol>
+<p>
+一般来说,模板在头文件里,既包含声明,也包含定义.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf9a2dd0" class="outline-3">
+<h3 id="orgf9a2dd0"><span class="section-number-3">1.2</span> 类模板</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+与函数模板不同,类模板自定义的类型参数无法通过编译器的推理获得.因此,类模板需要提供额外的参数信息.下面是一个关于类模板的简单示例.
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #FF1493;">template</span><span style="color: #AF87FF;">&lt;</span><span style="color: #FF1493;">typename</span> <span style="color: #5FD7FF;">T</span><span style="color: #AF87FF;">&gt;</span> <span style="color: #FF1493;">class</span> <span style="color: #5FD7FF;">Blob</span><span style="color: #AF87FF;">{</span>
+<span style="color: #FF1493;">public</span>:
+  <span style="color: #FF1493;">typedef</span> <span style="color: #5FD7FF;">T</span> <span style="color: #5FD7FF;">value_type</span>;
+  <span style="color: #FF1493;">typedef</span> <span style="color: #5FD7FF;">T</span> <span style="color: #AF87FF;">std</span>::<span style="color: #AF87FF;">vector</span><span style="color: #5FD7FF;">&lt;</span><span style="color: #5FD7FF;">T</span><span style="color: #5FD7FF;">&gt;</span>::<span style="color: #5FD7FF;">size_type</span> <span style="color: #5FD7FF;">size_type</span>;
+
+  <span style="color: #8B8878;">//</span><span style="color: #8B8878;">constrcution function</span>
+  <span style="color: #87D700;">Blob</span><span style="color: #5FD7FF;">()</span>;
+  <span style="color: #87D700;">Blob</span><span style="color: #5FD7FF;">(</span><span style="color: #AF87FF;">std</span>::<span style="color: #5FD7FF;">initializer_list</span><span style="color: #87D700;">&lt;</span><span style="color: #5FD7FF;">T</span><span style="color: #87D700;">&gt;</span> <span style="color: #FF8C00;">il</span><span style="color: #5FD7FF;">)</span>;
+  <span style="color: #5FD7FF;">size_type</span> <span style="color: #87D700;">size</span><span style="color: #5FD7FF;">()</span> <span style="color: #FF1493;">const</span> <span style="color: #5FD7FF;">{</span>
+    <span style="color: #FF1493;">return</span> data-&gt;size<span style="color: #87D700;">()</span>;
+  <span style="color: #5FD7FF;">}</span>
+  <span style="color: #5FD7FF;">bool</span> <span style="color: #87D700;">empty</span><span style="color: #5FD7FF;">()</span> <span style="color: #FF1493;">const</span> <span style="color: #5FD7FF;">{</span>
+    <span style="color: #FF1493;">return</span> data-&gt;empty<span style="color: #87D700;">()</span>;
+  <span style="color: #5FD7FF;">}</span>
+  <span style="color: #5FD7FF;">void</span> <span style="color: #87D700;">push_back</span><span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">const</span> <span style="color: #5FD7FF;">T</span> &amp;<span style="color: #FF8C00;">t</span><span style="color: #5FD7FF;">){</span>
+    data-&gt;push_back<span style="color: #87D700;">(</span>t<span style="color: #87D700;">)</span>;
+  <span style="color: #5FD7FF;">}</span>
+  <span style="color: #5FD7FF;">void</span> <span style="color: #87D700;">push_back</span><span style="color: #5FD7FF;">(</span><span style="color: #5FD7FF;">T</span> &amp;&amp;<span style="color: #FF8C00;">t</span><span style="color: #5FD7FF;">){</span>
+    data-&gt;push_back<span style="color: #87D700;">(</span><span style="color: #AF87FF;">std</span>::<span style="color: #5FD7FF;">mouve</span><span style="color: #CDC673;">(</span><span style="color: #FF8C00;">t</span><span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span>;
+  <span style="color: #5FD7FF;">}</span>
+  <span style="color: #5FD7FF;">void</span> <span style="color: #87D700;">pop_back</span><span style="color: #5FD7FF;">()</span>;
+
+  <span style="color: #8B8878;">//</span><span style="color: #8B8878;">&#20803;&#32032;&#35775;&#38382;</span>
+  <span style="color: #5FD7FF;">T</span> &amp; <span style="color: #87D700;">back</span><span style="color: #5FD7FF;">()</span>;
+  <span style="color: #5FD7FF;">T</span> &amp; <span style="color: #FF1493;">operator</span><span style="color: #5FD7FF;">[]</span><span style="color: #5FD7FF;">(</span><span style="color: #5FD7FF;">size_type</span> <span style="color: #FF8C00;">i</span><span style="color: #5FD7FF;">)</span>;;
+<span style="color: #FF1493;">private</span>:
+  <span style="color: #AF87FF;">std</span>::<span style="color: #5FD7FF;">shared_ptr</span><span style="color: #5FD7FF;">&lt;</span><span style="color: #AF87FF;">std</span>::<span style="color: #5FD7FF;">vector</span><span style="color: #87D700;">&lt;</span><span style="color: #5FD7FF;">T</span><span style="color: #87D700;">&gt;</span><span style="color: #5FD7FF;">&gt;</span><span style="color: #FF8C00;">data</span>;
+<span style="color: #AF87FF;">}</span>
+</pre>
+</div>
+
+<p>
+先不去纠结这个类究竟有何意义,我们直接看一下如何调用之.
+啊,非常简单:
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #5FD7FF;">Blob</span><span style="color: #AF87FF;">&lt;</span><span style="color: #5FD7FF;">int</span><span style="color: #AF87FF;">&gt;</span> <span style="color: #FF8C00;">ia</span>;
+<span style="color: #5FD7FF;">Blob</span><span style="color: #AF87FF;">&lt;</span><span style="color: #5FD7FF;">int</span><span style="color: #AF87FF;">&gt;</span><span style="color: #FF8C00;">ia1</span>=<span style="color: #AF87FF;">{</span>0,1,2,3,4<span style="color: #AF87FF;">}</span>;
+</pre>
+</div>
+<p>
+总之,单纯使用一个尖括号进行调用就可以了.
+</p>
+
+<p>
+好了,不先往下看,要去和hnswlib对线了!
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org3b32efb" class="outline-2">
+<h2 id="org3b32efb"><span class="section-number-2">2</span> 模板的实参推断</h2>
+</div>
+<div id="outline-container-org1a161bd" class="outline-2">
+<h2 id="org1a161bd"><span class="section-number-2">3</span> 重载与模板</h2>
+</div>
+<div id="outline-container-orgd327361" class="outline-2">
+<h2 id="orgd327361"><span class="section-number-2">4</span> 模板的特例化</h2>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: LiangZi</p>
+<p class="date">Created: 2021-11-15 Mon 20:45</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

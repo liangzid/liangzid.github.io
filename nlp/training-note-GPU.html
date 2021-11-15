@@ -6,7 +6,7 @@
 <!-- 2021-11-15 Mon 20:45 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Sitemap</title>
+<title>在GPU上进行训练的一些指南</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="LiangZi" />
 <style type="text/css">
@@ -219,58 +219,94 @@
 </head>
 <body>
 <div id="content">
-<h1 class="title">Sitemap</h1>
-<ul class="org-ul">
-<li><a href="DataMiningAndMachineLearning.html">数据挖掘与机器学习课程笔记</a></li>
-<li><a href="react-and-others.html">React 相关笔记</a></li>
-<li><a href="xihan-wangguo-lun.html">西汉亡国论</a></li>
-<li><a href="ziranbianzhengfa.html">自然辩证法笔记</a></li>
-<li><a href="template-C++.html">C++中template模板的学习</a></li>
-<li><a href="search-on-graph.html">search on graph系列算法笔记</a></li>
-<li><a href="qingshu0601.html">第三首情诗</a></li>
-<li><a href="qingshu0524.html">qingshu0524</a></li>
-<li><a href="online-learning.html">ONLINE LEARNING 调研</a></li>
-<li><a href="reading-being-and-time.html">存在与时间笔记</a></li>
-<li><a href="wokansinuodeng.html">我看斯诺登</a></li>
-<li><a href="reading-jiamiu-zhiyiweideguoyourendexin.html">读加缪致一位德国友人的信有感</a></li>
-<li><a href="reading-beiyanmaidejuren.html">被掩埋的巨人-阅读杂感</a></li>
-<li><a href="pro-get-reading.html">阅读《Pro Git》有感</a></li>
-<li><a href="outline-the-mountain.html">outline-theMountain</a></li>
-<li><a href="orgmode.html">org mode 简略指南（个人翻译版）</a></li>
-<li><a href="nanpengyou-zeren.html">身为男朋友应当尽到的责任</a></li>
-<li><a href="my-paper-workflow.html">我的学术学习工作流</a></li>
-<li><a href="introduction-log-writing.html">introduction怎么写?</a></li>
-<li><a href="idea-ptm-metalearning-fine-tuning.html">idea:预训练模型在小样本学习下的可解释性</a></li>
-<li><a href="howto-write-paper-and-ppt.html">浅论论文和ppt的形式封装</a></li>
-<li><a href="fate-note.html">FATE-一种联邦学习框架</a></li>
-<li><a href="English-vocabulary.html">常用英语论文撰写词汇表（不定时更新）</a></li>
-<li><a href="draw-acdamic-paper.html">撰写学术论文的要求</a></li>
-<li><a href="docker-note.html">DOCKER使用杂感</a></li>
-<li><a href="23-years-old.html">写在二十三岁开头的诗</a></li>
-<li><a href="dataset_of_knowledge_graph.html">知识图谱入坑笔记</a></li>
-<li><a href="elisp-learning.html">emacs lisp 语法的学习与使用</a></li>
-<li>nlp
-<ul class="org-ul">
-<li><a href="nlp/gpt2_NLG.html">关于huggingface transformers NLG模块实现的基本思路</a></li>
-<li><a href="nlp/training-note-GPU.html">在GPU上进行训练的一些指南</a></li>
-<li><a href="nlp/PretrainingLanguageModels_Chinese.html">中文预训练模型汇总</a></li>
-</ul></li>
-<li>paper_reading
-<ul class="org-ul">
-<li><a href="paper_reading/ethical-offensive-in-DS.html">对话系统中的伦理问题小考</a></li>
-<li><a href="paper_reading/multiwoz.html">MultiWoz2.1 dataset</a></li>
-<li><a href="paper_reading/neural_database.html">神经数据库（neural templates） 阅读笔记</a></li>
-</ul></li>
-<li>yan1
-<ul class="org-ul">
-<li><a href="yan1/web-minjie-kaifa.html">web前端作业——基于React组件化思路开发的山寨版创新港图书馆大数据可视化平台</a></li>
-<li><a href="yan1/software-test.html">软件测试复习笔记</a></li>
-<li><a href="yan1/rbac_action_management.html">基于动作监听机制和角色权限控制的系统一瞥——以游戏作为一个嵌入式视角</a></li>
-<li><a href="yan1/kettle_datasets.html">使用kettle整合MovieLens和EachMovie</a></li>
-<li><a href="yan1/Sys-libraryManagement.html">企业架构与软件系统分析设计结课作业——一个山寨版创新港图书馆管理系统的设计</a></li>
-<li><a href="yan1/maozhongte_reading_errors_in_china_develop.html">《中国崛起不可承受之错》之我鉴</a></li>
-</ul></li>
+<h1 class="title">在GPU上进行训练的一些指南</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgbeaa741">1. GPU数目决策及主GPU设置</a>
+<ul>
+<li><a href="#org248b26a">1.1. 优势劣势比较</a></li>
+<li><a href="#orgcb1b4aa">1.2. 单GPU模式指定主GPU</a></li>
+<li><a href="#orgbd46aab">1.3. 多GPU模式使用与指定主GPU</a></li>
 </ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgbeaa741" class="outline-2">
+<h2 id="orgbeaa741"><span class="section-number-2">1</span> GPU数目决策及主GPU设置</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org248b26a" class="outline-3">
+<h3 id="org248b26a"><span class="section-number-3">1.1</span> 优势劣势比较</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+单GPU模式常常可以训练在多GPU上出现out of memory现象的代码。这可能是因为：无论是单GPU还是多GPU，
+模型参数和数据集都需要加载在一个主GPU上（对应.to(device)操作），因此，多GPU或会对该主GPU产生更大的
+负担，因此，当数据较大、内存不足时，使用单GPU反而比多GPU要好。
+</p>
+</div>
+</div>
+<div id="outline-container-orgcb1b4aa" class="outline-3">
+<h3 id="orgcb1b4aa"><span class="section-number-3">1.2</span> 单GPU模式指定主GPU</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+说出来可能不信，单GPU也要指定主GPU！不然就会加载到0号GPU上去。
+十分简单。只需要定义cuda编号，然后将模型与数据加载上去。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #8B8878;"># </span><span style="color: #8B8878;">set device</span>
+<span style="color: #FF8C00;">device</span> = <span style="color: #CDC673;">'cuda:2'</span> <span style="color: #FF1493;">if</span> args.cuda <span style="color: #FF1493;">else</span> <span style="color: #CDC673;">'cpu'</span>
+<span style="color: #8B8878;"># </span><span style="color: #8B8878;">set environment</span>
+<span style="color: #FF8C00;">os.environ</span><span style="color: #AF87FF;">[</span><span style="color: #CDC673;">"CUDA_VISIBLE_DEVICES"</span><span style="color: #AF87FF;">]</span> = <span style="color: #CDC673;">"2,3,4"</span>
+model.to<span style="color: #AF87FF;">(</span>device<span style="color: #AF87FF;">)</span>
+data.to<span style="color: #AF87FF;">(</span>device<span style="color: #AF87FF;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgbd46aab" class="outline-3">
+<h3 id="orgbd46aab"><span class="section-number-3">1.3</span> 多GPU模式使用与指定主GPU</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+多GPU主要是使用到了Parallel方法，此处展示一个示例：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #8B8878;"># </span><span style="color: #8B8878;">set device</span>
+<span style="color: #FF8C00;">device</span> = <span style="color: #CDC673;">'cuda:2'</span> <span style="color: #FF1493;">if</span> args.cuda <span style="color: #FF1493;">else</span> <span style="color: #CDC673;">'cpu'</span>
+
+<span style="color: #8B8878;"># </span><span style="color: #8B8878;">args.device="2,3,4"</span>
+
+<span style="color: #8B8878;"># </span><span style="color: #8B8878;">set environment</span>
+<span style="color: #FF8C00;">os.environ</span><span style="color: #AF87FF;">[</span><span style="color: #CDC673;">"CUDA_VISIBLE_DEVICES"</span><span style="color: #AF87FF;">]</span> =args.device
+<span style="color: #FF1493;">if</span> args.cuda <span style="color: #FF1493;">and</span> torch.cuda.device_count<span style="color: #AF87FF;">()</span> &gt; 1:
+        LOGGER.info<span style="color: #AF87FF;">(</span><span style="color: #CDC673;">"Let's use GPUs to train"</span><span style="color: #AF87FF;">)</span>
+        <span style="color: #FF8C00;">model</span> = DataParallel<span style="color: #AF87FF;">(</span>model, device_ids=<span style="color: #5FD7FF;">[</span><span style="color: #FF1493;">int</span><span style="color: #87D700;">(</span>i<span style="color: #87D700;">)</span> <span style="color: #FF1493;">for</span> i <span style="color: #FF1493;">in</span> args.device.split<span style="color: #87D700;">(</span><span style="color: #CDC673;">','</span><span style="color: #87D700;">)</span><span style="color: #5FD7FF;">]</span><span style="color: #AF87FF;">)</span>
+        <span style="color: #FF8C00;">multi_gpu</span> = <span style="color: #AF87FF;">True</span>
+model.to<span style="color: #AF87FF;">(</span>device<span style="color: #AF87FF;">)</span>
+data.to<span style="color: #AF87FF;">(</span>device<span style="color: #AF87FF;">)</span>
+</pre>
+</div>
+
+
+
+
+<p>
+lalala
+</p>
+
+
+
+
+<p>
+something not interesting.
+</p>
+</div>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: LiangZi</p>

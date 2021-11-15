@@ -1,0 +1,214 @@
+#+title: 数据挖掘与机器学习课程笔记
+#+author: 梁子
+#+latex_class: elegantpaper
+
+朱晓燕，计院，xjtueden@163.com
+
+WangJiayin 计算机学院，
+
+赖欣，
+
+
+数据挖掘的一些工具与软件平台
+
+http://www.kdnuggets.com/software
+
+CRISP-DM 
+
+
+* overview
+
+大，智，云，移
+
+** data mining的目的      --------> 为了让数据更好地被使用,由用户界定而非程序员
+数据很多，知识很少
+1. 数据很多，但是却找不到
+2. 数据之间的矛盾（由于角度不同，基线不同等等产生的）
+3. 非人类直接理解的数据：解决跨行业的人对非直接理解信息的理解问题
+
+
+
+*** 实体聚焦
+当很难通过模型的某一单一维度去判断实体时，怎么知道某些事情来自于同一个实体
+
+*** history
+数据库,数据收集--> 关系模型-->基本的数据挖掘算法
+
+** quality of Data management
+数据挖掘来自于数据管理
+
+数据质量包括:
+1. 数据的数量;
+2. 数据的客观性;(看起来客观的数据都具有一定的主观性),重点
+3. 数据的可靠性;
+4. 数据的时限性;
+
+
+*** Intrinsic Data quality:
+
+ 1. 准确度;accuracy; 关于数据的,数据要准确
+ 2. 客观性;objectivity   以一个条件概率的形式隐含着,也就是非完全的客观.
+ 3. 可信度;believability   
+ 4. reputation
+
+***  Contextual Data Quality: 数据的质量和要解决的问题相关
+
+ 1. Relevancy       一定要挑拣相关的数据,不要啥数据都往里面塞
+ 2. value-added
+ 3. timeliness      
+ 4. completeness
+ 5. Amount of Data  小样本学习的重要性 , 如何去遏制过拟合
+
+***  Representational Data quality:
+
+ 1. Interpretability  可解释性,人工智能的最大问题,目前:a)追求精度;b)追求可解释性,使用推理
+ 2. Ease of understanding
+ 3. Concise representation
+ 4. Consistent representation
+
+*** accessibility data quality 数据的可访问性 
+1. accessibility.
+2. accessibility security.
+
+** 闲谈
+技术专家: 懂模型的人  ---> 很多,不缺
+领域专家:           ---> 很缺
+
+累进学习 <-> 在线学习
+
+
+** 软件包
+
+建议:
+
+1. 不要只听模型,从代码层面去理解;
+2. 大作业是根据软件包开发一个实际能用的平台结果
+
+** 数据集
+
+** 相关顶级期刊和会议
+
+
+
+
+* introduction : Data Mining
+** something(concepts) of data mining
+
+data is NOT information.
+
+Information: the result of organizing data into meaningful quantities.
+
+database: 一种结构化的数据的集合 -->被认为是信息。
+
+数据挖掘：从信息中间将所需要的东西挖掘出知识（knowledge)来
+
+数据挖掘的要求：  （Knowledge Discovery in Databases）
+1. valid
+2. Novel
+3. useful
+4. understandable
+
+数据挖掘的几个类别：
+1. Database  information struct data
+2. algorithm
+3. information retrieval
+4. statistics
+5. machine learning 机器学习只是数据挖掘中的一种，往往不是最有效的
+others： visualization
+
+*** 闲谈
+数据孪生技术
+*** KDD： Knowledge Discovery from DATA
+Data minine 是KDD的一个环节
+
+抛出一个问题--KDD过程,从数据中获得knowledge-->将知识应用到问题解决中去results--->得到一些新的策略strategy
+
+<NEEDPIC: ROles in the KDD process>
+*** KDD的四个过程:
+1. Data consolidation
+   + 
+   + 基本原则:garbage in, garbage out
+     + 从多个数据库综合数据
+     + 选取部分特征
+     + 对missing value进行处理
+     + 删掉异常值
+     + 确定合适的分布
+2. selection & preprocessing
+   + 需要做一些清洗
+   + 基本步骤:
+     + 选取一个实例的集合
+     + 属性降维 reduce attribute dimensionality
+     + reduce attribute value ranges a)对异常值进行处理;b)仅仅对关心的特征进行此等处理
+     + transform data 如归一化等变换.
+
+3. data mining
+   + 选择与数据或者领域相适合的数据挖掘方法
+   + 当数据量很小的时候,更适合用小样本学习相关的数据,而非NN
+   + 若数据集中不同标签的数据的分布很不平衡,就需要模型可以处理典型的非平衡型数据集
+   + 基本步骤:
+     + Kinds of data to be mined
+       + 比如,粒子群更适合于连续数据,蚁群算法更适合于离散数据
+       + 再比如,对二值函数的回归操作
+     + Kinds of knowledge to be discovered
+       + 比如,做关联分析. 比如研究基因突变问题(基因与性状的关系), 如果是单一基因,可用(T检验,似乎是统计学里的??), 但当是多个基因的逻辑规则结合时, t检验却可能不再有效, 而是决策树等方法比较有效.
+     + Kinds of techniques utilized
+     + Kinds of application
+     + <NEEDPIC: Applications,operations,techniques>
+4. interpretation and evaluation
+   + something
+
+   + 挖掘出来的pattern是否有用? 可以从数据中挖掘的大量的pattern,而其中大部分都是无用的.
+     + 逻辑上说得通. easily understood by human;
+     + 在新的数据集上有效
+     + 具有潜在意义 potentially useful
+     + novel, or validates some hypothesis that a user seeks to confim.
+   + pattern完整性(completeness)与优化性(optimization)的权衡
+     + 只挖掘感兴趣的东西
+   + evaluation
+     + 统计验证,专家评估,失效条件
+   + interpretation
+   + visualization
+5. Major Issues
+   1. mining  methodology
+      1. 将不同模态的数据融合;
+      2. 方法的效果
+      3. 检验
+      4. 噪声抵制
+      5. 并行性,分布式,增量式
+      6. 将知识集成起来,进行融合
+   2. 用户交互
+   3. 应用..
+   4. precise patterns VS approximate patterns
+   5. constrained vs no-constrained patterns
+
+*** 数据的质量
+3C:采集,管理,消费,
+- intrinsic data: 数据本身的问题
+- accessibility:数据访问不到,计算资源有限导致访问不到
+- contextual: 数据的相关性问题:缺省,不一致的标志
+
+<补充一张图片>
+
+*** ten potholes 十个重要的数据问题
+<待补充>
+<加图片>
+
+
+problem需要被关心,尤其是关于数据的表示
+
+** (concepts) of machine learning
+
+*** supervised learning
+
+*** unsupervised learning
+
+**** cluster
+
+**** graph mining
+
+*** semi-supervised learning (弱监督学习)
+
+
+** differences(concepts) of Machine learning, Data Mining, and Statistics.
+
+

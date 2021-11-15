@@ -1,0 +1,1387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-07-13 周二 07:29 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>系统架构——一个山寨版交大图书馆管理系统的设计</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="梁子，3120305385，S0083，软件学院" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">系统架构——一个山寨版交大图书馆管理系统的设计</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2ba72a5">1. 系统需求</a></li>
+<li><a href="#org54a6e1c">2. 基于ARIS HOUSE MODEL的系统设计方案</a>
+<ul>
+<li><a href="#orgb7147b8">2.1. 组织视图：用户及用户间关系的确认与分析</a></li>
+<li><a href="#org4d5d7d6">2.2. 服务视图：业务需求的确认</a></li>
+<li><a href="#org95a01a0">2.3. 流程试图：从用户到服务的整体流程</a></li>
+<li><a href="#org38ccb80">2.4. 数据视图：数据库的设计</a></li>
+<li><a href="#orgc0fd0d8">2.5. 功能视图：功能模块的定义及其相关逐渐调用关系的确认</a></li>
+</ul>
+</li>
+<li><a href="#org9814463">3. 对上述系统设计的补充——Zachman Framework下的增补</a>
+<ul>
+<li><a href="#orgcf40e63">3.1. What，How，Who，When，Why? 不同视角下的已有模块的分析</a></li>
+<li><a href="#org9d267e9">3.2. Where？</a></li>
+<li><a href="#orgd76d785">3.3. 填补之后的Zachman矩阵</a></li>
+</ul>
+</li>
+<li><a href="#org58847d7">4. 系统设计方案的格式化表达——UML视角图</a>
+<ul>
+<li><a href="#org2cdbd21">4.1. Zachman-where模型下的UML硬件部署图设计</a></li>
+<li><a href="#org6eb3936">4.2. ARIS模型组织-服务视图下的UML用例图设计</a></li>
+<li><a href="#orga5c2719">4.3. ARIS模型功能-流程视图下的UML活动图设计</a></li>
+<li><a href="#orgd18b343">4.4. ARIS模型数据-功能视图下的UML类图设计</a></li>
+</ul>
+</li>
+<li><a href="#org60217b7">5. 一个山寨版交大图书馆管理系统的实现</a>
+<ul>
+<li><a href="#org798f3a1">5.1. 整体架构</a>
+<ul>
+<li><a href="#org5c9a936">5.1.1. 门禁子系统</a></li>
+<li><a href="#org712f866">5.1.2. 书籍借还子系统</a></li>
+<li><a href="#org7b9100b">5.1.3. 查询检索子系统</a></li>
+<li><a href="#orga7b4fe1">5.1.4. 数据和操作权限管理子系统</a></li>
+<li><a href="#orge6086cc">5.1.5. 数据分析子和可视化子系统</a></li>
+</ul>
+</li>
+<li><a href="#org28c3532">5.2. RBAC：用户-角色-动作 控制体系的实现及对该体系的管理</a>
+<ul>
+<li><a href="#org04ad60d">5.2.1. RBAC的实现</a></li>
+<li><a href="#orgbf5a414">5.2.2. 管理RBAC</a></li>
+<li><a href="#orgaeccef9">5.2.3. 同目前RBAC控制库的对比分析</a></li>
+</ul>
+</li>
+<li><a href="#orga0a3bcd">5.3. 数据可视化平台</a>
+<ul>
+<li><a href="#org45ba2ff">5.3.1. 数据分析实验</a></li>
+<li><a href="#orgc496d11">5.3.2. 基于dva和react的组件化数据可视化方案</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org97fd581">6. 结论及未来工作</a></li>
+<li><a href="#org9b40f5d">7. 参考文献</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2ba72a5" class="outline-2">
+<h2 id="org2ba72a5"><span class="section-number-2">1</span> 系统需求</h2>
+</div>
+<div id="outline-container-org54a6e1c" class="outline-2">
+<h2 id="org54a6e1c"><span class="section-number-2">2</span> 基于ARIS HOUSE MODEL的系统设计方案</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+首先尝试使用ARIS HOUSE模型进行该图书馆管理系统的设计。如下图所示，ARIS房子模型是以组织角色为主导的系统架构设计方案，该方案首先确定系统的组织，以形成组织视图，在系统使用者和系统需求（即所提供服务）得到确认之后，通过细化系统中涉及到的数据、功能、流程来完成对整个系统结构的设计。本章节将依循该过程，依照上一章提供的用户组织及业务需求进行初步的系统设计。
+</p>
+
+
+<div id="org71aad79" class="figure">
+<p><img src="./images/20210713032627.png" alt="20210713032627.png" />
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb7147b8" class="outline-3">
+<h3 id="orgb7147b8"><span class="section-number-3">2.1</span> 组织视图：用户及用户间关系的确认与分析</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+组织视图是ARIS模型的核心，只有确认了系统的使用者，才能对数据、功能、流程、服务进行合理的划分和定义。本图书馆管理系统中所涉及的目标用户主要包括：
+</p>
+<ol class="org-ol">
+<li>图书馆使用用户。这些使用用户是图书馆的主要面向对象，它们进出图书馆，进行阅读、自习、借书、还书等等操作，它们相当于是图书馆的主要受体，依照身份的不同，这些用户可以划分为以下几类：
+<ol class="org-ol">
+<li>学校老师。学校的授课教师。</li>
+<li>校外人员。如外校学生、前来交流的老师等。</li>
+<li>学生。主要受体，包括以下几类：
+<ol class="org-ol">
+<li>本科生。这些学生的数量较多，可以继续细分。</li>
+<li>研究生。可以继续细分。</li>
+<li>博士生。可以继续细分。</li>
+</ol></li>
+</ol></li>
+<li>图书馆管理员。主要用以进行人工图书馆业务的办理。如个别书籍无法被借出，可在图书馆管理员处进行人工借阅；当一本书还书超时，需要支付惩罚时，可通过图书馆管理员进行特殊的人工处理等等。</li>
+<li>系统管理员。系统管理员用以管理整个图书馆系统，如大屏的可视化，每个用户的权限设置，进书、出书等等。</li>
+</ol>
+
+<p>
+针对这些目标用户，可以发现它们之间的如下关系：
+</p>
+
+<ol class="org-ol">
+<li>在划分上，三大用户群体之间耦合性较低，主要的耦合性体现在图书管理员、系统管理员也可能是图书馆使用用户的一员，该问题可通过建立不同的账号解决。整体上，这三类群体的业务之间几乎不具有耦合关系，因此，整体的系统可以简单划分为三个相对较为独立的子系统；</li>
+<li>对于图书馆使用用户，其包含的各类用户之间具有极强的业务相关性，仅仅在一些系统超参数，如最多可借阅的书籍数目上有区别，因此系统应当足够灵活使之可以满足这些需求。</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org4d5d7d6" class="outline-3">
+<h3 id="org4d5d7d6"><span class="section-number-3">2.2</span> 服务视图：业务需求的确认</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+当确认了目标用户之后，就可以着手进行服务视图的建立。下面是具体的角色-服务对应关系。
+</p>
+<ul class="org-ul">
+<li>图书馆使用用户的业务：
+<ul class="org-ul">
+<li>图书馆门禁相关。主要处理图书馆的门禁情况，即一个人有没有权限进入图书馆，有没有权限出去等等。
+<ul class="org-ul">
+<li>进门认证；</li>
+<li>出门时所有携带书籍均办理借阅的认证；</li>
+</ul></li>
+<li>图书馆书籍处理。
+<ul class="org-ul">
+<li>借书</li>
+<li>还书</li>
+<li>账户查询</li>
+</ul></li>
+<li>图书馆搜索相关。依照不同关键字和查询方式进行图书库馆藏的查询。</li>
+<li>图书推荐相关。依照用户的借阅习惯进行个性化推荐。</li>
+</ul></li>
+<li>图书馆管理员的业务：
+<ul class="org-ul">
+<li>修改用户借阅还书相关信息</li>
+<li>修改某图书信息</li>
+<li>修改借阅动作</li>
+</ul></li>
+<li>系统管理员的业务需求：
+<ul class="org-ul">
+<li>管理用户（使用用户、图书管理员）信息</li>
+<li>管理图书信息</li>
+<li>管理推荐、可视化</li>
+<li>管理权限动作</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org95a01a0" class="outline-3">
+<h3 id="org95a01a0"><span class="section-number-3">2.3</span> 流程试图：从用户到服务的整体流程</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+在确认了用户及用户的业务需求之后，便可进行系统流程的设计，并基于用例图设计生成UML活动图。首先对涉及到的系统流程进行分析：
+</p>
+<ol class="org-ol">
+<li>书籍处理。还书借书流程；
+<ul class="org-ul">
+<li>目标用户：图书馆使用用户；</li>
+<li>子流程：
+<ul class="org-ul">
+<li>借书</li>
+<li>还书</li>
+<li>借书-还书</li>
+<li>借书逾期还书</li>
+<li>查看书籍信息</li>
+</ul></li>
+</ul></li>
+<li>门禁处理。
+<ul class="org-ul">
+<li>目标用户：图书馆使用用户；</li>
+<li>子流程：
+<ul class="org-ul">
+<li>持卡进入；</li>
+<li>人脸识别进入；</li>
+<li>不携带书籍出；</li>
+<li>携带已办理手续书籍出；</li>
+<li>携带部分未办理手续书籍出；</li>
+</ul></li>
+</ul></li>
+<li>特殊事件处理
+<ul class="org-ul">
+<li>目标用户：图书馆管理员</li>
+<li>子流程：
+<ul class="org-ul">
+<li>借书；</li>
+<li>还书；</li>
+<li>修改用户的借书还书信息；</li>
+<li>修改书籍的被借被还信息；</li>
+</ul></li>
+</ul></li>
+<li>数据分析与可视化。
+<ul class="org-ul">
+<li>依照用户的借阅习惯推荐一本书；</li>
+<li>依照所有用户的借阅特点生成分析结果；</li>
+<li>将分析结果进行可视化展示；</li>
+</ul></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org38ccb80" class="outline-3">
+<h3 id="org38ccb80"><span class="section-number-3">2.4</span> 数据视图：数据库的设计</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+还没写！！！！！！！！！！
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgc0fd0d8" class="outline-3">
+<h3 id="orgc0fd0d8"><span class="section-number-3">2.5</span> 功能视图：功能模块的定义及其相关逐渐调用关系的确认</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+除去以上诸节所述的组织、业务、流程、数据之外，另外一个需要详细考虑的视图是功能模块。功能是将业务和流程静态化之后的结果，也是对业务和流程进行拆分所产生的更细粒度的表达。功能模板重点强调定义和实现需要执行的各个功能单元，并在此基础上明确这些功能单元之间的调用关系。本系统中所涉及到的主要功能单元模块如下：
+</p>
+
+<ul class="org-ul">
+<li>进门认证
+<ul class="org-ul">
+<li>基于ID卡的身份识别；</li>
+<li>基于人脸的身份识别；</li>
+</ul></li>
+<li>出门认证
+<ul class="org-ul">
+<li>检验一本书是否被借阅的函数；</li>
+<li>响铃；</li>
+</ul></li>
+<li>借书
+<ul class="org-ul">
+<li>书籍识别</li>
+<li>基于ID卡的身份识别；</li>
+<li>基于人脸的身份识别；</li>
+<li>书籍身份信息绑定；</li>
+</ul></li>
+<li>还书
+<ul class="org-ul">
+<li>书籍识别；</li>
+<li>查询书籍身份绑定信息；</li>
+<li>书籍身份解绑；</li>
+</ul></li>
+<li>账户查询
+<ul class="org-ul">
+<li>一些查询相关的操作；</li>
+</ul></li>
+<li>搜索
+<ul class="org-ul">
+<li>检索算法</li>
+<li>数据库查询函数；</li>
+</ul></li>
+<li>推荐
+<ul class="org-ul">
+<li>推荐算法；</li>
+<li>推荐数据整理；</li>
+</ul></li>
+<li>修改借阅还书信息
+<ul class="org-ul">
+<li>查询借阅还书信息；</li>
+<li>修改借阅还书信息；</li>
+</ul></li>
+<li>修改图书信息</li>
+<li>修改借阅动作</li>
+<li>管理用户信息
+<ul class="org-ul">
+<li>增加用户</li>
+<li>删除用户</li>
+<li>编辑用户</li>
+<li>查询用户</li>
+</ul></li>
+<li>管理图书信息
+<ul class="org-ul">
+<li>添加图书</li>
+<li>删除图书</li>
+<li>编辑图书</li>
+<li>查询图书</li>
+</ul></li>
+<li>权限
+<ul class="org-ul">
+<li>管理角色
+<ul class="org-ul">
+<li>增加角色</li>
+<li>编辑角色</li>
+<li>删除角色</li>
+<li>查询角色</li>
+</ul></li>
+<li>管理动作
+<ul class="org-ul">
+<li>增加角色</li>
+<li>编辑角色</li>
+<li>删除角色</li>
+<li>查询角色</li>
+</ul></li>
+<li>管理用户-角色配置
+<ul class="org-ul">
+<li>增加一条新的用户-角色映射</li>
+<li>修改已有的映射</li>
+<li>查询映射</li>
+<li>删除一条映射</li>
+</ul></li>
+<li>管理角色-动作配置
+<ul class="org-ul">
+<li>增加一条新的角色-动作映射</li>
+<li>修改已有的映射</li>
+<li>查询映射</li>
+<li>删除一条映射</li>
+</ul></li>
+</ul></li>
+<li>可视化
+<ul class="org-ul">
+<li>数据分析算法</li>
+<li>可视化技术</li>
+</ul></li>
+</ul>
+
+
+<p>
+上述功能模块是针对不同业务所罗列而得的，其对于实际的代码撰写仍具有较粗的粒度，比如上述描述的任何一个类（或函数），都没有对其输入参数、输出参数和状态进行表达，后续章节将会对其进行细化。总体而言，以上即为基于ARIS进行系统模型构建的全部过程。下面将针对上述过程中的疏漏，使用Zachman框架进行补充和扩展。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9814463" class="outline-2">
+<h2 id="org9814463"><span class="section-number-2">3</span> 对上述系统设计的补充——Zachman Framework下的增补</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+针对实际的图书馆场景，ARIS模型的设计方式并非完美无缺，因此，本章节尝试在之前图书馆管理系统设计方案的基础上基于zachman框架进行补充。Zachman框架是由约翰 扎科曼（John Zachman ）在1987年创立的全球第一个企业架构理论，也是所有企业架构理论的源泉。 一般认为，Zachman框架（Zachman framework）是一种逻辑结构，它旨为信息技术企业提供一种可以理解的信息表述。它可以对企业信息按照要求分类和从不同角度进行表示。Zachman框架的创始人John Zachman早在1987年就提出了这种思想，它全称为企业架构和企业信息系统结构架构(Zachman Framework for Enterprise Architecture and Information Systems Architecture)。Zachman框架提炼和吸收了传统方法中的一些精髓，它是一款独立于信息企业所使用的工具的平台。它可以根据抽象规则定义企业信息的一个方面。
+</p>
+
+<p>
+一般而言，zachman框架是一个如下图所示的6*6的矩阵，其中每行包括了范围、商业模式、系统模式、技术模式、组件、工作系统等六个层次，每列包含角色、需求、时序、地点、目的和实现方式等六个系统侧面。通过这六种方式，zachman模型达成了一种全面、综合、复杂的系统建模。
+</p>
+
+
+<div id="org8376d9e" class="figure">
+<p><img src="./images/20210713065200.png" alt="20210713065200.png" />
+</p>
+</div>
+
+<p>
+下一章节将首要分析在基于ARIS进行建模时有哪些地方已经被考虑在内了。
+</p>
+</div>
+
+<div id="outline-container-orgcf40e63" class="outline-3">
+<h3 id="orgcf40e63"><span class="section-number-3">3.1</span> What，How，Who，When，Why? 不同视角下的已有模块的分析</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+按照每列的形式来看，数据、功能、角色、时间序列（流程）都被考虑在内了，唯有动机和地点不够明确。考虑到动机无法作为图书馆管理系统的有效建模工具，所以有关动机层面的辅助信息难以被考虑在内。然而，地点却是本系统不得不需要考虑的一环，下面对其进行简单介绍。
+</p>
+</div>
+</div>
+<div id="outline-container-org9d267e9" class="outline-3">
+<h3 id="org9d267e9"><span class="section-number-3">3.2</span> Where？</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+图书馆管理系统在地点上涉及到多个终端，并存在与服务器的交互问题，主要地点汇总如下：
+</p>
+<ol class="org-ol">
+<li>位于图书馆门口终端上的门禁子系统。</li>
+<li>位于图书馆内的数据可视化终端。</li>
+<li>位于图书馆内嵌入式仪器的书籍业务处理子系统；</li>
+<li>位于图书馆内的检索电脑；</li>
+<li>位于机房的服务器；</li>
+<li>图书馆管理员的电脑；</li>
+<li><p>
+图书馆使用用户的智能终端；
+</p>
+
+<p>
+上述的各个地点都同其相关业务具有强耦合关系，其中大部分终端都需要适配系统针对于某一业务的子系统。基于这些地点，可以构建得到系统的硬件部署图。该部分内容将在后续章节中出现。
+</p></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgd76d785" class="outline-3">
+<h3 id="orgd76d785"><span class="section-number-3">3.3</span> 填补之后的Zachman矩阵</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+将建模结果使用zachman模型进行表达，可以得到如下所示的矩阵：
+</p>
+
+<p>
+。。。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org58847d7" class="outline-2">
+<h2 id="org58847d7"><span class="section-number-2">4</span> 系统设计方案的格式化表达——UML视角图</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org2cdbd21" class="outline-3">
+<h3 id="org2cdbd21"><span class="section-number-3">4.1</span> Zachman-where模型下的UML硬件部署图设计</h3>
+</div>
+<div id="outline-container-org6eb3936" class="outline-3">
+<h3 id="org6eb3936"><span class="section-number-3">4.2</span> ARIS模型组织-服务视图下的UML用例图设计</h3>
+</div>
+<div id="outline-container-orga5c2719" class="outline-3">
+<h3 id="orga5c2719"><span class="section-number-3">4.3</span> ARIS模型功能-流程视图下的UML活动图设计</h3>
+</div>
+<div id="outline-container-orgd18b343" class="outline-3">
+<h3 id="orgd18b343"><span class="section-number-3">4.4</span> ARIS模型数据-功能视图下的UML类图设计</h3>
+</div>
+</div>
+<div id="outline-container-org60217b7" class="outline-2">
+<h2 id="org60217b7"><span class="section-number-2">5</span> 一个山寨版交大图书馆管理系统的实现</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+本章节将介绍关于本图书馆管理系统的实现过程，并选取两个侧面进行重点分析。首先是对整个系统的介绍。
+</p>
+</div>
+<div id="outline-container-org798f3a1" class="outline-3">
+<h3 id="org798f3a1"><span class="section-number-3">5.1</span> 整体架构</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+整体系统主要包含下列五个子系统：门禁子系统，书籍借还仔细体哦那个，查询检索子系统，数据和操作权限管理子系统，数据分析与可视化子系统。下面依次对之进行介绍。
+</p>
+</div>
+
+<div id="outline-container-org5c9a936" class="outline-4">
+<h4 id="org5c9a936"><span class="section-number-4">5.1.1</span> 门禁子系统</h4>
+<div class="outline-text-4" id="text-5-1-1">
+<p>
+门禁子系统主要涉及到身份认证和书籍是否归还检测两个问题。针对于身份认证
+</p>
+</div>
+</div>
+
+
+
+<div id="outline-container-org712f866" class="outline-4">
+<h4 id="org712f866"><span class="section-number-4">5.1.2</span> 书籍借还子系统</h4>
+</div>
+
+
+
+
+<div id="outline-container-org7b9100b" class="outline-4">
+<h4 id="org7b9100b"><span class="section-number-4">5.1.3</span> 查询检索子系统</h4>
+</div>
+
+
+
+
+<div id="outline-container-orga7b4fe1" class="outline-4">
+<h4 id="orga7b4fe1"><span class="section-number-4">5.1.4</span> 数据和操作权限管理子系统</h4>
+</div>
+
+
+
+
+
+<div id="outline-container-orge6086cc" class="outline-4">
+<h4 id="orge6086cc"><span class="section-number-4">5.1.5</span> 数据分析子和可视化子系统</h4>
+</div>
+</div>
+
+
+
+<div id="outline-container-org28c3532" class="outline-3">
+<h3 id="org28c3532"><span class="section-number-3">5.2</span> RBAC：用户-角色-动作 控制体系的实现及对该体系的管理</h3>
+<div class="outline-text-3" id="text-5-2">
+</div>
+<div id="outline-container-org04ad60d" class="outline-4">
+<h4 id="org04ad60d"><span class="section-number-4">5.2.1</span> RBAC的实现</h4>
+</div>
+
+<div id="outline-container-orgbf5a414" class="outline-4">
+<h4 id="orgbf5a414"><span class="section-number-4">5.2.2</span> 管理RBAC</h4>
+</div>
+
+<div id="outline-container-orgaeccef9" class="outline-4">
+<h4 id="orgaeccef9"><span class="section-number-4">5.2.3</span> 同目前RBAC控制库的对比分析</h4>
+</div>
+</div>
+
+<div id="outline-container-orga0a3bcd" class="outline-3">
+<h3 id="orga0a3bcd"><span class="section-number-3">5.3</span> 数据可视化平台</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+本部分拟实现的功能是：一个被目前广泛使用的可视化界面。
+观察到创新港的图书馆中便有屏幕投放这种前端界面，因此打算仿照之实现一个山寨版本。整体结果图示如下图所示：
+</p>
+
+<p>
+从图中可以看出，该页面所实现的功能主要包括以下几个方面：
+</p>
+<ol class="org-ol">
+<li>图书馆进出情况分析；</li>
+<li>图书借阅情况分析；</li>
+<li>各类基础信息统计；</li>
+<li>图书借阅类别分布的统计；</li>
+<li>借阅者年级分布的统计；</li>
+<li>还书机使用频率曲线；</li>
+<li><p>
+实时时间显示
+</p>
+
+<p>
+该过程需要两部分支持，一部分是基于用户数据进行数据分析实验，另一部分是针对数据分析实验的结果进行可视化的展示。下面分别介绍之。
+</p></li>
+</ol>
+</div>
+<div id="outline-container-org45ba2ff" class="outline-4">
+<h4 id="org45ba2ff"><span class="section-number-4">5.3.1</span> 数据分析实验</h4>
+</div>
+
+<div id="outline-container-orgc496d11" class="outline-4">
+<h4 id="orgc496d11"><span class="section-number-4">5.3.2</span> 基于dva和react的组件化数据可视化方案</h4>
+<div class="outline-text-4" id="text-5-3-2">
+<p>
+整体上而言，本部分使用阿里巴巴的前端框架dva进行套装，整体上可分为三大模块：
+</p>
+
+<ol class="org-ol">
+<li>界面。基于react编写相关组件，用以展示每一个模块；</li>
+<li>操作逻辑和前端数据。基于dva框架进行存储；</li>
+<li>风格样式。使用styled-components进行组件化的css样式使用；</li>
+<li>可视化，基于百度的echarts进行可视化。</li>
+</ol>
+
+<p>
+下图展示了整体上的模型结构实现&#x2026;从图中可以看出，blablabla
+</p>
+
+
+<p>
+下面介绍各个组块的实现原则。
+</p>
+
+<p>
+各个组块的实现均基于react进行，主要包括以下8个原子级别的组块：
+</p>
+
+<ol class="org-ol">
+<li>时间组块；</li>
+<li>标题组块；</li>
+<li>地图组块；</li>
+<li>图书馆重要统计值数值展示组块；</li>
+<li>图书馆进出人数展示组块；</li>
+<li>图书借阅榜组块；</li>
+<li>图书借阅类别分析组块；</li>
+<li>借阅者年级分布展示组块；</li>
+<li>还书机使用功能分布组块；</li>
+<li>还书机使用频率组块；</li>
+</ol>
+
+<p>
+基于这八个原子组块，主要将页面划分为三个部分：
+</p>
+<ol class="org-ol">
+<li>顶部，包含标题和当前时间；</li>
+<li>左部，包含图书馆进出人数展示、图书借阅榜两大部分；</li>
+<li>中部，包含地图和重要统计数值展示；</li>
+<li>右部，包含图书馆的一些部分分析结果，及还书机的使用情况；</li>
+</ol>
+
+<p>
+之后，这三个部分将组成整体的页面。
+</p>
+
+<p>
+前面已提及，为了更好地展示解耦前端的各个部分，上述各个组块的风格样式以及其交互逻辑均是分离开的，而后使用dva中的connect方法将模型和页面进行拼接。下面以左侧组件试图为例进行介绍。
+如前面所述，左侧主要包括图书馆进出人数展示的折线图以及滚动的图书借阅榜，基于此二者的react组件类中的render函数被定义为：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js"> render<span style="color: #AE81FF;">()</span> <span style="color: #AE81FF;">{</span>
+    <span style="color: #F92672;">const</span> <span style="color: #66D9EF;">{</span> userSitua, trafficSitua, accessFrequency, peakFlow <span style="color: #66D9EF;">}</span> = <span style="color: #AE81FF;">this</span>.props;
+    <span style="color: #F92672;">return</span> <span style="color: #66D9EF;">(</span>
+      <span style="color: #75715E;">// </span><span style="color: #75715E;">&#39118;&#26684;</span>
+      &lt;LeftPage&gt;
+        <span style="color: #A6E22E;">{</span><span style="color: #75715E;">/* </span><span style="color: #75715E;">&#39030;&#37096;&#22270;&#34920;</span><span style="color: #75715E;"> */</span><span style="color: #A6E22E;">}</span>
+        &lt;LeftTopBox&gt;
+          &lt;BorderBox12 className=<span style="color: #E6DB74;">'left-top-borderBox12'</span>&gt;
+            &lt;div className=<span style="color: #E6DB74;">'left-top'</span>&gt;
+              &lt;ModuleTitle&gt;
+                &lt;i className=<span style="color: #E6DB74;">'iconfont'</span>&gt;&amp;#xe78f;&lt;/i&gt;
+                &lt;span&gt;&#20170;&#26085;&#22270;&#20070;&#39302;&#36827;&#20986;&#24773;&#20917;&lt;/span&gt;
+              &lt;/ModuleTitle&gt;
+
+              &lt;div className=<span style="color: #E6DB74;">'title-dis'</span>&gt;
+                &lt;span&gt;
+                  &#24403;&#21069;&#21442;&#35266;&#20154;&#25968;<span style="color: #A6E22E;">(</span>&#23567;&#26102;<span style="color: #A6E22E;">)</span>:
+                  &lt;span className=<span style="color: #E6DB74;">'title-dis-keyword'</span>&gt;<span style="color: #A6E22E;">{</span>accessFrequency<span style="color: #A6E22E;">}</span>&#20154;&lt;/span&gt;
+                &lt;/span&gt;
+
+                &lt;span&gt;
+                  &#20170;&#26085;&#24635;&#20154;&#25968;:
+                  &lt;span className=<span style="color: #E6DB74;">'title-dis-keyword'</span>&gt;<span style="color: #A6E22E;">{</span>peakFlow<span style="color: #A6E22E;">}</span>&#20154;&lt;/span&gt;
+                &lt;/span&gt;
+              &lt;/div&gt;
+              <span style="color: #A6E22E;">{</span><span style="color: #75715E;">/* </span><span style="color: #75715E;">&#22270;&#34920;</span><span style="color: #75715E;"> */</span><span style="color: #A6E22E;">}</span>
+              &lt;TrafficSituation trafficSitua=<span style="color: #A6E22E;">{</span>trafficSitua<span style="color: #A6E22E;">}</span>&gt;&lt;/TrafficSituation&gt;
+            &lt;/div&gt;
+          &lt;/BorderBox12&gt;
+        &lt;/LeftTopBox&gt;
+
+        <span style="color: #A6E22E;">{</span><span style="color: #75715E;">/* </span><span style="color: #75715E;">&#24213;&#37096;&#22270;&#34920;</span><span style="color: #75715E;"> */</span><span style="color: #A6E22E;">}</span>
+        &lt;LeftBottomBox&gt;
+          &lt;BorderBox13 className=<span style="color: #E6DB74;">'left-bottom-borderBox13'</span>&gt;
+            &lt;div className=<span style="color: #E6DB74;">'left-bottom'</span>&gt;
+              &lt;ModuleTitle&gt;
+                &lt;i className=<span style="color: #E6DB74;">'iconfont'</span>&gt;&amp;#xe88e;&lt;/i&gt;
+                &lt;span&gt;&#26412;&#21608;&#22270;&#20070;&#20511;&#38405;&#27036;&lt;/span&gt;
+              &lt;/ModuleTitle&gt;
+              <span style="color: #A6E22E;">{</span><span style="color: #75715E;">/* </span><span style="color: #75715E;">&#22270;&#34920;</span><span style="color: #75715E;"> */</span><span style="color: #A6E22E;">}</span>
+              &lt;UserSituation userSitua=<span style="color: #A6E22E;">{</span>userSitua<span style="color: #A6E22E;">}</span>&gt;&lt;/UserSituation&gt;
+            &lt;/div&gt;
+          &lt;/BorderBox13&gt;
+        &lt;/LeftBottomBox&gt;
+      &lt;/LeftPage&gt;
+    <span style="color: #66D9EF;">)</span>;
+  <span style="color: #AE81FF;">}</span>
+<span style="color: #F8F8F2; background-color: #272822;">}</span>
+</pre>
+</div>
+
+<p>
+从中可以看出，所有的组件均被包括在&lt;LeftPage&gt;之内，在之中，划分得到了底部顶部两个box，而核心的图标区域是两个react组件，TrafficSituation 和 UserSituation。下面先对这几个组件进行简单介绍。
+</p>
+
+<p>
+首先，LeftPage以及两个box均是针对于css样式风格而撰写的组件，借用了styled-components的写法，如LeftTopBox就包含了如下的样式设定：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js"><span style="color: #F92672;">export</span> <span style="color: #F92672;">const</span> <span style="color: #FD971F;">LeftTopBox</span> = styled.div<span style="color: #E6DB74;">`</span>
+<span style="color: #E6DB74;">  position: relative;</span>
+<span style="color: #E6DB74;">  height: 4.375rem;</span>
+<span style="color: #E6DB74;">  width: 100%;</span>
+<span style="color: #E6DB74;">  .left-top-borderBox12 {</span>
+<span style="color: #E6DB74;">    width: inherit;</span>
+<span style="color: #E6DB74;">    height: inherit;</span>
+<span style="color: #E6DB74;">    padding: 0.1875rem;</span>
+<span style="color: #E6DB74;">    .left-top {</span>
+<span style="color: #E6DB74;">      width: 100%;</span>
+<span style="color: #E6DB74;">      height: 100%;</span>
+<span style="color: #E6DB74;">      border-radius: 10px;</span>
+<span style="color: #E6DB74;">      background-color: rgba(19, 25, 47, 0.6);</span>
+<span style="color: #E6DB74;">      .title-dis {</span>
+<span style="color: #E6DB74;">        margin-top: 0.1875rem;</span>
+<span style="color: #E6DB74;">        display: flex;</span>
+<span style="color: #E6DB74;">        justify-content: space-around;</span>
+<span style="color: #E6DB74;">        align-items: center;</span>
+<span style="color: #E6DB74;">        font-size: 0.2rem;</span>
+<span style="color: #E6DB74;">        color: #c0c9d2;</span>
+<span style="color: #E6DB74;">        &amp;-keyword {</span>
+<span style="color: #E6DB74;">          padding-left: 0.125rem;</span>
+<span style="color: #E6DB74;">          color: #47dae8;</span>
+<span style="color: #E6DB74;">        }</span>
+<span style="color: #E6DB74;">      }</span>
+<span style="color: #E6DB74;">    }</span>
+<span style="color: #E6DB74;">  }</span>
+<span style="color: #E6DB74;">`</span>;
+</pre>
+</div>
+
+<p>
+而两个Situation，均是react化的echarts组件，该组件一方面需要满足可视化库echarts的一些设定，另一方面又需要满足react的封装风格，以出口人流量为例，可以撰写如下:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-js"><span style="color: #F92672;">class</span> TrafficSituation <span style="color: #F92672;">extends</span> PureComponent <span style="color: #AE81FF;">{</span>
+  constructor<span style="color: #66D9EF;">(</span>props<span style="color: #66D9EF;">)</span> <span style="color: #66D9EF;">{</span>
+    <span style="color: #F92672;">super</span><span style="color: #A6E22E;">(</span>props<span style="color: #A6E22E;">)</span>;
+    <span style="color: #AE81FF;">this</span>.state = <span style="color: #A6E22E;">{</span>
+      renderer: <span style="color: #E6DB74;">'canvas'</span>,
+    <span style="color: #A6E22E;">}</span>;
+  <span style="color: #66D9EF;">}</span>
+
+  render<span style="color: #66D9EF;">()</span> <span style="color: #66D9EF;">{</span>
+    <span style="color: #F92672;">const</span> <span style="color: #A6E22E;">{</span> renderer <span style="color: #A6E22E;">}</span> = <span style="color: #AE81FF;">this</span>.state;
+    <span style="color: #F92672;">const</span> <span style="color: #A6E22E;">{</span> trafficSitua <span style="color: #A6E22E;">}</span> = <span style="color: #AE81FF;">this</span>.props;
+    <span style="color: #F92672;">return</span> <span style="color: #A6E22E;">(</span>
+      &lt;div
+        style=<span style="color: #E6DB74;">{</span><span style="color: #FD971F;">{</span>
+          width: <span style="color: #E6DB74;">'5.375rem'</span>,
+          height: <span style="color: #E6DB74;">'3.125rem'</span>,
+        <span style="color: #FD971F;">}</span><span style="color: #E6DB74;">}</span>&gt;
+        <span style="color: #E6DB74;">{</span>trafficSitua ? <span style="color: #FD971F;">(</span>
+          &lt;Chart renderer=<span style="color: #F92672;">{</span>renderer<span style="color: #F92672;">}</span> option=<span style="color: #F92672;">{</span>trafficOptions<span style="color: #AE81FF;">(</span>trafficSitua<span style="color: #AE81FF;">)</span><span style="color: #F92672;">}</span> /&gt;
+        <span style="color: #FD971F;">)</span> : <span style="color: #FD971F;">(</span>
+          <span style="color: #E6DB74;">''</span>
+        <span style="color: #FD971F;">)</span><span style="color: #E6DB74;">}</span>
+      &lt;/div&gt;
+    <span style="color: #A6E22E;">)</span>;
+  <span style="color: #66D9EF;">}</span> <span style="color: #75715E;">//</span><span style="color: #75715E;">endrender</span>
+<span style="color: #AE81FF;">}</span>
+
+<span style="color: #F92672;">export</span> <span style="color: #F92672;">default</span> TrafficSituation;
+
+</pre>
+</div>
+
+<p>
+其中，相关数据信息是从上游，也就是leftpage组件流到该组件之内的。关于该数据如何流入到LeftPage，后续在介绍数据逻辑时进行介绍。
+可以发现，该代码的核心步骤在于使用Chart组件进行数据和选项的配置，关于基础的Chart组件如何撰写，echarts提供了示例代码，如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js"><span style="color: #F92672;">export</span> <span style="color: #F92672;">default</span> <span style="color: #F92672;">class</span> Chart <span style="color: #F92672;">extends</span> PureComponent <span style="color: #AE81FF;">{</span>
+  constructor<span style="color: #66D9EF;">(</span>props<span style="color: #66D9EF;">)</span> <span style="color: #66D9EF;">{</span>
+    <span style="color: #F92672;">super</span><span style="color: #A6E22E;">(</span>props<span style="color: #A6E22E;">)</span>;
+    <span style="color: #AE81FF;">this</span>.state = <span style="color: #A6E22E;">{</span>
+      width: <span style="color: #E6DB74;">'100%'</span>,
+      height: <span style="color: #E6DB74;">'100%'</span>,
+    <span style="color: #A6E22E;">}</span>;
+    <span style="color: #AE81FF;">this</span>.chart = <span style="color: #AE81FF;">null</span>;
+  <span style="color: #66D9EF;">}</span>
+  <span style="color: #75715E;">// </span><span style="color: #75715E;">&#24322;&#27493;&#20989;&#25968;</span>
+  <span style="color: #F92672;">async</span> componentDidMount<span style="color: #66D9EF;">()</span> <span style="color: #66D9EF;">{</span>
+    <span style="color: #75715E;">// </span><span style="color: #75715E;">&#21021;&#22987;&#21270;&#22270;&#34920;</span>
+    <span style="color: #F92672;">await</span> <span style="color: #AE81FF;">this</span>.initChart<span style="color: #A6E22E;">(</span><span style="color: #AE81FF;">this</span>.el<span style="color: #A6E22E;">)</span>;
+    <span style="color: #75715E;">// </span><span style="color: #75715E;">&#23558;&#20256;&#20837;&#30340;&#37197;&#32622;(&#21253;&#21547;&#25968;&#25454;)&#27880;&#20837;</span>
+    <span style="color: #AE81FF;">this</span>.setOption<span style="color: #A6E22E;">(</span><span style="color: #AE81FF;">this</span>.props.option<span style="color: #A6E22E;">)</span>;
+    <span style="color: #75715E;">// </span><span style="color: #75715E;">&#30417;&#21548;&#23631;&#24149;&#32553;&#25918;&#65292;&#37325;&#26032;&#32472;&#21046; echart &#22270;&#34920;</span>
+    window.addEventListener<span style="color: #A6E22E;">(</span><span style="color: #E6DB74;">'resize'</span>, debounce<span style="color: #E6DB74;">(</span><span style="color: #AE81FF;">this</span>.resize, 100<span style="color: #E6DB74;">)</span><span style="color: #A6E22E;">)</span>;
+  <span style="color: #66D9EF;">}</span>
+
+  componentDidUpdate<span style="color: #66D9EF;">()</span> <span style="color: #66D9EF;">{</span>
+    <span style="color: #75715E;">// </span><span style="color: #75715E;">&#27599;&#27425;&#26356;&#26032;&#32452;&#20214;&#37117;&#37325;&#32622;</span>
+    <span style="color: #AE81FF;">this</span>.setOption<span style="color: #A6E22E;">(</span><span style="color: #AE81FF;">this</span>.props.option<span style="color: #A6E22E;">)</span>;
+  <span style="color: #66D9EF;">}</span>
+
+  componentWillUnmount<span style="color: #66D9EF;">()</span> <span style="color: #66D9EF;">{</span>
+    <span style="color: #75715E;">// </span><span style="color: #75715E;">&#32452;&#20214;&#21368;&#36733;&#21069;&#21368;&#36733;&#22270;&#34920;</span>
+    <span style="color: #AE81FF;">this</span>.dispose<span style="color: #A6E22E;">()</span>;
+  <span style="color: #66D9EF;">}</span>
+
+  render<span style="color: #66D9EF;">()</span> <span style="color: #66D9EF;">{</span>
+    <span style="color: #F92672;">const</span> <span style="color: #A6E22E;">{</span> width, height <span style="color: #A6E22E;">}</span> = <span style="color: #AE81FF;">this</span>.state;
+
+    <span style="color: #F92672;">return</span> <span style="color: #A6E22E;">(</span>
+      &lt;div
+        className=<span style="color: #E6DB74;">'default-chart'</span>
+        ref=<span style="color: #E6DB74;">{</span>el =&gt; <span style="color: #FD971F;">(</span><span style="color: #AE81FF;">this</span>.el = el<span style="color: #FD971F;">)</span><span style="color: #E6DB74;">}</span>
+        style=<span style="color: #E6DB74;">{</span><span style="color: #FD971F;">{</span> width, height <span style="color: #FD971F;">}</span><span style="color: #E6DB74;">}</span>
+      /&gt;
+    <span style="color: #A6E22E;">)</span>;
+  <span style="color: #66D9EF;">}</span>
+
+
+  initChart = el =&gt; <span style="color: #66D9EF;">{</span>
+    <span style="color: #75715E;">// </span><span style="color: #75715E;">renderer &#29992;&#20110;&#37197;&#32622;&#28210;&#26579;&#26041;&#24335; &#21487;&#20197;&#26159; svg &#25110;&#32773; canvas</span>
+    <span style="color: #F92672;">const</span> <span style="color: #FD971F;">renderer</span> = <span style="color: #AE81FF;">this</span>.props.renderer || <span style="color: #E6DB74;">'canvas'</span>;
+
+    <span style="color: #F92672;">return</span> <span style="color: #F92672;">new</span> <span style="color: #66D9EF;">Promise</span><span style="color: #A6E22E;">(</span>resolve =&gt; <span style="color: #E6DB74;">{</span>
+      setTimeout<span style="color: #FD971F;">(</span><span style="color: #F92672;">()</span> =&gt; <span style="color: #F92672;">{</span>
+        <span style="color: #AE81FF;">this</span>.chart = echarts.init<span style="color: #AE81FF;">(</span>el, <span style="color: #AE81FF;">null</span>, <span style="color: #66D9EF;">{</span>
+          renderer,
+          width: <span style="color: #E6DB74;">'auto'</span>,
+          height: <span style="color: #E6DB74;">'auto'</span>,
+        <span style="color: #66D9EF;">}</span><span style="color: #AE81FF;">)</span>;
+        resolve<span style="color: #AE81FF;">()</span>;
+      <span style="color: #F92672;">}</span>, 0<span style="color: #FD971F;">)</span>;
+    <span style="color: #E6DB74;">}</span><span style="color: #A6E22E;">)</span>;
+  <span style="color: #66D9EF;">}</span>;
+
+  setOption = option =&gt; <span style="color: #66D9EF;">{</span>
+    <span style="color: #F92672;">if</span> <span style="color: #A6E22E;">(</span>!<span style="color: #AE81FF;">this</span>.chart<span style="color: #A6E22E;">)</span> <span style="color: #A6E22E;">{</span>
+      <span style="color: #F92672;">return</span>;
+    <span style="color: #A6E22E;">}</span>
+
+    <span style="color: #F92672;">const</span> <span style="color: #FD971F;">notMerge</span> = <span style="color: #AE81FF;">this</span>.props.notMerge;
+    <span style="color: #F92672;">const</span> <span style="color: #FD971F;">lazyUpdate</span> = <span style="color: #AE81FF;">this</span>.props.lazyUpdate;
+
+    <span style="color: #AE81FF;">this</span>.chart.setOption<span style="color: #A6E22E;">(</span>option, notMerge, lazyUpdate<span style="color: #A6E22E;">)</span>;
+  <span style="color: #66D9EF;">}</span>;
+  dispose = <span style="color: #66D9EF;">()</span> =&gt; <span style="color: #66D9EF;">{</span>
+    <span style="color: #F92672;">if</span> <span style="color: #A6E22E;">(</span>!<span style="color: #AE81FF;">this</span>.chart<span style="color: #A6E22E;">)</span> <span style="color: #A6E22E;">{</span>
+      <span style="color: #F92672;">return</span>;
+    <span style="color: #A6E22E;">}</span>
+
+    <span style="color: #AE81FF;">this</span>.chart.dispose<span style="color: #A6E22E;">()</span>;
+    <span style="color: #AE81FF;">this</span>.chart = <span style="color: #AE81FF;">null</span>;
+  <span style="color: #66D9EF;">}</span>;
+  resize = <span style="color: #66D9EF;">()</span> =&gt; <span style="color: #66D9EF;">{</span>
+    <span style="color: #AE81FF;">this</span>.chart &amp;&amp; <span style="color: #AE81FF;">this</span>.chart.resize<span style="color: #A6E22E;">()</span>;
+  <span style="color: #66D9EF;">}</span>;
+  getInstance = <span style="color: #66D9EF;">()</span> =&gt; <span style="color: #66D9EF;">{</span>
+    <span style="color: #F92672;">return</span> <span style="color: #AE81FF;">this</span>.chart;
+  <span style="color: #66D9EF;">}</span>;
+<span style="color: #AE81FF;">}</span>
+</pre>
+</div>
+
+<p>
+其中，purecomponent是一种较为特殊的component，该类仅仅当上游props发生改变或自身的state发生改变时才对自身进行重新渲染。
+</p>
+
+<p>
+当对出口流量的组件形式了解后，另一个问题就是如何配置echarts对象，此处直接针对echarts官方提供的API参数进行修改即可。具体为：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js"><span style="color: #F92672;">export</span> <span style="color: #F92672;">const</span> <span style="color: #FD971F;">trafficOptions</span> = <span style="color: #AE81FF;">(</span>params<span style="color: #AE81FF;">)</span> =&gt; <span style="color: #AE81FF;">(</span><span style="color: #66D9EF;">{</span>
+  title: <span style="color: #A6E22E;">{</span>
+    show: <span style="color: #AE81FF;">false</span>,
+  <span style="color: #A6E22E;">}</span>,
+  legend: <span style="color: #A6E22E;">{</span>
+    show: <span style="color: #AE81FF;">true</span>,
+    top: <span style="color: #E6DB74;">'5%'</span>,
+    textStyle: <span style="color: #E6DB74;">{</span>
+      color: <span style="color: #E6DB74;">'#c0c9d2'</span>,
+    <span style="color: #E6DB74;">}</span>,
+  <span style="color: #A6E22E;">}</span>,
+  tooltip: <span style="color: #A6E22E;">{</span>
+    trigger: <span style="color: #E6DB74;">'axis'</span>,
+    axisPointer: <span style="color: #E6DB74;">{</span>
+      lineStyle: <span style="color: #FD971F;">{</span>
+        color: <span style="color: #F92672;">{</span>
+          type: <span style="color: #E6DB74;">'linear'</span>,
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: <span style="color: #AE81FF;">[</span>
+            <span style="color: #66D9EF;">{</span>
+              offset: 0,
+              color: <span style="color: #E6DB74;">'rgba(0, 255, 233,0)'</span>,
+            <span style="color: #66D9EF;">}</span>,
+            <span style="color: #66D9EF;">{</span>
+              offset: 0.5,
+              color: <span style="color: #E6DB74;">'rgba(255, 255, 255,1)'</span>,
+            <span style="color: #66D9EF;">}</span>,
+            <span style="color: #66D9EF;">{</span>
+              offset: 1,
+              color: <span style="color: #E6DB74;">'rgba(0, 255, 233,0)'</span>,
+            <span style="color: #66D9EF;">}</span>,
+          <span style="color: #AE81FF;">]</span>,
+          global: <span style="color: #AE81FF;">false</span>,
+        <span style="color: #F92672;">}</span>,
+      <span style="color: #FD971F;">}</span>,
+    <span style="color: #E6DB74;">}</span>,
+  <span style="color: #A6E22E;">}</span>,
+  grid: <span style="color: #A6E22E;">{</span>
+    top: <span style="color: #E6DB74;">'15%'</span>,
+    left: <span style="color: #E6DB74;">'10%'</span>,
+    right: <span style="color: #E6DB74;">'5%'</span>,
+    bottom: <span style="color: #E6DB74;">'10%'</span>,
+  <span style="color: #A6E22E;">}</span>,
+  xAxis: <span style="color: #A6E22E;">{</span>
+    type: <span style="color: #E6DB74;">'category'</span>,
+    axisLine: <span style="color: #E6DB74;">{</span>
+      show: <span style="color: #AE81FF;">true</span>,
+    <span style="color: #E6DB74;">}</span>,
+    splitArea: <span style="color: #E6DB74;">{</span>
+      color: <span style="color: #E6DB74;">'#f00'</span>,
+      lineStyle: <span style="color: #FD971F;">{</span>
+        color: <span style="color: #E6DB74;">'#f00'</span>,
+      <span style="color: #FD971F;">}</span>,
+    <span style="color: #E6DB74;">}</span>,
+    axisLabel: <span style="color: #E6DB74;">{</span>
+      color: <span style="color: #E6DB74;">'#BCDCF0'</span>,
+    <span style="color: #E6DB74;">}</span>,
+    splitLine: <span style="color: #E6DB74;">{</span>
+      show: <span style="color: #AE81FF;">false</span>,
+    <span style="color: #E6DB74;">}</span>,
+    boundaryGap: <span style="color: #AE81FF;">false</span>,
+    data: params.timeList,
+  <span style="color: #A6E22E;">}</span>,
+
+  yAxis: <span style="color: #A6E22E;">{</span>
+    type: <span style="color: #E6DB74;">'value'</span>,
+    min: 0,
+    splitLine: <span style="color: #E6DB74;">{</span>
+      show: <span style="color: #AE81FF;">true</span>,
+      lineStyle: <span style="color: #FD971F;">{</span>
+        color: <span style="color: #E6DB74;">'rgba(255,255,255,0.1)'</span>,
+      <span style="color: #FD971F;">}</span>,
+    <span style="color: #E6DB74;">}</span>,
+    axisLine: <span style="color: #E6DB74;">{</span>
+      show: <span style="color: #AE81FF;">true</span>,
+    <span style="color: #E6DB74;">}</span>,
+    axisLabel: <span style="color: #E6DB74;">{</span>
+      show: <span style="color: #AE81FF;">true</span>,
+      margin: 10,
+      textStyle: <span style="color: #FD971F;">{</span>
+        color: <span style="color: #E6DB74;">'#d1e6eb'</span>,
+      <span style="color: #FD971F;">}</span>,
+    <span style="color: #E6DB74;">}</span>,
+    axisTick: <span style="color: #E6DB74;">{</span>
+      show: <span style="color: #AE81FF;">false</span>,
+    <span style="color: #E6DB74;">}</span>,
+  <span style="color: #A6E22E;">}</span>,
+  series: <span style="color: #A6E22E;">[</span>
+    <span style="color: #E6DB74;">{</span>
+      name: <span style="color: #E6DB74;">'&#36827;&#20837;&#20154;&#25968;'</span>,
+      type: <span style="color: #E6DB74;">'line'</span>,
+      smooth: <span style="color: #AE81FF;">true</span>, <span style="color: #75715E;">//</span><span style="color: #75715E;">&#26159;&#21542;&#24179;&#28369;</span>
+      lineStyle: <span style="color: #FD971F;">{</span>
+        normal: <span style="color: #F92672;">{</span>
+          color: <span style="color: #E6DB74;">'#00b3f4'</span>,
+          shadowColor: <span style="color: #E6DB74;">'rgba(0, 0, 0, .3)'</span>,
+          shadowBlur: 0,
+          shadowOffsetY: 5,
+          shadowOffsetX: 5,
+        <span style="color: #F92672;">}</span>,
+      <span style="color: #FD971F;">}</span>,
+      label: <span style="color: #FD971F;">{</span>
+        show: <span style="color: #AE81FF;">false</span>,
+        position: <span style="color: #E6DB74;">'top'</span>,
+        textStyle: <span style="color: #F92672;">{</span>
+          color: <span style="color: #E6DB74;">'#00b3f4'</span>,
+        <span style="color: #F92672;">}</span>,
+      <span style="color: #FD971F;">}</span>,
+      <span style="color: #75715E;">// </span><span style="color: #75715E;">&#21435;&#38500;&#28857;&#26631;&#35760;</span>
+      symbolSize: 0,
+      <span style="color: #75715E;">// </span><span style="color: #75715E;">&#40736;&#26631;&#25918;&#19978;&#21435;&#36824;&#26159;&#35201;&#26377;&#39068;&#33394;&#30340;</span>
+      itemStyle: <span style="color: #FD971F;">{</span>
+        color: <span style="color: #E6DB74;">'#00b3f4'</span>,
+      <span style="color: #FD971F;">}</span>,
+      <span style="color: #75715E;">// </span><span style="color: #75715E;">&#35774;&#32622;&#28176;&#21464;&#33394;</span>
+      areaStyle: <span style="color: #FD971F;">{</span>
+        normal: <span style="color: #F92672;">{</span>
+          color: <span style="color: #F92672;">new</span> <span style="color: #66D9EF;">echarts.graphic.LinearGradient</span><span style="color: #AE81FF;">(</span>
+            0,
+            0,
+            0,
+            1,
+            <span style="color: #66D9EF;">[</span>
+              <span style="color: #A6E22E;">{</span>
+                offset: 0,
+                color: <span style="color: #E6DB74;">'rgba(0,179,244,0.3)'</span>,
+              <span style="color: #A6E22E;">}</span>,
+              <span style="color: #A6E22E;">{</span>
+                offset: 1,
+                color: <span style="color: #E6DB74;">'rgba(0,179,244,0)'</span>,
+              <span style="color: #A6E22E;">}</span>,
+            <span style="color: #66D9EF;">]</span>,
+            <span style="color: #AE81FF;">false</span>
+          <span style="color: #AE81FF;">)</span>,
+          shadowColor: <span style="color: #E6DB74;">'rgba(0,179,244, 0.9)'</span>,
+          shadowBlur: 20,
+        <span style="color: #F92672;">}</span>,
+      <span style="color: #FD971F;">}</span>,
+      data: params.outData,
+    <span style="color: #E6DB74;">}</span>,
+    <span style="color: #E6DB74;">{</span>
+      name: <span style="color: #E6DB74;">'&#36208;&#20986;&#20154;&#25968;'</span>,
+      type: <span style="color: #E6DB74;">'line'</span>,
+      smooth: <span style="color: #AE81FF;">true</span>, <span style="color: #75715E;">//</span><span style="color: #75715E;">&#26159;&#21542;&#24179;&#28369;</span>
+      <span style="color: #75715E;">// </span><span style="color: #75715E;">&#38452;&#24433;</span>
+      lineStyle: <span style="color: #FD971F;">{</span>
+        normal: <span style="color: #F92672;">{</span>
+          color: <span style="color: #E6DB74;">'#00ca95'</span>,
+          shadowColor: <span style="color: #E6DB74;">'rgba(0, 0, 0, .3)'</span>,
+          shadowBlur: 0,
+          shadowOffsetY: 5,
+          shadowOffsetX: 5,
+        <span style="color: #F92672;">}</span>,
+      <span style="color: #FD971F;">}</span>,
+      label: <span style="color: #FD971F;">{</span>
+        show: <span style="color: #AE81FF;">false</span>,
+        position: <span style="color: #E6DB74;">'top'</span>,
+        textStyle: <span style="color: #F92672;">{</span>
+          color: <span style="color: #E6DB74;">'#00ca95'</span>,
+        <span style="color: #F92672;">}</span>,
+      <span style="color: #FD971F;">}</span>,
+      <span style="color: #75715E;">// </span><span style="color: #75715E;">&#21435;&#38500;&#28857;&#26631;&#35760;</span>
+      symbolSize: 0,
+      itemStyle: <span style="color: #FD971F;">{</span>
+        color: <span style="color: #E6DB74;">'#00ca95'</span>,
+      <span style="color: #FD971F;">}</span>,
+      <span style="color: #75715E;">// </span><span style="color: #75715E;">&#35774;&#32622;&#28176;&#21464;&#33394;</span>
+      areaStyle: <span style="color: #FD971F;">{</span>
+        normal: <span style="color: #F92672;">{</span>
+          color: <span style="color: #F92672;">new</span> <span style="color: #66D9EF;">echarts.graphic.LinearGradient</span><span style="color: #AE81FF;">(</span>
+            0,
+            0,
+            0,
+            1,
+            <span style="color: #66D9EF;">[</span>
+              <span style="color: #A6E22E;">{</span>
+                offset: 0,
+                color: <span style="color: #E6DB74;">'rgba(0,202,149,0.3)'</span>,
+              <span style="color: #A6E22E;">}</span>,
+              <span style="color: #A6E22E;">{</span>
+                offset: 1,
+                color: <span style="color: #E6DB74;">'rgba(0,202,149,0)'</span>,
+              <span style="color: #A6E22E;">}</span>,
+            <span style="color: #66D9EF;">]</span>,
+            <span style="color: #AE81FF;">false</span>
+          <span style="color: #AE81FF;">)</span>,
+          shadowColor: <span style="color: #E6DB74;">'rgba(0,202,149, 0.9)'</span>,
+          shadowBlur: 20,
+        <span style="color: #F92672;">}</span>,
+      <span style="color: #FD971F;">}</span>,
+      data: params.inData,
+    <span style="color: #E6DB74;">}</span>,
+  <span style="color: #A6E22E;">]</span>,
+<span style="color: #66D9EF;">}</span><span style="color: #AE81FF;">)</span>;
+</pre>
+</div>
+
+<p>
+通过这种方式，即可完成对一个echarts折线图的全部处理了。
+</p>
+
+<p>
+另外的问题是，数据是如何从后端流入到当前组件的。依照react的思路，一般而言，数据的变动包含两个原则：
+</p>
+<ol class="org-ol">
+<li>对于一个组件节点，如果该组件节点触发了状态变动，则依照变动情况进行处理：若只影响以当前节点为根节点的子树，则在当前节点改变，否则需要找到最小公共子树，在其之上改变状态，或在根节点改变状态。老师上课所写的todo APP即是此种逻辑；</li>
+<li>对于一个组件节点，其所需要的数据，只能是自身状态提供的，或是父节点传递过来的；</li>
+</ol>
+
+<p>
+此处自然也是基于这两个原则进行的，不过稍有不同。这里的不同主要体现在数据传送的方法上，同样以leftpage为例，数据从leftpage传送到各个子组件是遵循上述原则的。不过，由于直接同外界交互，leftpage获取数据是依照dva框架的形式进行的，该交互主要包括三个部分：数据来源，数据处理、数据导出展示。
+</p>
+
+<p>
+比如，对于leftpage，需要获得两个对象，分别是人流量信息和图书排行榜信息，这些信息从后端获取，因此第一个操作是一个get操作。如果获取失败，则进入异常处理环节，否则便需要将获取得到的数据传入到leftpage组件之后，令之使用pros获得。
+对于上述整个流程，在从后端获取数据的环节，主要代码是：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js"><span style="color: #F92672;">export</span> <span style="color: #F92672;">default</span> <span style="color: #F92672;">function</span> request<span style="color: #AE81FF;">(</span><span style="color: #FD971F;">url</span>, <span style="color: #FD971F;">options</span><span style="color: #AE81FF;">)</span> <span style="color: #AE81FF;">{</span>
+  <span style="color: #F92672;">return</span> fetch<span style="color: #66D9EF;">(</span>url, options<span style="color: #66D9EF;">)</span>
+    .then<span style="color: #66D9EF;">(</span>checkStatus<span style="color: #66D9EF;">)</span>
+    .then<span style="color: #66D9EF;">(</span>parseJSON<span style="color: #66D9EF;">)</span>
+    .then<span style="color: #66D9EF;">(</span>data =&gt; <span style="color: #A6E22E;">(</span><span style="color: #E6DB74;">{</span> data <span style="color: #E6DB74;">}</span><span style="color: #A6E22E;">)</span><span style="color: #66D9EF;">)</span>
+    .<span style="color: #F92672;">catch</span><span style="color: #66D9EF;">(</span>err =&gt; <span style="color: #A6E22E;">(</span><span style="color: #E6DB74;">{</span> err <span style="color: #E6DB74;">}</span><span style="color: #A6E22E;">)</span><span style="color: #66D9EF;">)</span>;
+<span style="color: #AE81FF;">}</span>
+
+<span style="color: #F92672;">export</span> <span style="color: #F92672;">const</span> <span style="color: #FD971F;">getLeftPageData</span> = <span style="color: #F92672;">async</span> <span style="color: #AE81FF;">()</span> =&gt; <span style="color: #AE81FF;">{</span>
+  <span style="color: #F92672;">return</span> request<span style="color: #66D9EF;">(</span><span style="color: #E6DB74;">'/api/leftPageData'</span><span style="color: #66D9EF;">)</span>.then<span style="color: #66D9EF;">(</span>response =&gt; <span style="color: #A6E22E;">{</span>
+    <span style="color: #F92672;">return</span> response.data;
+  <span style="color: #A6E22E;">}</span><span style="color: #66D9EF;">)</span>;
+<span style="color: #AE81FF;">}</span>;
+
+</pre>
+</div>
+
+<p>
+对于所获得的数据，dva会设置如下的model：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js"><span style="color: #F92672;">export</span> <span style="color: #F92672;">default</span> <span style="color: #AE81FF;">{</span>
+  <span style="color: #75715E;">// </span><span style="color: #75715E;">&#21629;&#21517;&#31354;&#38388; (&#24517;&#22635;)</span>
+  namespace: <span style="color: #E6DB74;">'leftPage'</span>,
+
+  <span style="color: #75715E;">// </span><span style="color: #75715E;">&#25968;&#25454;</span>
+  state: <span style="color: #66D9EF;">{}</span>,
+
+  <span style="color: #75715E;">// </span><span style="color: #75715E;">&#36335;&#30001;&#30417;&#21548;</span>
+  subscriptions: <span style="color: #66D9EF;">{</span>
+    setup<span style="color: #A6E22E;">(</span><span style="color: #E6DB74;">{</span> dispatch, history <span style="color: #E6DB74;">}</span><span style="color: #A6E22E;">)</span> <span style="color: #A6E22E;">{</span>
+      <span style="color: #F92672;">return</span> history.listen<span style="color: #E6DB74;">(</span><span style="color: #FD971F;">(</span>location, action<span style="color: #FD971F;">)</span> =&gt; <span style="color: #FD971F;">{</span>
+        <span style="color: #75715E;">// </span><span style="color: #75715E;">&#21442;&#25968;&#21487;&#20197;&#30452;&#25509;&#31616;&#20889;&#25104;{pathname}</span>
+        <span style="color: #F92672;">if</span> <span style="color: #F92672;">(</span>location.pathname === <span style="color: #E6DB74;">'/'</span><span style="color: #F92672;">)</span> <span style="color: #F92672;">{</span> <span style="color: #75715E;">//</span><span style="color: #75715E;">&#24403;&#36827;&#20837;&#24403;&#21069;&#39029;&#38754;&#23601;&#25191;&#34892;&#33719;&#21462;&#25968;&#25454;&#36825;&#19968;action</span>
+          dispatch<span style="color: #AE81FF;">(</span><span style="color: #66D9EF;">{</span> type: <span style="color: #E6DB74;">'getLeftPageData'</span> <span style="color: #66D9EF;">}</span><span style="color: #AE81FF;">)</span>;
+        <span style="color: #F92672;">}</span>
+      <span style="color: #FD971F;">}</span><span style="color: #E6DB74;">)</span>;
+    <span style="color: #A6E22E;">}</span>,
+  <span style="color: #66D9EF;">}</span>,
+
+  <span style="color: #75715E;">// </span><span style="color: #75715E;">&#24322;&#27493;&#35831;&#27714;    action&#22788;&#29702;&#22120;&#65292;&#29992;&#20197;&#23545;&#24322;&#27493;&#21160;&#20316;&#36827;&#34892;&#22788;&#29702;</span>
+  effects: <span style="color: #66D9EF;">{</span>
+    *getLeftPageData<span style="color: #A6E22E;">(</span><span style="color: #E6DB74;">{</span> payload <span style="color: #E6DB74;">}</span>, <span style="color: #E6DB74;">{</span> call, put <span style="color: #E6DB74;">}</span><span style="color: #A6E22E;">)</span> <span style="color: #A6E22E;">{</span>
+      <span style="color: #F92672;">const</span> <span style="color: #FD971F;">data</span> = <span style="color: #F92672;">yield</span> call<span style="color: #E6DB74;">(</span>getLeftPageData<span style="color: #E6DB74;">)</span>; 
+      <span style="color: #F92672;">if</span> <span style="color: #E6DB74;">(</span>data<span style="color: #E6DB74;">)</span> <span style="color: #E6DB74;">{</span>
+        <span style="color: #F92672;">yield</span> put<span style="color: #FD971F;">(</span><span style="color: #F92672;">{</span>
+          type: <span style="color: #E6DB74;">'setData'</span>,
+          payload: data,
+        <span style="color: #F92672;">}</span><span style="color: #FD971F;">)</span>;
+      <span style="color: #E6DB74;">}</span> <span style="color: #F92672;">else</span> <span style="color: #E6DB74;">{</span>
+        console.log<span style="color: #FD971F;">(</span><span style="color: #E6DB74;">`&#33719;&#21462;&#24038;&#20391;&#25968;&#25454;&#25968;&#25454;&#22833;&#36133;`</span><span style="color: #FD971F;">)</span>;
+      <span style="color: #E6DB74;">}</span>
+    <span style="color: #A6E22E;">}</span>,
+  <span style="color: #66D9EF;">}</span>,
+
+  <span style="color: #75715E;">// </span><span style="color: #75715E;">&#21516;&#27493;&#25805;&#20316;</span>
+  reducers: <span style="color: #66D9EF;">{</span>
+    setData<span style="color: #A6E22E;">(</span>state, action<span style="color: #A6E22E;">)</span> <span style="color: #A6E22E;">{</span>
+      <span style="color: #F92672;">return</span> <span style="color: #E6DB74;">{</span> ...state, ...action.payload <span style="color: #E6DB74;">}</span>;
+    <span style="color: #A6E22E;">}</span>,
+  <span style="color: #66D9EF;">}</span>,
+<span style="color: #AE81FF;">}</span>;
+
+</pre>
+</div>
+
+<p>
+可以看出，该过程主要包含了如下几个部分：
+</p>
+<ol class="org-ol">
+<li>路由监听，主要是设置何时进行dispatch，也就是什么时候进行数据获取；</li>
+<li>effects，负责对异步动作进行处理，此处即是对获取左侧数据进行这一动作进行执行。同时，该过程使用了标准的yield-put结构，该结构会在需要时尝试运行一个动作，如果成功，则派发后续动作（put），以调用同步操作setData；</li>
+<li>reducers，等价于原始react中的setState。</li>
+</ol>
+
+<p>
+基于以上的介绍，整体的前端运行方式就较为清晰了。后续是如何对之进行安装和使用。
+</p>
+</div>
+
+
+<ol class="org-ol">
+<li><a id="org04be3d2"></a>安装与运行<br />
+<div class="outline-text-5" id="text-5-3-2-1">
+<p>
+基于npm进行依赖安装
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">npm install
+</pre>
+</div>
+<p>
+主要包括以下依赖：
+</p>
+<div class="org-src-container">
+<pre class="src src-js"><span style="color: #E6DB74;">"dependencies"</span>: <span style="color: #AE81FF;">{</span>
+   <span style="color: #E6DB74;">"@jiaminghi/data-view-react"</span>: <span style="color: #E6DB74;">"^1.2.4"</span>,
+   <span style="color: #E6DB74;">"dva"</span>: <span style="color: #E6DB74;">"^2.4.1"</span>,
+   <span style="color: #E6DB74;">"echarts"</span>: <span style="color: #E6DB74;">"^4.9.0"</span>,
+   <span style="color: #E6DB74;">"react"</span>: <span style="color: #E6DB74;">"^16.2.0"</span>,
+   <span style="color: #E6DB74;">"react-dom"</span>: <span style="color: #E6DB74;">"^16.2.0"</span>,
+   <span style="color: #E6DB74;">"sass-loader"</span>: <span style="color: #E6DB74;">"8.0.2"</span>,
+   <span style="color: #E6DB74;">"styled-components"</span>: <span style="color: #E6DB74;">"^5.2.0"</span>
+ <span style="color: #AE81FF;">}</span>,
+</pre>
+</div>
+<p>
+其中，sass的安装可能会出现报错，可以先进行额外的处理。
+</p>
+
+<p>
+运行下列命令，即可在浏览器打开相关页面，F11进入全屏中即可使用。
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">npm start 
+</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org97fd581" class="outline-2">
+<h2 id="org97fd581"><span class="section-number-2">6</span> 结论及未来工作</h2>
+</div>
+
+
+<div id="outline-container-org9b40f5d" class="outline-2">
+<h2 id="org9b40f5d"><span class="section-number-2">7</span> 参考文献</h2>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: Tue Jul 13 02:52:31 2021</p>
+<p class="author">Author: 梁子，3120305385，S0083，软件学院</p>
+<p class="date">Created: 2021-07-13 周二 07:29</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
