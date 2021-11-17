@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-11-15 Mon 20:45 -->
+<!-- 2021-11-17 Wed 19:52 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>emacs lisp 语法的学习与使用</title>
+<title>emacs lisp基本</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="梁子" />
 <style type="text/css">
@@ -241,7 +241,7 @@
 </head>
 <body>
 <div id="content">
-<h1 class="title">emacs lisp 语法的学习与使用</h1>
+<h1 class="title">emacs lisp基本</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
@@ -301,7 +301,6 @@
 <p>
 setq是声明变量的关键词，用法如下：
 </p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> foo <span style="color: #CDC673;">"bushiwo"</span><span style="color: #AF87FF;">)</span>
 <span style="color: #AF87FF;">(</span>message foo<span style="color: #AF87FF;">)</span>
@@ -310,7 +309,6 @@ setq是声明变量的关键词，用法如下：
 <p>
 输出结果是：
 </p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #CDC673;">"bushiwo"</span>
 </pre>
@@ -320,7 +318,6 @@ message函数起到了将变量输出到缓冲区的作用.
 </p>
 </div>
 </div>
-
 <div id="outline-container-org813820e" class="outline-3">
 <h3 id="org813820e"><span class="section-number-3">1.2</span> 通过defvar定义不会改变声明的变量</h3>
 <div class="outline-text-3" id="text-1-2">
@@ -328,7 +325,6 @@ message函数起到了将变量输出到缓冲区的作用.
 用法和setq一致,但是定义的变量数值不会发生改变.如果定义的变量已经被定义,那么赋值将会失败.
 比如说:
 </p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#22312;&#21069;&#38754;&#24050;&#32463;&#36890;&#36807;setq&#23450;&#20041;&#20102;foo&#30340;&#21069;&#25552;&#19979;</span>
 <span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defvar</span> <span style="color: #FF8C00;">foo</span> <span style="color: #CDC673;">"liangzi"</span>
@@ -340,14 +336,12 @@ message函数起到了将变量输出到缓冲区的作用.
 </p>
 </div>
 </div>
-
 <div id="outline-container-orga5dbff6" class="outline-3">
 <h3 id="orga5dbff6"><span class="section-number-3">1.3</span> 通过defun定义函数.</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 比如,我想定义一个求圆的面积的函数,我可以这么去写:
 </p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#39318;&#20808;,&#22768;&#26126;PI&#30340;&#20540;</span>
 <span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> pi 3.14<span style="color: #AF87FF;">)</span>
@@ -373,14 +367,12 @@ message函数起到了将变量输出到缓冲区的作用.
 </div>
 </div>
 </div>
-
 <div id="outline-container-org61b1ad2" class="outline-3">
 <h3 id="org61b1ad2"><span class="section-number-3">1.4</span> 使用局部作用域</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 对于刚刚的函数,我们把pi定义在了函数外面,这样并不好.并且,在函数内部我们没有定义任何的局部变量.这在一个较长的函数里面是难以实现的.下面就介绍如何使用let进行局部作用域的定义.并在此基础上,考虑局部变量的声明问题.
 </p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defun</span> <span style="color: #87D700;">get-circle-sq</span> <span style="color: #5FD7FF;">(</span>r<span style="color: #5FD7FF;">)</span>
   <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">let</span> <span style="color: #87D700;">(</span>
@@ -400,11 +392,9 @@ message函数起到了将变量输出到缓冲区的作用.
 
 </pre>
 </div>
-
 <p>
 当然,也可以用let* 让表达式更加精简,比如:
 </p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defun</span> <span style="color: #87D700;">circle-area</span> <span style="color: #5FD7FF;">(</span>radix<span style="color: #5FD7FF;">)</span>
   <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">let*</span> <span style="color: #87D700;">(</span><span style="color: #CDC673;">(</span>pi 3.1415926<span style="color: #CDC673;">)</span>
@@ -415,7 +405,6 @@ message函数起到了将变量输出到缓冲区的作用.
 </div>
 </div>
 </div>
-
 <div id="outline-container-orgef1eb10" class="outline-3">
 <h3 id="orgef1eb10"><span class="section-number-3">1.5</span> 在对函数和变量观察时的技巧(使用C-h)</h3>
 <div class="outline-text-3" id="text-1-5">
@@ -424,7 +413,6 @@ message函数起到了将变量输出到缓冲区的作用.
 </p>
 </div>
 </div>
-
 <div id="outline-container-orga800be7" class="outline-3">
 <h3 id="orga800be7"><span class="section-number-3">1.6</span> 匿名函数表达式lambda</h3>
 <div class="outline-text-3" id="text-1-6">
@@ -432,7 +420,6 @@ message函数起到了将变量输出到缓冲区的作用.
 lambda表达式的格式和寻常的函数定义比较相似(只不过它没有名字而已.)
 下面是一个简单的例子:
 </p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">lambda</span> <span style="color: #5FD7FF;">(</span>r<span style="color: #5FD7FF;">)</span>
   <span style="color: #CDC673;">"find the sq of r"</span>
@@ -440,12 +427,10 @@ lambda表达式的格式和寻常的函数定义比较相似(只不过它没有�
   <span style="color: #AF87FF;">)</span>
 </pre>
 </div>
-
 <p>
 在对函数进行调用时,可以简单地使用funcall.
 下面是一个例子:
 </p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span>funcall <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">lambda</span> <span style="color: #87D700;">(</span>r<span style="color: #87D700;">)</span>
            <span style="color: #87D700;">(</span>* r r<span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span> <span style="color: #FF8C00; font-weight: bold; font-style: italic; text-decoration: underline;">2</span><span style="color: #AF87FF; font-weight: bold; font-style: italic; text-decoration: underline;">)</span>
@@ -454,7 +439,6 @@ lambda表达式的格式和寻常的函数定义比较相似(只不过它没有�
 <p>
 或者把它赋值给一个变量:
 </p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> sq <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">lambda</span> <span style="color: #87D700;">(</span>r<span style="color: #87D700;">)</span>
         <span style="color: #87D700;">(</span>* r r<span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
@@ -462,14 +446,12 @@ lambda表达式的格式和寻常的函数定义比较相似(只不过它没有�
 <span style="color: #AF87FF;">(</span>funcall sq 2 <span style="color: #AF87FF;">)</span>
 </pre>
 </div>
-
 <p>
 除此之外, lambda主要被用于作为参数在函数之间进行传递.这也是函数式编程的主打卖点吧.
 </p>
 </div>
 </div>
 </div>
-
 <div id="outline-container-org1776886" class="outline-2">
 <h2 id="org1776886"><span class="section-number-2">2</span> 基本逻辑顺序</h2>
 <div class="outline-text-2" id="text-2">
@@ -477,14 +459,12 @@ lambda表达式的格式和寻常的函数定义比较相似(只不过它没有�
 下面对每门语言基本存在的逻辑顺序进行简单的介绍.
 </p>
 </div>
-
 <div id="outline-container-org8e3755f" class="outline-3">
 <h3 id="org8e3755f"><span class="section-number-3">2.1</span> 顺序执行</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 顺序执行在函数里是默认的.这毫无疑问,也毫无问题.显式地确定顺序执行的方法是使用progn,如:
 </p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">progn</span>
   <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">setq</span> a 3<span style="color: #5FD7FF;">)</span>
@@ -496,14 +476,12 @@ lambda表达式的格式和寻常的函数定义比较相似(只不过它没有�
 </div>
 </div>
 </div>
-
 <div id="outline-container-org9284e39" class="outline-3">
 <h3 id="org9284e39"><span class="section-number-3">2.2</span> if 与cond</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个例子作为介绍:
 </p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defun</span> <span style="color: #87D700;">myabs</span> <span style="color: #5FD7FF;">(</span>x<span style="color: #5FD7FF;">)</span>
   <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">if</span> <span style="color: #87D700;">(</span>&gt; x 0<span style="color: #87D700;">)</span>
@@ -525,14 +503,12 @@ if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个�
 </div>
 </div>
 </div>
-
 <div id="outline-container-org3a32101" class="outline-3">
 <h3 id="org3a32101"><span class="section-number-3">2.3</span> while 控制循环</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 事实证明，这个while循环很危险,经历一次死机之后,此处的所有文档全部消失了.
 </p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defun</span> <span style="color: #87D700;">factorial</span> <span style="color: #5FD7FF;">(</span>n<span style="color: #5FD7FF;">)</span>
   <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">let</span> <span style="color: #87D700;">(</span><span style="color: #CDC673;">(</span>res 1<span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span>
@@ -545,7 +521,6 @@ if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个�
 </div>
 </div>
 </div>
-
 <div id="outline-container-org2e2ae58" class="outline-3">
 <h3 id="org2e2ae58"><span class="section-number-3">2.4</span> 逻辑运算 and or not</h3>
 <div class="outline-text-3" id="text-2-4">
@@ -575,7 +550,6 @@ if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个�
 </div>
 </div>
 </div>
-
 <div id="outline-container-org2c6d1d0" class="outline-2">
 <h2 id="org2c6d1d0"><span class="section-number-2">3</span> 数据结构</h2>
 <div class="outline-text-2" id="text-3">
@@ -636,7 +610,6 @@ if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个�
 </div>
 </div>
 </div>
-
 <div id="outline-container-org074710c" class="outline-3">
 <h3 id="org074710c"><span class="section-number-3">3.2</span> 字符与字符串</h3>
 <div class="outline-text-3" id="text-3-2">
@@ -647,13 +620,11 @@ if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个�
 <p>
 elisp里面的字符和C一样，都是用单引号表示，同时与一个整型数字挂钩（比如ASCII值）. 此处给出一个简单的示例:
 </p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #8B8878;">;; </span><span style="color: #8B8878;">'A'</span>
 ?A <span style="color: #8B8878;">;;</span><span style="color: #8B8878;">-&gt; 65</span>
 </pre>
 </div>
-
 <p>
 除此之外, 对于一些自身包含意义的符号, 可以使用转义字符进行表达. 比如, 对于( 可以用?\(进行表达.
 </p>
@@ -661,7 +632,6 @@ elisp里面的字符和C一样，都是用单引号表示，同时与一个整�
 <p>
 除此之外引申出来的就是一些控制字符, 如:
 </p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">?\a =&gt; 7                 <span style="color: #8B8878;">; </span><span style="color: #8B8878;">control-g, `</span><span style="color: #AF87FF;">C-g</span><span style="color: #8B8878;">'</span>
 ?\b =&gt; 8                 <span style="color: #8B8878;">; </span><span style="color: #8B8878;">backspace, &lt;BS&gt;, `</span><span style="color: #AF87FF;">C-h</span><span style="color: #8B8878;">'</span>
@@ -677,11 +647,9 @@ elisp里面的字符和C一样，都是用单引号表示，同时与一个整�
 
 </pre>
 </div>
-
 <p>
 另一种更寻常的控制字符的生成格式是:
 </p>
-
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">?\^I ?\^i ?\C-I ?\C-i
 </pre>
@@ -691,7 +659,6 @@ elisp里面的字符和C一样，都是用单引号表示，同时与一个整�
 </p>
 </div>
 </div>
-
 <div id="outline-container-org581d9c1" class="outline-4">
 <h4 id="org581d9c1"><span class="section-number-4">3.2.2</span> 由字符产生字符串的一些函数</h4>
 <div class="outline-text-4" id="text-3-2-2">
@@ -835,7 +802,7 @@ list常常是指由cons cell生成的一些东西. 我们来看一些特殊的li
 <div id="postamble" class="status">
 <p class="date">Date: 2020-07-07 Tue 00:00</p>
 <p class="author">Author: 梁子</p>
-<p class="date">Created: 2021-11-15 Mon 20:45</p>
+<p class="date">Created: 2021-11-17 Wed 19:52</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

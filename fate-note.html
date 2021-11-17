@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-11-15 Mon 19:19 -->
+<!-- 2021-11-17 Wed 19:52 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>FATE-一种联邦学习框架</title>
+<title>FATE: 一种联邦学习框架</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="liangzid" />
 <style type="text/css">
@@ -193,6 +193,7 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
+<link rel="stylesheet" type="text/css" href="~/liangzid.github.io/notes/css/worg.css"/>
 <script type="text/javascript">
 // @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
@@ -218,22 +219,22 @@
 </head>
 <body>
 <div id="content">
-<h1 class="title">FATE-一种联邦学习框架</h1>
+<h1 class="title">FATE: 一种联邦学习框架</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgcf7a911">联邦学习基本概念</a></li>
-<li><a href="#org15bb567">安装</a></li>
-<li><a href="#org78643e8">FATE总览</a></li>
+<li><a href="#orgcf7a911">1. 联邦学习基本概念</a></li>
+<li><a href="#org15bb567">2. 安装</a></li>
+<li><a href="#org78643e8">3. FATE总览</a></li>
+<li><a href="#org8b493fb">4. fate demo测试</a></li>
 </ul>
 </div>
 </div>
 
-
 <div id="outline-container-orgcf7a911" class="outline-2">
-<h2 id="orgcf7a911">联邦学习基本概念</h2>
-<div class="outline-text-2" id="text-orgcf7a911">
+<h2 id="orgcf7a911"><span class="section-number-2">1</span> 联邦学习基本概念</h2>
+<div class="outline-text-2" id="text-1">
 <p>
 之前听学长讲过关于联邦学习的汇报，但后来发现该报告无法cover阅读文档时所出现的问题，因此还是需要自己再补充一些知识。
 </p>
@@ -246,8 +247,8 @@
 
 <p>
 首先是横向和纵向的问题，这主要是针对于数据讨论的。可以想象一个坐标轴，横轴代表数据的特征，纵轴代表每个特征下数据的个数。
-如此一来，整张图便是数据的特征分布图。针对于这张图，如果x轴不变，尝试通过多机机制实现对y轴的扩充，也就是在保持特征空间不变的前提下扩充样本数目，那么就是横向联邦学习；
-与之相反，如果样本数目是充足的，重点在于通过扩展样本数使得模型可以覆盖更广的样本空间，那么这种联邦学习就是纵向的。
+如此一来，整张图便是数据的特征分布图。针对于这张图，如果x轴不变，尝试通过多机机制实现对y轴的扩充，也就是在保持特征空间不变的前提下扩充样本数目，那么就是纵向联邦学习；
+与之相反，如果样本数目是充足的，重点在于通过扩展样本表达使得模型可以覆盖更广的特征空间，那么这种联邦学习就是横向的。
 </p>
 
 <p>
@@ -266,13 +267,9 @@ FATE就是这样的一个框架。
 </div>
 </div>
 
-
-
-
-
 <div id="outline-container-org15bb567" class="outline-2">
-<h2 id="org15bb567">安装</h2>
-<div class="outline-text-2" id="text-org15bb567">
+<h2 id="org15bb567"><span class="section-number-2">2</span> 安装</h2>
+<div class="outline-text-2" id="text-2">
 <p>
 官网提供了两种安装方式，即单机安装与集群安装。从这里了解到<a href="https://fate.fedai.org/install/">细节</a>。
 笔者没有集群，先考察<a href="https://github.com/FederatedAI/FATE/tree/master/standalone-deploy">单机安装模式</a>。单机安装模式中推荐方法是实用docker。
@@ -320,8 +317,8 @@ bash ./python/federatedml/test/run_test.sh
 </div>
 
 <div id="outline-container-org78643e8" class="outline-2">
-<h2 id="org78643e8">FATE总览</h2>
-<div class="outline-text-2" id="text-org78643e8">
+<h2 id="org78643e8"><span class="section-number-2">3</span> FATE总览</h2>
+<div class="outline-text-2" id="text-3">
 <p>
 根据<a href="https://fate.fedai.org/overview/">官网</a>的介绍，fate主要包括以下几个大的板块：
 </p>
@@ -334,13 +331,33 @@ bash ./python/federatedml/test/run_test.sh
 <li>Federated Network: 不详。</li>
 <li>KubeFATE：听名字可以看出来，但是我不懂。</li>
 </ol>
+
+<p>
+不妨先根据fate的demo进行测试
+</p>
+</div>
+</div>
+<div id="outline-container-org8b493fb" class="outline-2">
+<h2 id="org8b493fb"><span class="section-number-2">4</span> fate demo测试</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+目前fate支持两个版本，官方支持使用v2,因此后续就以v2为例子进行。注意：即使官方版本是1.x.x版本（例如我使用时官方推荐版本是1.6.1），也是可以使用v2的！
+</p>
+
+<p>
+官方的v2版本demo是无法直接运行的（直接运行会报错）。我怀疑可能是开发者为了测试我的开发能力。此处测试的demo是AI界的hello word，即在minist数据集上用Alexnet训练一个图像数字判别器。链接在<a href="https://github.com/FederatedAI/FATE/tree/master/examples/dsl/v2/homo_nn/mnist_demo">这里</a>。
+</p>
+
+<p>
+（被叫去开会了，有空补充！~）
+</p>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: Sat Sep 18 20:55:59 2021</p>
 <p class="author">Author: liangzid</p>
-<p class="date">Created: 2021-11-15 Mon 19:19</p>
+<p class="date">Created: 2021-11-17 Wed 19:52</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

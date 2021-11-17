@@ -3,12 +3,12 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-11-15 Mon 20:45 -->
+<!-- 2021-11-17 Wed 19:52 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>关于huggingface transformers NLG模块实现的基本思路</title>
 <meta name="generator" content="Org mode" />
-<meta name="author" content="LiangZi" />
+<meta name="author" content="liangzid" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center;
@@ -224,23 +224,24 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgf6c2ff5">1. 关于huggingface transformers NLG 模块实现的基本思路</a>
+<li><a href="#org2857864">1. 标题1</a></li>
+<li><a href="#orgf6c2ff5">2. 关于huggingface transformers NLG 模块实现的基本思路</a>
 <ul>
-<li><a href="#orga3eadb4">1.1. 语言模型的训练与测试的不同之处</a></li>
-<li><a href="#orga73259f">1.2. 训练环节</a>
+<li><a href="#orga3eadb4">2.1. 语言模型的训练与测试的不同之处</a></li>
+<li><a href="#orga73259f">2.2. 训练环节</a>
 <ul>
-<li><a href="#orgd954e63">1.2.1. 数据集封装形式</a></li>
-<li><a href="#org5d4a3f8">1.2.2. 微不足道的模型训练细节</a></li>
+<li><a href="#org82170a6">2.2.1. 数据集封装形式</a></li>
+<li><a href="#org5d4a3f8">2.2.2. 微不足道的模型训练细节</a></li>
 </ul>
 </li>
-<li><a href="#org920915a">1.3. 测试环节</a>
+<li><a href="#org920915a">2.3. 测试环节</a>
 <ul>
-<li><a href="#org82170a6">1.3.1. 数据集封装形式</a></li>
-<li><a href="#orgb4a1036">1.3.2. NLG生成细节</a>
+<li><a href="#org643b2c1">2.3.1. 数据集封装形式</a></li>
+<li><a href="#orgb4a1036">2.3.2. NLG生成细节</a>
 <ul>
-<li><a href="#org466a0de">1.3.2.1. 贪婪生成方案</a></li>
-<li><a href="#org5774473">1.3.2.2. beam search 方案</a></li>
-<li><a href="#orgc0820cf">1.3.2.3. 其他方案</a></li>
+<li><a href="#org466a0de">2.3.2.1. 贪婪生成方案</a></li>
+<li><a href="#org5774473">2.3.2.2. beam search 方案</a></li>
+<li><a href="#orgc0820cf">2.3.2.3. 其他方案</a></li>
 </ul>
 </li>
 </ul>
@@ -250,14 +251,16 @@
 </ul>
 </div>
 </div>
-
+<div id="outline-container-org2857864" class="outline-2">
+<h2 id="org2857864"><span class="section-number-2">1</span> 标题1</h2>
+</div>
 <div id="outline-container-orgf6c2ff5" class="outline-2">
-<h2 id="orgf6c2ff5"><span class="section-number-2">1</span> 关于huggingface transformers NLG 模块实现的基本思路</h2>
-<div class="outline-text-2" id="text-1">
+<h2 id="orgf6c2ff5"><span class="section-number-2">2</span> 关于huggingface transformers NLG 模块实现的基本思路</h2>
+<div class="outline-text-2" id="text-2">
 </div>
 <div id="outline-container-orga3eadb4" class="outline-3">
-<h3 id="orga3eadb4"><span class="section-number-3">1.1</span> 语言模型的训练与测试的不同之处</h3>
-<div class="outline-text-3" id="text-1-1">
+<h3 id="orga3eadb4"><span class="section-number-3">2.1</span> 语言模型的训练与测试的不同之处</h3>
+<div class="outline-text-3" id="text-2-1">
 <p>
 PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预测下一个token时，基于的是前面的token全都正确的似然假设；
 而其测试时，则没有了groud truth的强假设，而是在预测的基础上再预测。
@@ -271,20 +274,20 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </div>
 
 <div id="outline-container-orga73259f" class="outline-3">
-<h3 id="orga73259f"><span class="section-number-3">1.2</span> 训练环节</h3>
-<div class="outline-text-3" id="text-1-2">
+<h3 id="orga73259f"><span class="section-number-3">2.2</span> 训练环节</h3>
+<div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-orgd954e63" class="outline-4">
-<h4 id="orgd954e63"><span class="section-number-4">1.2.1</span> 数据集封装形式</h4>
-<div class="outline-text-4" id="text-1-2-1">
+<div id="outline-container-org82170a6" class="outline-4">
+<h4 id="org82170a6"><span class="section-number-4">2.2.1</span> 数据集封装形式</h4>
+<div class="outline-text-4" id="text-2-2-1">
 <p>
 一般而言，是数据等于标签的格式。以对话为例，可能就是"Q+[SEP]+A"这种。
 </p>
 </div>
 </div>
 <div id="outline-container-org5d4a3f8" class="outline-4">
-<h4 id="org5d4a3f8"><span class="section-number-4">1.2.2</span> 微不足道的模型训练细节</h4>
-<div class="outline-text-4" id="text-1-2-2">
+<h4 id="org5d4a3f8"><span class="section-number-4">2.2.2</span> 微不足道的模型训练细节</h4>
+<div class="outline-text-4" id="text-2-2-2">
 <p>
 由于是token预测问题，所以本质上属于一个分类问题，一般而言，会使用交叉熵，除了使用transformers库之外，还可以自己用以下的方式进行损失的定义和传播：
 </p>
@@ -303,12 +306,12 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </div>
 </div>
 <div id="outline-container-org920915a" class="outline-3">
-<h3 id="org920915a"><span class="section-number-3">1.3</span> 测试环节</h3>
-<div class="outline-text-3" id="text-1-3">
+<h3 id="org920915a"><span class="section-number-3">2.3</span> 测试环节</h3>
+<div class="outline-text-3" id="text-2-3">
 </div>
-<div id="outline-container-org82170a6" class="outline-4">
-<h4 id="org82170a6"><span class="section-number-4">1.3.1</span> 数据集封装形式</h4>
-<div class="outline-text-4" id="text-1-3-1">
+<div id="outline-container-org643b2c1" class="outline-4">
+<h4 id="org643b2c1"><span class="section-number-4">2.3.1</span> 数据集封装形式</h4>
+<div class="outline-text-4" id="text-2-3-1">
 <p>
 测试环节的数据集同训练环节有所不同，因为在测试环节，相当于是基于一个prefix去生成后面的话。
 所以，数据集的数据，应该是：“Q+[SEP]”，标签同样是“Q+[SEP]+A”。
@@ -316,15 +319,15 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </div>
 </div>
 <div id="outline-container-orgb4a1036" class="outline-4">
-<h4 id="orgb4a1036"><span class="section-number-4">1.3.2</span> NLG生成细节</h4>
-<div class="outline-text-4" id="text-1-3-2">
+<h4 id="orgb4a1036"><span class="section-number-4">2.3.2</span> NLG生成细节</h4>
+<div class="outline-text-4" id="text-2-3-2">
 <p>
 下面给出几种较为常见的NLG的具体实现，方便日后炼丹之用。
 </p>
 </div>
 <div id="outline-container-org466a0de" class="outline-5">
-<h5 id="org466a0de"><span class="section-number-5">1.3.2.1</span> 贪婪生成方案</h5>
-<div class="outline-text-5" id="text-1-3-2-1">
+<h5 id="org466a0de"><span class="section-number-5">2.3.2.1</span> 贪婪生成方案</h5>
+<div class="outline-text-5" id="text-2-3-2-1">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #FF8C00;">beam_outputs</span>=Decoder.generate<span style="color: #AF87FF;">(</span>input_ids=utterance_input, max_length=64<span style="color: #AF87FF;">)</span>
 </pre>
@@ -336,8 +339,8 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </div>
 
 <div id="outline-container-org5774473" class="outline-5">
-<h5 id="org5774473"><span class="section-number-5">1.3.2.2</span> beam search 方案</h5>
-<div class="outline-text-5" id="text-1-3-2-2">
+<h5 id="org5774473"><span class="section-number-5">2.3.2.2</span> beam search 方案</h5>
+<div class="outline-text-5" id="text-2-3-2-2">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #FF8C00;">outputs</span>=Decoder.generate<span style="color: #AF87FF;">(</span>input_ids=utterance_input, max_length=64,
                                                 num_beams=5,
@@ -348,8 +351,8 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </div>
 
 <div id="outline-container-orgc0820cf" class="outline-5">
-<h5 id="orgc0820cf"><span class="section-number-5">1.3.2.3</span> 其他方案</h5>
-<div class="outline-text-5" id="text-1-3-2-3">
+<h5 id="orgc0820cf"><span class="section-number-5">2.3.2.3</span> 其他方案</h5>
+<div class="outline-text-5" id="text-2-3-2-3">
 <p>
 参考这里： <a href="https://huggingface.co/blog/how-to-generate">https://huggingface.co/blog/how-to-generate</a>
 </p>
@@ -360,8 +363,9 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: LiangZi</p>
-<p class="date">Created: 2021-11-15 Mon 20:45</p>
+<p class="date">Date: Wed Nov 17 19:40:30 2021</p>
+<p class="author">Author: liangzid</p>
+<p class="date">Created: 2021-11-17 Wed 19:52</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
