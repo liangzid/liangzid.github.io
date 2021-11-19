@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-11-18 Thu 09:23 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>学习rust之所有权的学习</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Zi Liang" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="~/liangzid.github.io/notes/css/worg.css"/>
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">学习rust之所有权的学习</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2b14657">1. 所有权（ownership）是什么？</a>
+<ul>
+<li><a href="#org0a8355e">1.1. stack vs heap?</a></li>
+<li><a href="#orgf34b4f2">1.2. 已有的内存管理风格</a></li>
+<li><a href="#org05c609c">1.3. 所有权（ownership）是什么？</a></li>
+<li><a href="#orgc7c9bea">1.4. 不是指向数据，而是指向指针————引用就是一个指向指针的指针</a></li>
+<li><a href="#org57db6ff">1.5. 总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2b14657" class="outline-2">
+<h2 id="org2b14657"><span class="section-number-2">1</span> 所有权（ownership）是什么？</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+在理解所有权之前，我们稍微接触一点硬件知识。
+</p>
+</div>
+<div id="outline-container-org0a8355e" class="outline-3">
+<h3 id="org0a8355e"><span class="section-number-3">1.1</span> stack vs heap?</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+首先的一个问题是栈和堆的的区别。
+栈和堆对编程语言的意义，主要在于如何访问、如何修改存储在栈和堆上的向量。
+而对于不同的编程语言，其实还是有些不同的，因此我们先介绍一般风格（称之为C风格），之后给出几个特殊风格的例子。
+</p>
+
+<p>
+栈和堆有什么区别？栈相当于一个更简朴、更快速、体积更小、更死板的仓库——就像蜂窝一样，每一个单元都是固定的，因此你不需要记录太多关于栈的信息，仅仅需要记住一个索引就好了。而堆与之相反。堆的空间被认为是很大的，因此访问会慢一些。堆所能存储的东西也是更加灵活的，更加自定义的。
+</p>
+
+<p>
+我试图总结一个表格，来说明二者在编程语言上的核心区别。可能会有谬误，仅代表我的理解。
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">\</th>
+<th scope="col" class="org-left">stack</th>
+<th scope="col" class="org-left">heap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">所存储变量类型</td>
+<td class="org-left">基本类型变量（如float）</td>
+<td class="org-left">复杂变量类型（class）</td>
+</tr>
+
+<tr>
+<td class="org-left">所存储变量赋值新的变量时</td>
+<td class="org-left">值复制</td>
+<td class="org-left">引用（指针，索引）复制，值不复制</td>
+</tr>
+
+<tr>
+<td class="org-left">接上行，拷贝类型</td>
+<td class="org-left">赋值为深拷贝</td>
+<td class="org-left">赋值为浅拷贝</td>
+</tr>
+
+<tr>
+<td class="org-left">进出方式</td>
+<td class="org-left">先进后出</td>
+<td class="org-left">先进先出</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+当然，世界上也有一些比较纯粹的编程语言，可能你定义一个整数，也会按照堆的风格进行处理，或许smalltalk就是这样一种语言。
+</p>
+</div>
+</div>
+<div id="outline-container-orgf34b4f2" class="outline-3">
+<h3 id="orgf34b4f2"><span class="section-number-3">1.2</span> 已有的内存管理风格</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+在理解所有权之前，先来看看目前的编程语言中已有的内存管理方式：
+</p>
+<ol class="org-ol">
+<li>GC风格（Garbage Collection）：即用户不需要关心垃圾的处理过程，解释器会自动地对无用的空间进行回收。</li>
+<li>精细内存管理风格：我需要手动新建一片内存区域，同时手动清楚他们。</li>
+</ol>
+
+<p>
+可以看出，GC风格和精细的内存管理是互补的：前者使用方便，节省脑力；后者可以在运行时无需花费额外的代价管理内存空间。
+</p>
+
+<p>
+而新提出的“所有权”，则有一种“我全都要”的感觉。
+当然，世界上不存在我全都要，关于“所有权”的花销在哪里，最后再去考虑，我们先来学习一下什么是所有权。
+</p>
+</div>
+</div>
+<div id="outline-container-org05c609c" class="outline-3">
+<h3 id="org05c609c"><span class="section-number-3">1.3</span> 所有权（ownership）是什么？</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+笔者看来，所有权就是约束了 <b>变量名（也就是指向内存空间的index）</b> 与 <b>变量数值（也就是内存空间所存储的数据）</b> 的一种描述。 
+</p>
+
+<p>
+我先试一试一句话定义ownership:
+</p>
+
+<blockquote>
+<p>
+对于一个对象而言，其所有权指：对于该对象而言，存在且仅存在一个主人可以访问、修改这个对象。
+</p>
+</blockquote>
+
+<blockquote>
+<p>
+The ownership for a object is the authority that there exists one and only one owner that can visit this object.
+</p>
+</blockquote>
+
+<p>
+一般而言，所有权规则被定义为下面三条：
+</p>
+
+<blockquote>
+<ul class="org-ul">
+<li>Rust 中的每一个值都有一个被称为其 所有者（owner）的变量。</li>
+<li>值在任一时刻有且只有一个所有者。</li>
+<li>当所有者（变量）离开作用域，这个值将被丢弃。</li>
+</ul>
+</blockquote>
+
+<p>
+我们现在可以停下来，思考一下为什么所有权可以做内存管理了。其实答案比较直白：如果一个值存在堆上，那么每变更一个所有域，我就需要人工交换所有权。如果我忘记了，编译时按照上述规则编译器就会找不到那个变量，从而内存错误会发生在编译时。
+</p>
+
+<p>
+当然，这样的一个可能的问题就是：我不能再像过去使用java、python等语言那样设置多个变量名指向一个变量了。比如我有一个初始化函数 <code>object()</code> 可以返回一个在堆上的对象，下面的伪代码语句对rust不适用。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #FF8C00;">a</span>=<span style="color: #FF1493;">object</span><span style="color: #AF87FF;">()</span>
+<span style="color: #FF8C00;">b</span>=a
+<span style="color: #FF1493;">print</span><span style="color: #AF87FF;">(</span>a<span style="color: #AF87FF;">)</span>
+</pre>
+</div>
+
+
+<p>
+我们再看一个类似的伪代码，该代码和变量赋值类似，属于函数赋值:由于我们使用的是一个不知道长度的string（编译时未知）而非一个字面值字符串，所以 <code>s1</code> 会存储在堆上，
+由于s1在堆上，所以当其把指针传给函数的参数 <code>a_string</code> 时，s1就不再是owner了，这时如果你试图使用它——就会报错，你只能再对他赋值。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust">  <span style="color: #FF1493;">let</span> s1=<span style="color: #5FD7FF;">String</span>::from<span style="color: #AF87FF;">(</span><span style="color: #CDC673;">"lalalaaaaaaaa"</span><span style="color: #AF87FF;">)</span>;
+  <span style="color: #FF1493;">let</span> s2=in_and_out<span style="color: #AF87FF;">(</span>s1<span style="color: #AF87FF;">)</span>;
+  <span style="color: #FF1493;">println!</span><span style="color: #AF87FF;">(</span><span style="color: #CDC673;">"</span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">"</span>,s1<span style="color: #AF87FF;">)</span>; <span style="color: #8B8878;">// </span><span style="color: #8B8878;">error</span>
+
+<span style="color: #FF1493;">fn</span> <span style="color: #87D700;">takes_and_gives_back</span><span style="color: #AF87FF;">(</span><span style="color: #FF8C00;">a_string</span>: <span style="color: #5FD7FF;">String</span><span style="color: #AF87FF;">)</span> -&gt; <span style="color: #5FD7FF;">String</span> <span style="color: #AF87FF;">{</span> 
+    <span style="color: #FF1493;">let</span> new_stirng=some_transform<span style="color: #5FD7FF;">(</span>a_string<span style="color: #5FD7FF;">)</span> <span style="color: #8B8878;">// </span><span style="color: #8B8878;">some_transform&#26159;&#25105;&#30606;&#20889;&#30340;&#20989;&#25968;,&#27880;&#24847;&#27809;&#20998;&#21495;&#65292;&#20195;&#34920;&#36820;&#22238;&#20043;</span>
+<span style="color: #AF87FF;">}</span>
+</pre>
+</div>
+
+<p>
+上述情况是较为繁琐的，因为如果我们还想接着使用s1，那么针对以上问题，我们还要接着把函数里的a_string返回回来，即
+</p>
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #FF1493;">fn</span> <span style="color: #87D700;">takes_and_gives_back</span><span style="color: #AF87FF;">(</span><span style="color: #FF8C00;">a_string</span>: <span style="color: #5FD7FF;">String</span><span style="color: #AF87FF;">)</span> -&gt; <span style="color: #5FD7FF;">String</span> <span style="color: #AF87FF;">{</span> 
+    <span style="color: #FF1493;">let</span> new_stirng=some_transform<span style="color: #5FD7FF;">(</span>a_string<span style="color: #5FD7FF;">)</span>;
+    <span style="color: #5FD7FF;">(</span>a_string, new_string<span style="color: #5FD7FF;">)</span>
+<span style="color: #AF87FF;">}</span>
+</pre>
+</div>
+
+<p>
+这样就太麻烦了。
+此处和C++一样，rust给出了引用。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc7c9bea" class="outline-3">
+<h3 id="orgc7c9bea"><span class="section-number-3">1.4</span> 不是指向数据，而是指向指针————引用就是一个指向指针的指针</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+我们来看看引用，一种C++里也用烂了的方式。
+</p>
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #FF1493;">fn</span> <span style="color: #87D700;">main</span><span style="color: #AF87FF;">()</span> <span style="color: #AF87FF;">{</span>
+    <span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">s1</span> = <span style="color: #5FD7FF;">String</span>::from<span style="color: #5FD7FF;">(</span><span style="color: #CDC673;">"hello"</span><span style="color: #5FD7FF;">)</span>;
+
+    <span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">len</span> = calculate_length<span style="color: #5FD7FF;">(</span>&amp;s1<span style="color: #5FD7FF;">)</span>;
+
+    <span style="color: #FF1493;">println!</span><span style="color: #5FD7FF;">(</span><span style="color: #CDC673;">"The length of '</span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">' is </span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">."</span>, s1, len<span style="color: #5FD7FF;">)</span>;
+<span style="color: #AF87FF;">}</span>
+
+<span style="color: #FF1493;">fn</span> <span style="color: #87D700;">calculate_length</span><span style="color: #AF87FF;">(</span><span style="color: #FF8C00;">s</span>: &amp;<span style="color: #5FD7FF;">String</span><span style="color: #AF87FF;">)</span> -&gt; <span style="color: #5FD7FF;">usize</span> <span style="color: #AF87FF;">{</span>
+    s.len<span style="color: #5FD7FF;">()</span>
+<span style="color: #AF87FF;">}</span>
+</pre>
+</div>
+<p>
+以上述代码为例，s不再是指向String::from("hello")的指针了。如果我们认为s1指向了堆中的该字符串，那么变量本身则是存储在栈中的一些数据（可以看作是对内存中该数据的meta-data）。如果我们使用&amp;去解引用，那么我们获得的s，并不是和s1一样的一个指向内存中变量空间的指针，而是一个指向了s1的指针。对于这个s，他在函数被使用时建立（即初始化在栈中），在函数结束时销毁（该参数不能被返回，原因后面介绍）。因此，我们可以通过s去操纵内存空间，因为函数自动使用了语法糖，让你觉得你在操纵s1。
+</p>
+
+<p>
+rust在此基础上又进了一步，对于上述代码中的s1，你可以使用多个只读的引用，但你不能使用多个具有写权限的引用。——等等，读写权限是什么鬼？
+</p>
+
+<p>
+是这样的：rust默认定义的变量不具有写权限（即初始化完，就是最终状态了），如果你想定义一个变量，还可以改变，就要加关键词mut。所以：
+</p>
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #8B8878;">// </span><span style="color: #8B8878;">case1: &#21487;&#20197;&#32534;&#35793;&#36890;&#36807;&#30340;&#29256;&#26412;</span>
+<span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">s</span> = <span style="color: #5FD7FF;">String</span>::from<span style="color: #AF87FF;">(</span><span style="color: #CDC673;">"hello"</span><span style="color: #AF87FF;">)</span>;
+<span style="color: #FF1493;">let</span> r1=&amp; s;
+<span style="color: #FF1493;">let</span> r2=&amp; s;
+<span style="color: #FF1493;">println!</span><span style="color: #AF87FF;">(</span><span style="color: #CDC673;">"</span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">, </span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">"</span>, r1, r2<span style="color: #AF87FF;">)</span>;
+
+<span style="color: #8B8878;">//</span><span style="color: #8B8878;">------&#32534;&#35793;&#36890;&#36807;</span>
+<span style="color: #FF1493;">let</span> <span style="color: #FF1493;">mut</span> <span style="color: #FF8C00;">s</span> = <span style="color: #5FD7FF;">String</span>::from<span style="color: #AF87FF;">(</span><span style="color: #CDC673;">"hello"</span><span style="color: #AF87FF;">)</span>;
+<span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">r1</span> = &amp;<span style="color: #FF1493;">mut</span> s;
+<span style="color: #FF1493;">println!</span><span style="color: #AF87FF;">(</span><span style="color: #CDC673;">"</span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">, </span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">"</span>, r1, r1<span style="color: #AF87FF;">)</span>;
+
+<span style="color: #8B8878;">//</span><span style="color: #8B8878;">------&#32534;&#35793;&#19981;&#36890;&#36807;</span>
+<span style="color: #FF1493;">let</span> <span style="color: #FF1493;">mut</span> <span style="color: #FF8C00;">s</span> = <span style="color: #5FD7FF;">String</span>::from<span style="color: #AF87FF;">(</span><span style="color: #CDC673;">"hello"</span><span style="color: #AF87FF;">)</span>;
+<span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">r1</span> = &amp;<span style="color: #FF1493;">mut</span> s;
+<span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">r2</span> = &amp;<span style="color: #FF1493;">mut</span> s;
+<span style="color: #FF1493;">println!</span><span style="color: #AF87FF;">(</span><span style="color: #CDC673;">"</span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">, </span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">"</span>, r1, r2<span style="color: #AF87FF;">)</span>;
+</pre>
+</div>
+
+<p>
+下面给出一个更加变态的代码，看看我学会了没有。
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #FF1493;">let</span> <span style="color: #FF1493;">mut</span> <span style="color: #FF8C00;">s</span> = <span style="color: #5FD7FF;">String</span>::from<span style="color: #AF87FF;">(</span><span style="color: #CDC673;">"hello"</span><span style="color: #AF87FF;">)</span>;
+
+<span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">r1</span> = &amp;s; <span style="color: #8B8878;">// </span><span style="color: #8B8878;">&#27809;&#38382;&#39064;</span>
+<span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">r2</span> = &amp;s; <span style="color: #8B8878;">// </span><span style="color: #8B8878;">&#27809;&#38382;&#39064;</span>
+<span style="color: #FF1493;">println!</span><span style="color: #AF87FF;">(</span><span style="color: #CDC673;">"</span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;"> and </span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">"</span>, r1, r2<span style="color: #AF87FF;">)</span>;
+<span style="color: #8B8878;">// </span><span style="color: #8B8878;">r1 r2&#26159;&#20540;&#20256;&#20837;&#65292;&#32780;&#36890;&#36807;&#20316;&#29992;&#22495;println!()&#65292;&#25152;&#26377;&#26435;&#34987;&#36716;&#21040;&#20989;&#25968;&#37324;&#20102;&#65292;&#25152;&#20197;r1,r2&#28040;&#22833;&#12290;</span>
+<span style="color: #8B8878;">// </span><span style="color: #8B8878;">&#27492;&#20301;&#32622;&#20043;&#21518; r1 &#21644; r2 &#19981;&#20877;&#20351;&#29992;</span>
+
+<span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">r3</span> = &amp;<span style="color: #FF1493;">mut</span> s; <span style="color: #8B8878;">// </span><span style="color: #8B8878;">&#27809;&#38382;&#39064;</span>
+<span style="color: #FF1493;">println!</span><span style="color: #AF87FF;">(</span><span style="color: #CDC673;">"</span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">"</span>, r3<span style="color: #AF87FF;">)</span>;
+</pre>
+</div>
+
+<p>
+前面我埋了一个坑，即为什么：函数里的引用不能够作为返回值返回。这其实就是编译器为了保证安全设置的一个规则下的一个具体表现。
+rust编译器规定:
+</p>
+<blockquote>
+<p>
+引用的所有权不能比变量的所有权更早地离开某个作用域.
+</p>
+</blockquote>
+
+<p>
+这是针对悬垂引用问题（Dangling Reference）提出的。该问题是指：堆上的数据已经消失了，栈上存储的指向这些数据的变量名也消失了，但是栈上存储的指向栈上的用户名的指针，也就是我们的引用，还在。&#x2014;&gt;这就是潜在的危险了。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org57db6ff" class="outline-3">
+<h3 id="org57db6ff"><span class="section-number-3">1.5</span> 总结</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+关于ownership的介绍就是这么多。总结下来就是：拥有权独一份，过期就删除；只读的引用拥有权有很多份，过期就删除；可写的引用拥有权有且只有一份。以及：rust不可能会让你同时拥有两个可以执行写操作的指针。
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: Wed Nov 17 20:18:15 2021</p>
+<p class="author">Author: Zi Liang</p>
+<p class="date">Created: 2021-11-18 Thu 09:23</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
