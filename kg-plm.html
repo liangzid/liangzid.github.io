@@ -1,0 +1,719 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2021-11-21 Sun 16:37 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>知识图谱增强的预训练模型</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Zi Liang" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="~/liangzid.github.io/notes/css/worg.css"/>
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">知识图谱增强的预训练模型</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgad91bce">1. 0 前言</a></li>
+<li><a href="#org6bf27e8">2. 1 为什么要用知识图谱去增强预训练模型？</a></li>
+<li><a href="#org7522184">3. 2 知识图谱与预训练模型结合时的常见问题</a></li>
+<li><a href="#orgd7e6730">4. 3 相关工作</a>
+<ul>
+<li><a href="#orgf3cffa4">4.1. 3.1 隐式融合——使用embedding在模型内部融合</a>
+<ul>
+<li><a href="#orgfe68a2d">4.1.1. ERNIE</a></li>
+<li><a href="#org7d8df35">4.1.2. KnowBERT</a></li>
+</ul>
+</li>
+<li><a href="#org8bb4efd">4.2. 3.2 显式融合——不改变模型结构的融合方式</a>
+<ul>
+<li><a href="#org155e33c">4.2.1. K-BERT</a></li>
+<li><a href="#org3364c70">4.2.2. CoLAKE</a></li>
+</ul>
+</li>
+<li><a href="#org5624159">4.3. 3.3 知识图谱与预训练模型的共同学习</a>
+<ul>
+<li><a href="#org56aea0d">4.3.1. KEPLER</a></li>
+<li><a href="#orgd3f9153">4.3.2. JAKET</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgd70f993">5. 4 总结与未来展望</a></li>
+<li><a href="#orgb5ecaa0">6. 参考文献</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgad91bce" class="outline-2">
+<h2 id="orgad91bce"><span class="section-number-2">1</span> 0 前言</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+如果2019年BERT对于NLP从业人员而言尚还有一些新颖之处，那么到2021年，transformer对于整个AI圈都已是老生常谈的话题了。当然，比起transformer的横空出世，知识图谱近年来也越来越受到关注。然而，作为语义网络、万维网、数据库的后继者，2012年被提出的知识图谱旨在提供一种更加复杂灵活的知识的显式建模，这对缺乏特定领域知识和常识信息捕捉的预训练模型无疑是一种良好的补充。本文将梳理用知识图谱增强预训练模型的相关工作。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6bf27e8" class="outline-2">
+<h2 id="org6bf27e8"><span class="section-number-2">2</span> 1 为什么要用知识图谱去增强预训练模型？</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+当然是因为需求（灌水），我们期望让预训练模型在需要特定知识或常识的任务中表现得更好。比如一段文字“Harry Potter points his wand at Lord Voldmort.”，要想让模型理解这句话，就需要预训练模型知道一些《哈利波特》中的信息，换而言之，应该具有更好的对文本中某些实体的理解，而不仅仅是把它们当作一个称谓。再比如说文本生成中的例子，如果我们让模型用“河、鱼、网、捉”几个词造句，我们至少应当保证生成的句子是人在河里用网捉鱼，而非鱼在捉网等等。这里面就涉及到一些常识。尽管这些常识已经通过大量的文本预训练或多或少隐式存储在了模型中，但这些知识并不足以让预训练模型处理当下的任务，所以才需要进行知识的注入和增强。另一方面，得到了知识的增强之后，预训练模型可以表现得更像是领域专家，或更像是人。比如你在和对话机器人聊天，你说：“翻译翻译，什么叫惊喜。”你是希望它把“惊喜”翻译成英文，还是想让它玩汤师爷的梗呢？
+</p>
+</div>
+</div>
+<div id="outline-container-org7522184" class="outline-2">
+<h2 id="org7522184"><span class="section-number-2">3</span> 2 知识图谱与预训练模型结合时的常见问题</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+了解相关意图之后，再来看看结合需要考虑的难点。将知识图谱信息注入到预训练模型中，常见的三个问题就是结构化信息的非结构化，异构特征空间的对齐，以及知识噪声的解决。
+</p>
+
+<p>
+对比于自然语言文本这种非结构化的信息，知识图谱在形式上可以看作是三元组的列表，或者是一张有向图。这样的形式蕴含着比单纯的自然语言文本更多的信息，也就是结构里的信息。如果将这样的信息同用于提取非结构化文本信息的预训练模型结合起来，是开展此类工作的第一步。
+</p>
+
+<p>
+第二个问题是空间的对齐，由于token部分的特征与知识图谱的embedding是通过分离的两种不同的方法得到的，所以二者所处的特征空间几乎必然是不同的。针对这类问题，最简单的方法是学习一个线性变换去做对齐。
+</p>
+
+<p>
+第三个问题是知识噪声问题。如果无法进行良好的融合，所融入的知识图谱信息不仅不会帮助预训练模型，反而还会降低预训练模型的效果。在embedding层面，知识信息可能会干扰注意力机制部分的运算，使得当前的推理同预训练模型参数之间发生矛盾；对于在输入文本上的融合，知识噪声可能会破坏原有句子的结构和表达，从而影响模型的理解和生成。
+</p>
+
+<p>
+下面介绍的相关工作都是在这三个问题之上进行思考并提出的。
+</p>
+</div>
+</div>
+<div id="outline-container-orgd7e6730" class="outline-2">
+<h2 id="orgd7e6730"><span class="section-number-2">4</span> 3 相关工作</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+用知识图谱增强预训练模型的工作可依据多个角度进行划分。从主客关系上看，有通过知识图谱增强预训练模型，以实现更好的知识图谱构建的，也有通过知识图谱引入知识，为预训练模型在NLP本身的下游任务上提升效果的。从知识图谱与预训练模型的增强方式来看，有通过线性变化、注意力机制等在知识实体与关系的嵌入式表达上进行知识融合的，也有直接使用实体描述，设计特定的预训练模型输入。在面向的任务上，除去GLUE等进行通用自然语言理解测试的benchmark之外，还包括近期热门的知识增强的开放领域问答、常识文本生成等等。
+</p>
+
+<p>
+由于相关工作过于庞杂，本文从模型的角度入手，按照知识与预训练模型融合的方式进行分类，仅仅选取具有代表性的工作进行重点分析。面对一些重要的研究任务或其他值得注意的问题，同样会进行具体的强调。粗略划分，知识融合的方法可简单分成三类：token层面的融合，embedding层面上的融合，以及知识图谱与预训练模型的共同学习。下面分别进行介绍。
+</p>
+</div>
+
+<div id="outline-container-orgf3cffa4" class="outline-3">
+<h3 id="orgf3cffa4"><span class="section-number-3">4.1</span> 3.1 隐式融合——使用embedding在模型内部融合</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+隐式融合是比较直接的embedding融合方法，该类方法基于一些KGE（Knowledge Graph Embedding，使用最多的是TransE）算法获得知识图谱中的实体与关系的embedding，并为这些embedding修改预训练模型结构，以便将二者进行结合。根据将embedding与预训练模型结合的方式，可以粗略分为基于projection的结合方法和基于attention的结合方法。下面以几篇论文为例。
+</p>
+</div>
+
+<div id="outline-container-orgfe68a2d" class="outline-4">
+<h4 id="orgfe68a2d"><span class="section-number-4">4.1.1</span> ERNIE</h4>
+<div class="outline-text-4" id="text-4-1-1">
+<p>
+ERNIE算得上是该领域的较早工作，其知识融合方法可通过下图进行表达。
+</p>
+
+
+<div id="org08a9f14" class="figure">
+<p><img src="./images/screenshot_20211121_163217.png" alt="screenshot_20211121_163217.png" />
+</p>
+</div>
+
+<p>
+从图中可以看出，ERNIE在传统的transformer encoder（也就是图中的T-encoder，T可以理解为token或者text）的基础上，加入了一种可以进行知识融合的encoder模块（对应图中的K-encoder）。一个K-encoder的输入除了过去常见的token input之外，还有知识的输入。
+ERNIE中知识主要指实体，即从待理解的输入语句中提取的一些特定的概念，这些实体可以通过实体识别、匹配等方法找到，当然在学术实验中多是默认为一个已有的值，后续的NLU上的工作基本继承了这一做法。当然，也存在一些既使用实体信息又利用了实体之间的关系信息的工作，后面也会进行介绍。看完输入之后，K-Encoder的输出同样也是包括两部分，即token输出和entity输出。这种设计可以实现将M个K-encoder进行拼接，从而支持进行更深度的语义融合。那么，文本信息和实体信息是怎么进行融合的呢？
+</p>
+
+<p>
+之前说过，知识融合的头一个问题是特征空间的问题。所以ERNIE设计了一种projection的方式进行特征融合。简单而言就是，对于同一概念或实体通过文本间self-attention与实体self-attention得到的两种embedding w_j与w_k，通过以下的线性变换加非线性激活函数的方式，先融合到一个新的空间，之后再映射回原有空间。
+</p>
+
+
+<div id="org824ced3" class="figure">
+<p><img src="./images/screenshot_20211121_163314.png" alt="screenshot_20211121_163314.png" />
+</p>
+</div>
+
+<p>
+而对于输入文本中没有对应的实体的那些token，则不需要进行融合，仅仅将上述流程自我变换一遍即可。
+</p>
+
+
+<div id="org80977fc" class="figure">
+<p><img src="./images/screenshot_20211121_163325.png" alt="screenshot_20211121_163325.png" />
+</p>
+</div>
+
+<p>
+在得知了融合的方式之后，另一个问题是：上述融合中的参数，以及对entity进行self-attention部分的参数，如何进行训练？在过往BERT模型提出的MLM与NSP的基础上，此处添加了一个实体对齐任务，类似于MLM，就不赘述了。
+</p>
+
+<p>
+这篇工作之后，国内陆续涌现出K-BERT、CoLake等论文，但这些论文同embedding级别的融合工作稍有不同，因此放在后面介绍。下面首先介绍一篇AllenNLP分享的论文。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7d8df35" class="outline-4">
+<h4 id="org7d8df35"><span class="section-number-4">4.1.2</span> KnowBERT</h4>
+<div class="outline-text-4" id="text-4-1-2">
+<p>
+这篇论文同样是用embedding融合的方式去做的，只不过复杂了一点，废话少说，上图：
+</p>
+
+
+<div id="orgacb4d6c" class="figure">
+<p><img src="./images/screenshot_20211121_163339.png" alt="screenshot_20211121_163339.png" /> 
+</p>
+</div>
+
+<p>
+图画的还是很乱的，单凭颜色，我们可以粗略把他们分成三块：最右边的蓝色部分是实体，下部红色是融合之前的模型，紫色是融合之后的。文中一共标记了七个步骤，其实是有些繁琐的，此处把这七个步骤简单罗列，感兴趣者可以去看论文。
+</p>
+
+<ol class="org-ol">
+<li>Projection to entity dimension (200)；</li>
+<li>Mention-span pooling；</li>
+<li>Mention-span transform；</li>
+<li>Entity embedding pooling（attention-based）；</li>
+<li>Entity link；</li>
+<li>Fusion（recontextualization）；</li>
+<li>Inv-Projection；</li>
+</ol>
+
+<p>
+可以看出，以上很多工作都是为融合做准备，且都是ERNIE没有考虑到的问题。如将token归并成span，这是因为有些实体其实包含多个token，换而言之，token和entity不是一一对应的。这一点在中文里尤甚，而ERNIE是没有考虑到的。再比如说，查询知识图谱库时，常常会出现输入一个string出现多个entity的情况，这种不算太学术但实际使用时必须考虑的问题，也被这篇工作考虑到了。除此之外，第一步和第七步的两个逆变换，其实是对ERNIE思路的一种继承。当然，最重要的还是知识融合的过程。这篇论文借用自注意力机制进行融合，具体的融合方式可以用下面的公式进行表达：
+</p>
+
+
+<div id="org3266f9b" class="figure">
+<p><img src="./images/screenshot_20211121_163354.png" alt="screenshot_20211121_163354.png" />
+</p>
+</div>
+
+<p>
+我们知道，此处的H是projection之后的token输入，也就是纯粹的没有知识融入的文本特征，而S^’e，是从文本中提取出的span在融合了相关实体信息之后的表示，也就是既包含该实体的上下文信息又包含该实体从知识图谱中获得的额外信息的表示。KnowBERT用H作为Q，用S作为K和V，进行注意力机制的聚合。抛去公式，直观地理解这一过程就是：长度为N的文本中的第i个token与所挖掘M个实体中的第j个实体，通过表示向量的内积计算二者的相似度，而后进行归一化形成注意力矩阵。所以说，同传统的self-attention的方阵不同，此处的注意力矩阵是N*M的，且N一般比M大。比如在上图中，N=4，而M=3。之后，基于这样的一个权重矩阵，每个token的表示向量都通过该token对每一个entity的加权和获得。
+</p>
+
+<p>
+可以看出，这种方法不同于ERNIE那种仅是为了让预训练模型理解某几个特定的生词，而是将实体的信息更加显式地插入到了每个token里。当然，这样的结果更多是融合之后的信息，需要通过残差连接维持原有的文本输入。这篇工作的另一个问题是，中间涉及到较多的可学习模块，因此较难训练。一般该类问题都可以通过课程训练，子模块单独训练等方式缓解冷启动问题，此处就不赘述了。
+KG-BART
+之后再介绍一篇发表在AAAI2021上的论文，KG-BART。同之前的NLU任务不同，KG-BART主要是用在了文本生成上的常识文本生成（commonsense generation）任务。该任务是一种特殊的硬限制文本生成（hard-constraint NLG）,特殊之处就是“常识”。而为了让生成模型具有常识，自然就需要结合知识图谱或相关文档。有关commenGen的相关信息后续还会介绍。这篇论文的整体框图如下图所示：
+</p>
+
+
+<div id="orge43c877" class="figure">
+<p><img src="./images/screenshot_20211121_163414.png" alt="screenshot_20211121_163414.png" />
+</p>
+</div>
+
+<p>
+从图中可以看出，同BART一样，KG-BART也是典型的encoder-decoder结构。该结构的输入是一个BPE编码的token输入，输出为我们期待的句子。可以看出，知识子图在encoder和decoder上都进行了增强。当然，此处的两种知识子图的意义不同，encoder处的图侧重于补充常识信息（R表示reasoning），而decoder部分则主要用以辅助生成，因此是在改变输出token的分布（E表示Expanding）。下面分别对其生成方式进行简单介绍。
+Encoder部分：
+Encoder部分的框图如下图所示：
+</p>
+
+
+<div id="orgf465500" class="figure">
+<p><img src="./images/screenshot_20211121_163426.png" alt="screenshot_20211121_163426.png" />
+</p>
+</div>
+
+<p>
+从图中可以看出，encoder中主要包含三个部分，SCI、MGAT和CSD。其中SCI和CSD类似于know BERT中的span，都是将subword整理成一个concept（或者，entity），以及将这样的一个concept再拆解到token级别的过程。论文中使用的是一维卷积加池化，具体细节此处便不赘述了，让我们集中关注知识的融合过程。
+从图中可以看到，知识的融合主要包括实体（v^R）和关系（r^R）两部分，这些embedding的学习均是基于TransE进行的。对于融合过程，该工作基于GAT进行，也就是下面的三个公式：
+</p>
+
+
+<div id="orga9d38d7" class="figure">
+<p><img src="./images/screenshot_20211121_163437.png" alt="screenshot_20211121_163437.png" />
+</p>
+</div>
+
+<p>
+我们直接看最后一个公式，可以看出这是标准的GAT结构，即图中节点i更新之后的特征等于其邻域内所有节点的特征在经过线性变换后进行有权重的家和。其中，每个节点的初始特征包括两部分，一部分是来自于文本的聚合之后的概念特征，另一部分是知识图谱中该概念对应的embedding在线性变换之后的结果。每个节点的特征即为这两部分的拼接值（也就是第一个公式）。而权重\alpha则是基于目标节点i和邻居节点j的相似度进行计算的（对应第二个公式）。当然，不同于self-attention中使用内积近似相似度，此处使用的是加和形式的相似度，并且额外将两概念之间的关系表示也添加了进去。关于基于知识的图神经网络聚合，还有一些别的聚合方式，相关工作后面会进行介绍。
+看完encoder之后，再关注一下decoder。整体而言，decoder的融合形式同know BERT有些类似，下面简单介绍。
+</p>
+
+
+<div id="org0cf860c" class="figure">
+<p><img src="./images/screenshot_20211121_163449.png" alt="screenshot_20211121_163449.png" />
+</p>
+</div>
+
+<p>
+上图是decoder部分的框图，同encoder不同的是，该图对知识图谱子图部分的处理更多一些。这是因为该工作认为进行文本生成时需要更多地考虑同当前概念相关的一些token，以更好地进行文本生成。因此，此时的知识图谱子图（右下角）不仅仅包含了encoder输入里的概念（ski，skier，mountatin），还包括了许多新的概念，从而形成几个概念树（每个树的根节点为输入中的一个概念）。而decoder部分先不考虑概念之间的relation，而是首先基于这样的树结构将叶子节点的信息传播到根节点，之后再进行根节点之间的传递和知识与文本信息的融合。对于树上的GNN，论文直接使用了GAT进行特征传播，如下面的公式所示：
+</p>
+
+
+<div id="orgc0b91d9" class="figure">
+<p><img src="./images/screenshot_20211121_163500.png" alt="screenshot_20211121_163500.png" />
+</p>
+</div>
+
+<p>
+对于概念之间的信息传播，同样地一个GAT就可以解决。在此也不赘述。
+</p>
+
+
+<div id="orgee8072c" class="figure">
+<p><img src="./images/screenshot_20211121_163521.png" alt="screenshot_20211121_163521.png" /> 
+</p>
+</div>
+
+<p>
+下面来看一下概念上的表示如何同文本上的概念表示进行融合。正如前面所述，此处使用的是know BERT中的方法，该方法也是transformer decoder中对cross-attention的一个直接的化用。即文本输入作为Q，外部输入作为K和V，如下面公式所展示的：
+</p>
+
+
+<div id="orga369454" class="figure">
+<p><img src="./images/screenshot_20211121_163538.png" alt="screenshot_20211121_163538.png" />
+</p>
+</div>
+
+<p>
+当然，AT^KG是知识图谱信息与文本信息融合的方法，而AT^TX则是vanilla transformer decoder中已有的部分，最终将二者进行拼接即可。
+</p>
+
+
+<div id="org34713b2" class="figure">
+<p><img src="./images/screenshot_20211121_163555.png" alt="screenshot_20211121_163555.png" /> 
+</p>
+</div>
+
+<p>
+以上三篇工作均为基于embedding进行融合的典型，几乎也将embedding的结合方式总结得差不多了。当然，由于神经网络的可学习性，有时候模型结构对使用效果的影响并不是唯一的。用知识去增强预训练模型，同模型的输入、训练的任务都息息相关。面向特定的下游任务，不同的融合方式甚至也会产生不同的效果。尽管embedding的方式比较直观，且属于典型的深度学习风格，但该类方法仍然存在以下几类问题：
+</p>
+
+<ol class="org-ol">
+<li>知识的融合效果受knowledge embedding学习限制；</li>
+<li>简单的变换未必能将知识空间与文本空间对齐；</li>
+<li>该结构需要对预训练模型重新进行预训练，即使通用的KG+PTM预训练是可行的，针对特定领域的预训练或微调同样存在困难。</li>
+</ol>
+
+<p>
+下面介绍的第二类方法将提供一些额外的思路。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8bb4efd" class="outline-3">
+<h3 id="org8bb4efd"><span class="section-number-3">4.2</span> 3.2 显式融合——不改变模型结构的融合方式</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+与之前所述的基于embedding的结合相比，另一种思路更为直接：既然知识图谱本身就是借助自然语言表达的，能不能直接把实体和关系经过某些变换后以token的形式输入到预训练模型中，以实现效果较好的增强呢？这样就不需要再去为每个实体学习embedding，更不需要考虑两种特征空间的聚合了。
+</p>
+
+<p>
+一些相关的工作都是在这种思路的基础上进行的。这类工作大概可以分成两类，分别是训练时的知识增强和推理时的知识增强。顾名思义，训练时的知识增强主要是指将知识图谱同自然语言文本结合形成某种特殊的“语料”，并在训练期间通过模型的预训练让模型学到这些知识。与之对应，推理时的增强仅仅在进行模型推理时才使用到相对应的知识数据，而不对模型的训练有太多的干扰（当然，训练肯定是有效的）。下面分别对这两种类型的学习进行介绍。
+</p>
+</div>
+
+<div id="outline-container-org155e33c" class="outline-4">
+<h4 id="org155e33c"><span class="section-number-4">4.2.1</span> K-BERT</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<p>
+该类工作中，较早的是K-BERT。K-BERT基于输入序列，通过查询语句中的三元组，将输入语句转化为输入树。之后，通过特殊设计BERT的输入信息编码和mask矩阵，实现推理时模型增强的目的。具体过程可通过下面的框图描述。
+</p>
+
+
+<div id="orgcd39146" class="figure">
+<p><img src="./images/screenshot_20211121_163613.png" alt="screenshot_20211121_163613.png" />
+</p>
+</div>
+
+<p>
+通过上图可以看出，对于库克正在北京参观这句话，在其输入到预训练模型中时，token embedding和segment embedding并没有发生变化，唯一发生改变的只是position embedding和mask matrix。对于位置编码，图中展现了两种（红色的和黑色的），通过这两种编码就可以将输入的序列一一对应为一个子图。由于硬编码已经在输入的顺序中体现了出来，因此实际BERT输入的位置编码是描述每一条路径的软编码。而mask矩阵的意图更为简单：输入的自然语言文本是彼此可见的，每个三元组内部也是彼此可见的，但文本中的token同其他三元组是不可见的，这样也就避免了前面所说的知识噪声问题。当然，三元组上的额外信息还是可以间接传入文本中的其他token的。
+</p>
+
+<p>
+当然，在这个过程中还有其他一些可做手脚的地方，比如segment embedding，完全可以用它来区分文本输入和知识输入等等。后续也有一些工作顺手在这些地方做了修改。
+</p>
+
+<p>
+下面介绍一篇同样是在输入上下文章且更惊艳一点的论文，CoLAKE。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3364c70" class="outline-4">
+<h4 id="org3364c70"><span class="section-number-4">4.2.2</span> CoLAKE</h4>
+<div class="outline-text-4" id="text-4-2-2">
+<p>
+如果说K-BERT是在想，该如何把输入文本扩展成一棵树的话，那么CoLAKE的核心思路就是，能不能把输入文本通过知识图谱扩展成一张图？这当然是可行的。比起K-BERT将输入文本理解为按照位置编码组织起来的一条线，CoLAKE则基于self-attention与GNN相似性上的结论，将输入文本看作是全连接图，并在此基础上将该图通过知识图谱进行扩展。也就形成了下图所示的框图。
+</p>
+
+
+<div id="org2ead161" class="figure">
+<p><img src="./images/screenshot_20211121_163627.png" alt="screenshot_20211121_163627.png" />
+</p>
+</div>
+
+<p>
+构建起这样的图之后，同样地，该图也是需要送入BERT等模型中去的，因而CoLAKE面临着和K-BERT同样的设计问题。下图可以展现出其设计细节：
+</p>
+
+
+<div id="org2b0f710" class="figure">
+<p><img src="./images/screenshot_20211121_163637.png" alt="screenshot_20211121_163637.png" />
+</p>
+</div>
+
+<p>
+可以看出，该工作和K-BERT没有太大的区别，主要的区别有三处：1）segment embedding中细化了很多细节；2）该图的mask矩阵是基于图的拓扑关系构建的，相当于是邻接矩阵，而不是根据避免知识噪声的原则；3）该论文更为重视预训练过程，通过之前所说的扩展MLM的方法完成了对模型更好的训练。
+CoLAKE的另外一个特色在于，通过这种方式得到的知识图谱中实体与关系的embedding，其实比transE等传统方法的效果还要好，这一点也在一些知识图谱不全的实验中得到了验证。当然，对比的baseline主要是比较经典的一些方法，但也足够惊艳了。
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org5624159" class="outline-3">
+<h3 id="org5624159"><span class="section-number-3">4.3</span> 3.3 知识图谱与预训练模型的共同学习</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+除去上述两部分的工作之外，还有一类工作进行了额外的尝试。这类工作同前面所介绍的第二类工作，即通过不改变模型结构而进行融合十分相似，但该类工作并不满足于单纯地将知识图谱增强于预训练模型。换而言之，这类工作实际上将知识图谱表示学习和面向知识的自然语言理解一起做了，并希望通过这种方式可以在这两个领域内都得到模型的提升。上文中所介绍的CoLAKE也可以说属于这类工作，但CoLAKE的核心还是在知识图谱增强预训练模型上的，下面介绍明显地将这两个任务结合在一起的工作。
+</p>
+</div>
+
+<div id="outline-container-org56aea0d" class="outline-4">
+<h4 id="org56aea0d"><span class="section-number-4">4.3.1</span> KEPLER</h4>
+<div class="outline-text-4" id="text-4-3-1">
+<p>
+KEPLER是借用此种思路的较简单的工作。其基本框架可以用下文所述的框图进行表达：
+</p>
+
+
+<div id="orgf16e2ca" class="figure">
+<p><img src="./images/screenshot_20211121_163650.png" alt="screenshot_20211121_163650.png" />
+</p>
+</div>
+
+<p>
+从图中可以看出，KEPLER的思想是，使用统一的一个transformer encoder实现对文本信息或实体描述信息的编码，对两个领域分别设计预训练任务，并使用这类预训练任务的联合任务对encoder进行训练。如上图所示，提取文本信息的Encoder同从头部实体与尾部实体中获取embedding的Encoder是一个encoder，因此，通过知识图谱中的实体描述，Encoder可以学习到实体信息，而通过在文本上的预训练，encoder也可以学习到文本层次上的信息，这样就完成了在训练时将知识信息融入到encoder之中。该模型的训练损失主要包括两部分，一部分是常见的MLM，另一部分则是对于Knowledge Embedding的损失，此处主要是使用负采样的损失函数，即
+</p>
+
+
+<div id="org3cfcbf7" class="figure">
+<p><img src="./images/screenshot_20211121_163701.png" alt="screenshot_20211121_163701.png" />
+</p>
+</div>
+
+<p>
+此处的h和t都是正样本，h’和t’为负样本。D_r是同relation相关的距离函数，论文中简单实用了transE的方式，也就是加和距离：
+</p>
+
+
+<div id="orga57b973" class="figure">
+<p><img src="./images/screenshot_20211121_163711.png" alt="screenshot_20211121_163711.png" />
+</p>
+</div>
+
+<p>
+这篇论文整体思路是比较简洁的，同时期的JAKET则设计得更复杂了一些。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd3f9153" class="outline-4">
+<h4 id="orgd3f9153"><span class="section-number-4">4.3.2</span> JAKET</h4>
+<div class="outline-text-4" id="text-4-3-2">
+<p>
+JAKET将知识图谱表示学习与知识图谱增强的NLU两个任务视为彼此可以互相促进的任务，并以此思路作为论文的最大卖点。下图展示了JAKET的整体流程。
+</p>
+
+<p>
+<img src="./images/screenshot_20211121_163722.png" alt="screenshot_20211121_163722.png" />
+	粗略来看，整张图可分为两种颜色：蓝色和绿色。蓝色部分主要是知识图谱表示学习的部分，而绿色的部分则是知识增强的文本理解模型。先看蓝色部分，同KEPLER类似（其实也是目前做KGE这块都会用到的方式），transformer encoder（即图中的LM1）会被用在提取实体描述的表示上，而这些描述的表示其实就是对应实体的表示。之后，通过适配于知识图谱的GAT，这些特征将依照知识图谱的拓扑结构得到信息传递，并连接在如实体分类、关系预测等预训练任务上。在整个知识图谱表示学习的过程中，值得注意的两个点是：
+</p>
+
+<ol class="org-ol">
+<li>同KEPLER一样，JAKET也将LM1视为共享的Encoder，同时为了缓解循环依赖问题，LM2还具有额外的encoder LM2。同时，在基于KGE任务进行训练时，LM1是相对而言frozen的（这也是比较合理的，因为LM1用来提取文本表示，属于只不过是被用在了KGE的部分）。</li>
+</ol>
+<p>
+2.不同于KEPLER的是，知识图谱中实体的表示还是会被用来进行LM2的增强。具体的增强过程在介绍绿色部分时介绍。 
+	在理解清楚KGE的基本过程后，下面简单介绍一下GAT部分。同上文中介绍KG-BART里对知识图谱进行GAT的方式有所不同，此处采用的是另一个风格的GAT，具体形式如下所示：
+</p>
+
+<p>
+<img src="./images/screenshot_20211121_163731.png" alt="screenshot_20211121_163731.png" />
+	从图中可以看出，聚合方式同样还是GAT，不过有一个地方发生了变化。过去的GAT是将邻居节点的表示E_u经过矩阵映射之后做聚合，而在此处，为了适配知识图谱中的关系的特征，将聚合的对象改成了f(E_u，R_r)=E_u+R_r。这种做法应当也是受到了TransE的影响（E_u+R_r &#x2013;&gt; E_v）吧。
+</p>
+
+<p>
+下面再来看绿色的部分，也就是常见的文本NLU部分的过程。可以看出，该部分首先也是通过LM1获得输入的token级别的初步特征，之后将该特征表示里实体的表示同知识图谱中获得的实体embedding进行融合。此处的融合方式比较简单，论文中直接进行了加和。之后，融合之后的输入序列表示会进入到LM2中，LM2的输出被用来进行预训练模型相关的任务。同之前的工作一样，任务主要包括两个，一个是通常BERT中的MLM，第二个是专门针对于实体的MLM。另外的一个在实现中的细节是，LM1和LM2不一定是两个分离的模型，比如在论文中，二者是一个transformer encoder（论文中使用的是Roberta）的前8层和后8层。
+</p>
+
+<p>
+JAKET整体来看比KEPLER复杂了许多，但在实验上有明显的欠缺。或许是提交了不完全的版本吧……
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd70f993" class="outline-2">
+<h2 id="orgd70f993"><span class="section-number-2">5</span> 4 总结与未来展望</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+将知识图谱同预训练模型进行结合，目前已经出现了大量的工作。除去上述文章中所介绍的论文之外，还有将KG转化为自然语言语料融入到训练中、设置即插即用的知识图谱等其他工作。目前来看，将知识图谱与预训练模型结合，并在此过程中对彼此任务都获得提升，已经成为一个趋势。另外的一个趋势是，针对于不同的下游任务，在融合方式上进行特殊的适配，毕竟目前出现了大量的需要知识图谱支撑的NLP任务。未来的工作或许会从这些角度继续深入。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb5ecaa0" class="outline-2">
+<h2 id="orgb5ecaa0"><span class="section-number-2">6</span> 参考文献</h2>
+<div class="outline-text-2" id="text-6">
+<ol class="org-ol">
+<li>ERNIE：Zhang, Zhengyan, et al. "ERNIE: Enhanced language representation with informative entities." arXiv preprint arXiv:1905.07129 (2019).</li>
+<li>knowBERT：Peters, Matthew E., et al. "Knowledge enhanced contextual word representations." arXiv preprint arXiv:1909.04164 (2019).</li>
+<li>KG-BART：Liu, Ye, et al. "KG-BART: Knowledge Graph-Augmented BART for Generative Commonsense Reasoning." arXiv preprint arXiv:2009.12677 (2020).</li>
+<li>K-BERT：Washington, K., et al. KBERT. Knowledge Based Estimation of Material Release Transients. No. ESTSC-001257IBMPC00. Sandia National Labs., Albuquerque, NM (United States), 1995.</li>
+<li>Co-LAKE：Sun, Tianxiang, et al. "Colake: Contextualized language and knowledge embedding." arXiv preprint arXiv:2010.00309 (2020).</li>
+<li>KEPLER：Wang, Xiaozhi, et al. "KEPLER: A unified model for knowledge embedding and pre-trained language representation." Transactions of the Association for Computational Linguistics 9 (2021): 176-194.</li>
+<li>JACKET：Yu, Donghan, et al. "Jaket: Joint pre-training of knowledge graph and language understanding." arXiv preprint arXiv:2010.00796 (2020).</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2021年秋天</p>
+<p class="author">Author: Zi Liang</p>
+<p class="date">Created: 2021-11-21 Sun 16:37</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
