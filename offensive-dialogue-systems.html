@@ -1,0 +1,197 @@
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org80802ce">1. Fighting Offensive Language on Social Media with Unsupervised Text Style Transfer</a></li>
+<li><a href="#orgbd9e9e3">2. Build it Break it Fix it for Dialogue Safety: Robustness from Adversarial Human Attack</a></li>
+<li><a href="#orgd1d628f">3. </a></li>
+</ul>
+</div>
+</div>
+<p>
+本文整理了一些，在对话系统关注于敏感信息对话的工作。所谓的敏感信息，主要就是指脏话、歧视类信息、各种类型的敏感信息。
+</p>
+
+<p>
+这些工作主要可以分为两部分：分别是如何去识别他们，如何去修改他们，等等。
+</p>
+
+
+<div id="outline-container-org80802ce" class="outline-2">
+<h2 id="org80802ce"><span class="section-number-2">1</span> Fighting Offensive Language on Social Media with Unsupervised Text Style Transfer</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="https://arxiv.org/abs/1805.07685">https://arxiv.org/abs/1805.07685</a>
+</p>
+
+<p>
+这篇论文算是该领域比较早的工作了，该工作主要有三个特点：
+</p>
+<ol class="org-ol">
+<li>不仅可以检测出offensive的回复，还可以修改offensive的回复为正常回复。</li>
+<li>这个方法是无监督的。</li>
+</ol>
+
+<p>
+可以说，这两点是正中我的论文下怀了，于是我抓紧读了读，下面试归纳其方法如下：
+</p>
+
+
+<div id="orgfb5701e" class="figure">
+<p><img src="./images/screenshot_20211207_103219.png" alt="screenshot_20211207_103219.png" /> 
+</p>
+</div>
+
+<p>
+如果直接看上图，可能会很懵，毕竟该图画得很复杂。该论文的做法其实很简单，在模型上主要包括两部分，分别是一个encoder-decoder模型，和一个分类器模型。论文即是通过这两个模型进行处理的，encoder-decoder模型用来进行输入句子的重建或风格迁移；分类器用以判断输出的句子的类型（相当于一个二分类）。
+</p>
+
+<p>
+比如，再上图中，我们可以将输入的 \(s_{i}\) 看作是某一种风格（即如果i=1，代表脏话；i=0代表正常语句），那么对于输入的句子 \(x^i_k\) 我们可以将其使用encoder-decoder模式进行映射，在decoder中，通过控制输入 \(s_{i}\) 的数值，我们就可以让输出产生不同的效果。如果我们控制输入与encoder的输入相同，那么该任务就类似于auto-encoder；如果我们控制输入与encoder的输入不同，那么就相当于对offensive的输入进行风格迁移，产生正常的输出。此时，classifier就是用来判断所生成的句子的风格是否与我所输入的期望风格相同的。
+</p>
+
+<p>
+通过以上的方式，可以发现：此处并未存在对已有标签的需求，无论是分类器的训练，还是encoder-decoder的训练，全部都是通过已有的原始数据作为标签进行的。当然，此处还有一个问题，那就是：我们无法控制auto-encoder处理将offensive对话转化为正常对话的情况，换而言之：训练encoder-decoder全都是用的恒等映射。
+</p>
+
+<p>
+针对这个问题，作者提出了一种名为“backward transfer”的方式（如上图右半部分所示）， 该方法相当于对输入的句子进行两次翻转，通过设置最终的输出与原始的输入一致，来训练模型的翻转能力。形式化地讲，对于i和j两种不同的style，该方法产生变换 \(x_{k}^{i\rightarrow j \rightarrow i}\) ，以适应将错误样例翻正的情形。
+</p>
+
+<p>
+总结一下，该方法主要包括两类训练损失：reconstruction的损失和classification的损失。
+</p>
+
+<p>
+这些损失一共有5个（即图中的蓝色文字），分别是：
+</p>
+
+<ol class="org-ol">
+<li>恒等映射中的，分类器损失：
+<img src="./images/screenshot_20211207_105200.png" alt="screenshot_20211207_105200.png" /></li>
+<li>恒等映射中的，autoencoder损失：
+<img src="./images/screenshot_20211207_105213.png" alt="screenshot_20211207_105213.png" /></li>
+<li>原始句子输入的分类损失：</li>
+</ol>
+
+<div id="org758c8bd" class="figure">
+<p><img src="./images/screenshot_20211207_105416.png" alt="screenshot_20211207_105416.png" />
+</p>
+</div>
+<ol class="org-ol">
+<li>backward transfer中的第二个结果（即最终输出）的分类损失：</li>
+</ol>
+
+<div id="org492b0c1" class="figure">
+<p><img src="./images/screenshot_20211207_105316.png" alt="screenshot_20211207_105316.png" />
+</p>
+</div>
+<ol class="org-ol">
+<li>backward transfer中的最终输出句子与输入句子之间的autoencoder损失：</li>
+</ol>
+
+<div id="org81a59af" class="figure">
+<p><img src="./images/screenshot_20211207_105257.png" alt="screenshot_20211207_105257.png" />
+</p>
+</div>
+
+
+<p>
+当然，阅读归阅读，我对这篇论文是否能够work，内心是充满质疑的，主要的质疑之处在于backward transfer是否可以起作用。在我看来，在 $x_{k}^{i&rarr; j&rarr; i}$的变换中，j处的文本的监督信号，其实是特别弱的（仅仅有一个分类器信号）。我并不认为通过这种方式，在面对较为复杂的情况时，可以产生十分不错的回复。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgbd9e9e3" class="outline-2">
+<h2 id="orgbd9e9e3"><span class="section-number-2">2</span> Build it Break it Fix it for Dialogue Safety: Robustness from Adversarial Human Attack</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<a href="https://arxiv.org/abs/1908.06083">https://arxiv.org/abs/1908.06083</a>
+</p>
+
+<p>
+这是一篇来自于fackbookAI的工作，这篇工作在解决问题的方法上并没有特别的创新，不过提出了一整套比较有意思的训练思路。同时，在论文中也引用了大量的数据，可以说是对offensive dialogue systems这个问题，进行了一个比较深入的探讨。
+</p>
+
+<p>
+因此，这篇论文的介绍重心可能会包括两部分：这篇论文通过统计数据告诉了我们什么？这篇论文是怎么解决这些的。我在阅读论文是侧重于第一个领域，现在梳理一下。
+</p>
+
+<p>
+这篇论文告诉了我们什么？我总结出以下几点：
+</p>
+
+<ol class="org-ol">
+<li>在公共讨论中，offensive的现象是非常多的（这个大家都知道）；</li>
+<li>存在一些bad actors，他们会刻意地跟机器审查对着干，从而实验一反面产生一些不好的言论，另一方面躲避审查；<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup></li>
+<li>简单的、不具有进化性质的offensive自动检测算法会被用户找到弱点，就像对抗攻击一样，新的offensive形式会产生出来<sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup>;</li>
+<li><p>
+offensive数据占据总体数据的比例，总体上维持在10%左右。下图是Wikipedia Toxic Comments数据集中offensive对话与非offensive对话的一个分布情况：
+</p>
+
+
+<div id="orgdb72abf" class="figure">
+<p><img src="./images/screenshot_20211208_110058.png" alt="screenshot_20211208_110058.png" /> 
+</p>
+</div></li>
+</ol>
+
+<p>
+除此之外，还有一些比较有意思的新闻： tay chatbot停机，因为该问题。<sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup>
+</p>
+
+<p>
+下面开始介绍文本所提出的方法。正如题目所示，本文所提出方法主要就包括三个步骤：build、break和fix。也就是：构建分类器、寻找分类器分类错误的错例来源、通过新的错误数据来重新训练分类器，最后一起预测，这整个流程。在上述流程中，break的步骤，是通过人工设计对话而实现的。其整体流程可以用下图来表达：
+</p>
+
+
+<div id="org769fd69" class="figure">
+<p><img src="./images/screenshot_20211208_110426.png" alt="screenshot_20211208_110426.png" />    
+</p>
+</div>
+
+<p>
+可以看出，对于最终进行offensive的预测时，是通过新分类器与之前的classifier叠加来实现的。
+试验结果如下图所示：
+</p>
+
+
+<div id="orga4f2d03" class="figure">
+<p><img src="./images/screenshot_20211208_110732.png" alt="screenshot_20211208_110732.png" />
+</p>
+</div>
+
+<p>
+不得不说，尽管通过这种方法，算法可以获得足够的提升，但是其分类的F1值，还是不堪入目的……
+</p>
+
+<p>
+除此之外，该论文还研究了多轮对话里的offensive问题。该问题比较有意思，即可能会存在一些情况，在单轮时没有问题，但是在多轮时却是不对的。论文作者给出了一些例子，比如“是的，你当然要这么做！”这句话乍一听可能没有问题，但是在“我要跳下去吗？”这个语境下，就很危险了。为此，作者也做了一些实验，此处就不赘述。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgd1d628f" class="outline-2">
+<h2 id="orgd1d628f"><span class="section-number-2">3</span> </h2>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+see: Pnina Shachaf and Noriko Hara. 2010. Beyond vandalism: Wikipedia trolls. Journal of Information Science, 36(3):357370.
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+see: 1. Hossein Hosseini, Sreeram Kannan, Baosen Zhang, and Radha Poovendran. 2017. Deceiving google’s perspective api built for detecting toxic comments. arXiv preprint arXiv:1702.08138.  2.Tommi Grondahl, Luca Pajola, Mika Juuti, Mauro ¨Conti, and N Asokan. 2018. All you need is” love”: Evading hate-speech detection. arXiv preprint arXiv:1808.09115
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3">3</a></sup> <div class="footpara"><p class="footpara">
+Marty J Wolf, K Miller, and Frances S Grodzinsky. 2017. Why we should have seen that coming: comments on microsoft’s tay experiment, and wider implications. ACM SIGCAS Computers and Society, 47(3):5464.
+</p></div></div>
+
+
+</div>
+</div>
