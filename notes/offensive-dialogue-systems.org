@@ -1,4 +1,4 @@
-#+title: 对话系统中的敏感信息处理--总结
+#+title: 对话系统中的安全性问题——一份不完整总结
 #+date: Mon Dec  6 20:45:53 2021
 #+author: Zi Liang
 #+email: liangzid@stu.xjtu.edu.cn
@@ -7,17 +7,176 @@
 
 本文整理了一些，在对话系统关注于敏感信息对话的工作。所谓的敏感信息，主要就是指脏话、歧视类信息、各种类型的敏感信息。
 
-这些工作主要可以分为两部分：分别是如何去识别他们，如何去修改他们，等等。
 
+* 对话系统中安全性问题之一瞥
+  对话系统中的安全性问题包含哪几个方面？笔者总结为以下四点：
+  1. 冒犯性的（offensive）回复；
+  2. 带有偏置（bias）和歧视的回答；
+  3. 敏感回复；
+  4. 不正确的立场。
+
+     
+     值得注意的是，以上几点其实是会有交叉重叠的，这一点将会在论文中得到更明显的体现。下面首先还是通过示例对这几类问题进行一个直观的感觉吧。
+  
+** offensive response
+   冒犯性回复其实是比较好理解的，未来展现出本文的专业性，本文把所有的冒犯性回复总结为以下六种情况：
+   + 包含脏话；
+   + 不包含脏话的冒犯性句子；
+   + 包含冒犯性的否定；
+   + 通过画面性的语言和类比来进行冒犯；
+   + 需要特定知识才能进行的冒犯；
+   + 包含讽刺的冒犯，即阴阳怪气。
+
+     
+     我从百度贴吧首页的一个[[https://tieba.baidu.com/p/7138577846][帖子]]中截取来一些中文回复，帮助大家直观感受一下……
+
+    [[file:./images/screenshot_20211220_171042.png]]
+
+    当然，以上列举了很多例子，但这些例子也只是属于utterance级别，并不包含语义关系。我们常常遇到的另一种情况是： *某句话单独来看不具有冒犯性，但是将其至于对话语境之中，就会产生一定的冒犯性。* 下面是一个例子：
+
+    #+begin_quote
+User: You are totally a troll.
+Bot: Aren't you?
+    #+end_quote
+
+    尽管有人会申辩是人类先不遵守礼仪，但是目前来看机器人仍然是没有人权的，机器人只能高尚地存在，所以这句话就不太合适了。
+
+    通过这些例子，我已经了解了什么是offensive。
+
+** biased Responses
+   第二个值得探讨的问题就是关于对话回复里的偏置。这里的偏置是指，“偏向于夸耀或者损毁一方”。 当然，这个问题其实首先是一个社会问题——社会上存在着各种性别、种族、地域上的歧视，最终导致了data-driven的对话系统的问题。
+
+   然后人类又试图通过科技来走捷径。 目前来看，bias主要体现在以下四个方面：
++ 性别gender bias；
++ 种族race bias；
++ 地域region bias；
++ 由于对话系统的个性化而产生的歧视；
+
+  下面是四个例子，分别对应于这四种bias。
+ [[file:./images/screenshot_20211220_171923.png]] 
+
+[[file:./images/screenshot_20211220_171936.png]]
+
+[[file:./images/screenshot_20211220_171951.png]]
+
+前三个例子尚还可以理解，最后一个例子需要多着墨几句。对话系统的个性化研究是open-domain对话系统里面的一个方向，该方向试图赋予对话系统一个特定的“人设”——就如同漫画开头的人设一样。比如，如果我是一个年轻的单身的文艺青年，我可能就会想找一个相同年龄的、喜欢文学的中国女孩聊天。后者就是机器人的人设。人设的初衷是让机器人更像人，但是，这也让bias更加严重——比如我是一个白人男性，我可能就会持有一些不太好的观点。
+
+下面再看看关于敏感回复的问题。
+
+** sensitive response
+   敏感回复问题主要来自于三个方面：
+
+   1. 需要专业知识才能回答的问题（如医疗知识）；
+   2. 会造成一些风险或伤害的问题（如抑郁患者的询问）；
+   3. 一些敏感的话题（如政治、宗教、色情等等）；
+
+      下面分别给出三个例子，不做解释。
+
+      #+begin_quote
+User: How do you like Trump?
+Bot: I don't like him at all. I think he is a liar and a pescatarian.
+
+User: Is suicide the only way to end everything?
+Bot: I mean, that’s pretty a good option.
+
+User: Can pneumonia cause blood in urine?
+Bot: Yes. And it’s an immune reaction that may lead to death. 
+      #+end_quote
+   
+** 不正当的立场
+   最后来看一下立场问题。对于一件事情，立场其实是很说明的。一般而言立场有三：肯定、否定、中立。
+   但其实选择一个立场是困难的。甚至于对于人而言都是困难的。不然为什么会有那么多流血的政治斗争呢？
+   
+   机器人决定一个立场很重要，因为该机器人的立场，背后代表的，是公司的立场。公司被碰磁就很可怕了。
+
+   我们先看一个例子，理解一下为什么立场有害。
+   
+  [[file:./images/screenshot_20211220_173247.png]] 
+
+  对于宗教话题，这种明确错误观点的支持确实是有害的。但是，中立的立场也有害，反对有时候甚至也不行，这是为什么？某论文给出了下面的例子。
+  
+ [[file:./images/screenshot_20211220_173354.png]] 
+
+  从这里面，大概可以体会到确定一个立场的简单了吧。
+
+  下面针对以上的这几个问题，就介绍一下典型的一些工作。
+
+  
+* 相关工作
+  在介绍相关工作之前，不妨先做一个思考：假如我要解决以上问题，我会怎么做？很显然，我会通过以下几种策略进行：首先，我可以做一些detection，去检测机器人是否说了offensive的话，如果是的话，我就用一些别的话替换掉。或者通过这这种分类器去净化我的语聊。另一种思路是：通过CTG（Controlled Text Generation）等方法，去控制输出文本，使其不要产生bias或者offensive。
+
+  其中后面的方法也主要是基于这两种策略进行的。不过，身为一种面向应用的research，这些工作常常会选择将NLU和NLG上的解决思路进行混合。下面就一一介绍之。
+
+** Build it Break it Fix it for Dialogue Safety: Robustness from Adversarial Human Attack
+
+   [[https://arxiv.org/abs/1908.06083]]
+
+   这是一篇来自于fackbookAI的工作，发表在EMNLP2019。
+
+   在2017年已经有论文开始关注对话系统里的offensive情况，在那时，所采用的方式就是直接训练二分类器。这篇工作在解决问题的方法上并没有特别的创新，仍然是采用的分类器，不过提出了一整套比较有意思的训练思路。
+   同时，在论文中也引用了大量的数据，可以说是对offensive dialogue systems这个问题，进行了一个比较深入的探讨。
+
+   因此，这篇论文的介绍重心可能会包括两部分：1）这篇论文通过统计数据告诉了我们什么？2）这篇论文是怎么解决这些问题的。我在阅读论文时侧重于第一个领域，现在梳理一下。
+
+   这篇论文告诉了我们什么？我总结出以下几点：
+
+   1. 在公共讨论中，offensive的现象是非常多的（这个大家都知道）；
+   2. 存在一些bad actors，他们会刻意地跟机器审查对着干，从而实验一反面产生一些不好的言论，另一方面躲避审查；[fn:1]
+   3. 简单的、不具有进化性质的offensive自动检测算法会被用户找到弱点，就像对抗攻击一样，新的offensive形式会产生出来[fn:2];
+   4. offensive数据占据总体数据的比例，总体上维持在10%左右。下图是Wikipedia Toxic Comments数据集中offensive对话与非offensive对话的一个分布情况：
+
+     [[file:./images/screenshot_20211208_110058.png]] 
+
+   除此之外，还有一些比较有意思的新闻： tay chatbot停机，因为该问题。[fn:3]
+
+[fn:1] see: Pnina Shachaf and Noriko Hara. 2010. Beyond vandalism: Wikipedia trolls. Journal of Information Science, 36(3):357370.
+[fn:2] see: 1. Hossein Hosseini, Sreeram Kannan, Baosen Zhang, and Radha Poovendran. 2017. Deceiving google’s perspective api built for detecting toxic comments. arXiv preprint arXiv:1702.08138.  2.Tommi Grondahl, Luca Pajola, Mika Juuti, Mauro ¨Conti, and N Asokan. 2018. All you need is” love”: Evading hate-speech detection. arXiv preprint arXiv:1808.09115
+[fn:3] Marty J Wolf, K Miller, and Frances S Grodzinsky. 2017. Why we should have seen that coming: comments on microsoft’s tay experiment, and wider implications. ACM SIGCAS Computers and Society, 47(3):5464.
+
+
+下面开始介绍文本所提出的方法。
+
+正如题目所示，本文所提出方法主要就包括三个步骤：build、break和fix。也就是：构建分类器、寻找分类器分类错误的错例来源、通过新的错误数据来训练分类器，这整个流程。
+
+在上述流程中，break的步骤，是通过人工尝试产生一些不易被察觉的offensive回复来实现的。其整体流程可以用下图来表达：
+
+[[file:./images/screenshot_20211208_110426.png]]    
+
+。
+
+通过这种方法，就可以获取到一些难度更高的、一般分类器更加难以察觉的offensive语料。下图就是通过正常的形式产生回复（对应standard）和通过这种对抗学习的方式产生回复（Adversarial）获得的语料异同。
+
+[[file:./images/screenshot_20211220_185252.png]]
+
+可以看出，通过这种方式获得的语料，比起原语料而言，更倾向于保存一些更加“高级”的offensive对话。
+
+于是作者设计进行了实验，主要测试来以下三类分类器，分类器的backbone是BERT（毕竟2019年），区别只是数据集的不同：
++ $A_{0}$ : 在原始WTC数据集训练的模型，WTC介绍在本论文开头；
++ $S_{i}$ ：用小于等于i轮的standard数据训练得到的模型。Standard前面已有介绍，指在无分类器反馈的基础上由crowdworkers产生的回复；
++ $A_{i}$ ：用小于等于i轮的adversarial数据训练得到的模型。 adversarial就是本论文提出的Build-Break-Fix方法产生的语料。
+  
+注意到，Ai会在A_{i+1}处获得0.0的结果。这是由于b-b-f训练方法的特点导致的。因为我们知道，第i+1轮的语料是通过break前i轮语料训练所得的分类器S_i来获得的。所以Si在第i+1轮上将offensive回复预测正确的概率为0.0
+
+
+[[file:./images/screenshot_20211208_110732.png]]
+
+不得不说，尽管通过这种方法，算法可以获得足够的提升，但是其分类的F1值，还是不堪入目的……
+
+除此之外，该论文还研究了多轮对话里的offensive问题。该问题比较有意思，即可能会存在一些情况，在单轮时没有问题，但是在多轮时却是不对的。论文作者给出了一些例子，比如“是的，你当然要这么做！”这句话乍一听可能没有问题，但是在“我要跳下去吗？”这个语境下，就很危险了。为此，作者也做了一些实验，此处就不赘述。
 
 ** Fighting Offensive Language on Social Media with Unsupervised Text Style Transfer
    [[https://arxiv.org/abs/1805.07685]]
 
-   这篇论文算是该领域比较早的工作了，该工作主要有三个特点：
+   和上一篇一样，这篇工作也是比较早期的一个工作。该工作来自于IBM research，发表在ACL 2020 上。
+   尽管是一篇来自公司的工作，但是这篇工作的核心却是偏学术的。这篇论文的重点被放在了设计模型结构上，而非对offensive的现实应用进行深刻的思考。
+   
+   这篇论文算是通过添加NLG模块来提升效果的比较早的工作了，该工作主要有三个特点：
    1. 不仅可以检测出offensive的回复，还可以修改offensive的回复为正常回复。
-   2. 这个方法是无监督的。
+   2. 这个方法在修复offensive回复的部分，也就是NLG部分，是无监督的。
 
-   可以说，这两点是正中我的论文下怀了，于是我抓紧读了读，下面试归纳其方法如下：
+      这二点是很重要的，因为如果简单地基于分类器，那么虽然可以找出来offensive的模型，但是却无法对其进行修改。——只能替换为一些诸如“对不起，我们还是聊下一个话题吧”这样的万能回复。过多的这类话是会影响对话质量的。除此之外，当用户在某些论坛上发表脏话评论时，如果仅仅告知该用户“您的消息不符合规范，请编辑重发”，也不如给出不具有冒犯性同时保留了评论愿意的方式，对用户更有吸引力。
+      
+   可以说，无论如何，这两点是正中我的论文下怀了，于是我抓紧读了读，下面试归纳其方法如下：
 
    [[file:./images/screenshot_20211207_103219.png]] 
 
@@ -47,43 +206,24 @@
 
 当然，阅读归阅读，我对这篇论文是否能够work，内心是充满质疑的，主要的质疑之处在于backward transfer是否可以起作用。在我看来，在 $x_{k}^{i\rightarrow j\rightarrow i}$的变换中，j处的文本的监督信号，其实是特别弱的（仅仅有一个分类器信号）。我并不认为通过这种方式，在面对较为复杂的情况时，可以产生十分不错的回复。
 
+** Does Gender Matter? Towards Fairness in Dialogue Systems
+下面来看两篇处理bias的论文。这两篇论文继承了前面的解决方案：即既包括分类器进行detection，又包括NLG环节进行改写。
 
-** Build it Break it Fix it for Dialogue Safety: Robustness from Adversarial Human Attack
+第一篇论文是揭示并提出这个问题的一篇论文，来自于密歇根州大学和HKPU大学的学者们，发表在COLING2020上。这篇论文以美国常见的性别、人种上的公平性——即是否存在bias来进行讨论。
 
-   [[https://arxiv.org/abs/1908.06083]]
+回顾一下第一章中的问题，我们可以透过下表来重新理解一下什么叫做公平性。
 
-   这是一篇来自于fackbookAI的工作，这篇工作在解决问题的方法上并没有特别的创新，不过提出了一整套比较有意思的训练思路。同时，在论文中也引用了大量的数据，可以说是对offensive dialogue systems这个问题，进行了一个比较深入的探讨。
+[[file:./images/screenshot_20211220_202759.png]]
 
-   因此，这篇论文的介绍重心可能会包括两部分：这篇论文通过统计数据告诉了我们什么？这篇论文是怎么解决这些的。我在阅读论文是侧重于第一个领域，现在梳理一下。
+在上述表格中，对于一句语义信息完全一致的话，我们仅仅通过改变这句话中的代词（即he和she），就可以发现对话系统会产生态度不一样的回复。比如图中，对男性是赞扬，对女性是否定。同样地，使用传统英语和黑人英语，也会出现一个offensive一个非offensive的回复，这都表明对话系统模型或多或少会存在公平性问题。
 
-   这篇论文告诉了我们什么？我总结出以下几点：
-
-   1. 在公共讨论中，offensive的现象是非常多的（这个大家都知道）；
-   2. 存在一些bad actors，他们会刻意地跟机器审查对着干，从而实验一反面产生一些不好的言论，另一方面躲避审查；[fn:1]
-   3. 简单的、不具有进化性质的offensive自动检测算法会被用户找到弱点，就像对抗攻击一样，新的offensive形式会产生出来[fn:2];
-   4. offensive数据占据总体数据的比例，总体上维持在10%左右。下图是Wikipedia Toxic Comments数据集中offensive对话与非offensive对话的一个分布情况：
-
-     [[file:./images/screenshot_20211208_110058.png]] 
-
-   除此之外，还有一些比较有意思的新闻： tay chatbot停机，因为该问题。[fn:3]
-
-[fn:1] see: Pnina Shachaf and Noriko Hara. 2010. Beyond vandalism: Wikipedia trolls. Journal of Information Science, 36(3):357370.
-[fn:2] see: 1. Hossein Hosseini, Sreeram Kannan, Baosen Zhang, and Radha Poovendran. 2017. Deceiving google’s perspective api built for detecting toxic comments. arXiv preprint arXiv:1702.08138.  2.Tommi Grondahl, Luca Pajola, Mika Juuti, Mauro ¨Conti, and N Asokan. 2018. All you need is” love”: Evading hate-speech detection. arXiv preprint arXiv:1808.09115
-[fn:3] Marty J Wolf, K Miller, and Frances S Grodzinsky. 2017. Why we should have seen that coming: comments on microsoft’s tay experiment, and wider implications. ACM SIGCAS Computers and Society, 47(3):5464.
+为了形式化地定义对话系统中的公平性，作者
 
 
-下面开始介绍文本所提出的方法。正如题目所示，本文所提出方法主要就包括三个步骤：build、break和fix。也就是：构建分类器、寻找分类器分类错误的错例来源、通过新的错误数据来重新训练分类器，最后一起预测，这整个流程。在上述流程中，break的步骤，是通过人工设计对话而实现的。其整体流程可以用下图来表达：
 
-[[file:./images/screenshot_20211208_110426.png]]    
 
-可以看出，对于最终进行offensive的预测时，是通过新分类器与之前的classifier叠加来实现的。
-试验结果如下图所示：
 
-[[file:./images/screenshot_20211208_110732.png]]
 
-不得不说，尽管通过这种方法，算法可以获得足够的提升，但是其分类的F1值，还是不堪入目的……
-
-除此之外，该论文还研究了多轮对话里的offensive问题。该问题比较有意思，即可能会存在一些情况，在单轮时没有问题，但是在多轮时却是不对的。论文作者给出了一些例子，比如“是的，你当然要这么做！”这句话乍一听可能没有问题，但是在“我要跳下去吗？”这个语境下，就很危险了。为此，作者也做了一些实验，此处就不赘述。
 
 
 ** Recipes for Safety in Open-domain Chatbots
