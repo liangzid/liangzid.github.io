@@ -1,0 +1,370 @@
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2d026b3">1. 总体框架</a>
+<ul>
+<li><a href="#orge2d9106">1.1. 简介</a></li>
+<li><a href="#orgacbc0c1">1.2. 文件结构</a></li>
+</ul>
+</li>
+<li><a href="#org4dc6d90">2. 所实现功能</a>
+<ul>
+<li><a href="#orgefa63a9">2.1. prog related</a>
+<ul>
+<li><a href="#org01c2ee6">2.1.1. find definition &amp; application</a></li>
+<li><a href="#org81d91ec">2.1.2. auto insert and my snippets</a></li>
+<li><a href="#org01df0b1">2.1.3. details for some progs</a></li>
+</ul>
+</li>
+<li><a href="#orgaef874f">2.2. version control</a></li>
+<li><a href="#org1a19f27">2.3. take notes</a></li>
+<li><a href="#org8654b39">2.4. ssh, with tramp</a></li>
+<li><a href="#org543adc9">2.5. listern to music</a></li>
+<li><a href="#org5d9ef10">2.6. play games</a></li>
+<li><a href="#orgfdd5ee6">2.7. English related</a></li>
+<li><a href="#orge8fce76">2.8. my useful function</a></li>
+</ul>
+</li>
+<li><a href="#orgfd7b9bd">3. Key-bindings</a>
+<ul>
+<li><a href="#org2fa751b">3.1. major mode</a></li>
+<li><a href="#org867a99c">3.2. org mode</a></li>
+<li><a href="#orga6f6a31">3.3. latex mode</a></li>
+<li><a href="#orgcd5f462">3.4. python mode</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2d026b3" class="outline-2">
+<h2 id="org2d026b3"><span class="section-number-2">1</span> 总体框架</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orge2d9106" class="outline-3">
+<h3 id="orge2d9106"><span class="section-number-3">1.1</span> 简介</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+本文档汇总并总结我所使用的emacs配置的基本用法,并会进行不间断地更新。
+</p>
+
+<p>
+由于我希望在多个平台上使用他，其中，又因受限于论文写作、画图、QQ、微信等工作流的需求，本emacs配置不得不支持windows系统上的使用。
+</p>
+
+<p>
+由于在服务器端写代码的需求，需要维持在linux终端上的使用。由于在笔记本电脑上使用linux的需求，还需要维持linux桌面端的使用。因而总体上需要以下几部分：
+</p>
+
+<ol class="org-ol">
+<li>在windows系统上，主要功能需求包括和两部分;</li>
+<li>在linux服务器上，具有良好的python语法支持；</li>
+<li>在windows系统和linux系统下，最好拥有以下支持：
+<ol class="org-ol">
+<li>邮件处理</li>
+<li>C++、C语法支持；</li>
+<li>各种编程语言的开箱即用；</li>
+</ol></li>
+</ol>
+
+<p>
+针对于以上问题，目前所采用的折中解决方案是：采用win10系统+ WSL2，所有的emacs配置均建立在linux系统上进行配置，同时为wsl2撰写一些函数，以提供更加方便的系统交互。
+通过以上方式，我整合了我的工作流，实现上述需求：
+</p>
+
+<ol class="org-ol">
+<li>通过在wsl2上（目前采用ubuntu20.04）通过脚本安装二进制软件，将emacs作为前端，实现emacs中的各项基本功能；</li>
+<li>通过tramp，一个ssh软件，来自动管理连接远程服务器；</li>
+<li>通过执行powershell命令，来更好地辅助wsl和windows系统之间的交流；</li>
+</ol>
+
+<p>
+同时，我还为emacs的使用准备了两种环境：
+</p>
+<ol class="org-ol">
+<li>TUI（Text User Inferface），通过在windows的官方应用市场下载terminal，可以直接建立对wsl的访问。我常常在terminal中启动emacs，这占据了我工作中的绝大多数时间。比起GUI环境，terminal有以下优点：
+<ol class="org-ol">
+<li>速度更快，我的emacs很需要高效率，正常用着用着，就会开很多buffer，如果还打开lsp这种服务，那么就更复杂了；</li>
+<li>tui看起来更好看；</li>
+<li>tui更加纯粹，因为绝大多数时候，我都是在coding；</li>
+</ol></li>
+<li>GUI环境，win11可以支持WSL下的原生GUI，不过很可惜，我工位的电脑在硬件上无法支持win11，所以我只能使用win10，而在win10中，我采用mobaxterm，一个开源的ssh连接软件，来进行GUI映射。
+mobaxterm自带x11，在终端键入emacs，就可以产生一个gui版本的emacs了。使用GUI的方式有以下优点：
+<ol class="org-ol">
+<li>支持图片，如此在写博客时，可以内置现实图片；在写latex时，可以试试查看产生的pdf（tui不行）；在python科研绘图时，也可以直接display得到对应的结果；</li>
+<li>鼠标使用。gui支持使用鼠标，这在拼写检查、绘图等事情上有一定用途；</li>
+<li>更多的theme。有一些theme还是gui比较好看</li>
+<li>字体，略过不谈；</li>
+<li>没有快捷键缺损的问题。在tui使用时，为emacs定义的快捷键，可能会与终端的快捷键发生冲突。而我至今没找到怎么把terminal中所有的快捷键都关掉……</li>
+</ol></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgacbc0c1" class="outline-3">
+<h3 id="orgacbc0c1"><span class="section-number-3">1.2</span> 文件结构</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+我所采用的是最经典的emacs配置结构。
+</p>
+
+<p>
+我们知道，emacs通过访问 \~/emacs.d/init.el 来执行emacs配置的加载。而init文件，则通过顺序加载各个子文件，来实现对整个emacs的加载。
+</p>
+
+<p>
+整体的一个tree，可以通过下述代码所述：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-dot">&#9500;&#9472;&#9472; auto-insert
+&#9500;&#9472;&#9472; auto-save-list
+&#9500;&#9472;&#9472; collected
+&#9500;&#9472;&#9472; doc
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; images
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; utils-in-windows
+&#9500;&#9472;&#9472; elpa
+&#9500;&#9472;&#9472; eshell
+&#9500;&#9472;&#9472; imdict
+&#9500;&#9472;&#9472; lisp
+&#9500;&#9472;&#9472; netease-cloud-music
+&#9500;&#9472;&#9472; other-files
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; easy-collections
+&#9474;&#160;&#160; &#9474;&#160;&#160; &#9492;&#9472;&#9472; img
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; netease-cloud-music.el
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; org-static-blog
+&#9500;&#9472;&#9472; pyim
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; dcache
+&#9500;&#9472;&#9472; quelpa
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; melpa
+&#9500;&#9472;&#9472; request
+&#9500;&#9472;&#9472; rime
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; build
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; luna_pinyin.userdb
+&#9474;&#160;&#160; &#9474;&#160;&#160; &#9492;&#9472;&#9472; lost
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; luna_pinyin.userdb.old
+&#9474;&#160;&#160; &#9474;&#160;&#160; &#9492;&#9472;&#9472; lost
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; terra_pinyin.userdb
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; terra_pinyin.userdb.old
+&#9474;&#160;&#160;     &#9492;&#9472;&#9472; lost
+&#9500;&#9472;&#9472; site-lisp
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; emacs-application-framework
+&#9474;&#160;&#160;     &#9500;&#9472;&#9472; app
+&#9474;&#160;&#160;     &#9474;&#160;&#160; &#9492;&#9472;&#9472; airshare
+&#9474;&#160;&#160;     &#9500;&#9472;&#9472; core
+&#9474;&#160;&#160;     &#9474;&#160;&#160; &#9492;&#9472;&#9472; js
+&#9474;&#160;&#160;     &#9500;&#9472;&#9472; extension
+&#9474;&#160;&#160;     &#9492;&#9472;&#9472; img
+&#9500;&#9472;&#9472; snippets
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; c++-mode
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; c-mode
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; emacs-lisp-mode
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; latex-mode
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; org-mode
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; python-mode
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; rust-mode
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; sh-mode
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; web-mode
+&#9500;&#9472;&#9472; software
+&#9500;&#9472;&#9472; transient
+&#9492;&#9472;&#9472; url
+</pre>
+</div>
+
+<p>
+其中，other-files是我用来存储那些不需要进行更新，或者自己所写的包的地址；lisp是我的配置地址，剩下的都比较明显，就不再进行介绍了。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4dc6d90" class="outline-2">
+<h2 id="org4dc6d90"><span class="section-number-2">2</span> 所实现功能</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgefa63a9" class="outline-3">
+<h3 id="orgefa63a9"><span class="section-number-3">2.1</span> prog related</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="outline-container-org01c2ee6" class="outline-4">
+<h4 id="org01c2ee6"><span class="section-number-4">2.1.1</span> find definition &amp; application</h4>
+</div>
+
+<div id="outline-container-org81d91ec" class="outline-4">
+<h4 id="org81d91ec"><span class="section-number-4">2.1.2</span> auto insert and my snippets</h4>
+</div>
+
+<div id="outline-container-org01df0b1" class="outline-4">
+<h4 id="org01df0b1"><span class="section-number-4">2.1.3</span> details for some progs</h4>
+</div>
+</div>
+
+
+<div id="outline-container-orgaef874f" class="outline-3">
+<h3 id="orgaef874f"><span class="section-number-3">2.2</span> version control</h3>
+</div>
+
+<div id="outline-container-org1a19f27" class="outline-3">
+<h3 id="org1a19f27"><span class="section-number-3">2.3</span> take notes</h3>
+</div>
+
+<div id="outline-container-org8654b39" class="outline-3">
+<h3 id="org8654b39"><span class="section-number-3">2.4</span> ssh, with tramp</h3>
+</div>
+
+<div id="outline-container-org543adc9" class="outline-3">
+<h3 id="org543adc9"><span class="section-number-3">2.5</span> listern to music</h3>
+</div>
+
+<div id="outline-container-org5d9ef10" class="outline-3">
+<h3 id="org5d9ef10"><span class="section-number-3">2.6</span> play games</h3>
+</div>
+
+<div id="outline-container-orgfdd5ee6" class="outline-3">
+<h3 id="orgfdd5ee6"><span class="section-number-3">2.7</span> English related</h3>
+</div>
+
+<div id="outline-container-orge8fce76" class="outline-3">
+<h3 id="orge8fce76"><span class="section-number-3">2.8</span> my useful function</h3>
+</div>
+</div>
+
+
+
+<div id="outline-container-orgfd7b9bd" class="outline-2">
+<h2 id="orgfd7b9bd"><span class="section-number-2">3</span> Key-bindings</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org2fa751b" class="outline-3">
+<h3 id="org2fa751b"><span class="section-number-3">3.1</span> major mode</h3>
+<div class="outline-text-3" id="text-3-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">key</th>
+<th scope="col" class="org-left">info</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-c y</td>
+<td class="org-left">youdao-dictionary</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c p</td>
+<td class="org-left">projectile-command-map</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c e</td>
+<td class="org-left">english helper</td>
+</tr>
+
+<tr>
+<td class="org-left">C-\\</td>
+<td class="org-left">comment-line</td>
+</tr>
+
+<tr>
+<td class="org-left">M-0 M-9</td>
+<td class="org-left">window switch</td>
+</tr>
+
+<tr>
+<td class="org-left">ESC, C-d</td>
+<td class="org-left">EVIL ESC</td>
+</tr>
+
+<tr>
+<td class="org-left">&lt;SPC&gt;</td>
+<td class="org-left">EVIL LEADER</td>
+</tr>
+
+<tr>
+<td class="org-left">C-s</td>
+<td class="org-left">search files</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c C-r</td>
+<td class="org-left">rebegin after break</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h f</td>
+<td class="org-left">help of function</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h v</td>
+<td class="org-left">help of variable</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x C-r</td>
+<td class="org-left">recent open file</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h C-k</td>
+<td class="org-left">find function on key</td>
+</tr>
+
+<tr>
+<td class="org-left">C-0,-,=</td>
+<td class="org-left">screen big,small and so on</td>
+</tr>
+
+<tr>
+<td class="org-left">ac</td>
+<td class="org-left">aspell check buffer</td>
+</tr>
+
+<tr>
+<td class="org-left">fs</td>
+<td class="org-left">flyspell</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org867a99c" class="outline-3">
+<h3 id="org867a99c"><span class="section-number-3">3.2</span> org mode</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+1111
+</p>
+</div>
+</div>
+<div id="outline-container-orga6f6a31" class="outline-3">
+<h3 id="orga6f6a31"><span class="section-number-3">3.3</span> latex mode</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+1111
+</p>
+</div>
+</div>
+<div id="outline-container-orgcd5f462" class="outline-3">
+<h3 id="orgcd5f462"><span class="section-number-3">3.4</span> python mode</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+1111
+</p>
+</div>
+</div>
+</div>

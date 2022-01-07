@@ -1,0 +1,178 @@
+#+title: 我的emacs配置文档介绍
+#+date: Mon Jan  3 20:36:40 2022
+#+author: Zi Liang
+#+email: liangzid@stu.xjtu.edu.cn
+#+latex_class: elegantpaper
+#+filetags: config:emacs:document
+#+OPTIONS: broken-links:t
+
+* 总体框架
+  
+** 简介
+本文档汇总并总结我所使用的emacs配置的基本用法,并会进行不间断地更新。
+
+  由于我希望在多个平台上使用他，其中，又因受限于论文写作、画图、QQ、微信等工作流的需求，本emacs配置不得不支持windows系统上的使用。
+
+由于在服务器端写代码的需求，需要维持在linux终端上的使用。由于在笔记本电脑上使用linux的需求，还需要维持linux桌面端的使用。因而总体上需要以下几部分：
+
+1. 在windows系统上，主要功能需求包括[[latex]]和[[note]]两部分;
+2. 在linux服务器上，具有良好的python语法支持；
+3. 在windows系统和linux系统下，最好拥有以下支持：
+   1. 邮件处理 
+   2. C++、C语法支持；
+   3. 各种编程语言的开箱即用；
+
+针对于以上问题，目前所采用的折中解决方案是：采用win10系统+ WSL2，所有的emacs配置均建立在linux系统上进行配置，同时为wsl2撰写一些函数，以提供更加方便的系统交互。
+通过以上方式，我整合了我的工作流，实现上述需求：
+
+1. 通过在wsl2上（目前采用ubuntu20.04）通过脚本安装二进制软件，将emacs作为前端，实现emacs中的各项基本功能；
+2. 通过tramp，一个ssh软件，来自动管理连接远程服务器；
+3. 通过执行powershell命令，来更好地辅助wsl和windows系统之间的交流；
+
+同时，我还为emacs的使用准备了两种环境：
+1. TUI（Text User Inferface），通过在windows的官方应用市场下载terminal，可以直接建立对wsl的访问。我常常在terminal中启动emacs，这占据了我工作中的绝大多数时间。比起GUI环境，terminal有以下优点：
+   1. 速度更快，我的emacs很需要高效率，正常用着用着，就会开很多buffer，如果还打开lsp这种服务，那么就更复杂了；
+   2. tui看起来更好看；
+   3. tui更加纯粹，因为绝大多数时候，我都是在coding；
+2. GUI环境，win11可以支持WSL下的原生GUI，不过很可惜，我工位的电脑在硬件上无法支持win11，所以我只能使用win10，而在win10中，我采用mobaxterm，一个开源的ssh连接软件，来进行GUI映射。
+   mobaxterm自带x11，在终端键入emacs，就可以产生一个gui版本的emacs了。使用GUI的方式有以下优点：
+   1. 支持图片，如此在写博客时，可以内置现实图片；在写latex时，可以试试查看产生的pdf（tui不行）；在python科研绘图时，也可以直接display得到对应的结果；
+   2. 鼠标使用。gui支持使用鼠标，这在拼写检查、绘图等事情上有一定用途；
+   3. 更多的theme。有一些theme还是gui比较好看
+   4. 字体，略过不谈；
+   5. 没有快捷键缺损的问题。在tui使用时，为emacs定义的快捷键，可能会与终端的快捷键发生冲突。而我至今没找到怎么把terminal中所有的快捷键都关掉……
+
+** 文件结构
+
+
+我所采用的是最经典的emacs配置结构。
+
+我们知道，emacs通过访问 \~/emacs.d/init.el 来执行emacs配置的加载。而init文件，则通过顺序加载各个子文件，来实现对整个emacs的加载。
+
+整体的一个tree，可以通过下述代码所述：
+
+#+BEGIN_SRC dot
+  ├── auto-insert
+  ├── auto-save-list
+  ├── collected
+  ├── doc
+  │   ├── images
+  │   └── utils-in-windows
+  ├── elpa
+  ├── eshell
+  ├── imdict
+  ├── lisp
+  ├── netease-cloud-music
+  ├── other-files
+  │   ├── easy-collections
+  │   │   └── img
+  │   ├── netease-cloud-music.el
+  │   └── org-static-blog
+  ├── pyim
+  │   └── dcache
+  ├── quelpa
+  │   └── melpa
+  ├── request
+  ├── rime
+  │   ├── build
+  │   ├── luna_pinyin.userdb
+  │   │   └── lost
+  │   ├── luna_pinyin.userdb.old
+  │   │   └── lost
+  │   ├── terra_pinyin.userdb
+  │   └── terra_pinyin.userdb.old
+  │       └── lost
+  ├── site-lisp
+  │   └── emacs-application-framework
+  │       ├── app
+  │       │   └── airshare
+  │       ├── core
+  │       │   └── js
+  │       ├── extension
+  │       └── img
+  ├── snippets
+  │   ├── c++-mode
+  │   ├── c-mode
+  │   ├── emacs-lisp-mode
+  │   ├── latex-mode
+  │   ├── org-mode
+  │   ├── python-mode
+  │   ├── rust-mode
+  │   ├── sh-mode
+  │   └── web-mode
+  ├── software
+  ├── transient
+  └── url
+#+END_SRC
+
+其中，other-files是我用来存储那些不需要进行更新，或者自己所写的包的地址；lisp是我的配置地址，剩下的都比较明显，就不再进行介绍了。
+
+* 所实现功能
+
+
+  
+** prog related
+
+*** find definition & application
+   
+*** auto insert and my snippets
+
+*** details for some progs
+
+    
+** version control
+   
+** take notes
+   
+** ssh, with tramp
+
+** listern to music
+
+** play games
+   
+** English related
+
+** my useful function
+
+
+   
+* Key-bindings
+
+** major mode
+ |----------+----------------------------|
+ | key      | info                       |
+ |----------+----------------------------|
+ | C-c y    | youdao-dictionary          |
+ | C-c p    | projectile-command-map     |
+ | C-c e    | english helper             |
+ | C-\\     | comment-line               |
+ | M-0 M-9  | window switch              |
+ | ESC, C-d | EVIL ESC                   |
+ | <SPC>    | EVIL LEADER                |
+ | C-s      | search files               |
+ | C-c C-r  | rebegin after break        |
+ | C-h f    | help of function           |
+ | C-h v    | help of variable           |
+ | C-x C-r  | recent open file           |
+ | C-h C-k  | find function on key       |
+ | C-0,-,=  | screen big,small and so on |
+ | ac       | aspell check buffer        |
+ | fs       | flyspell                   |
+ |          |                            |
+ |----------+----------------------------|
+
+** org mode
+1111
+** latex mode
+1111
+** python mode
+1111
+
+
+
+
+
+
+
+
+
