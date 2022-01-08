@@ -18,20 +18,32 @@
 </ul>
 </li>
 <li><a href="#orgaef874f">2.2. version control</a></li>
-<li><a href="#org1a19f27">2.3. take notes</a></li>
-<li><a href="#org8654b39">2.4. ssh, with tramp</a></li>
-<li><a href="#org543adc9">2.5. listern to music</a></li>
-<li><a href="#org5d9ef10">2.6. play games</a></li>
-<li><a href="#orgfdd5ee6">2.7. English related</a></li>
-<li><a href="#orge8fce76">2.8. my useful function</a></li>
+<li><a href="#org1a19f27">2.3. take notes</a>
+<ul>
+<li><a href="#org366e92c">2.3.1. insert codes</a></li>
+<li><a href="#org3c38bdb">2.3.2. 运行代码</a></li>
+<li><a href="#orgeda38e2">2.3.3. 插入图片</a></li>
+<li><a href="#org5cdf2eb">2.3.4. 格式导出</a></li>
+<li><a href="#org6ed3791">2.3.5. 发布博客</a></li>
 </ul>
 </li>
-<li><a href="#orgfd7b9bd">3. Key-bindings</a>
+<li><a href="#org8654b39">2.4. ssh, with tramp</a></li>
+<li><a href="#org42d54e7">2.5. listen to music</a></li>
+<li><a href="#org5d9ef10">2.6. play games</a></li>
+<li><a href="#orgfdd5ee6">2.7. English related</a>
 <ul>
-<li><a href="#org2fa751b">3.1. major mode</a></li>
-<li><a href="#org867a99c">3.2. org mode</a></li>
-<li><a href="#orga6f6a31">3.3. latex mode</a></li>
-<li><a href="#orgcd5f462">3.4. python mode</a></li>
+<li><a href="#org4074f1c">2.7.1. 查单词</a></li>
+<li><a href="#org3a68a71">2.7.2. 英语自动补全</a></li>
+<li><a href="#org9d6c6fc">2.7.3. 英语拼写检查</a></li>
+</ul>
+</li>
+<li><a href="#orga946217">2.8. 输入法</a></li>
+</ul>
+</li>
+<li><a href="#org1a2cb09">3. 附录：键位表</a>
+<ul>
+<li><a href="#orgd34ac35">3.1. evil相关的leader键位表</a></li>
+<li><a href="#org82fc35e">3.2. snippets</a></li>
 </ul>
 </li>
 </ul>
@@ -200,45 +212,682 @@ mobaxterm自带x11，在终端键入emacs，就可以产生一个gui版本的ema
 </div>
 </div>
 
-
 <div id="outline-container-orgaef874f" class="outline-3">
 <h3 id="orgaef874f"><span class="section-number-3">2.2</span> version control</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+我通过magit去做版本控制，这个东西对新手比较友好。<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>
+</p>
+
+<p>
+我没有为git设置快捷键，因为使用不是很多， git有很多低级功能，如add，commit， push，pull等操作，就不赘述了。
+</p>
+
+<p>
+比较常见的进阶问题是关于diff的，此处先不赘述，后面专门写文章介绍。
+</p>
 </div>
+</div>
+
 
 <div id="outline-container-org1a19f27" class="outline-3">
 <h3 id="org1a19f27"><span class="section-number-3">2.3</span> take notes</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+我的笔记通过org mode进行记录，之后发表到我自己的<a href="https://liangzid.github.io/sitemap.html">blog</a>上。发表到博客有利于我自己查看。
+</p>
+
+<p>
+关于如何使用ORG mode，这应该不是一个问题。我主要对orgmode进行了三个方面的自定义：
+</p>
+</div>
+<div id="outline-container-org366e92c" class="outline-4">
+<h4 id="org366e92c"><span class="section-number-4">2.3.1</span> insert codes</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<p>
+相当于写了一点点的语法糖，我把它绑定在了“C-c s i”上，代表 src，input。
+</p>
+
+<p>
+函数如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#35774;&#32622;org&#24555;&#36895;&#25554;&#20837;&#28304;&#20195;&#30721;</span>
+<span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defun</span> <span style="color: #87D700;">org-insert-src-block</span> <span style="color: #5FD7FF;">(</span>src-code-type<span style="color: #5FD7FF;">)</span>
+  <span style="color: #CDC673;">"Insert a `</span><span style="color: #AF87FF;">SRC-CODE-TYPE</span><span style="color: #CDC673;">' type source code block in org-mode."</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">interactive</span>
+   <span style="color: #87D700;">(</span><span style="color: #FF1493;">let</span> <span style="color: #CDC673;">(</span><span style="color: #FF8C00;">(</span>src-code-types
+          '<span style="color: #FF1493;">(</span><span style="color: #CDC673;">"emacs-lisp"</span> <span style="color: #CDC673;">"python"</span> <span style="color: #CDC673;">"C"</span> <span style="color: #CDC673;">"sh"</span> <span style="color: #CDC673;">"java"</span> <span style="color: #CDC673;">"js"</span> <span style="color: #CDC673;">"clojure"</span> <span style="color: #CDC673;">"C++"</span> <span style="color: #CDC673;">"css"</span>
+            <span style="color: #CDC673;">"calc"</span> <span style="color: #CDC673;">"asymptote"</span> <span style="color: #CDC673;">"dot"</span> <span style="color: #CDC673;">"gnuplot"</span> <span style="color: #CDC673;">"ledger"</span> <span style="color: #CDC673;">"lilypond"</span> <span style="color: #CDC673;">"mscgen"</span>
+            <span style="color: #CDC673;">"octave"</span> <span style="color: #CDC673;">"oz"</span> <span style="color: #CDC673;">"plantuml"</span> <span style="color: #CDC673;">"R"</span> <span style="color: #CDC673;">"sass"</span> <span style="color: #CDC673;">"screen"</span> <span style="color: #CDC673;">"sql"</span> <span style="color: #CDC673;">"awk"</span> <span style="color: #CDC673;">"ditaa"</span>
+            <span style="color: #CDC673;">"haskell"</span> <span style="color: #CDC673;">"latex"</span> <span style="color: #CDC673;">"lisp"</span> <span style="color: #CDC673;">"matlab"</span> <span style="color: #CDC673;">"ocaml"</span> <span style="color: #CDC673;">"org"</span> <span style="color: #CDC673;">"perl"</span> <span style="color: #CDC673;">"ruby"</span>
+            <span style="color: #CDC673;">"scheme"</span> <span style="color: #CDC673;">"sqlite"</span><span style="color: #FF1493;">)</span><span style="color: #FF8C00;">)</span><span style="color: #CDC673;">)</span>
+     <span style="color: #CDC673;">(</span>list <span style="color: #FF8C00;">(</span>ido-completing-read <span style="color: #CDC673;">"Source code type: "</span> src-code-types<span style="color: #FF8C00;">)</span><span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">progn</span>
+    <span style="color: #87D700;">(</span>newline-and-indent<span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span>insert <span style="color: #CDC673;">(</span>format <span style="color: #CDC673;">"#+BEGIN_SRC %s\n"</span> src-code-type<span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span>newline-and-indent<span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span>insert <span style="color: #CDC673;">"#+END_SRC\n"</span><span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span>previous-line 2<span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span>org-edit-src-code<span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+
+<span style="color: #8B8878;">;; </span><span style="color: #8B8878;">(message "--------------------begin--------------------")</span>
+<span style="color: #8B8878;">;;</span><span style="color: #8B8878;">&#23558;&#20854;&#21152;&#36733;&#22312;&#24555;&#25463;&#38190;&#19978;</span>
+<span style="color: #AF87FF;">(</span>add-hook 'org-mode-hook
+          '<span style="color: #5FD7FF;">(</span>lambda <span style="color: #87D700;">()</span>
+             <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">;; C-TAB for expanding</span>
+             <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">(local-set-key (kbd "C-&lt;tab&gt;")</span>
+             <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">'yas/expand-from-trigger-key)</span>
+             <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">keybinding for editing source code blocks</span>
+             <span style="color: #87D700;">(</span>local-set-key <span style="color: #CDC673;">(</span>kbd <span style="color: #CDC673;">"C-c s e"</span><span style="color: #CDC673;">)</span>
+             'org-edit-src-code<span style="color: #87D700;">)</span>
+             <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">keybinding for inserting code blocks</span>
+             <span style="color: #87D700;">(</span>local-set-key <span style="color: #CDC673;">(</span>kbd <span style="color: #CDC673;">"C-c s i"</span><span style="color: #CDC673;">)</span> 'org-insert-src-block <span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+
+</pre>
+</div>
+
+<p>
+对的，我上面的这段代码，就是用这个配置插入的……
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3c38bdb" class="outline-4">
+<h4 id="org3c38bdb"><span class="section-number-4">2.3.2</span> 运行代码</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<p>
+使用如下配置：
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #8B8878;">;;</span><span style="color: #8B8878;">code running</span>
+<span style="color: #AF87FF;">(</span>org-babel-do-load-languages
+     'org-babel-load-languages
+     '<span style="color: #5FD7FF;">(</span><span style="color: #87D700;">(</span>emacs-lisp . t<span style="color: #87D700;">)</span>
+       <span style="color: #87D700;">(</span>ditaa . t<span style="color: #87D700;">)</span>
+       <span style="color: #87D700;">(</span>python . t<span style="color: #87D700;">)</span>
+       <span style="color: #8B8878;">;;</span><span style="color: #8B8878;">(sh . t)</span>
+       <span style="color: #87D700;">(</span>latex . t<span style="color: #87D700;">)</span>
+       <span style="color: #87D700;">(</span>plantuml . t<span style="color: #87D700;">)</span>
+       <span style="color: #87D700;">(</span>R . t<span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+
+<span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> org-plantuml-jar-path
+     <span style="color: #5FD7FF;">(</span>expand-file-name <span style="color: #CDC673;">"~/.emacs.d/software/plantuml.jar"</span><span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+
+
+<span style="color: #8B8878;">;;</span><span style="color: #8B8878;">code&#25191;&#34892;&#20813;&#24212;&#31572;&#65288;Eval code without confirm&#65289;</span>
+<span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> org-confirm-babel-evaluate nil<span style="color: #AF87FF;">)</span>
+</pre>
+</div>
+
+<p>
+值得注意的是，我还对plantuml特殊照顾。这是为了画UML图的jar包。我用它是为了能够在某些时候画一些简单的图示。
+</p>
+
+<p>
+比如下面的代码：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org">
+#+begin_src plantuml :file ./img/202201071111.png
+(a)--&gt;(b)
+(b)--&gt;(c)
+(c)--&gt; (d)
+(d)--&gt; (a)
+</pre>
+</div>
+
+<p>
+#+end_src
+</p>
+
+<p>
+当我使用“C-c C-c”时，就可以自动插入代码进去了.
+</p>
+
+
+<div id="org6d588e2" class="figure">
+<p><img src="./img/202201071111.png" alt="202201071111.png" />
+</p>
+</div>
+
+<p>
+当然，正常的编程语言都可以理解，只要你有解释器。比如 python：
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #FF1493;">return</span> 1+1
+</pre>
+</div>
+
+
+<div id="org45c8340" class="figure">
+<p><img src="./images/screenshot_20220107_214119.png" alt="screenshot_20220107_214119.png" /> 
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgeda38e2" class="outline-4">
+<h4 id="orgeda38e2"><span class="section-number-4">2.3.3</span> 插入图片</h4>
+<div class="outline-text-4" id="text-2-3-3">
+<p>
+这个是21世纪记笔记的硬需求。由于我是用的wsl，所以在拥有mac这种电脑之前，我需要解决的一个核心问题是：如何将windows里复制的图片进行粘贴。我把这个流程抽象的很简单，主要是借助powershell。
+</p>
+
+<p>
+这个流程是，我通过C-M-a (qq的截图键) 和 M-a (微信的截图键) 选取我希望截图的部分，然后通过SPC-s-i，插入我截取完成的那部分图片，之后，对应的图片会被保存在当前文件所处地区的imgs文件夹中，并基于插入时间产生一个文件。
+</p>
+
+
+<div id="org0a5796e" class="figure">
+<p><img src="./images/screenshot_20220107_215239.png" alt="screenshot_20220107_215239.png" /> 
+</p>
+</div>
+
+<p>
+比如上面这张图片，就是我去那个文件夹下，打开了一个目录之后而得到的。
+</p>
+
+<p>
+这一部分的配置如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defun</span> <span style="color: #87D700;">my-yank-image-from-win-clipboard-through-powershell</span><span style="color: #5FD7FF;">()</span>
+  <span style="color: #CDC673;">"to simplify the logic, use c:/Users/Public as temporary directoy, and move it into current directoy"</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">interactive</span><span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">let*</span> <span style="color: #87D700;">(</span><span style="color: #CDC673;">(</span>powershell <span style="color: #CDC673;">"/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"</span><span style="color: #CDC673;">)</span>
+         <span style="color: #CDC673;">(</span>file-name <span style="color: #FF8C00;">(</span>format-time-string <span style="color: #CDC673;">"screenshot_%Y%m%d_%H%M%S.png"</span><span style="color: #FF8C00;">)</span><span style="color: #CDC673;">)</span>
+         <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">(file-path-powershell (concat "c:/Users/\$env:USERNAME/" file-name))</span>
+         <span style="color: #CDC673;">(</span>file-path-wsl <span style="color: #FF8C00;">(</span>concat <span style="color: #CDC673;">"./images/"</span> file-name<span style="color: #FF8C00;">)</span><span style="color: #CDC673;">)</span>
+         <span style="color: #87D700;">)</span>
+    <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">(shell-command (concat powershell " -command \"(Get-Clipboard -Format Image).Save(\\\"C:/Users/\\$env:USERNAME/" file-name "\\\")\""))</span>
+    <span style="color: #87D700;">(</span>shell-command <span style="color: #CDC673;">(</span>concat powershell <span style="color: #CDC673;">" -command \"(Get-Clipboard -Format Image).Save(\\\"C:/Users/Public/"</span> file-name <span style="color: #CDC673;">"\\\")\""</span><span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span>rename-file <span style="color: #CDC673;">(</span>concat <span style="color: #CDC673;">"/mnt/c/Users/Public/"</span> file-name<span style="color: #CDC673;">)</span> file-path-wsl<span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span>insert <span style="color: #CDC673;">(</span>concat <span style="color: #CDC673;">"[[file:"</span> file-path-wsl <span style="color: #CDC673;">"]]"</span><span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span>message <span style="color: #CDC673;">"insert DONE."</span><span style="color: #87D700;">)</span>
+    <span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+</pre>
+</div>
+
+<p>
+其基本原理是：将复制的图片保存在本地，然后移动到目标文件夹下，并在当前光标下插入。
+</p>
+
+<p>
+如果你在windows下用emacs，我这里有一套完整的方案，通过C-M-Y便可以开启截图！
+配置如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #8B8878;">;; </span><span style="color: #8B8878;">"C:\Program Files\IrfanView\i_view64.exe"</span>
+<span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defun</span> <span style="color: #87D700;">my-screen-capture</span> <span style="color: #5FD7FF;">()</span>
+  <span style="color: #CDC673;">"Take a screenshot into a unique-named file in the current buffer file</span>
+<span style="color: #CDC673;">   directory and insert a link to this file."</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">interactive</span><span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span>lower-frame<span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">let</span> <span style="color: #87D700;">(</span><span style="color: #CDC673;">(</span>capture-name <span style="color: #FF8C00;">(</span>concat
+                       <span style="color: #FF1493;">(</span>format-time-string <span style="color: #CDC673;">"%Y%m%d%H%M%S"</span><span style="color: #FF1493;">)</span> <span style="color: #CDC673;">".png"</span><span style="color: #FF8C00;">)</span><span style="color: #CDC673;">)</span>
+        <span style="color: #CDC673;">(</span>capture-save-path <span style="color: #FF8C00;">(</span>concat
+                            <span style="color: #FF1493;">(</span>file-name-directory buffer-file-name<span style="color: #FF1493;">)</span> <span style="color: #CDC673;">"images/"</span><span style="color: #FF8C00;">)</span><span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span><span style="color: #FF1493;">setq</span> capture-file <span style="color: #CDC673;">(</span>concat capture-save-path capture-name<span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span>
+    <span style="color: #87D700;">(</span><span style="color: #FF1493;">if</span> *is-windows*
+        <span style="color: #CDC673;">(</span><span style="color: #FF8C00;">(</span><span style="color: #FF1493;">setq</span> command <span style="color: #FF1493;">(</span>concat <span style="color: #CDC673;">"\"C://Program Files//IrfanView//i_view64.exe\"  /capture=4 /dpi=(300,300) /convert="</span>
+                               <span style="color: #AF87FF;">(</span>replace-regexp-in-string <span style="color: #CDC673;">"/"</span> <span style="color: #CDC673;">"\\\\"</span> capture-file<span style="color: #AF87FF;">)</span><span style="color: #FF1493;">)</span><span style="color: #FF8C00;">)</span>
+         <span style="color: #FF8C00;">(</span>shell-command command<span style="color: #FF8C00;">)</span><span style="color: #CDC673;">)</span>
+      <span style="color: #CDC673;">(</span>call-process-shell-command <span style="color: #CDC673;">"scrot"</span> nil nil nil nil <span style="color: #CDC673;">"-s"</span> capture-file<span style="color: #CDC673;">)</span>
+      <span style="color: #87D700;">)</span>
+
+    <span style="color: #87D700;">(</span>insert <span style="color: #CDC673;">(</span>concat
+             <span style="color: #CDC673;">"[[file:./images/"</span> capture-name <span style="color: #CDC673;">"]]"</span><span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span>
+  <span style="color: #AF87FF;">)</span>
+
+<span style="color: #AF87FF;">(</span>define-key org-mode-map <span style="color: #5FD7FF;">(</span>kbd <span style="color: #CDC673;">"C-M-Y"</span><span style="color: #5FD7FF;">)</span> 'my-screen-capture<span style="color: #AF87FF;">)</span>
+</pre>
+</div>
+
+<p>
+除此之外还有一些别的办法，但是似乎对WSL没用，没用所以我就用不到。
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq-default</span> org-download-heading-lvl nil<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq-default</span> org-download-image-dir <span style="color: #CDC673;">"./img"</span><span style="color: #AF87FF;">)</span> <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#25226;&#22270;&#29255;&#20445;&#23384;&#22312; org &#25991;&#26723;&#25152;&#22312;&#30446;&#24405;&#30340; img &#23376;&#30446;&#24405;&#19979;</span>
+
+<span style="color: #AF87FF;">(</span>add-hook 'org-mode-hook
+          #'org-download-enable<span style="color: #AF87FF;">)</span>
+
+<span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#35774;&#32622;&#25554;&#20837;&#22270;&#29255;&#30340;&#24555;&#25463;&#38190;</span>
+<span style="color: #8B8878;">;; </span><span style="color: #8B8878;">(after-load 'org-download</span>
+  <span style="color: #AF87FF;">(</span>define-key org-mode-map <span style="color: #5FD7FF;">(</span>kbd <span style="color: #CDC673;">"C-c C-x s"</span><span style="color: #5FD7FF;">)</span> 'org-download-screenshot<span style="color: #AF87FF;">)</span> <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#25554;&#20837;&#25130;&#22270;</span>
+<span style="color: #AF87FF;">(</span>define-key org-mode-map <span style="color: #5FD7FF;">(</span>kbd <span style="color: #CDC673;">"C-c C-x y"</span><span style="color: #5FD7FF;">)</span> 'org-download-yank<span style="color: #AF87FF;">)</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5cdf2eb" class="outline-4">
+<h4 id="org5cdf2eb"><span class="section-number-4">2.3.4</span> 格式导出</h4>
+<div class="outline-text-4" id="text-2-3-4">
+<p>
+这个是org mode的默认功能，我对它做了增强，主要是确定模板和支持中文。
+</p>
+
+<p>
+默认命令是C-c C-e，比如对于这个文件，我可以通过该命令得到导出页面。
+</p>
+
+
+<div id="orgabcc2ed" class="figure">
+<p><img src="./images/screenshot_20220107_220217.png" alt="screenshot_20220107_220217.png" /> 
+</p>
+</div>
+
+<p>
+对于上述命令，我用到的最多的，是通过org导出word相关格式，html格式，和latex支持的PDF格式。除此之外还有epub游戏。
+</p>
+
+<p>
+其中最需要配置的是latex支持的PDF格式，配置方式如下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+<span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#20351;&#29992;xelatex&#65292;&#37197;&#21512;&#24403;&#21069;org&#25991;&#20214;&#26368;&#24320;&#22987;&#30340;&#37197;&#32622;&#26469;&#27491;&#24120;&#36755;&#20986;&#20013;&#25991;</span>
+  <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#36825;&#31867;&#31508;&#35760;&#22522;&#26412;&#19981;&#21487;&#33021;&#26159;&#20840;&#33521;&#25991;&#65292;&#25152;&#20197;&#23601;&#23433;&#24515;&#29992;xelatex&#31639;&#20102;</span>
+  <span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> org-latex-pdf-process '<span style="color: #5FD7FF;">(</span><span style="color: #CDC673;">"xelatex -file-line-error -interaction nonstopmode %f"</span>
+                                <span style="color: #CDC673;">"bibtex %b"</span>
+                                <span style="color: #CDC673;">"xelatex -file-line-error -interaction nonstopmode %f"</span>
+                                <span style="color: #CDC673;">"xelatex -file-line-error -interaction nonstopmode %f"</span><span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+
+  <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#29983;&#25104;PDF&#21518;&#28165;&#29702;&#36741;&#21161;&#25991;&#20214;</span>
+  <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">https://answer-id.com/53623039</span>
+  <span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> org-latex-logfiles-extensions
+    <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">quote</span> <span style="color: #87D700;">(</span><span style="color: #CDC673;">"lof"</span> <span style="color: #CDC673;">"lot"</span> <span style="color: #CDC673;">"tex"</span> <span style="color: #CDC673;">"tex~"</span> <span style="color: #CDC673;">"aux"</span>
+      <span style="color: #CDC673;">"idx"</span> <span style="color: #CDC673;">"log"</span> <span style="color: #CDC673;">"out"</span> <span style="color: #CDC673;">"toc"</span> <span style="color: #CDC673;">"nav"</span>
+      <span style="color: #CDC673;">"snm"</span> <span style="color: #CDC673;">"vrb"</span> <span style="color: #CDC673;">"dvi"</span> <span style="color: #CDC673;">"fdb_latexmk"</span>
+      <span style="color: #CDC673;">"blg"</span> <span style="color: #CDC673;">"brf"</span> <span style="color: #CDC673;">"fls"</span> <span style="color: #CDC673;">"entoc"</span> <span style="color: #CDC673;">"ps"</span>
+      <span style="color: #CDC673;">"spl"</span> <span style="color: #CDC673;">"bbl"</span> <span style="color: #CDC673;">"xdv"</span><span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+
+  <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#22270;&#29255;&#40664;&#35748;&#23485;&#24230;</span>
+  <span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> org-image-actual-width '<span style="color: #5FD7FF;">(</span>300<span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+
+  <span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> org-export-with-sub-superscripts nil<span style="color: #AF87FF;">)</span>
+
+  <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#19981;&#35201;&#33258;&#21160;&#21019;&#24314;&#22791;&#20221;&#25991;&#20214;</span>
+  <span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> make-backup-files nil<span style="color: #AF87FF;">)</span>
+
+  <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">elegantpaper.cls</span>
+  <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">https://github.com/ElegantLaTeX/ElegantPaper/blob/master/elegantpaper.cls</span>
+  <span style="color: #AF87FF;">(</span><span style="color: #FF1493;">with-eval-after-load</span> 'ox-latex
+  <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">http://orgmode.org/worg/org-faq.html#using-xelatex-for-pdf-export</span>
+  <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">latexmk runs pdflatex/xelatex (whatever is specified) multiple times</span>
+  <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">automatically to resolve the cross-references.</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">setq</span> org-latex-pdf-process '<span style="color: #87D700;">(</span><span style="color: #CDC673;">"latexmk -xelatex -quiet -shell-escape -f %f"</span><span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">setq</span> org-latex-listings t<span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span>add-to-list 'org-latex-classes
+                '<span style="color: #87D700;">(</span><span style="color: #CDC673;">"elegantpaper"</span>
+                  <span style="color: #CDC673;">"\\documentclass[lang=cn]{elegantpaper}</span>
+<span style="color: #CDC673;">                  [NO-DEFAULT-PACKAGES]</span>
+<span style="color: #CDC673;">                  [PACKAGES]</span>
+<span style="color: #CDC673;">                  [EXTRA]"</span>
+                  <span style="color: #CDC673;">(</span><span style="color: #CDC673;">"\\section{%s}"</span> . <span style="color: #CDC673;">"\\section*{%s}"</span><span style="color: #CDC673;">)</span>
+                  <span style="color: #CDC673;">(</span><span style="color: #CDC673;">"\\subsection{%s}"</span> . <span style="color: #CDC673;">"\\subsection*{%s}"</span><span style="color: #CDC673;">)</span>
+                  <span style="color: #CDC673;">(</span><span style="color: #CDC673;">"\\subsubsection{%s}"</span> . <span style="color: #CDC673;">"\\subsubsection*{%s}"</span><span style="color: #CDC673;">)</span>
+                  <span style="color: #CDC673;">(</span><span style="color: #CDC673;">"\\paragraph{%s}"</span> . <span style="color: #CDC673;">"\\paragraph*{%s}"</span><span style="color: #CDC673;">)</span>
+                  <span style="color: #CDC673;">(</span><span style="color: #CDC673;">"\\subparagraph{%s}"</span> . <span style="color: #CDC673;">"\\subparagraph*{%s}"</span><span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span>
+  <span style="color: #AF87FF;">)</span>
+
+</pre>
+</div>
+
+<p>
+这个东西需要配置开头文件，通过使用 <code>#+latex_class: elegantpaper</code> 的前缀。
+</p>
+
+<p>
+其中的elegantpaper，是一个latex中的sty文件。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6ed3791" class="outline-4">
+<h4 id="org6ed3791"><span class="section-number-4">2.3.5</span> 发布博客</h4>
+<div class="outline-text-4" id="text-2-3-5">
+<p>
+通过org-publish进行绑定，其配置如下，其中敏感信息一竟被删除：
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">require</span> '<span style="color: #AF87FF;">ox-publish</span><span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> org-publish-project-alist
+      '<span style="color: #5FD7FF;">(</span>
+         <span style="color: #87D700;">(</span><span style="color: #CDC673;">"blog-notes"</span>
+            <span style="color: #FF1493;">:base-directory</span> <span style="color: #CDC673;">"~/liangzid.github.io/notes/"</span>
+             <span style="color: #FF1493;">:base-extension</span> <span style="color: #CDC673;">"org"</span>
+             <span style="color: #FF1493;">:publishing-directory</span> <span style="color: #CDC673;">"~/liangzid.github.io/"</span>
+             <span style="color: #FF1493;">:recursive</span> t
+             <span style="color: #FF1493;">:htmlized-source</span> t
+             <span style="color: #FF1493;">:html-extension</span> <span style="color: #CDC673;">"html"</span>
+             <span style="color: #FF1493;">:body-only</span> t
+             <span style="color: #FF1493;">:table-of-contents</span> t
+             <span style="color: #FF1493;">:publishing-function</span> org-html-publish-to-html
+             <span style="color: #FF1493;">:headline-levels</span> 5
+             <span style="color: #FF1493;">:auto-preamble</span> t
+             <span style="color: #FF1493;">:section-numbers</span> t
+             <span style="color: #FF1493;">:author</span> <span style="color: #CDC673;">"LiangZi"</span>
+             <span style="color: #FF1493;">:email</span> <span style="color: #CDC673;">"liangzid@stu.xjtu.edu.cn"</span>
+             <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">:exclude-tags "noshow"</span>
+             <span style="color: #FF1493;">:auto-sitemap</span> t                  <span style="color: #8B8878;">; </span><span style="color: #8B8878;">&#33258;&#21160;&#29983;&#25104; sitemap.org &#25991;&#20214;</span>
+             <span style="color: #FF1493;">:sitemap-filename</span> <span style="color: #CDC673;">"sitemap.org"</span>  <span style="color: #8B8878;">; </span><span style="color: #8B8878;">... call it sitemap.org (it's the default)...</span>
+             <span style="color: #FF1493;">:sitemap-title</span> <span style="color: #CDC673;">"Sitemap"</span>         <span style="color: #8B8878;">; </span><span style="color: #8B8878;">... with title 'Sitemap'.</span>
+             <span style="color: #FF1493;">:sitemap-sort-files</span> anti-chronologically
+             <span style="color: #FF1493;">:sitemap-file-entry-format</span> <span style="color: #CDC673;">"%d %t"</span>
+             <span style="color: #FF1493;">:html-head</span> <span style="color: #CDC673;">"&lt;link rel=\"stylesheet\" type=\"text/css\" href=\"https://liangzid.github.io/notes/css/worg.css\"/&gt;"</span>
+
+         <span style="color: #87D700;">)</span>
+         <span style="color: #87D700;">(</span><span style="color: #CDC673;">"blog-static"</span>
+             <span style="color: #FF1493;">:base-directory</span> <span style="color: #CDC673;">"~/liangzid.github.io/notes/"</span>
+             <span style="color: #FF1493;">:base-extension</span> <span style="color: #CDC673;">"css</span><span style="color: #AF87FF;">\\</span><span style="color: #CDC673;">|</span><span style="color: #CDC673;">js</span><span style="color: #AF87FF;">\\</span><span style="color: #CDC673;">|</span><span style="color: #CDC673;">png</span><span style="color: #AF87FF;">\\</span><span style="color: #CDC673;">|</span><span style="color: #CDC673;">jpg</span><span style="color: #AF87FF;">\\</span><span style="color: #CDC673;">|</span><span style="color: #CDC673;">gif</span><span style="color: #AF87FF;">\\</span><span style="color: #CDC673;">|</span><span style="color: #CDC673;">pdf</span><span style="color: #AF87FF;">\\</span><span style="color: #CDC673;">|</span><span style="color: #CDC673;">mp3</span><span style="color: #AF87FF;">\\</span><span style="color: #CDC673;">|</span><span style="color: #CDC673;">ogg</span><span style="color: #AF87FF;">\\</span><span style="color: #CDC673;">|</span><span style="color: #CDC673;">swf"</span>
+             <span style="color: #FF1493;">:publishing-directory</span> <span style="color: #CDC673;">"~/liangzid.github.io/"</span>
+             <span style="color: #FF1493;">:html-head</span> <span style="color: #CDC673;">"&lt;link rel=\"stylesheet\" type=\"text/css\" href=\"https://liangzid.github.io/notes/css/worg.css\"/&gt;"</span>
+             <span style="color: #FF1493;">:recursive</span> t
+             <span style="color: #FF1493;">:publishing-function</span> org-publish-attachment
+          <span style="color: #87D700;">)</span>
+         <span style="color: #87D700;">(</span><span style="color: #CDC673;">"blog"</span> <span style="color: #FF1493;">:components</span> <span style="color: #CDC673;">(</span><span style="color: #CDC673;">"blog-notes"</span> <span style="color: #CDC673;">"blog-static"</span><span style="color: #CDC673;">)</span><span style="color: #87D700;">)</span>
+
+        <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#25226;&#21508;&#37096;&#20998;&#30340;&#37197;&#32622;&#25991;&#20214;&#20889;&#21040;&#36825;&#37324;&#38754;&#26469;</span>
+
+        <span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+
+</pre>
+</div>
+
+<p>
+这里的css配置问题，我还没有解决。
+</p>
+</div>
+</div>
 </div>
 
 <div id="outline-container-org8654b39" class="outline-3">
 <h3 id="org8654b39"><span class="section-number-3">2.4</span> ssh, with tramp</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+我之前使用vscode来连接远程服务器写代码，但是vscode比较麻烦，常常需要连接多次，多次输入密码。
+除此之外，我面对vscode等工具会产生一种畏惧心态——因为太复杂了，没有emacs简洁简单。
+</p>
+
+<p>
+后来，我转向了终端，即在服务器上安装emacs，然后ssh远程过去，然后在终端打开emacs使用。
+后来发现，其实emacs竟然也自带ssh工具，这就是tramp。
+</p>
+
+<p>
+我其实挺喜欢tramp的，这个东西使用起来很简单，并且记录一次密码之后，就可以永远快速进入了！
+</p>
+
+<p>
+假如说断网了，也就是我和服务器失去了连接，没关系，我在本地的buffer上也会有一份副本。当出现多个写而产生的冲突时，会有一个冲突报警。
+</p>
+
+<p>
+我主要有若干个实验室的服务器帐号，分别属于不同的ip上（当然，必须是服务器内网访问），所以我写了一个简单的函数，这样我只需要运行SPC-服务器序号，就可以访问他们了！
+</p>
+
+<p>
+函数写的十分简单，下面仅以其中一个为例：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #AF87FF;">(</span><span style="color: #FF1493;">defun</span> <span style="color: #87D700;">ssh-connect-41</span> <span style="color: #5FD7FF;">()</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">interactive</span><span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span>counsel-find-file <span style="color: #CDC673;">"/ssh:username@XXX.XXX.XXX.XXX:/home/username/liangzi_need_smile"</span><span style="color: #5FD7FF;">)</span>
+  <span style="color: #AF87FF;">)</span>
+</pre>
 </div>
 
-<div id="outline-container-org543adc9" class="outline-3">
-<h3 id="org543adc9"><span class="section-number-3">2.5</span> listern to music</h3>
+<p>
+关于快捷键绑定，后面会统一介绍。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org42d54e7" class="outline-3">
+<h3 id="org42d54e7"><span class="section-number-3">2.5</span> listen to music</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+是的，还可以听音乐。不过我没有这个习惯。现在的音乐多不合我的耳，我也不喜欢版权文化，因此我已经两年多不怎么听歌了。
+</p>
+
+<p>
+可以通过我的<a href="https://gitee.com/18842378119/a.emacs.d">仓库</a>中other-files中 <code>netease-cloud-music.el</code> 文件夹获取听音乐功能。此处不赘述。
+</p>
+</div>
 </div>
 
 <div id="outline-container-org5d9ef10" class="outline-3">
 <h3 id="org5d9ef10"><span class="section-number-3">2.6</span> play games</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+略。
+</p>
 </div>
-
+</div>
 <div id="outline-container-orgfdd5ee6" class="outline-3">
 <h3 id="orgfdd5ee6"><span class="section-number-3">2.7</span> English related</h3>
+<div class="outline-text-3" id="text-2-7">
+<p>
+我的英语需求，主要包括：在阅读别人的文档时，提供查单词功能；在自己进行写作时，能够提供一些单词辅助，以及拼写检查。
+</p>
+</div>
+<div id="outline-container-org4074f1c" class="outline-4">
+<h4 id="org4074f1c"><span class="section-number-4">2.7.1</span> 查单词</h4>
+<div class="outline-text-4" id="text-2-7-1">
+<p>
+我是用的是 youdao-dictionary 这个package，我把它绑定在快捷键C-c y上。我发现这个package很好用，支持当前position单词的翻译，以及对选中文本序列的翻译。
+</p>
+
+<p>
+配置较为简单：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+<span style="color: #AF87FF;">(</span><span style="color: #FF1493;">use-package</span> <span style="color: #AF87FF;">youdao-dictionary</span>
+  <span style="color: #FF1493;">:config</span>
+  <span style="color: #5FD7FF;">(</span>global-set-key <span style="color: #87D700;">(</span>kbd <span style="color: #CDC673;">"C-c y"</span><span style="color: #87D700;">)</span> 'youdao-dictionary-search-at-point+<span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+
+</pre>
+</div>
+</div>
 </div>
 
-<div id="outline-container-orge8fce76" class="outline-3">
-<h3 id="orge8fce76"><span class="section-number-3">2.8</span> my useful function</h3>
+<div id="outline-container-org3a68a71" class="outline-4">
+<h4 id="org3a68a71"><span class="section-number-4">2.7.2</span> 英语自动补全</h4>
+<div class="outline-text-4" id="text-2-7-2">
+<p>
+使用lazycat的english helper，由于这个软件早就停止更新了，所以我也放在了other-files里面。
+配置如下：
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+<span style="color: #AF87FF;">(</span><span style="color: #FF1493;">require</span> '<span style="color: #AF87FF;">company-english-helper</span><span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span><span style="color: #FF1493;">setq</span> company-english-helper-active-p nil<span style="color: #AF87FF;">)</span>
+<span style="color: #AF87FF;">(</span>global-set-key <span style="color: #5FD7FF;">(</span>kbd <span style="color: #CDC673;">"C-c e"</span><span style="color: #5FD7FF;">)</span> 'toggle-company-english-helper<span style="color: #AF87FF;">)</span>
+
+</pre>
+</div>
+
+<p>
+不要忘记load-path
+</p>
 </div>
 </div>
 
 
 
-<div id="outline-container-orgfd7b9bd" class="outline-2">
-<h2 id="orgfd7b9bd"><span class="section-number-2">3</span> Key-bindings</h2>
+<div id="outline-container-org9d6c6fc" class="outline-4">
+<h4 id="org9d6c6fc"><span class="section-number-4">2.7.3</span> 英语拼写检查</h4>
+<div class="outline-text-4" id="text-2-7-3">
+<p>
+当我写论文时，这个功能很重要。
+</p>
+
+<p>
+我主要使用了两种check工具，一个是ispell，一个是flyspell。我不是特别了解这儿这的区别和联系，但是感觉flyspell更加复杂一点，同时我喜欢的是简单的东西。首先介绍ispell。ispell显然，也是linux下某拼写检查工具aspell的emacs前端，直接M-x运行即可。
+</p>
+
+<p>
+和大多数GNU工具一样，其使用很简单，当你打开之后，它便会一个个的让你审阅那些单词，并为每一个单词提供可替换的选项。通过这种方式，就可以实现全文的一个拼写检查了。
+</p>
+
+<p>
+另一个工具是flyspell，据说功能更加强大，当你打开这个mode之后，他会将所有有问题的word下标发红。我一直没学明白怎么进行最基本的correct，所以这个工具游戏地方 使用我就不得而知了。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga946217" class="outline-3">
+<h3 id="orga946217"><span class="section-number-3">2.8</span> 输入法</h3>
+<div class="outline-text-3" id="text-2-8">
+<p>
+emacs也自带了一些输入法，来应对一些极端情况。比如我现在使用的wsl，如果我通过X11打开，那么就需要这个子系统配置输入法，否则就无法输入中文，在这种情况下，windows系统默认的输入法是无法使用的。
+</p>
+
+<p>
+我为我的emacs配置提供了两种输入法，一种是pyim，这种输入法是elisp实现的，所以不需要额外安装任何软件，可靠性很强。但是确定就是，输入法不太好用……另一种方式是，安装不需要折腾的输入法后端于linux中，并在emacs中提供对应的前端。我目前主要使用这一种方案，也就是狗哥所给出的rime前端。我的配置参考的是lazycat的博客，如下：
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+<span style="color: #AF87FF;">(</span><span style="color: #FF1493;">use-package</span> <span style="color: #AF87FF;">rime</span>
+  <span style="color: #FF1493;">:init</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">setq</span> rime-posframe-properties
+        <span style="color: #87D700;">(</span>list <span style="color: #FF1493;">:background-color</span> <span style="color: #CDC673;">"#333333"</span>
+            <span style="color: #FF1493;">:foreground-color</span> <span style="color: #CDC673;">"#dcdccc"</span>
+            <span style="color: #FF1493;">:internal-border-width</span> 10<span style="color: #87D700;">)</span><span style="color: #5FD7FF;">)</span>
+  <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">setq</span> default-input-method <span style="color: #CDC673;">"rime"</span>
+        rime-show-candidate 'posframe<span style="color: #5FD7FF;">)</span>
+  <span style="color: #FF1493;">:custom</span>
+  <span style="color: #5FD7FF;">(</span>default-input-method <span style="color: #CDC673;">"rime"</span><span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span>
+</pre>
+</div>
+
+
+<p>
+效果如下图所示
+</p>
+
+
+<div id="org4a81766" class="figure">
+<p><img src="./images/screenshot_20220108_104821.png" alt="screenshot_20220108_104821.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1a2cb09" class="outline-2">
+<h2 id="org1a2cb09"><span class="section-number-2">3</span> 附录：键位表</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org2fa751b" class="outline-3">
-<h3 id="org2fa751b"><span class="section-number-3">3.1</span> major mode</h3>
+<div id="outline-container-orgd34ac35" class="outline-3">
+<h3 id="orgd34ac35"><span class="section-number-3">3.1</span> evil相关的leader键位表</h3>
 <div class="outline-text-3" id="text-3-1">
+<p>
+我直接把evil部分的设置拉过来，并进行简单的解释。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #8B8878;">;;; </span><span style="color: #8B8878;">&#20197;&#19979;&#25152;&#26377;&#30340;&#38190;&#20301;&#65292;leader&#38190;&#37117;&#26159;&#31354;&#26684;&#12290;</span>
+
+ <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">manager for file and buffer.</span>
+ <span style="color: #CDC673;">"xs"</span> 'save-buffer  
+ <span style="color: #CDC673;">"xf"</span> 'find-file
+ <span style="color: #CDC673;">"xr"</span> 'recentf-open-files
+ <span style="color: #CDC673;">"xb"</span> 'switch-to-buffer
+ <span style="color: #CDC673;">"xk"</span> 'kill-buffer
+ <span style="color: #CDC673;">"xc"</span> 'save-buffers-kill-terminal
+ <span style="color: #CDC673;">"bb"</span> <span style="color: #AF87FF;">(</span><span style="color: #FF1493;">lambda</span> <span style="color: #5FD7FF;">()</span> <span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">interactive</span><span style="color: #5FD7FF;">)</span> <span style="color: #5FD7FF;">(</span>switch-to-buffer nil<span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">)</span> <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">switch to last buffer.</span>
+ <span style="color: #CDC673;">"jj"</span> 'scroll-other-window
+ <span style="color: #CDC673;">"kk"</span> 'scroll-other-window-up
+ <span style="color: #CDC673;">"x0"</span> 'delete-window
+ <span style="color: #CDC673;">"x1"</span> 'delete-other-windows
+ <span style="color: #CDC673;">"x2"</span> 'split-window-below
+ <span style="color: #CDC673;">"x3"</span> 'split-window-right
+
+ <span style="color: #CDC673;">"hf"</span> 'counsel-describe-function 
+ <span style="color: #CDC673;">"hv"</span> 'counsel-describe-variable
+ <span style="color: #CDC673;">"hk"</span> 'describe-key
+ <span style="color: #CDC673;">"hm"</span> 'describe-mode
+
+ <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">code navigation.</span>
+ <span style="color: #CDC673;">"sh"</span> 'highlight-symbol
+ <span style="color: #CDC673;">"sr"</span> 'highlight-symbol-query-replace
+ <span style="color: #CDC673;">"sn"</span> 'highlight-symbol-nav-mode <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#20351;&#29992;M-n,p&#36827;&#34892;&#19978;&#19979;&#23548;&#33322;</span>
+
+ <span style="color: #CDC673;">"sy"</span> 'wsl-copy-region-to-clipboard <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#23558;wsl&#20013;emacs&#30340;&#36873;&#20013;&#21306;&#22495;&#22797;&#21046;&#21040;&#31995;&#32479;clipboard&#20013; </span>
+ <span style="color: #CDC673;">"sd"</span> 'wsl-cut-region-to-clipboard <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">&#21516;&#19978;&#65292;&#19981;&#36807;&#26159;&#21098;&#20999;</span>
+
+ <span style="color: #CDC673;">"si"</span> 'my-yank-image-from-win-clipboard-through-powershell <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">image &#32423;&#21035;&#30340;yank</span>
+
+ <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">shell relevant</span>
+ <span style="color: #CDC673;">"sh"</span> 'shell
+ <span style="color: #CDC673;">"sc"</span> 'shell-command
+
+ <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">"gd" 'evil-goto-definition</span>
+ <span style="color: #CDC673;">"gd"</span> 'xref-find-definitions-other-window
+
+ <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">python debug</span>
+ <span style="color: #CDC673;">"dd"</span> 'pdb 
+ <span style="color: #CDC673;">"db"</span> 'gud-break
+ <span style="color: #CDC673;">"dr"</span> 'gud-remove
+ <span style="color: #CDC673;">"dc"</span> 'gud-cont
+ <span style="color: #CDC673;">"dn"</span> 'gud-next
+ <span style="color: #CDC673;">"ds"</span> 'gud-step
+ <span style="color: #CDC673;">"di"</span> 'gud-stepi
+ <span style="color: #CDC673;">"dp"</span> 'gud-print
+ <span style="color: #CDC673;">"de"</span> 'gud-finish
+
+ <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">git relevant</span>
+ <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">"gs" 'git-add-commit-push-lz ;; git synroize.</span>
+
+ <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">ssh connect</span>
+ <span style="color: #CDC673;">"41"</span> 'ssh-connect-41
+ <span style="color: #CDC673;">"42"</span> 'ssh-connect-42
+ <span style="color: #CDC673;">"45"</span> 'ssh-connect-45
+
+ <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">manager for english query.</span>
+ <span style="color: #CDC673;">"cy"</span> 'youdao-dictionary
+ <span style="color: #CDC673;">"te"</span> 'toggle-company-english-helper
+
+ <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">manager for other frequency.</span>
+ <span style="color: #CDC673;">"ac"</span> 'ispell-buffer
+ <span style="color: #CDC673;">"fs"</span> 'flyspell-mode
+
+ <span style="color: #8B8878;">;; </span><span style="color: #8B8878;">for orgmode application</span>
+ <span style="color: #CDC673;">"ii"</span> 'my-screen-capture
+ <span style="color: #CDC673;">"ih"</span> 'fastinsert-org-head
+ <span style="color: #CDC673;">"ic"</span> 'org-insert-src-block
+
+</pre>
+</div>
+
+
+
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
@@ -342,29 +991,23 @@ mobaxterm自带x11，在终端键入emacs，就可以产生一个gui版本的ema
 </table>
 </div>
 </div>
-
-<div id="outline-container-org867a99c" class="outline-3">
-<h3 id="org867a99c"><span class="section-number-3">3.2</span> org mode</h3>
+<div id="outline-container-org82fc35e" class="outline-3">
+<h3 id="org82fc35e"><span class="section-number-3">3.2</span> snippets</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
-1111
+太多了，还是我自己去看并。在snippets目录下。。。
 </p>
 </div>
 </div>
-<div id="outline-container-orga6f6a31" class="outline-3">
-<h3 id="orga6f6a31"><span class="section-number-3">3.3</span> latex mode</h3>
-<div class="outline-text-3" id="text-3-3">
-<p>
-1111
-</p>
 </div>
-</div>
-<div id="outline-container-orgcd5f462" class="outline-3">
-<h3 id="orgcd5f462"><span class="section-number-3">3.4</span> python mode</h3>
-<div class="outline-text-3" id="text-3-4">
-<p>
-1111
-</p>
-</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+如果对git不理解，可以参考<a href="pro-get-reading.html">this article</a>.
+</p></div></div>
+
+
 </div>
 </div>
