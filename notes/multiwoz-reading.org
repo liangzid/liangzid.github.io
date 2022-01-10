@@ -1,0 +1,2712 @@
+#+title: 阅读、理解、和解析MultiWoz数据集
+#+date: Sun Jan  9 19:50:39 2022
+#+author: Zi Liang
+#+email: liangzid@stu.xjtu.edu.cn
+#+latex_class: elegantpaper
+#+filetags: ds:tod:dataset:data
+
+this article last edited at <2022-01-10 Mon>
+
+入门TOD（Task-oriented Dialogue Systems）的第一步是什么呢。是模型么，还是理解历史上经典的四个组件呢？
+
+我觉得，还是数据。在我看来，理解任务型对话系统数据集的格式，是入门的第一步。所以很惭愧，我之前都没有入过门。今天趁着论文初稿完成，就整理一下。
+
+* MultiWoz 1.0
+首先来看一下数据集的结构文件：
+
+#+BEGIN_SRC 
+  ├── attraction_db.json
+  ├── data.json
+  ├── hotel_db.json
+  ├── README.json
+  ├── restaurant_db.json
+  ├── testListFile.json
+  ├── train_db.json
+  └── valListFile.json
+#+END_SRC
+
+可以看出来上述排序是通过字母表排序的。所以还需要我们人工分类一下，主要包括三类：
+1. 数据库部分（以db结尾），这类数据将一个数据表（所谓数据表就是一个数据的列表）以json的形式进行表达；
+2. 核心数据文件，即data.json;
+3. 测试集与验证集数据的列举文件，即ListFile结尾的文件。
+
+   让我们一步步地去这三类数据是什么样子。
+
+** Taxonomy of Database
+
+   我们先来看看数据库的结构。我们知道，Woz系列的数据集，其场景类似于美团买东西的方式：即我想订一个旅馆（hotel）、车票（train）、餐馆（restaurant）、景点（attraction）等等。下面就以attraction为例，进行一个查看。
+
+   attraction_db.json是一个数据表，里面就是一个列表，列表里的每一个元素都是诸如如下的格式：
+
+   #+BEGIN_SRC emacs-lisp
+     {
+	 "address": "pool way, whitehill road, off newmarket road",
+	 "area": "east",
+	 "entrance fee": "?",
+	 "id": "1",
+	 "location": [
+	     52.208789,
+	     0.154883
+	 ],
+	 "name": "abbey pool and astroturf pitch",
+	 "openhours": "?",
+	 "phone": "01223902088",
+	 "postcode": "cb58nt",
+	 "pricerange": "?",
+	 "type": "swimmingpool"
+     },
+   #+END_SRC
+
+   可以发现，里面就是一些属性。对于那些缺省的属性，在value中被置为0.
+
+  由此，其实可以把每一个domain的所有solt都归纳下来：
+
+  |------------+---------------------------------------------------------------------------------------------------------|
+  | domain     | slots                                                                                                   |
+  | attraction | address,area,entrance fee,id,location,name,openhours,phone,postcode,pricerange,type                     |
+  | train      | arriveBy,day,departure,destination,duration,leaveAt,price,trainID,                                      |
+  | hotel      | address,area,internet,parking,id,location,name,phone,postcode,price,pricerange,stars,takesbookings,type |
+  | restaurant | address,area,food,id,introduction,location,name,phone,postcode,pricerange,type                          |
+  |------------+---------------------------------------------------------------------------------------------------------|
+
+  后续可以发现，这些slot会起到很重要的作用。
+
+  
+** Taxonomy of data.
+
+   首先来看一条(即表格中的一行)数据。
+
+   #+BEGIN_SRC emacs-lisp
+	 "SNG01856.json": {
+	     "goal": {
+		 "taxi": {}, 
+		 "police": {}, 
+		 "eod": true, 
+		 "hospital": {}, 
+		 "hotel": {
+		     "info": {
+			 "type": "hotel", 
+			 "parking": "yes", 
+			 "pricerange": "cheap", 
+			 "internet": "yes"
+		     }, 
+		     "fail_info": {}, 
+		     "book": {
+			 "pre_invalid": true, 
+			 "stay": "2", 
+			 "day": "tuesday", 
+			 "invalid": false, 
+			 "people": "6"
+		     }, 
+		     "fail_book": {
+			 "stay": "3"
+		     }
+		 }, 
+		 "topic": {
+		     "taxi": false, 
+		     "police": false, 
+		     "restaurant": false, 
+		     "hospital": false, 
+		     "hotel": false, 
+		     "general": false, 
+		     "attraction": false, 
+		     "train": false, 
+		     "booking": false
+		 }, 
+		 "attraction": {}, 
+		 "train": {}, 
+		 "messageLen": 6, 
+		 "message": [
+		     "You are looking for a <span class='emphasis'>place to stay</span>. The hotel should be in the <span class='emphasis'>cheap</span> price range and should be in the type of <span class='emphasis'>hotel</span>", 
+		     "The hotel should <span class='emphasis'>include free parking</span> and should <span class='emphasis'>include free wifi</span>", 
+		     "Once you find the <span class='emphasis'>hotel</span> you want to book it for <span class='emphasis'>6 people</span> and <span class='emphasis'>3 nights</span> starting from <span class='emphasis'>tuesday</span>", 
+		     "If the booking fails how about <span class='emphasis'>2 nights</span>", 
+		     "Make sure you get the <span class='emphasis'>reference number</span>"
+		 ], 
+		 "restaurant": {}
+	     }, 
+	     "log": [
+		 {
+		     "text": "am looking for a place to to stay that has cheap price range it should be in a type of hotel", 
+		     "metadata": {}
+		 }, 
+		 {
+		     "text": "Okay, do you have a specific area you want to stay in?", 
+		     "metadata": {
+			 "taxi": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {
+				 "leaveAt": "", 
+				 "destination": "", 
+				 "departure": "", 
+				 "arriveBy": ""
+			     }
+			 }, 
+			 "police": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {}
+			 }, 
+			 "restaurant": {
+			     "book": {
+				 "booked": [], 
+				 "time": "", 
+				 "day": "", 
+				 "people": ""
+			     }, 
+			     "semi": {
+				 "food": "", 
+				 "pricerange": "", 
+				 "name": "", 
+				 "area": ""
+			     }
+			 }, 
+			 "hospital": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {
+				 "department": ""
+			     }
+			 }, 
+			 "hotel": {
+			     "book": {
+				 "booked": [], 
+				 "stay": "", 
+				 "day": "", 
+				 "people": ""
+			     }, 
+			     "semi": {
+				 "name": "not mentioned", 
+				 "area": "not mentioned", 
+				 "parking": "not mentioned", 
+				 "pricerange": "cheap", 
+				 "stars": "not mentioned", 
+				 "internet": "not mentioned", 
+				 "type": "hotel"
+			     }
+			 }, 
+			 "attraction": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {
+				 "type": "", 
+				 "name": "", 
+				 "area": ""
+			     }
+			 }, 
+			 "train": {
+			     "book": {
+				 "booked": [], 
+				 "people": ""
+			     }, 
+			     "semi": {
+				 "leaveAt": "", 
+				 "destination": "", 
+				 "day": "", 
+				 "arriveBy": "", 
+				 "departure": ""
+			     }
+			 }
+		     }
+		 }, 
+		 {
+		     "text": "no, i just need to make sure it's cheap. oh, and i need parking", 
+		     "metadata": {}
+		 }, 
+		 {
+		     "text": "I found 1 cheap hotel for you that includes parking. Do you like me to book it?", 
+		     "metadata": {
+			 "taxi": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {
+				 "leaveAt": "", 
+				 "destination": "", 
+				 "departure": "", 
+				 "arriveBy": ""
+			     }
+			 }, 
+			 "police": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {}
+			 }, 
+			 "restaurant": {
+			     "book": {
+				 "booked": [], 
+				 "time": "", 
+				 "day": "", 
+				 "people": ""
+			     }, 
+			     "semi": {
+				 "food": "", 
+				 "pricerange": "", 
+				 "name": "", 
+				 "area": ""
+			     }
+			 }, 
+			 "hospital": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {
+				 "department": ""
+			     }
+			 }, 
+			 "hotel": {
+			     "book": {
+				 "booked": [], 
+				 "stay": "", 
+				 "day": "", 
+				 "people": ""
+			     }, 
+			     "semi": {
+				 "name": "not mentioned", 
+				 "area": "not mentioned", 
+				 "parking": "yes", 
+				 "pricerange": "cheap", 
+				 "stars": "not mentioned", 
+				 "internet": "not mentioned", 
+				 "type": "hotel"
+			     }
+			 }, 
+			 "attraction": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {
+				 "type": "", 
+				 "name": "", 
+				 "area": ""
+			     }
+			 }, 
+			 "train": {
+			     "book": {
+				 "booked": [], 
+				 "people": ""
+			     }, 
+			     "semi": {
+				 "leaveAt": "", 
+				 "destination": "", 
+				 "day": "", 
+				 "arriveBy": "", 
+				 "departure": ""
+			     }
+			 }
+		     }
+		 }, 
+		 {
+		     "text": "Yes, please. 6 people 3 nights starting on tuesday.", 
+		     "metadata": {}
+		 }, 
+		 {
+		     "text": "I am sorry but I wasn't able to book that for you for Tuesday. Is there another day you would like to stay or perhaps a shorter stay?", 
+		     "metadata": {
+			 "taxi": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {
+				 "leaveAt": "", 
+				 "destination": "", 
+				 "departure": "", 
+				 "arriveBy": ""
+			     }
+			 }, 
+			 "police": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {}
+			 }, 
+			 "restaurant": {
+			     "book": {
+				 "booked": [], 
+				 "time": "", 
+				 "day": "", 
+				 "people": ""
+			     }, 
+			     "semi": {
+				 "food": "", 
+				 "pricerange": "", 
+				 "name": "", 
+				 "area": ""
+			     }
+			 }, 
+			 "hospital": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {
+				 "department": ""
+			     }
+			 }, 
+			 "hotel": {
+			     "book": {
+				 "booked": [], 
+				 "stay": "3", 
+				 "day": "tuesday", 
+				 "people": "6"
+			     }, 
+			     "semi": {
+				 "name": "not mentioned", 
+				 "area": "not mentioned", 
+				 "parking": "yes", 
+				 "pricerange": "cheap", 
+				 "stars": "not mentioned", 
+				 "internet": "not mentioned", 
+				 "type": "hotel"
+			     }
+			 }, 
+			 "attraction": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {
+				 "type": "", 
+				 "name": "", 
+				 "area": ""
+			     }
+			 }, 
+			 "train": {
+			     "book": {
+				 "booked": [], 
+				 "people": ""
+			     }, 
+			     "semi": {
+				 "leaveAt": "", 
+				 "destination": "", 
+				 "day": "", 
+				 "arriveBy": "", 
+				 "departure": ""
+			     }
+			 }
+		     }
+		 }, 
+		 {
+		     "text": "how about only 2 nights.", 
+		     "metadata": {}
+		 }, 
+		 {
+		     "text": "Booking was successful.\nReference number is : 7GAWK763. Anything else I can do for you?", 
+		     "metadata": {
+			 "taxi": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {
+				 "leaveAt": "", 
+				 "destination": "", 
+				 "departure": "", 
+				 "arriveBy": ""
+			     }
+			 }, 
+			 "police": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {}
+			 }, 
+			 "restaurant": {
+			     "book": {
+				 "booked": [], 
+				 "time": "", 
+				 "day": "", 
+				 "people": ""
+			     }, 
+			     "semi": {
+				 "food": "", 
+				 "pricerange": "", 
+				 "name": "", 
+				 "area": ""
+			     }
+			 }, 
+			 "hospital": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {
+				 "department": ""
+			     }
+			 }, 
+			 "hotel": {
+			     "book": {
+				 "booked": [
+				     {
+					 "name": "the cambridge belfry", 
+					 "reference": "7GAWK763"
+				     }
+				 ], 
+				 "stay": "2", 
+				 "day": "tuesday", 
+				 "people": "6"
+			     }, 
+			     "semi": {
+				 "name": "not mentioned", 
+				 "area": "not mentioned", 
+				 "parking": "yes", 
+				 "pricerange": "cheap", 
+				 "stars": "not mentioned", 
+				 "internet": "not mentioned", 
+				 "type": "hotel"
+			     }
+			 }, 
+			 "attraction": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {
+				 "type": "", 
+				 "name": "", 
+				 "area": ""
+			     }
+			 }, 
+			 "train": {
+			     "book": {
+				 "booked": [], 
+				 "people": ""
+			     }, 
+			     "semi": {
+				 "leaveAt": "", 
+				 "destination": "", 
+				 "day": "", 
+				 "arriveBy": "", 
+				 "departure": ""
+			     }
+			 }
+		     }
+		 }, 
+		 {
+		     "text": "No, that will be all. Good bye.", 
+		     "metadata": {}
+		 }, 
+		 {
+		     "text": "Thank you for using our services.", 
+		     "metadata": {
+			 "taxi": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {
+				 "leaveAt": "", 
+				 "destination": "", 
+				 "departure": "", 
+				 "arriveBy": ""
+			     }
+			 }, 
+			 "police": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {}
+			 }, 
+			 "restaurant": {
+			     "book": {
+				 "booked": [], 
+				 "time": "", 
+				 "day": "", 
+				 "people": ""
+			     }, 
+			     "semi": {
+				 "food": "", 
+				 "pricerange": "", 
+				 "name": "", 
+				 "area": ""
+			     }
+			 }, 
+			 "hospital": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {
+				 "department": ""
+			     }
+			 }, 
+			 "hotel": {
+			     "book": {
+				 "booked": [
+				     {
+					 "name": "the cambridge belfry", 
+					 "reference": "7GAWK763"
+				     }
+				 ], 
+				 "stay": "2", 
+				 "day": "tuesday", 
+				 "people": "6"
+			     }, 
+			     "semi": {
+				 "name": "not mentioned", 
+				 "area": "not mentioned", 
+				 "parking": "yes", 
+				 "pricerange": "cheap", 
+				 "stars": "not mentioned", 
+				 "internet": "not mentioned", 
+				 "type": "hotel"
+			     }
+			 }, 
+			 "attraction": {
+			     "book": {
+				 "booked": []
+			     }, 
+			     "semi": {
+				 "type": "", 
+				 "name": "", 
+				 "area": ""
+			     }
+			 }, 
+			 "train": {
+			     "book": {
+				 "booked": [], 
+				 "people": ""
+			     }, 
+			     "semi": {
+				 "leaveAt": "", 
+				 "destination": "", 
+				 "day": "", 
+				 "arriveBy": "", 
+				 "departure": ""
+			     }
+			 }
+		     }
+		 }
+	     ]
+	 }, 
+   #+END_SRC
+
+如上如图所示，这样的一条数据是略显复杂的，这也是TOD的数据标注为什么会复杂的原因。下面先看一下上述一条数据中涉及到哪些属性：
+
+#+BEGIN_SRC python
+  |--goal
+      |--domain1
+      |--domain2
+      |--domainx
+	  |--info
+	  |--fail_info
+	  |--book
+	  |--fail_book
+      |--topic
+	  |--domainx: bool
+      |--eod: bool
+      |--messageLen: int
+      |--message
+	  |--message
+  |--log[]
+      |--text: str
+      |--metadata[domains]
+	  |--domain_i
+	      |--book
+		  |--booked
+		  |--other slots
+	      |--semi
+#+END_SRC
+
+上图较为经典的展现了一条数据的基本结构。我们可以发现，上述结构主要包含两部分：goal和log。前者主要是用在构建数据集上（MultiWoz是通过woz实验获得的），而后者，而是通过人工模拟而产生的数据。因此后者的结构更加重要一些。我们知道，text肯定就是对话的文本信息了，所以所谓的标签，就是这里的metadata。由于MultiWoz是多领域数据集，所以每个对话都可能会涉及到多个领域，这也就意味着，每句话都有可能涉及到多个领域。所以metadata里包含多个领域，同时，对每个领域，还包含了book和semi两部分。这两部分的具体含义是：
+
+1. book：后面介绍
+2. semi: 后面介绍
+
+
+
+** Taxonomy of val or test lists
+   以上内容已经基本实现对数据集的管理了，最后的一个步骤是：如何区分训练集、测试集与验证集？所以文件夹中还有两个文件，用以进行数据集划分。每一个文件中都是包括一个id，也就是上面的一条data数据的key。
+
+
+** 总结
+   以上就是MultiWoz1.0的全貌。可惜这个数据集以前不叫MultiWoz，而是叫New Woz，所以真正意义上的MultiWoz指的实际上是2.0. 而2.0也是十分经典的一篇论文。下面来走进2.0的文件结构。
+
+* MultiWoz 2.0
+同上，先看一下文件结构：
+
+#+BEGIN_SRC
+  ├── attraction_db.json
+  ├── data.json
+  ├── dialogue_acts.json
+  ├── hospital_db.json
+  ├── hotel_db.json
+  ├── ontology.json
+  ├── police_db.json
+  ├── README.json
+  ├── restaurant_db.json
+  ├── taxi_db.json
+  ├── testListFile.json
+  ├── train_db.json
+  └── valListFile.json
+#+END_SRC
+
+发现变化了吗？
+是的，从文件名上看，主要有以下几点变动：
+1. 从db上看，多了两个领域（police和taxi）；
+2. 多了一个ontology；
+3. 多了一个dialogue_acts;
+
+   笔者先验证了已有的几个部分（即data，ListFile和ontology）没有发生形式结构上的变动，然后准备就依照刚刚所发觉的这些变化，一一对变动进行介绍。
+
+   
+** taxonomy of ontology
+
+   ontology是干什么的？这个富有哲学性的名词，其实第一次出现在计算机中，还是来自于AI的符号主义。ontology我理解主要是指一种抽象性的定义和限定，AI中常用的意义是一种庸俗化了的ontology。
+
+   我之前写过一篇和知识图谱数据集相关的[[file:dataset_of_knowledge_graph.org][笔记]]。在那里你可以获得更加广阔的理解。{
+本体是对实体的特点和行为的的抽象。（另一个定义：本体是对概念和关系的形式化表述）。同样用面向对象理解，class的定义就是对应object的本体。 }
+
+   ontology.json文件中的内容，其实主要是对一些slot的规范。slot是什么？其实就是attribute name，如时间、地点、价格等等。那么怎么规范slot呢？传统的数据库会有一些基本类型，这些基本的数据类型（如string、int）就约束了slot。在这里，ontology只限定枚举变量。比如range这个slot，我们得知道range这个slot的value都是什么，枚举变量则是给了一个集合，表明所有的value都必定地属于这个集合。
+
+   下面是ontology.json中的几个元素的示例：
+
+
+   #+BEGIN_SRC emacs-lisp
+
+     {
+	 "hotel-price range": [
+	     "cheap",
+	     "do n't care",
+	     "moderate",
+	     "expensive"
+	 ],
+	 "hotel-internet": [
+	     "yes",
+	     "do n't care",
+	     "no"
+	 ],
+	 ...
+	 "taxi-arrive by": [
+	     "19:15",
+	     "15:45",
+	     "17:15",
+	     ...
+	     "17:30",
+	     "17:00",
+     }
+
+   #+END_SRC
+
+发现了吗，这里每个元素的key是domain和slot的组合，然后value就是我们所说的集合（json中表达序列只能通过列表）。我们还可以发现，这里的slot虽然存在和db文件中的对应关系，但是他们并不是完全相同（将匈牙利标记转化成自然语言标记了）。
+
+
+** taxonomy of dialogue acts
+
+   下面再来看另外一个文件，有关于对话系统的对话动作。
+
+   什么是对话动作？一句非结构化的自然语言语句，它的结构化表达，就是对话动作。比如“地址在哪里啊？”这句话，其实就包含询问-地址这样的一个结构化信息。我们可以通过dialogue_acts.json来详细了解对应的结构化信息。
+
+
+
+   #+BEGIN_SRC js
+	 "PMUL3994": {
+	     "1": {
+		 "Attraction-Request": [
+		     [
+			 "Area",
+			 "?"
+		     ]
+		 ],
+		 "Attraction-Inform": [
+		     [
+			 "Area",
+			 "Cambridge"
+		     ],
+		     [
+			 "Type",
+			 "swimming pools"
+		     ],
+		     [
+			 "Choice",
+			 "four "
+		     ]
+		 ]
+	     },
+	     "6": {
+		 "Booking-Request": [
+		     [
+			 "Time",
+			 "?"
+		     ]
+		 ]
+	     },
+	     "9": {
+		 "general-reqmore": [
+		     [
+			 "none",
+			 "none"
+		     ]
+		 ]
+	     },
+	     "5": {
+		 "Booking-Request": [
+		     [
+			 "Day",
+			 "?"
+		     ]
+		 ]
+	     },
+	     "4": {
+		 "Booking-Inform": [
+		     [
+			 "none",
+			 "none"
+		     ]
+		 ]
+	     },
+	     "7": {
+		 "Taxi-Request": [
+		     [
+			 "Dest",
+			 "?"
+		     ]
+		 ],
+		 "Booking-Book": [
+		     [
+			 "Ref",
+			 "U9WFNBHE"
+		     ]
+		 ]
+	     },
+	     "2": {
+		 "Attraction-Recommend": [
+		     [
+			 "Post",
+			 "cb43px"
+		     ],
+		     [
+			 "Name",
+			 "Jesus green outdoor pool"
+		     ]
+		 ],
+		 "general-reqmore": [
+		     [
+			 "none",
+			 "none"
+		     ]
+		 ]
+	     },
+	     "8": {
+		 "Taxi-Inform": [
+		     [
+			 "Phone",
+			 "07225283033"
+		     ],
+		     [
+			 "Car",
+			 "white Toyota"
+		     ]
+		 ],
+		 "general-reqmore": [
+		     [
+			 "none",
+			 "none"
+		     ]
+		 ]
+	     },
+	     "3": {
+		 "Booking-Inform": [
+		     [
+			 "none",
+			 "none"
+		     ]
+		 ],
+		 "Restaurant-Recommend": [
+		     [
+			 "Area",
+			 "center "
+		     ],
+		     [
+			 "Price",
+			 "expensive "
+		     ],
+		     [
+			 "Name",
+			 "little seoul"
+		     ]
+		 ]
+	     }
+	 },
+   #+END_SRC
+
+上面是一个例子，对应着一个对话。我们透过上面这个例子可以看出，其结构如下：
+
+#+BEGIN_SRC
+|--dialouge id
+    |--序号i
+        |-- domain-intent combination 1
+        |-- domain-intent combination 2
+        |-- domain-intent combination x
+            |--list i
+                |--slot
+                |--value
+        |-- domain-intent combination n
+#+END_SRC
+
+通过以上结构我们可以发现，每一个对话下面都有从1到N的一堆序号，这里每一个序号对应的是data.json中这个对话的第i个text，而对于每一个text，都会拥有一个对话动作列表。在这个列表中，每一个元素都是一个字典，key是domain和intent的组合，value又是一个列表，代表对于这个领域进行这个动作所包括的所有信息pair，其中列表的每一个元素，都是一个二元组，即slot和value。当表达一些类似于询问的意图是，value自然是不存在 ，所以此处被处理为问号。而正如序号3和序号8所示，如果这个intent 对 slot和value都不对应，那么便会传一个none字符串进去。
+
+下面是官方说法：
+
+#+begin_quote
+  There are 6 domains ('Booking', 'Restaurant', 'Hotel', 'Attraction', 'Taxi', 'Train') and 1 dummy domain ('general').
+
+  A domain-dependent dialogue act is defined as a domain token followed by a domain-independent dialogue act, e.g. 'Hotel-inform' means it is a 'inform' act in Hotel domain.
+  
+  Dialogue acts which cannot take slots, e.g., 'good bye', are defined under 'general' domain.
+
+  A slot-value pair defined as a list with two elements. The first element is slot token and the second one is its value.
+
+  If a dialogue act takes no slots, e.g., dialogue act 'offer booking' for an utterance 'would you like to take a reservation?', its slot-value pair is ['none', 'none']
+
+  There are four types of value:
+
+  1) If a slot takes binary value, e.g., 'has Internet' or 'has park', the value is either 'yes' or 'no'.
+  2) If a slot is under the act 'request', e.g., 'request' about 'area', the value is express as '?'.
+  3) The value that appears in the utterancem e,g., the name of a restaurant.
+  4) If for some reasons the turn does not have annotation then it is labeled as "No Annotation".
+#+end_quote
+  
+我学会了吗？
+
+* MultiWoz 2.1
+ 如果你觉得MultiWoz数据集就这点程度，或者说：如果你以为这样就可以使用multiwoz数据集，那么，你就走了一些弯路。因为在2022年的一开始，不得不说，MultiWoz2.1已经可以算是发论文的最低要求了。下面就让我们来看一下，这一版数据集，又搞出来什么新花样吧。
+
+ #+BEGIN_SRC 
+   .
+   ├── attraction_db.json
+   ├── data.json
+   ├── hospital_db.json
+   ├── hotel_db.json
+   ├── ontology.json
+   ├── police_db.json
+   ├── README
+   ├── restaurant_db.json
+   ├── slot_descriptions.json
+   ├── system_acts.json
+   ├── taxi_db.json
+   ├── testListFile.txt
+   ├── tokenization.md
+   ├── train_db.json
+   └── valListFile.txt
+ #+END_SRC
+
+经过阅读可以发现： 和过去一样，数据库相关文件都没有发生变换，但无论是data.json，还是ontology，都发生了一些变化。
+这些变化所产生的重要原因是：换了一个作者……但是新的文件格式，不得不说，反而有利于我们进一步地去使用MultiWoz数据集。下面就带着这些变化，与MultiWoz2.1全新添加的东西，一起对MultiWoz2.1进行讨论。
+
+** ontology更新了什么？
+
+先来看几个示例：
+
+
+#+BEGIN_SRC emacs-lisp
+    "hotel-semi-pricerange": [
+      "expensive",
+      "cheap",
+      "moderate",
+      "cheap>moderate",
+      "dontcare",
+      "cheap|moderate",
+      "moderate|cheap",
+      "$100"
+    ],
+
+    "taxi-semi-arriveBy": [
+      "12:00",
+      "19:30",
+      ...,
+    ],
+
+    "hotel-book-people": [
+      "2",
+      "7",
+      "8",
+      "5",
+      "1",
+      "6",
+      "3",
+      "4"
+    ],
+#+END_SRC
+
+发现了没有？ontology由 domain-intent的旧格式，更新为了 domain-XX-slot的新格式，此处的XX是semi或者book，也就是之前介绍data.json结构时所揭示的那个样子。
+
+除此之外，ontology的另一点改进是，此处的slot终于可以和db里的结果一一对应了，这样就解决了之前所面临的有关于转化的一些问题。
+
+** taxonomy of data.json
+
+   #+BEGIN_SRC js
+	 "SNG01856.json": {
+	     "goal": {
+		 "taxi": {},
+		 "police": {},
+		 "hospital": {},
+		 "hotel": {
+		     "info": {
+			 "type": "hotel",
+			 "parking": "yes",
+			 "pricerange": "cheap",
+			 "internet": "yes"
+		     },
+		     "fail_info": {},
+		     "book": {
+			 "pre_invalid": true,
+			 "stay": "2",
+			 "day": "tuesday",
+			 "invalid": false,
+			 "people": "6"
+		     },
+		     "fail_book": {
+			 "stay": "3"
+		     }
+		 },
+		 "topic": {
+		     "taxi": false,
+		     "police": false,
+		     "restaurant": false,
+		     "hospital": false,
+		     "hotel": false,
+		     "general": false,
+		     "attraction": false,
+		     "train": false,
+		     "booking": false
+		 },
+		 "attraction": {},
+		 "train": {},
+		 "message": [
+		     "You are looking for a <span class='emphasis'>place to stay</span>. The hotel should be in the <span class='emphasis'>cheap</span> price range and should be in the type of <span class='emphasis'>hotel</span>",
+		     "The hotel should <span class='emphasis'>include free parking</span> and should <span class='emphasis'>include free wifi</span>",
+		     "Once you find the <span class='emphasis'>hotel</span> you want to book it for <span class='emphasis'>6 people</span> and <span class='emphasis'>3 nights</span> starting from <span class='emphasis'>tuesday</span>",
+		     "If the booking fails how about <span class='emphasis'>2 nights</span>",
+		     "Make sure you get the <span class='emphasis'>reference number</span>"
+		 ],
+		 "restaurant": {}
+	     },
+	     "log": [
+		 {
+		     "text": "am looking for a place to to stay that has cheap price range it should be in a type of hotel",
+		     "metadata": {},
+		     "dialog_act": {
+			 "Hotel-Inform": [
+			     [
+				 "Type",
+				 "hotel"
+			     ],
+			     [
+				 "Price",
+				 "cheap"
+			     ]
+			 ]
+		     },
+		     "span_info": [
+			 [
+			     "Hotel-Inform",
+			     "Type",
+			     "hotel",
+			     20,
+			     20
+			 ],
+			 [
+			     "Hotel-Inform",
+			     "Price",
+			     "cheap",
+			     10,
+			     10
+			 ]
+		     ]
+		 },
+		 {
+		     "text": "Okay, do you have a specific area you want to stay in?",
+		     "metadata": {
+			 "taxi": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {
+				 "leaveAt": "",
+				 "destination": "",
+				 "departure": "",
+				 "arriveBy": ""
+			     }
+			 },
+			 "police": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {}
+			 },
+			 "restaurant": {
+			     "book": {
+				 "booked": [],
+				 "time": "",
+				 "day": "",
+				 "people": ""
+			     },
+			     "semi": {
+				 "food": "",
+				 "pricerange": "",
+				 "name": "",
+				 "area": ""
+			     }
+			 },
+			 "hospital": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {
+				 "department": ""
+			     }
+			 },
+			 "hotel": {
+			     "book": {
+				 "booked": [],
+				 "stay": "",
+				 "day": "",
+				 "people": ""
+			     },
+			     "semi": {
+				 "name": "not mentioned",
+				 "area": "not mentioned",
+				 "parking": "not mentioned",
+				 "pricerange": "cheap",
+				 "stars": "not mentioned",
+				 "internet": "not mentioned",
+				 "type": "hotel"
+			     }
+			 },
+			 "attraction": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {
+				 "type": "",
+				 "name": "",
+				 "area": ""
+			     }
+			 },
+			 "train": {
+			     "book": {
+				 "booked": [],
+				 "people": ""
+			     },
+			     "semi": {
+				 "leaveAt": "",
+				 "destination": "",
+				 "day": "",
+				 "arriveBy": "",
+				 "departure": ""
+			     }
+			 }
+		     },
+		     "dialog_act": {
+			 "Hotel-Request": [
+			     [
+				 "Area",
+				 "?"
+			     ]
+			 ]
+		     },
+		     "span_info": []
+		 },
+		 {
+		     "text": "no, i just need to make sure it's cheap. oh, and i need parking",
+		     "metadata": {},
+		     "dialog_act": {
+			 "Hotel-Inform": [
+			     [
+				 "Parking",
+				 "yes"
+			     ]
+			 ]
+		     },
+		     "span_info": []
+		 },
+		 {
+		     "text": "I found 1 cheap hotel for you that includes parking. Do you like me to book it?",
+		     "metadata": {
+			 "taxi": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {
+				 "leaveAt": "",
+				 "destination": "",
+				 "departure": "",
+				 "arriveBy": ""
+			     }
+			 },
+			 "police": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {}
+			 },
+			 "restaurant": {
+			     "book": {
+				 "booked": [],
+				 "time": "",
+				 "day": "",
+				 "people": ""
+			     },
+			     "semi": {
+				 "food": "",
+				 "pricerange": "",
+				 "name": "",
+				 "area": ""
+			     }
+			 },
+			 "hospital": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {
+				 "department": ""
+			     }
+			 },
+			 "hotel": {
+			     "book": {
+				 "booked": [],
+				 "stay": "",
+				 "day": "",
+				 "people": ""
+			     },
+			     "semi": {
+				 "name": "not mentioned",
+				 "area": "not mentioned",
+				 "parking": "yes",
+				 "pricerange": "cheap",
+				 "stars": "not mentioned",
+				 "internet": "not mentioned",
+				 "type": "hotel"
+			     }
+			 },
+			 "attraction": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {
+				 "type": "",
+				 "name": "",
+				 "area": ""
+			     }
+			 },
+			 "train": {
+			     "book": {
+				 "booked": [],
+				 "people": ""
+			     },
+			     "semi": {
+				 "leaveAt": "",
+				 "destination": "",
+				 "day": "",
+				 "arriveBy": "",
+				 "departure": ""
+			     }
+			 }
+		     },
+		     "dialog_act": {
+			 "Booking-Inform": [
+			     [
+				 "none",
+				 "none"
+			     ]
+			 ],
+			 "Hotel-Inform": [
+			     [
+				 "Price",
+				 "cheap"
+			     ],
+			     [
+				 "Choice",
+				 "1"
+			     ],
+			     [
+				 "Parking",
+				 "none"
+			     ]
+			 ]
+		     },
+		     "span_info": [
+			 [
+			     "Hotel-Inform",
+			     "Price",
+			     "cheap",
+			     3,
+			     3
+			 ],
+			 [
+			     "Hotel-Inform",
+			     "Choice",
+			     "1",
+			     2,
+			     2
+			 ]
+		     ]
+		 },
+		 {
+		     "text": "Yes, please. 6 people 3 nights starting on tuesday.",
+		     "metadata": {},
+		     "dialog_act": {
+			 "Hotel-Inform": [
+			     [
+				 "Stay",
+				 "3"
+			     ],
+			     [
+				 "Day",
+				 "tuesday"
+			     ],
+			     [
+				 "People",
+				 "6"
+			     ]
+			 ]
+		     },
+		     "span_info": [
+			 [
+			     "Hotel-Inform",
+			     "Stay",
+			     "3",
+			     6,
+			     6
+			 ],
+			 [
+			     "Hotel-Inform",
+			     "Day",
+			     "tuesday",
+			     10,
+			     10
+			 ],
+			 [
+			     "Hotel-Inform",
+			     "People",
+			     "6",
+			     4,
+			     4
+			 ]
+		     ]
+		 },
+		 {
+		     "text": "I am sorry but I wasn't able to book that for you for Tuesday. Is there another day you would like to stay or perhaps a shorter stay?",
+		     "metadata": {
+			 "taxi": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {
+				 "leaveAt": "",
+				 "destination": "",
+				 "departure": "",
+				 "arriveBy": ""
+			     }
+			 },
+			 "police": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {}
+			 },
+			 "restaurant": {
+			     "book": {
+				 "booked": [],
+				 "time": "",
+				 "day": "",
+				 "people": ""
+			     },
+			     "semi": {
+				 "food": "",
+				 "pricerange": "",
+				 "name": "",
+				 "area": ""
+			     }
+			 },
+			 "hospital": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {
+				 "department": ""
+			     }
+			 },
+			 "hotel": {
+			     "book": {
+				 "booked": [],
+				 "stay": "3",
+				 "day": "tuesday",
+				 "people": "6"
+			     },
+			     "semi": {
+				 "name": "not mentioned",
+				 "area": "not mentioned",
+				 "parking": "yes",
+				 "pricerange": "cheap",
+				 "stars": "not mentioned",
+				 "internet": "not mentioned",
+				 "type": "hotel"
+			     }
+			 },
+			 "attraction": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {
+				 "type": "",
+				 "name": "",
+				 "area": ""
+			     }
+			 },
+			 "train": {
+			     "book": {
+				 "booked": [],
+				 "people": ""
+			     },
+			     "semi": {
+				 "leaveAt": "",
+				 "destination": "",
+				 "day": "",
+				 "arriveBy": "",
+				 "departure": ""
+			     }
+			 }
+		     },
+		     "dialog_act": {
+			 "Booking-NoBook": [
+			     [
+				 "Day",
+				 "Tuesday"
+			     ]
+			 ],
+			 "Booking-Request": [
+			     [
+				 "Stay",
+				 "?"
+			     ],
+			     [
+				 "Day",
+				 "?"
+			     ]
+			 ]
+		     },
+		     "span_info": [
+			 [
+			     "Booking-NoBook",
+			     "Day",
+			     "Tuesday",
+			     14,
+			     14
+			 ]
+		     ]
+		 },
+		 {
+		     "text": "how about only 2 nights.",
+		     "metadata": {},
+		     "dialog_act": {
+			 "Hotel-Inform": [
+			     [
+				 "Stay",
+				 "2"
+			     ]
+			 ]
+		     },
+		     "span_info": [
+			 [
+			     "Hotel-Inform",
+			     "Stay",
+			     "2",
+			     3,
+			     3
+			 ]
+		     ]
+		 },
+		 {
+		     "text": "Booking was successful.\nReference number is : 7GAWK763. Anything else I can do for you?",
+		     "metadata": {
+			 "taxi": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {
+				 "leaveAt": "",
+				 "destination": "",
+				 "departure": "",
+				 "arriveBy": ""
+			     }
+			 },
+			 "police": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {}
+			 },
+			 "restaurant": {
+			     "book": {
+				 "booked": [],
+				 "time": "",
+				 "day": "",
+				 "people": ""
+			     },
+			     "semi": {
+				 "food": "",
+				 "pricerange": "",
+				 "name": "",
+				 "area": ""
+			     }
+			 },
+			 "hospital": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {
+				 "department": ""
+			     }
+			 },
+			 "hotel": {
+			     "book": {
+				 "booked": [
+				     {
+					 "name": "the cambridge belfry",
+					 "reference": "7GAWK763"
+				     }
+				 ],
+				 "stay": "2",
+				 "day": "tuesday",
+				 "people": "6"
+			     },
+			     "semi": {
+				 "name": "not mentioned",
+				 "area": "not mentioned",
+				 "parking": "yes",
+				 "pricerange": "cheap",
+				 "stars": "not mentioned",
+				 "internet": "not mentioned",
+				 "type": "hotel"
+			     }
+			 },
+			 "attraction": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {
+				 "type": "",
+				 "name": "",
+				 "area": ""
+			     }
+			 },
+			 "train": {
+			     "book": {
+				 "booked": [],
+				 "people": ""
+			     },
+			     "semi": {
+				 "leaveAt": "",
+				 "destination": "",
+				 "day": "",
+				 "arriveBy": "",
+				 "departure": ""
+			     }
+			 }
+		     },
+		     "dialog_act": {
+			 "general-reqmore": [
+			     [
+				 "none",
+				 "none"
+			     ]
+			 ],
+			 "Booking-Book": [
+			     [
+				 "Ref",
+				 "7GAWK763"
+			     ]
+			 ]
+		     },
+		     "span_info": [
+			 [
+			     "Booking-Book",
+			     "Ref",
+			     "7GAWK763",
+			     8,
+			     8
+			 ]
+		     ]
+		 },
+		 {
+		     "text": "No, that will be all. Good bye.",
+		     "metadata": {},
+		     "dialog_act": {
+			 "general-bye": [
+			     [
+				 "none",
+				 "none"
+			     ]
+			 ]
+		     },
+		     "span_info": []
+		 },
+		 {
+		     "text": "Thank you for using our services.",
+		     "metadata": {
+			 "taxi": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {
+				 "leaveAt": "",
+				 "destination": "",
+				 "departure": "",
+				 "arriveBy": ""
+			     }
+			 },
+			 "police": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {}
+			 },
+			 "restaurant": {
+			     "book": {
+				 "booked": [],
+				 "time": "",
+				 "day": "",
+				 "people": ""
+			     },
+			     "semi": {
+				 "food": "",
+				 "pricerange": "",
+				 "name": "",
+				 "area": ""
+			     }
+			 },
+			 "hospital": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {
+				 "department": ""
+			     }
+			 },
+			 "hotel": {
+			     "book": {
+				 "booked": [
+				     {
+					 "name": "the cambridge belfry",
+					 "reference": "7GAWK763"
+				     }
+				 ],
+				 "stay": "2",
+				 "day": "tuesday",
+				 "people": "6"
+			     },
+			     "semi": {
+				 "name": "not mentioned",
+				 "area": "not mentioned",
+				 "parking": "yes",
+				 "pricerange": "cheap",
+				 "stars": "not mentioned",
+				 "internet": "not mentioned",
+				 "type": "hotel"
+			     }
+			 },
+			 "attraction": {
+			     "book": {
+				 "booked": []
+			     },
+			     "semi": {
+				 "type": "",
+				 "name": "",
+				 "area": ""
+			     }
+			 },
+			 "train": {
+			     "book": {
+				 "booked": [],
+				 "people": ""
+			     },
+			     "semi": {
+				 "leaveAt": "",
+				 "destination": "",
+				 "day": "",
+				 "arriveBy": "",
+				 "departure": ""
+			     }
+			 }
+		     },
+		     "dialog_act": {
+			 "general-bye": [
+			     [
+				 "none",
+				 "none"
+			     ]
+			 ]
+		     },
+		     "span_info": []
+		 }
+	     ]
+	 },
+   #+END_SRC
+
+和往常一样，上述数据的结构可以总结如下：
+
+#+BEGIN_SRC python
+  |--goal
+      |--domain1
+      |--domain2
+      |--domainx
+	  |--info
+	  |--fail_info
+	  |--book
+	  |--fail_book
+      |--topic
+	  |--domainx: bool
+      |--eod: bool
+      # |--messageLen: int
+      |--message
+	  |--message i
+  |--log[]
+      |--text: str
+      |--metadata[domains]
+	  |--domain_i
+	      |--book
+		  |--booked
+		  |--other slots
+	      |--semi
+      |--dialog_act
+	  |-- this is the format of dialog acts in MultiWoz 2.0
+      |--span_info
+	  |--dialogue act 1
+	  |--dialogue act 2
+	  |--dialogue act i
+	       |--domain-intent
+	       |--slot
+	       |--value
+	       |--value position span beginning # span的计算从零开始
+	       |--value positiion span ending
+#+END_SRC
+
+啊，原来是把对话动作直接添加进去了，顺便为了方便NER类似的token级别的操作，还把span的位置信息也添加上了。
+
+其实事情没有这么简单，就连每个对话的名字也被进行了处理。比如上述示例的这个对话，由于整个对话只涉及到一个领域，所以此处的名字中包含了SNG（即single domain），而对于一个对话中包含多个领域的情况，对话名字种会有MUL。
+
+
+ 
+** slot_descriptions与tokenization
+
+这个数据集的另外一个特色是，除了上面的种种改动之外，MultiWoz2.1还添加了两个描述文件。
+
+1. slot_descriptions.json 这个文件的用途和文件名一样，就是为了解释每一个slot是干什么用的。我怀疑这个文件可能是为了给当时的标注人员使用而创建
+2. tokenization.md 这个文件主要是为了解决span_info中slot位置不准确的问题。我不是特别懂，总之，如果你想和DStC8的实验保持一致，那么你应该先保持先做一些变换，来尽可能地减小差距。代码如下：
+
+
+#+BEGIN_SRC python
+  text = re.sub("/", " / ", text)
+  text = re.sub("\-", " \- ", text)
+  text = re.sub("Im", "I\'m", text)
+  text = re.sub("im", "i\'m", text)
+  text = re.sub("theres", "there's", text)
+  text = re.sub("dont", "don't", text)
+  text = re.sub("whats", "what's", text)
+  text = re.sub("[0-9]:[0-9]+\. ", "[0-9]:[0-9]+ \. ", text)
+  text = re.sub("[a-z]\.[A-Z]", "[a-z]\. [A-Z]", text)
+  text = re.sub("\t:[0-9]+", "\t: [0-9]+", text)
+  tokens = word_tokenize(text)
+#+END_SRC
+
+这些正则表达式的意思大约是：加空格和加单引号。此处反斜杠多是用来让正则语义失效的，嗯~
+
+* MultiWoz 2.2
+
+最近，又出了新的一些MultiWoz数据集，2.2也算是其中之一。现整理如下：
+
+#+BEGIN_SRC 
+  .
+  ├── convert_to_multiwoz_format.py
+  ├── dev
+  │   ├── dialogues_001.json
+  │   └── dialogues_002.json
+  ├── dialog_acts.json
+  ├── README.md
+  ├── requirements.txt
+  ├── schema.json
+  ├── test
+  │   ├── dialogues_001.json
+  │   └── dialogues_002.json
+  └── train
+      ├── dialogues_001.json
+      ├── dialogues_002.json
+#+END_SRC
+
+透过这个文件树可以发现：data.json被划分成了三个数据集，同时也多了一个schema的东西。我们一步一步地去看。
+
+** schema：beyond ontology
+
+   首先给出一个schema的例子，由于schema是按照对话领域进行组织的，所以一个例子就必然地包括一个领域。
+
+   #+BEGIN_SRC js
+      {
+	 "service_name": "hotel",
+	 "slots": [
+	   {
+	     "name": "hotel-pricerange",
+	     "description": "price budget of the hotel",
+	     "possible_values": [
+	       "expensive",
+	       "cheap",
+	       "moderate"
+	     ],
+	     "is_categorical": true
+	   },
+	   {
+	     "name": "hotel-type",
+	     "description": "what is the type of the hotel",
+	     "possible_values": [
+	       "guesthouse",
+	       "hotel"
+	     ],
+	     "is_categorical": true
+	   },
+	   {
+	     "name": "hotel-parking",
+	     "description": "whether the hotel has parking",
+	     "possible_values": [
+	       "free",
+	       "no",
+	       "yes"
+	     ],
+	     "is_categorical": true
+	   },
+	   {
+	     "name": "hotel-bookday",
+	     "description": "day of the hotel booking",
+	     "possible_values": [
+	       "monday",
+	       "tuesday",
+	       "wednesday",
+	       "thursday",
+	       "friday",
+	       "saturday",
+	       "sunday"
+	     ],
+	     "is_categorical": true
+	   },
+	   {
+	     "name": "hotel-bookpeople",
+	     "description": "number of people for the hotel booking",
+	     "possible_values": [
+	       "1",
+	       "2",
+	       "3",
+	       "4",
+	       "5",
+	       "6",
+	       "7",
+	       "8"
+	     ],
+	     "is_categorical": true
+	   },
+	   {
+	     "name": "hotel-bookstay",
+	     "description": "length of stay at the hotel",
+	     "possible_values": [
+	       "1",
+	       "2",
+	       "3",
+	       "4",
+	       "5",
+	       "6",
+	       "7",
+	       "8"
+	     ],
+	     "is_categorical": true
+	   },
+	   {
+	     "name": "hotel-stars",
+	     "description": "star rating of the hotel",
+	     "possible_values": [
+	       "0",
+	       "1",
+	       "2",
+	       "3",
+	       "4",
+	       "5"
+	     ],
+	     "is_categorical": true
+	   },
+	   {
+	     "name": "hotel-internet",
+	     "description": "whether the hotel has internet",
+	     "possible_values": [
+	       "free",
+	       "no",
+	       "yes"
+	     ],
+	     "is_categorical": true
+	   },
+	   {
+	     "name": "hotel-name",
+	     "description": "name of the hotel",
+	     "possible_values": [],
+	     "is_categorical": false
+	   },
+	   {
+	     "name": "hotel-area",
+	     "description": "area or place of the hotel",
+	     "possible_values": [
+	       "centre",
+	       "east",
+	       "north",
+	       "south",
+	       "west"
+	     ],
+	     "is_categorical": true
+	   },
+	   {
+	     "name": "hotel-address",
+	     "description": "address of the hotel",
+	     "is_categorical": false
+	   },
+	   {
+	     "name": "hotel-phone",
+	     "description": "phone number of the hotel",
+	     "is_categorical": false
+	   },
+	   {
+	     "name": "hotel-postcode",
+	     "description": "postal code of the hotel",
+	     "is_categorical": false
+	   },
+	   {
+	     "name": "hotel-ref",
+	     "description": "reference number of the hotel booking",
+	     "is_categorical": false
+	   }
+	 ],
+	 "description": "hotel reservations and vacation stays",
+	 "intents": [
+	   {
+	     "name": "find_hotel",
+	     "description": "search for a hotel to stay in",
+	     "is_transactional": false,
+	     "required_slots": [],
+	     "optional_slots": {
+	       "hotel-pricerange": "dontcare",
+	       "hotel-type": "dontcare",
+	       "hotel-parking": "dontcare",
+	       "hotel-bookday": "dontcare",
+	       "hotel-bookpeople": "dontcare",
+	       "hotel-bookstay": "dontcare",
+	       "hotel-stars": "dontcare",
+	       "hotel-internet": "dontcare",
+	       "hotel-name": "dontcare",
+	       "hotel-area": "dontcare"
+	     }
+	   },
+	   {
+	     "name": "book_hotel",
+	     "description": "book a hotel to stay in",
+	     "is_transactional": true,
+	     "required_slots": [],
+	     "optional_slots": {
+	       "hotel-pricerange": "dontcare",
+	       "hotel-type": "dontcare",
+	       "hotel-parking": "dontcare",
+	       "hotel-bookday": "dontcare",
+	       "hotel-bookpeople": "dontcare",
+	       "hotel-bookstay": "dontcare",
+	       "hotel-stars": "dontcare",
+	       "hotel-internet": "dontcare",
+	       "hotel-name": "dontcare",
+	       "hotel-area": "dontcare"
+	     }
+	   }
+	 ]
+       },
+   #+END_SRC
+
+上述例子的一个具体结构如下：
+
+#+BEGIN_SRC python
+  |--service_name
+      |--slots[]
+	  |--slot i
+	      |--name {domain-slot}
+	      |--description
+	      |--possible_values: [enum]
+	      |--is_categorical: bool # denotes is enum type or not.
+      |--description:str
+      |--intents[]
+	  |-- intent i
+	      |--name {???}
+	      |--description
+	      |--is_transactional: bool # it means, if we need have a action, like running some function with this intents.
+	      |--required_slots:[]
+	      |--optional_slots:{}
+		   |--slot i
+		       |--value of slot i
+#+END_SRC
+
+   
+可以看出，这种组织形式比之前好了一些，至少可以划分出哪些slot是枚举变量（categorical），以及哪些intent是要执行动作的（transactional）。这样的一个文件，可以说是把ontology表达的更详细了，且创造出来一种更加具有特定性的intent。
+
+
+| Domain     | Categorical slots                                                               | Non-categorical slots                                                          | Intents    |
+|------------+---------------------------------------------------------------------------------+--------------------------------------------------------------------------------+------------|
+| Restaurant | pricerange, area, bookday, bookpeople                                           | food, name, booktime, address, phone, postcode, ref                            | find, book |
+| Attraction | area, type                                                                      | name, address, entrancefee, openhours, entrancefee, openhours, phone, postcode | find       |
+| Hotel      | pricerange, parking, internet, stars, area, type, bookpeople, bookday, bookstay | name, address, phone, postcode, ref                                            | find, book |
+| Taxi       | -                                                                               | destination, departure, arriveby, leaveat, phone, type                         | book       |
+| Train      | destination, departure, day, bookpeople                                         | arriveby, leaveat, trainid, ref, price, duration                               | find, book |
+| Bus        | day                                                                             | departure, destination, leaveat                                                | find       |
+| Hospital   | -                                                                               | department , address, phone, postcode                                          | find       |
+| Police     | -                                                                               | name, address, phone, postcode                                                 | find       |
+
+** 对话数据格式的改变
+
+先来看一条数据：
+
+#+BEGIN_SRC emacs-lisp
+    {
+      "dialogue_id": "PMUL4398.json",
+      "services": [
+	"restaurant",
+	"hotel"
+      ],
+      "turns": [
+	{
+	  "frames": [
+	    {
+	      "actions": [],
+	      "service": "restaurant",
+	      "slots": [],
+	      "state": {
+		"active_intent": "find_restaurant",
+		"requested_slots": [],
+		"slot_values": {
+		  "restaurant-area": [
+		    "centre"
+		  ],
+		  "restaurant-pricerange": [
+		    "expensive"
+		  ]
+		}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "taxi",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "train",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "bus",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "police",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "hotel",
+	      "slots": [],
+	      "state": {
+		"active_intent": "find_hotel",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "attraction",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "hospital",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    }
+	  ],
+	  "speaker": "USER",
+	  "turn_id": "0",
+	  "utterance": "i need a place to dine in the center thats expensive"
+	},
+	{
+	  "frames": [],
+	  "speaker": "SYSTEM",
+	  "turn_id": "1",
+	  "utterance": "I have several options for you; do you prefer African, Asian, or British food?"
+	},
+	{
+	  "frames": [
+	    {
+	      "actions": [],
+	      "service": "restaurant",
+	      "slots": [],
+	      "state": {
+		"active_intent": "find_restaurant",
+		"requested_slots": [
+		  "restaurant-food"
+		],
+		"slot_values": {
+		  "restaurant-area": [
+		    "centre"
+		  ],
+		  "restaurant-pricerange": [
+		    "expensive"
+		  ]
+		}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "taxi",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "train",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "bus",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "police",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "hotel",
+	      "slots": [],
+	      "state": {
+		"active_intent": "find_hotel",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "attraction",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "hospital",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    }
+	  ],
+	  "speaker": "USER",
+	  "turn_id": "2",
+	  "utterance": "Any sort of food would be fine, as long as it is a bit expensive. Could I get the phone number for your recommendation?"
+	},
+	{
+	  "frames": [
+	    {
+	      "actions": [],
+	      "service": "restaurant",
+	      "slots": [
+		{
+		  "exclusive_end": 38,
+		  "slot": "restaurant-name",
+		  "start": 31,
+		  "value": "Bedouin"
+		}
+	      ]
+	    }
+	  ],
+	  "speaker": "SYSTEM",
+	  "turn_id": "3",
+	  "utterance": "There is an Afrian place named Bedouin in the centre. How does that sound?"
+	},
+	{
+	  "frames": [
+	    {
+	      "actions": [],
+	      "service": "restaurant",
+	      "slots": [],
+	      "state": {
+		"active_intent": "find_restaurant",
+		"requested_slots": [
+		  "restaurant-phone"
+		],
+		"slot_values": {
+		  "restaurant-area": [
+		    "centre"
+		  ],
+		  "restaurant-name": [
+		    "bedouin"
+		  ],
+		  "restaurant-pricerange": [
+		    "expensive"
+		  ]
+		}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "hotel",
+	      "slots": [],
+	      "state": {
+		"active_intent": "find_hotel",
+		"requested_slots": [],
+		"slot_values": {
+		  "hotel-pricerange": [
+		    "expensive"
+		  ],
+		  "hotel-type": [
+		    "hotel"
+		  ]
+		}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "taxi",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "train",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "bus",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "police",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "attraction",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "hospital",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    }
+	  ],
+	  "speaker": "USER",
+	  "turn_id": "4",
+	  "utterance": "Sounds good, could I get that phone number? Also, could you recommend me an expensive hotel?"
+	},
+	{
+	  "frames": [
+	    {
+	      "actions": [],
+	      "service": "hotel",
+	      "slots": [
+		{
+		  "exclusive_end": 90,
+		  "slot": "hotel-name",
+		  "start": 69,
+		  "value": "University Arms Hotel"
+		}
+	      ]
+	    }
+	  ],
+	  "speaker": "SYSTEM",
+	  "turn_id": "5",
+	  "utterance": "Bedouin's phone is 01223367660. As far as hotels go, I recommend the University Arms Hotel in the center of town."
+	},
+	{
+	  "frames": [
+	    {
+	      "actions": [],
+	      "service": "restaurant",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {
+		  "restaurant-area": [
+		    "centre"
+		  ],
+		  "restaurant-name": [
+		    "bedouin"
+		  ],
+		  "restaurant-pricerange": [
+		    "expensive"
+		  ]
+		}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "hotel",
+	      "slots": [],
+	      "state": {
+		"active_intent": "find_hotel",
+		"requested_slots": [],
+		"slot_values": {
+		  "hotel-name": [
+		    "university arms hotel"
+		  ],
+		  "hotel-pricerange": [
+		    "expensive"
+		  ],
+		  "hotel-type": [
+		    "hotel"
+		  ]
+		}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "taxi",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "train",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "bus",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "police",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "attraction",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "hospital",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    }
+	  ],
+	  "speaker": "USER",
+	  "turn_id": "6",
+	  "utterance": "Yes. Can you book it for me?"
+	},
+	{
+	  "frames": [],
+	  "speaker": "SYSTEM",
+	  "turn_id": "7",
+	  "utterance": "Sure, when would you like that reservation?"
+	},
+	{
+	  "frames": [
+	    {
+	      "actions": [],
+	      "service": "restaurant",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {
+		  "restaurant-area": [
+		    "centre"
+		  ],
+		  "restaurant-name": [
+		    "bedouin"
+		  ],
+		  "restaurant-pricerange": [
+		    "expensive"
+		  ]
+		}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "hotel",
+	      "slots": [],
+	      "state": {
+		"active_intent": "book_hotel",
+		"requested_slots": [],
+		"slot_values": {
+		  "hotel-bookday": [
+		    "saturday"
+		  ],
+		  "hotel-bookpeople": [
+		    "2"
+		  ],
+		  "hotel-bookstay": [
+		    "2"
+		  ],
+		  "hotel-name": [
+		    "university arms hotel"
+		  ],
+		  "hotel-pricerange": [
+		    "expensive"
+		  ],
+		  "hotel-type": [
+		    "hotel"
+		  ]
+		}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "taxi",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "train",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "bus",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "police",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "attraction",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "hospital",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    }
+	  ],
+	  "speaker": "USER",
+	  "turn_id": "8",
+	  "utterance": "i want to book it for 2 people and 2 nights starting from saturday."
+	},
+	{
+	  "frames": [],
+	  "speaker": "SYSTEM",
+	  "turn_id": "9",
+	  "utterance": "Your booking was successful. Your reference number is FRGZWQL2 . May I help you further?"
+	},
+	{
+	  "frames": [
+	    {
+	      "actions": [],
+	      "service": "restaurant",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {
+		  "restaurant-area": [
+		    "centre"
+		  ],
+		  "restaurant-name": [
+		    "bedouin"
+		  ],
+		  "restaurant-pricerange": [
+		    "expensive"
+		  ]
+		}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "hotel",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {
+		  "hotel-bookday": [
+		    "saturday"
+		  ],
+		  "hotel-bookpeople": [
+		    "2"
+		  ],
+		  "hotel-bookstay": [
+		    "2"
+		  ],
+		  "hotel-name": [
+		    "university arms hotel"
+		  ],
+		  "hotel-pricerange": [
+		    "expensive"
+		  ],
+		  "hotel-type": [
+		    "hotel"
+		  ]
+		}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "taxi",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "train",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "bus",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "police",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "attraction",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    },
+	    {
+	      "actions": [],
+	      "service": "hospital",
+	      "slots": [],
+	      "state": {
+		"active_intent": "NONE",
+		"requested_slots": [],
+		"slot_values": {}
+	      }
+	    }
+	  ],
+	  "speaker": "USER",
+	  "turn_id": "10",
+	  "utterance": "That is all I need to know. Thanks, good bye."
+	},
+	{
+	  "frames": [],
+	  "speaker": "SYSTEM",
+	  "turn_id": "11",
+	  "utterance": "Thank you so much for Cambridge TownInfo centre. Have a great day!"
+	}
+      ]
+    },
+#+END_SRC
+
+上述代码的结构如下图所示：
+
+#+BEGIN_SRC python
+  |--dialogue_id
+  |--services[]
+      |--domain 1
+      |--domain i
+  |--turns
+      |--frames[]
+	      |--actions
+	      |--services
+	      |--slots[]
+		  |--exclusive_end
+		  |--slot
+		  |--start
+                  |value
+	      |--state
+		  |--active_intent
+		  |--requested_slots
+		  |--slot_values
+		      |--domain-slot i
+			  |--value i
+      |--speaker
+      |--turn_id
+      |--utterance
+#+END_SRC
+
+可以看出，2.2的格式与以往大不相同！该对话语料重新定义了turn，即一个角色的一句话，就是一个turn。除此以外，我们可以发现，2.2的标注更加细化了，比如对于每一句话，其speaker也被包含进来。actions我一直看着都是0，奇怪。service就是domain，不提。slots常常会包含一些结果，不过我不理解其具体含义，比如start和end，理论上讲也应该是slot所出现的位置，但是这和目标需求，都是不对应的。甚至在slots里所列举的slot，也是语句里没有出现的。这是为什么？难道2.2的标注不仅没有改对，反而更错了？
+
+当然不是！我们可以观察到另外一个现象：虽然一个角色的一句话被看作是1个turn，但是2.2却是以user-system这样的一个pair进行一次标注，换而言之，由于system角色对应的frames全部都是空的，不是因为他们没有所需要的标注信息，而是因为：他们的信息被放在了和user一起的frames里面。如果把system和user的话放在一起，这样去数位置的话，start对应的位置就正常了。
+
+state都是挺全面的，就是belief state。并且active_intent也把需要的结果展示出来了。
+
+
+
+
+* 结论
+写了很长了，只能另开一篇文章，介绍一下我自己的工具，用以自动地读取和运行以上各种版本的数据集，哈哈哈！
+
