@@ -3,196 +3,13 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-11-15 Mon 19:19 -->
+<!-- 2022-01-10 Mon 20:52 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>阅读《Pro Git》有感</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="liangzid" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
-  .title  { text-align: center;
-             margin-bottom: .2em; }
-  .subtitle { text-align: center;
-              font-size: medium;
-              font-weight: bold;
-              margin-top:0; }
-  .todo   { font-family: monospace; color: red; }
-  .done   { font-family: monospace; color: green; }
-  .priority { font-family: monospace; color: orange; }
-  .tag    { background-color: #eee; font-family: monospace;
-            padding: 2px; font-size: 80%; font-weight: normal; }
-  .timestamp { color: #bebebe; }
-  .timestamp-kwd { color: #5f9ea0; }
-  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
-  .underline { text-decoration: underline; }
-  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
-  p.verse { margin-left: 3%; }
-  pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
-    padding: 8pt;
-    font-family: monospace;
-    overflow: auto;
-    margin: 1.2em;
-  }
-  pre.src {
-    position: relative;
-    overflow: auto;
-    padding-top: 1.2em;
-  }
-  pre.src:before {
-    display: none;
-    position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
-    padding: 3px;
-    border: 1px solid black;
-  }
-  pre.src:hover:before { display: inline; margin-top: 14px;}
-  /* Languages per Org manual */
-  pre.src-asymptote:before { content: 'Asymptote'; }
-  pre.src-awk:before { content: 'Awk'; }
-  pre.src-C:before { content: 'C'; }
-  /* pre.src-C++ doesn't work in CSS */
-  pre.src-clojure:before { content: 'Clojure'; }
-  pre.src-css:before { content: 'CSS'; }
-  pre.src-D:before { content: 'D'; }
-  pre.src-ditaa:before { content: 'ditaa'; }
-  pre.src-dot:before { content: 'Graphviz'; }
-  pre.src-calc:before { content: 'Emacs Calc'; }
-  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-fortran:before { content: 'Fortran'; }
-  pre.src-gnuplot:before { content: 'gnuplot'; }
-  pre.src-haskell:before { content: 'Haskell'; }
-  pre.src-hledger:before { content: 'hledger'; }
-  pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
-  pre.src-latex:before { content: 'LaTeX'; }
-  pre.src-ledger:before { content: 'Ledger'; }
-  pre.src-lisp:before { content: 'Lisp'; }
-  pre.src-lilypond:before { content: 'Lilypond'; }
-  pre.src-lua:before { content: 'Lua'; }
-  pre.src-matlab:before { content: 'MATLAB'; }
-  pre.src-mscgen:before { content: 'Mscgen'; }
-  pre.src-ocaml:before { content: 'Objective Caml'; }
-  pre.src-octave:before { content: 'Octave'; }
-  pre.src-org:before { content: 'Org mode'; }
-  pre.src-oz:before { content: 'OZ'; }
-  pre.src-plantuml:before { content: 'Plantuml'; }
-  pre.src-processing:before { content: 'Processing.js'; }
-  pre.src-python:before { content: 'Python'; }
-  pre.src-R:before { content: 'R'; }
-  pre.src-ruby:before { content: 'Ruby'; }
-  pre.src-sass:before { content: 'Sass'; }
-  pre.src-scheme:before { content: 'Scheme'; }
-  pre.src-screen:before { content: 'Gnu Screen'; }
-  pre.src-sed:before { content: 'Sed'; }
-  pre.src-sh:before { content: 'shell'; }
-  pre.src-sql:before { content: 'SQL'; }
-  pre.src-sqlite:before { content: 'SQLite'; }
-  /* additional languages in org.el's org-babel-load-languages alist */
-  pre.src-forth:before { content: 'Forth'; }
-  pre.src-io:before { content: 'IO'; }
-  pre.src-J:before { content: 'J'; }
-  pre.src-makefile:before { content: 'Makefile'; }
-  pre.src-maxima:before { content: 'Maxima'; }
-  pre.src-perl:before { content: 'Perl'; }
-  pre.src-picolisp:before { content: 'Pico Lisp'; }
-  pre.src-scala:before { content: 'Scala'; }
-  pre.src-shell:before { content: 'Shell Script'; }
-  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
-  /* additional language identifiers per "defun org-babel-execute"
-       in ob-*.el */
-  pre.src-cpp:before  { content: 'C++'; }
-  pre.src-abc:before  { content: 'ABC'; }
-  pre.src-coq:before  { content: 'Coq'; }
-  pre.src-groovy:before  { content: 'Groovy'; }
-  /* additional language identifiers from org-babel-shell-names in
-     ob-shell.el: ob-shell is the only babel language using a lambda to put
-     the execution function name together. */
-  pre.src-bash:before  { content: 'bash'; }
-  pre.src-csh:before  { content: 'csh'; }
-  pre.src-ash:before  { content: 'ash'; }
-  pre.src-dash:before  { content: 'dash'; }
-  pre.src-ksh:before  { content: 'ksh'; }
-  pre.src-mksh:before  { content: 'mksh'; }
-  pre.src-posh:before  { content: 'posh'; }
-  /* Additional Emacs modes also supported by the LaTeX listings package */
-  pre.src-ada:before { content: 'Ada'; }
-  pre.src-asm:before { content: 'Assembler'; }
-  pre.src-caml:before { content: 'Caml'; }
-  pre.src-delphi:before { content: 'Delphi'; }
-  pre.src-html:before { content: 'HTML'; }
-  pre.src-idl:before { content: 'IDL'; }
-  pre.src-mercury:before { content: 'Mercury'; }
-  pre.src-metapost:before { content: 'MetaPost'; }
-  pre.src-modula-2:before { content: 'Modula-2'; }
-  pre.src-pascal:before { content: 'Pascal'; }
-  pre.src-ps:before { content: 'PostScript'; }
-  pre.src-prolog:before { content: 'Prolog'; }
-  pre.src-simula:before { content: 'Simula'; }
-  pre.src-tcl:before { content: 'tcl'; }
-  pre.src-tex:before { content: 'TeX'; }
-  pre.src-plain-tex:before { content: 'Plain TeX'; }
-  pre.src-verilog:before { content: 'Verilog'; }
-  pre.src-vhdl:before { content: 'VHDL'; }
-  pre.src-xml:before { content: 'XML'; }
-  pre.src-nxml:before { content: 'XML'; }
-  /* add a generic configuration mode; LaTeX export needs an additional
-     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
-  pre.src-conf:before { content: 'Configuration File'; }
-
-  table { border-collapse:collapse; }
-  caption.t-above { caption-side: top; }
-  caption.t-bottom { caption-side: bottom; }
-  td, th { vertical-align:top;  }
-  th.org-right  { text-align: center;  }
-  th.org-left   { text-align: center;   }
-  th.org-center { text-align: center; }
-  td.org-right  { text-align: right;  }
-  td.org-left   { text-align: left;   }
-  td.org-center { text-align: center; }
-  dt { font-weight: bold; }
-  .footpara { display: inline; }
-  .footdef  { margin-bottom: 1em; }
-  .figure { padding: 1em; }
-  .figure p { text-align: center; }
-  .equation-container {
-    display: table;
-    text-align: center;
-    width: 100%;
-  }
-  .equation {
-    vertical-align: middle;
-  }
-  .equation-label {
-    display: table-cell;
-    text-align: right;
-    vertical-align: middle;
-  }
-  .inlinetask {
-    padding: 10px;
-    border: 2px solid gray;
-    margin: 10px;
-    background: #ffffcc;
-  }
-  #org-div-home-and-up
-   { text-align: right; font-size: 70%; white-space: nowrap; }
-  textarea { overflow-x: auto; }
-  .linenr { font-size: smaller }
-  .code-highlighted { background-color: #ffff00; }
-  .org-info-js_info-navigation { border-style: none; }
-  #org-info-js_console-label
-    { font-size: 10px; font-weight: bold; white-space: nowrap; }
-  .org-info-js_search-highlight
-    { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
-  /*]]>*/-->
-</style>
+<link rel="stylesheet" type="text/css" href="./css/worg.css" />
 <script type="text/javascript">
 // @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
@@ -223,26 +40,26 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org04fb8be">VCS是什么？——以时间为方向的有向无环图。git是什么？——精妙的VCS</a></li>
-<li><a href="#orgc2293b6">在上述有向无环图基础上添加一个新的维度：空间。——git里面的“储物间”以及储物间之间的“移动”方式</a></li>
-<li><a href="#orge559a2c">形成一张版本控制图</a>
+<li><a href="#org04fb8be">1. VCS是什么？——以时间为方向的有向无环图。git是什么？——精妙的VCS</a></li>
+<li><a href="#orgc2293b6">2. 在上述有向无环图基础上添加一个新的维度：空间。——git里面的“储物间”以及储物间之间的“移动”方式</a></li>
+<li><a href="#orge559a2c">3. 形成一张版本控制图</a>
 <ul>
-<li><a href="#org0a2f246">通过branch、clone和fetch产生分支</a></li>
-<li><a href="#orgddee413">通过merge和rebase合并分支</a></li>
-<li><a href="#org0624c98">删除分支</a></li>
-<li><a href="#org4aaac4c">通过log访问图中的节点</a></li>
+<li><a href="#org0a2f246">3.1. 通过branch、clone和fetch产生分支</a></li>
+<li><a href="#orgddee413">3.2. 通过merge和rebase合并分支</a></li>
+<li><a href="#org0624c98">3.3. 删除分支</a></li>
+<li><a href="#org4aaac4c">3.4. 通过log访问图中的节点</a></li>
 </ul>
 </li>
-<li><a href="#orgb37af4d">工作流</a>
+<li><a href="#orgb37af4d">4. 工作流</a>
 <ul>
-<li><a href="#org739adaf">单人工作流</a></li>
-<li><a href="#orgfb49c89">典型的多人工作流</a></li>
+<li><a href="#org739adaf">4.1. 单人工作流</a></li>
+<li><a href="#orgfb49c89">4.2. 典型的多人工作流</a></li>
 </ul>
 </li>
-<li><a href="#org180d8f7">我的git个人适配文档</a>
+<li><a href="#org180d8f7">5. 我的git个人适配文档</a>
 <ul>
-<li><a href="#org3e74f5e">我的gitignore</a></li>
-<li><a href="#org7306d0e">我的git脚本</a></li>
+<li><a href="#org3e74f5e">5.1. 我的gitignore</a></li>
+<li><a href="#org7306d0e">5.2. 我的git脚本</a></li>
 </ul>
 </li>
 </ul>
@@ -253,8 +70,8 @@ git真是一个非常不错的版本控制工具！我以前只是在用add，co
 这篇笔记是个人对git的一点理解，不无谬误。
 </p>
 <div id="outline-container-org04fb8be" class="outline-2">
-<h2 id="org04fb8be">VCS是什么？——以时间为方向的有向无环图。git是什么？——精妙的VCS</h2>
-<div class="outline-text-2" id="text-org04fb8be">
+<h2 id="org04fb8be"><span class="section-number-2">1</span> VCS是什么？——以时间为方向的有向无环图。git是什么？——精妙的VCS</h2>
+<div class="outline-text-2" id="text-1">
 <p>
 个人理解，git是服务于“文本文件”的，准确地说，是服务于程序代码那种文本文件的。所以git本自然的以 <b>行</b> 作为其最小粒度。所以后面在merge等处理冲突（或者说合并多个流）的时候，git都是以行为单位进行匹配。这样做比目前较为通用的云同步在粒度上稍微细了一点，因为后者主要是面向二进制文件的，而二进制文件，是一变百变的。
 举个例子，如果有需求对docx之类的文档进行版本控制，可能就没有merge一说，但是对txt或者基于xml组织的odt文档，这种基于行的版本控制或许就是可行的了。
@@ -291,8 +108,8 @@ git则有些不同。git不以文件为单位，而以版本为单位，版本�
 </div>
 
 <div id="outline-container-orgc2293b6" class="outline-2">
-<h2 id="orgc2293b6">在上述有向无环图基础上添加一个新的维度：空间。——git里面的“储物间”以及储物间之间的“移动”方式</h2>
-<div class="outline-text-2" id="text-orgc2293b6">
+<h2 id="orgc2293b6"><span class="section-number-2">2</span> 在上述有向无环图基础上添加一个新的维度：空间。——git里面的“储物间”以及储物间之间的“移动”方式</h2>
+<div class="outline-text-2" id="text-2">
 <p>
 从物理上而言，git一般包含以下两类物理地址：若干个本地终端；若干个云终端。对不对？
 所谓的多人协作，最直白的一种方案是：将若干个本地终端推送到一个云终端上去合并。
@@ -364,8 +181,8 @@ git则有些不同。git不以文件为单位，而以版本为单位，版本�
 </div>
 </div>
 <div id="outline-container-orge559a2c" class="outline-2">
-<h2 id="orge559a2c">形成一张版本控制图</h2>
-<div class="outline-text-2" id="text-orge559a2c">
+<h2 id="orge559a2c"><span class="section-number-2">3</span> 形成一张版本控制图</h2>
+<div class="outline-text-2" id="text-3">
 <p>
 之前提及过，版本控制过程，本质上可以理解为一张有向无环图。那么两个操作是VCS中最重要的：建图，和看图。
 关于建图，其实就是迭代“建立节点，并提供连接”这个过程。
@@ -377,8 +194,8 @@ git则有些不同。git不以文件为单位，而以版本为单位，版本�
 </p>
 </div>
 <div id="outline-container-org0a2f246" class="outline-3">
-<h3 id="org0a2f246">通过branch、clone和fetch产生分支</h3>
-<div class="outline-text-3" id="text-org0a2f246">
+<h3 id="org0a2f246"><span class="section-number-3">3.1</span> 通过branch、clone和fetch产生分支</h3>
+<div class="outline-text-3" id="text-3-1">
 <p>
 分支（branch）很简单，就是为了验证一个新的功能，或者“开辟一个新的试验田”去干别的事情。所以产生分支的方式主要有两种：
 </p>
@@ -400,8 +217,8 @@ git则有些不同。git不以文件为单位，而以版本为单位，版本�
 </div>
 </div>
 <div id="outline-container-orgddee413" class="outline-3">
-<h3 id="orgddee413">通过merge和rebase合并分支</h3>
-<div class="outline-text-3" id="text-orgddee413">
+<h3 id="orgddee413"><span class="section-number-3">3.2</span> 通过merge和rebase合并分支</h3>
+<div class="outline-text-3" id="text-3-2">
 <p>
 当分支上的功能完成了验证之后，后面就需要将其与主分支合并。一般而言，合并的方式有两种，merge形式，和rebase形式。二者的内核是一致的。
 </p>
@@ -428,8 +245,8 @@ merge的过程是这样的：当前仓库处于分支A下，然后需要merge掉
 </div>
 
 <div id="outline-container-org0624c98" class="outline-3">
-<h3 id="org0624c98">删除分支</h3>
-<div class="outline-text-3" id="text-org0624c98">
+<h3 id="org0624c98"><span class="section-number-3">3.3</span> 删除分支</h3>
+<div class="outline-text-3" id="text-3-3">
 <p>
 git branch -d branchname
 </p>
@@ -437,8 +254,8 @@ git branch -d branchname
 </div>
 
 <div id="outline-container-org4aaac4c" class="outline-3">
-<h3 id="org4aaac4c">通过log访问图中的节点</h3>
-<div class="outline-text-3" id="text-org4aaac4c">
+<h3 id="org4aaac4c"><span class="section-number-3">3.4</span> 通过log访问图中的节点</h3>
+<div class="outline-text-3" id="text-3-4">
 <p>
 前面已经对如何建立版本控制图进行了全方位的讨论，现在可以看看如何遍历地访问这张图中的一些节点了。
 </p>
@@ -451,20 +268,20 @@ git branch -d branchname
 </div>
 
 <div id="outline-container-orgb37af4d" class="outline-2">
-<h2 id="orgb37af4d">工作流</h2>
-<div class="outline-text-2" id="text-orgb37af4d">
+<h2 id="orgb37af4d"><span class="section-number-2">4</span> 工作流</h2>
+<div class="outline-text-2" id="text-4">
 </div>
 <div id="outline-container-org739adaf" class="outline-3">
-<h3 id="org739adaf">单人工作流</h3>
-<div class="outline-text-3" id="text-org739adaf">
+<h3 id="org739adaf"><span class="section-number-3">4.1</span> 单人工作流</h3>
+<div class="outline-text-3" id="text-4-1">
 <p>
 略。
 </p>
 </div>
 </div>
 <div id="outline-container-orgfb49c89" class="outline-3">
-<h3 id="orgfb49c89">典型的多人工作流</h3>
-<div class="outline-text-3" id="text-orgfb49c89">
+<h3 id="orgfb49c89"><span class="section-number-3">4.2</span> 典型的多人工作流</h3>
+<div class="outline-text-3" id="text-4-2">
 <p>
 累了不想写了。。。。
 </p>
@@ -487,18 +304,18 @@ git branch -d branchname
 </div>
 
 <div id="outline-container-org180d8f7" class="outline-2">
-<h2 id="org180d8f7">我的git个人适配文档</h2>
-<div class="outline-text-2" id="text-org180d8f7">
+<h2 id="org180d8f7"><span class="section-number-2">5</span> 我的git个人适配文档</h2>
+<div class="outline-text-2" id="text-5">
 <p>
 有时间补充
 </p>
 </div>
 <div id="outline-container-org3e74f5e" class="outline-3">
-<h3 id="org3e74f5e">我的gitignore</h3>
+<h3 id="org3e74f5e"><span class="section-number-3">5.1</span> 我的gitignore</h3>
 </div>
 <div id="outline-container-org7306d0e" class="outline-3">
-<h3 id="org7306d0e">我的git脚本</h3>
-<div class="outline-text-3" id="text-org7306d0e">
+<h3 id="org7306d0e"><span class="section-number-3">5.2</span> 我的git脚本</h3>
+<div class="outline-text-3" id="text-5-2">
 <p>
 没想到写一篇笔记的时间比看这本书的时间还长。。。
 </p>
@@ -509,7 +326,7 @@ git branch -d branchname
 <div id="postamble" class="status">
 <p class="date">Date: Tue Sep 21 21:08:07 2021</p>
 <p class="author">Author: liangzid</p>
-<p class="date">Created: 2021-11-15 Mon 19:19</p>
+<p class="date">Created: 2022-01-10 Mon 20:52</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
