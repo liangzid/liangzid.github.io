@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-11-17 Wed 19:52 -->
+<!-- 2022-03-26 周六 21:55 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>关于huggingface transformers NLG模块实现的基本思路</title>
@@ -193,7 +193,6 @@
   .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
-<link rel="stylesheet" type="text/css" href="~/liangzid.github.io/notes/css/worg.css"/>
 <script type="text/javascript">
 // @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
@@ -224,24 +223,24 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org2857864">1. 标题1</a></li>
-<li><a href="#orgf6c2ff5">2. 关于huggingface transformers NLG 模块实现的基本思路</a>
+<li><a href="#orga90201e">1. 标题1</a></li>
+<li><a href="#org337cd91">2. 关于huggingface transformers NLG 模块实现的基本思路</a>
 <ul>
-<li><a href="#orga3eadb4">2.1. 语言模型的训练与测试的不同之处</a></li>
-<li><a href="#orga73259f">2.2. 训练环节</a>
+<li><a href="#orgad38767">2.1. 语言模型的训练与测试的不同之处</a></li>
+<li><a href="#orgfaa6419">2.2. 训练环节</a>
 <ul>
-<li><a href="#org82170a6">2.2.1. 数据集封装形式</a></li>
-<li><a href="#org5d4a3f8">2.2.2. 微不足道的模型训练细节</a></li>
+<li><a href="#org52c24c1">2.2.1. 数据集封装形式</a></li>
+<li><a href="#org43a8850">2.2.2. 微不足道的模型训练细节</a></li>
 </ul>
 </li>
-<li><a href="#org920915a">2.3. 测试环节</a>
+<li><a href="#org15c9f8d">2.3. 测试环节</a>
 <ul>
-<li><a href="#org643b2c1">2.3.1. 数据集封装形式</a></li>
-<li><a href="#orgb4a1036">2.3.2. NLG生成细节</a>
+<li><a href="#org7e867d0">2.3.1. 数据集封装形式</a></li>
+<li><a href="#org33fc530">2.3.2. NLG生成细节</a>
 <ul>
-<li><a href="#org466a0de">2.3.2.1. 贪婪生成方案</a></li>
-<li><a href="#org5774473">2.3.2.2. beam search 方案</a></li>
-<li><a href="#orgc0820cf">2.3.2.3. 其他方案</a></li>
+<li><a href="#orgec1059b">2.3.2.1. 贪婪生成方案</a></li>
+<li><a href="#orge8d1a48">2.3.2.2. beam search 方案</a></li>
+<li><a href="#orgada959a">2.3.2.3. 其他方案</a></li>
 </ul>
 </li>
 </ul>
@@ -251,15 +250,15 @@
 </ul>
 </div>
 </div>
-<div id="outline-container-org2857864" class="outline-2">
-<h2 id="org2857864"><span class="section-number-2">1</span> 标题1</h2>
+<div id="outline-container-orga90201e" class="outline-2">
+<h2 id="orga90201e"><span class="section-number-2">1</span> 标题1</h2>
 </div>
-<div id="outline-container-orgf6c2ff5" class="outline-2">
-<h2 id="orgf6c2ff5"><span class="section-number-2">2</span> 关于huggingface transformers NLG 模块实现的基本思路</h2>
+<div id="outline-container-org337cd91" class="outline-2">
+<h2 id="org337cd91"><span class="section-number-2">2</span> 关于huggingface transformers NLG 模块实现的基本思路</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orga3eadb4" class="outline-3">
-<h3 id="orga3eadb4"><span class="section-number-3">2.1</span> 语言模型的训练与测试的不同之处</h3>
+<div id="outline-container-orgad38767" class="outline-3">
+<h3 id="orgad38767"><span class="section-number-3">2.1</span> 语言模型的训练与测试的不同之处</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预测下一个token时，基于的是前面的token全都正确的似然假设；
@@ -273,30 +272,30 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </div>
 </div>
 
-<div id="outline-container-orga73259f" class="outline-3">
-<h3 id="orga73259f"><span class="section-number-3">2.2</span> 训练环节</h3>
+<div id="outline-container-orgfaa6419" class="outline-3">
+<h3 id="orgfaa6419"><span class="section-number-3">2.2</span> 训练环节</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-org82170a6" class="outline-4">
-<h4 id="org82170a6"><span class="section-number-4">2.2.1</span> 数据集封装形式</h4>
+<div id="outline-container-org52c24c1" class="outline-4">
+<h4 id="org52c24c1"><span class="section-number-4">2.2.1</span> 数据集封装形式</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 一般而言，是数据等于标签的格式。以对话为例，可能就是"Q+[SEP]+A"这种。
 </p>
 </div>
 </div>
-<div id="outline-container-org5d4a3f8" class="outline-4">
-<h4 id="org5d4a3f8"><span class="section-number-4">2.2.2</span> 微不足道的模型训练细节</h4>
+<div id="outline-container-org43a8850" class="outline-4">
+<h4 id="org43a8850"><span class="section-number-4">2.2.2</span> 微不足道的模型训练细节</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <p>
 由于是token预测问题，所以本质上属于一个分类问题，一般而言，会使用交叉熵，除了使用transformers库之外，还可以自己用以下的方式进行损失的定义和传播：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #FF8C00;">loss_func_cls</span> = CrossEntropyLoss<span style="color: #AF87FF;">(</span>ignore_index=PAD_ID, reduction=<span style="color: #CDC673;">'sum'</span><span style="color: #AF87FF;">)</span>
-<span style="color: #FF8C00;">output_distributions</span>=Decoder<span style="color: #AF87FF;">(</span>utterance_input<span style="color: #AF87FF;">)[</span>0<span style="color: #AF87FF;">]</span>
-<span style="color: #FF8C00;">output_prediction</span>=output_distributions.permute<span style="color: #AF87FF;">(</span><span style="color: #5FD7FF;">[</span>0,2,1<span style="color: #5FD7FF;">]</span><span style="color: #AF87FF;">)</span>
-<span style="color: #FF8C00;">loss_autoencoder</span>=loss_func_cls<span style="color: #AF87FF;">(</span>output_prediction,utterance_input<span style="color: #AF87FF;">)</span>
+<pre class="src src-python"><span style="color: #0084C8; font-weight: bold;">loss_func_cls</span> = CrossEntropyLoss<span style="color: #707183;">(</span>ignore_index=PAD_ID, reduction=<span style="color: #4E9A06;">'sum'</span><span style="color: #707183;">)</span>
+<span style="color: #0084C8; font-weight: bold;">output_distributions</span>=Decoder<span style="color: #707183;">(</span>utterance_input<span style="color: #707183;">)[</span>0<span style="color: #707183;">]</span>
+<span style="color: #0084C8; font-weight: bold;">output_prediction</span>=output_distributions.permute<span style="color: #707183;">(</span><span style="color: #7388d6;">[</span>0,2,1<span style="color: #7388d6;">]</span><span style="color: #707183;">)</span>
+<span style="color: #0084C8; font-weight: bold;">loss_autoencoder</span>=loss_func_cls<span style="color: #707183;">(</span>output_prediction,utterance_input<span style="color: #707183;">)</span>
 </pre>
 </div>
 <p>
@@ -305,12 +304,12 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </div>
 </div>
 </div>
-<div id="outline-container-org920915a" class="outline-3">
-<h3 id="org920915a"><span class="section-number-3">2.3</span> 测试环节</h3>
+<div id="outline-container-org15c9f8d" class="outline-3">
+<h3 id="org15c9f8d"><span class="section-number-3">2.3</span> 测试环节</h3>
 <div class="outline-text-3" id="text-2-3">
 </div>
-<div id="outline-container-org643b2c1" class="outline-4">
-<h4 id="org643b2c1"><span class="section-number-4">2.3.1</span> 数据集封装形式</h4>
+<div id="outline-container-org7e867d0" class="outline-4">
+<h4 id="org7e867d0"><span class="section-number-4">2.3.1</span> 数据集封装形式</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <p>
 测试环节的数据集同训练环节有所不同，因为在测试环节，相当于是基于一个prefix去生成后面的话。
@@ -318,18 +317,18 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </p>
 </div>
 </div>
-<div id="outline-container-orgb4a1036" class="outline-4">
-<h4 id="orgb4a1036"><span class="section-number-4">2.3.2</span> NLG生成细节</h4>
+<div id="outline-container-org33fc530" class="outline-4">
+<h4 id="org33fc530"><span class="section-number-4">2.3.2</span> NLG生成细节</h4>
 <div class="outline-text-4" id="text-2-3-2">
 <p>
 下面给出几种较为常见的NLG的具体实现，方便日后炼丹之用。
 </p>
 </div>
-<div id="outline-container-org466a0de" class="outline-5">
-<h5 id="org466a0de"><span class="section-number-5">2.3.2.1</span> 贪婪生成方案</h5>
+<div id="outline-container-orgec1059b" class="outline-5">
+<h5 id="orgec1059b"><span class="section-number-5">2.3.2.1</span> 贪婪生成方案</h5>
 <div class="outline-text-5" id="text-2-3-2-1">
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #FF8C00;">beam_outputs</span>=Decoder.generate<span style="color: #AF87FF;">(</span>input_ids=utterance_input, max_length=64<span style="color: #AF87FF;">)</span>
+<pre class="src src-python"><span style="color: #0084C8; font-weight: bold;">beam_outputs</span>=Decoder.generate<span style="color: #707183;">(</span>input_ids=utterance_input, max_length=64<span style="color: #707183;">)</span>
 </pre>
 </div>
 <p>
@@ -338,20 +337,20 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </div>
 </div>
 
-<div id="outline-container-org5774473" class="outline-5">
-<h5 id="org5774473"><span class="section-number-5">2.3.2.2</span> beam search 方案</h5>
+<div id="outline-container-orge8d1a48" class="outline-5">
+<h5 id="orge8d1a48"><span class="section-number-5">2.3.2.2</span> beam search 方案</h5>
 <div class="outline-text-5" id="text-2-3-2-2">
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #FF8C00;">outputs</span>=Decoder.generate<span style="color: #AF87FF;">(</span>input_ids=utterance_input, max_length=64,
+<pre class="src src-python"><span style="color: #0084C8; font-weight: bold;">outputs</span>=Decoder.generate<span style="color: #707183;">(</span>input_ids=utterance_input, max_length=64,
                                                 num_beams=5,
-                                                num_return_sequences=5, early_stopping=<span style="color: #AF87FF;">True</span><span style="color: #AF87FF;">)</span>
+                                                num_return_sequences=5, early_stopping=<span style="color: #F5666D;">True</span><span style="color: #707183;">)</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgc0820cf" class="outline-5">
-<h5 id="orgc0820cf"><span class="section-number-5">2.3.2.3</span> 其他方案</h5>
+<div id="outline-container-orgada959a" class="outline-5">
+<h5 id="orgada959a"><span class="section-number-5">2.3.2.3</span> 其他方案</h5>
 <div class="outline-text-5" id="text-2-3-2-3">
 <p>
 参考这里： <a href="https://huggingface.co/blog/how-to-generate">https://huggingface.co/blog/how-to-generate</a>
@@ -365,7 +364,7 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 <div id="postamble" class="status">
 <p class="date">Date: Wed Nov 17 19:40:30 2021</p>
 <p class="author">Author: liangzid</p>
-<p class="date">Created: 2021-11-17 Wed 19:52</p>
+<p class="date">Created: 2022-03-26 周六 21:55</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

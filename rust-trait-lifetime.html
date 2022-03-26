@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-01-10 Mon 20:52 -->
+<!-- 2022-03-26 周六 21:55 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>为什么rust是安全的？从泛型的角度进一步解析</title>
@@ -40,14 +40,14 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org3016e28">1. 泛型——和C++没有区别</a></li>
-<li><a href="#org270f9f9">2. trait-直译就是：个性</a>
+<li><a href="#org806caa3">1. 泛型——和C++没有区别</a></li>
+<li><a href="#org563046f">2. trait-直译就是：个性</a>
 <ul>
-<li><a href="#org7da7613">2.1. 我们为什么需要trait？</a></li>
-<li><a href="#orgfc24e05">2.2. 使用trait约束函数或结构体</a></li>
-<li><a href="#orgc0021dc">2.3. 把trait当作一种高级类型，以约束函数和泛型</a>
+<li><a href="#org3aa29ea">2.1. 我们为什么需要trait？</a></li>
+<li><a href="#org4aa3657">2.2. 使用trait约束函数或结构体</a></li>
+<li><a href="#org034c2b6">2.3. 把trait当作一种高级类型，以约束函数和泛型</a>
 <ul>
-<li><a href="#org0d0f2f1">2.3.1. 用trait约束函数</a></li>
+<li><a href="#org70cd176">2.3.1. 用trait约束函数</a></li>
 </ul>
 </li>
 </ul>
@@ -59,8 +59,8 @@
 如果我没有读过之前的<a href="rust-learning.html">这篇</a>介绍，那么最好还是先学习一下所有权（ownership）吧！
 </p>
 
-<div id="outline-container-org3016e28" class="outline-2">
-<h2 id="org3016e28"><span class="section-number-2">1</span> 泛型——和C++没有区别</h2>
+<div id="outline-container-org806caa3" class="outline-2">
+<h2 id="org806caa3"><span class="section-number-2">1</span> 泛型——和C++没有区别</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 如果我忘记C++的了，推荐阅读： <a href="template-C++.html">C++的泛型笔记</a> 
@@ -71,83 +71,83 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust">              <span style="color: #FF1493;">struct</span> <span style="color: #5FD7FF;">Point</span><span style="color: #AF87FF;">&lt;</span><span style="color: #5FD7FF;">T</span><span style="color: #AF87FF;">&gt;</span> <span style="color: #AF87FF;">{</span>
-                  <span style="color: #FF8C00;">x</span>: <span style="color: #5FD7FF;">T</span>,
-                  <span style="color: #FF8C00;">y</span>: <span style="color: #5FD7FF;">T</span>,
-              <span style="color: #AF87FF;">}</span>
+<pre class="src src-rust">              <span style="color: #A52A2A; font-weight: bold;">struct</span> <span style="color: #2F8B58; font-weight: bold;">Point</span><span style="color: #707183;">&lt;</span><span style="color: #2F8B58; font-weight: bold;">T</span><span style="color: #707183;">&gt;</span> <span style="color: #707183;">{</span>
+                  <span style="color: #0084C8; font-weight: bold;">x</span>: <span style="color: #2F8B58; font-weight: bold;">T</span>,
+                  <span style="color: #0084C8; font-weight: bold;">y</span>: <span style="color: #2F8B58; font-weight: bold;">T</span>,
+              <span style="color: #707183;">}</span>
 
-            <span style="color: #FF1493;">fn</span> <span style="color: #87D700;">main</span><span style="color: #AF87FF;">()</span> <span style="color: #AF87FF;">{</span>
-                <span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">integer</span> = <span style="color: #5FD7FF;">Point</span> <span style="color: #5FD7FF;">{</span> <span style="color: #FF8C00;">x</span>: 5, <span style="color: #FF8C00;">y</span>: 10 <span style="color: #5FD7FF;">}</span>;
-                <span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">float</span> = <span style="color: #5FD7FF;">Point</span> <span style="color: #5FD7FF;">{</span> <span style="color: #FF8C00;">x</span>: 1.0, <span style="color: #FF8C00;">y</span>: 4.0 <span style="color: #5FD7FF;">}</span>;
-            <span style="color: #AF87FF;">}</span>
+            <span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+                <span style="color: #A52A2A; font-weight: bold;">let</span> <span style="color: #0084C8; font-weight: bold;">integer</span> = <span style="color: #2F8B58; font-weight: bold;">Point</span> <span style="color: #7388d6;">{</span> <span style="color: #0084C8; font-weight: bold;">x</span>: 5, <span style="color: #0084C8; font-weight: bold;">y</span>: 10 <span style="color: #7388d6;">}</span>;
+                <span style="color: #A52A2A; font-weight: bold;">let</span> <span style="color: #0084C8; font-weight: bold;">float</span> = <span style="color: #2F8B58; font-weight: bold;">Point</span> <span style="color: #7388d6;">{</span> <span style="color: #0084C8; font-weight: bold;">x</span>: 1.0, <span style="color: #0084C8; font-weight: bold;">y</span>: 4.0 <span style="color: #7388d6;">}</span>;
+            <span style="color: #707183;">}</span>
 
-          <span style="color: #8B8878;">//</span><span style="color: #8B8878;">============================================</span>
+          <span style="color: #204A87;">//</span><span style="color: #204A87;">============================================</span>
 
-        <span style="color: #FF1493;">struct</span> <span style="color: #5FD7FF;">Point</span><span style="color: #AF87FF;">&lt;</span><span style="color: #5FD7FF;">T</span>, <span style="color: #5FD7FF;">U</span><span style="color: #AF87FF;">&gt;</span> <span style="color: #AF87FF;">{</span>
-            <span style="color: #FF8C00;">x</span>: <span style="color: #5FD7FF;">T</span>,
-            <span style="color: #FF8C00;">y</span>: <span style="color: #5FD7FF;">U</span>,
-        <span style="color: #AF87FF;">}</span>
+        <span style="color: #A52A2A; font-weight: bold;">struct</span> <span style="color: #2F8B58; font-weight: bold;">Point</span><span style="color: #707183;">&lt;</span><span style="color: #2F8B58; font-weight: bold;">T</span>, <span style="color: #2F8B58; font-weight: bold;">U</span><span style="color: #707183;">&gt;</span> <span style="color: #707183;">{</span>
+            <span style="color: #0084C8; font-weight: bold;">x</span>: <span style="color: #2F8B58; font-weight: bold;">T</span>,
+            <span style="color: #0084C8; font-weight: bold;">y</span>: <span style="color: #2F8B58; font-weight: bold;">U</span>,
+        <span style="color: #707183;">}</span>
 
-        <span style="color: #FF1493;">fn</span> <span style="color: #87D700;">main</span><span style="color: #AF87FF;">()</span> <span style="color: #AF87FF;">{</span>
-            <span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">both_integer</span> = <span style="color: #5FD7FF;">Point</span> <span style="color: #5FD7FF;">{</span> <span style="color: #FF8C00;">x</span>: 5, <span style="color: #FF8C00;">y</span>: 10 <span style="color: #5FD7FF;">}</span>;
-            <span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">both_float</span> = <span style="color: #5FD7FF;">Point</span> <span style="color: #5FD7FF;">{</span> <span style="color: #FF8C00;">x</span>: 1.0, <span style="color: #FF8C00;">y</span>: 4.0 <span style="color: #5FD7FF;">}</span>;
-            <span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">integer_and_float</span> = <span style="color: #5FD7FF;">Point</span> <span style="color: #5FD7FF;">{</span> <span style="color: #FF8C00;">x</span>: 5, <span style="color: #FF8C00;">y</span>: 4.0 <span style="color: #5FD7FF;">}</span>;
-        <span style="color: #AF87FF;">}</span>
+        <span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+            <span style="color: #A52A2A; font-weight: bold;">let</span> <span style="color: #0084C8; font-weight: bold;">both_integer</span> = <span style="color: #2F8B58; font-weight: bold;">Point</span> <span style="color: #7388d6;">{</span> <span style="color: #0084C8; font-weight: bold;">x</span>: 5, <span style="color: #0084C8; font-weight: bold;">y</span>: 10 <span style="color: #7388d6;">}</span>;
+            <span style="color: #A52A2A; font-weight: bold;">let</span> <span style="color: #0084C8; font-weight: bold;">both_float</span> = <span style="color: #2F8B58; font-weight: bold;">Point</span> <span style="color: #7388d6;">{</span> <span style="color: #0084C8; font-weight: bold;">x</span>: 1.0, <span style="color: #0084C8; font-weight: bold;">y</span>: 4.0 <span style="color: #7388d6;">}</span>;
+            <span style="color: #A52A2A; font-weight: bold;">let</span> <span style="color: #0084C8; font-weight: bold;">integer_and_float</span> = <span style="color: #2F8B58; font-weight: bold;">Point</span> <span style="color: #7388d6;">{</span> <span style="color: #0084C8; font-weight: bold;">x</span>: 5, <span style="color: #0084C8; font-weight: bold;">y</span>: 4.0 <span style="color: #7388d6;">}</span>;
+        <span style="color: #707183;">}</span>
 
-          <span style="color: #8B8878;">//</span><span style="color: #8B8878;">============================================</span>
+          <span style="color: #204A87;">//</span><span style="color: #204A87;">============================================</span>
 
-      <span style="color: #FF1493;">enum</span> <span style="color: #5FD7FF;">Option</span><span style="color: #AF87FF;">&lt;</span><span style="color: #5FD7FF;">T</span><span style="color: #AF87FF;">&gt;</span> <span style="color: #AF87FF;">{</span>
-          <span style="color: #5FD7FF;">Some</span><span style="color: #5FD7FF;">(</span><span style="color: #5FD7FF;">T</span><span style="color: #5FD7FF;">)</span>,
-          <span style="color: #5FD7FF;">None</span>,
-      <span style="color: #AF87FF;">}</span>
+      <span style="color: #A52A2A; font-weight: bold;">enum</span> <span style="color: #2F8B58; font-weight: bold;">Option</span><span style="color: #707183;">&lt;</span><span style="color: #2F8B58; font-weight: bold;">T</span><span style="color: #707183;">&gt;</span> <span style="color: #707183;">{</span>
+          <span style="color: #2F8B58; font-weight: bold;">Some</span><span style="color: #7388d6;">(</span><span style="color: #2F8B58; font-weight: bold;">T</span><span style="color: #7388d6;">)</span>,
+          <span style="color: #2F8B58; font-weight: bold;">None</span>,
+      <span style="color: #707183;">}</span>
 
-          <span style="color: #8B8878;">//</span><span style="color: #8B8878;">============================================</span>
+          <span style="color: #204A87;">//</span><span style="color: #204A87;">============================================</span>
 
-    <span style="color: #FF1493;">enum</span> <span style="color: #5FD7FF;">Result</span><span style="color: #AF87FF;">&lt;</span><span style="color: #5FD7FF;">T</span>, <span style="color: #5FD7FF;">E</span><span style="color: #AF87FF;">&gt;</span> <span style="color: #AF87FF;">{</span>
-        <span style="color: #5FD7FF;">Ok</span><span style="color: #5FD7FF;">(</span><span style="color: #5FD7FF;">T</span><span style="color: #5FD7FF;">)</span>,
-        <span style="color: #5FD7FF;">Err</span><span style="color: #5FD7FF;">(</span><span style="color: #5FD7FF;">E</span><span style="color: #5FD7FF;">)</span>,
-    <span style="color: #AF87FF;">}</span>
-          <span style="color: #8B8878;">//</span><span style="color: #8B8878;">============================================</span>
+    <span style="color: #A52A2A; font-weight: bold;">enum</span> <span style="color: #2F8B58; font-weight: bold;">Result</span><span style="color: #707183;">&lt;</span><span style="color: #2F8B58; font-weight: bold;">T</span>, <span style="color: #2F8B58; font-weight: bold;">E</span><span style="color: #707183;">&gt;</span> <span style="color: #707183;">{</span>
+        <span style="color: #2F8B58; font-weight: bold;">Ok</span><span style="color: #7388d6;">(</span><span style="color: #2F8B58; font-weight: bold;">T</span><span style="color: #7388d6;">)</span>,
+        <span style="color: #2F8B58; font-weight: bold;">Err</span><span style="color: #7388d6;">(</span><span style="color: #2F8B58; font-weight: bold;">E</span><span style="color: #7388d6;">)</span>,
+    <span style="color: #707183;">}</span>
+          <span style="color: #204A87;">//</span><span style="color: #204A87;">============================================</span>
 
-  <span style="color: #FF1493;">struct</span> <span style="color: #5FD7FF;">Point</span><span style="color: #AF87FF;">&lt;</span><span style="color: #5FD7FF;">T</span><span style="color: #AF87FF;">&gt;</span> <span style="color: #AF87FF;">{</span>
-      <span style="color: #FF8C00;">x</span>: <span style="color: #5FD7FF;">T</span>,
-      <span style="color: #FF8C00;">y</span>: <span style="color: #5FD7FF;">T</span>,
-  <span style="color: #AF87FF;">}</span>
+  <span style="color: #A52A2A; font-weight: bold;">struct</span> <span style="color: #2F8B58; font-weight: bold;">Point</span><span style="color: #707183;">&lt;</span><span style="color: #2F8B58; font-weight: bold;">T</span><span style="color: #707183;">&gt;</span> <span style="color: #707183;">{</span>
+      <span style="color: #0084C8; font-weight: bold;">x</span>: <span style="color: #2F8B58; font-weight: bold;">T</span>,
+      <span style="color: #0084C8; font-weight: bold;">y</span>: <span style="color: #2F8B58; font-weight: bold;">T</span>,
+  <span style="color: #707183;">}</span>
 
-  <span style="color: #FF1493;">impl</span><span style="color: #AF87FF;">&lt;</span><span style="color: #5FD7FF;">T</span><span style="color: #AF87FF;">&gt;</span> <span style="color: #5FD7FF;">Point</span><span style="color: #AF87FF;">&lt;</span><span style="color: #5FD7FF;">T</span><span style="color: #AF87FF;">&gt;</span> <span style="color: #AF87FF;">{</span>
-      <span style="color: #FF1493;">fn</span> <span style="color: #87D700;">x</span><span style="color: #5FD7FF;">(</span>&amp;<span style="color: #FF1493;">self</span><span style="color: #5FD7FF;">)</span> -&gt; &amp;<span style="color: #5FD7FF;">T</span> <span style="color: #5FD7FF;">{</span>
-          &amp;<span style="color: #FF1493;">self</span>.x
-      <span style="color: #5FD7FF;">}</span>
-  <span style="color: #AF87FF;">}</span>
+  <span style="color: #A52A2A; font-weight: bold;">impl</span><span style="color: #707183;">&lt;</span><span style="color: #2F8B58; font-weight: bold;">T</span><span style="color: #707183;">&gt;</span> <span style="color: #2F8B58; font-weight: bold;">Point</span><span style="color: #707183;">&lt;</span><span style="color: #2F8B58; font-weight: bold;">T</span><span style="color: #707183;">&gt;</span> <span style="color: #707183;">{</span>
+      <span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">x</span><span style="color: #7388d6;">(</span><span style="color: #2E3436; background-color: #EDEDED;">&amp;</span><span style="color: #A52A2A; font-weight: bold;">self</span><span style="color: #7388d6;">)</span> -&gt; <span style="color: #2E3436; background-color: #EDEDED;">&amp;</span><span style="color: #2F8B58; font-weight: bold;">T</span> <span style="color: #7388d6;">{</span>
+          <span style="color: #2E3436; background-color: #EDEDED;">&amp;</span><span style="color: #A52A2A; font-weight: bold;">self</span>.x
+      <span style="color: #7388d6;">}</span>
+  <span style="color: #707183;">}</span>
 
-  <span style="color: #FF1493;">fn</span> <span style="color: #87D700;">main</span><span style="color: #AF87FF;">()</span> <span style="color: #AF87FF;">{</span>
-      <span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">p</span> = <span style="color: #5FD7FF;">Point</span> <span style="color: #5FD7FF;">{</span> <span style="color: #FF8C00;">x</span>: 5, <span style="color: #FF8C00;">y</span>: 10 <span style="color: #5FD7FF;">}</span>;
+  <span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+      <span style="color: #A52A2A; font-weight: bold;">let</span> <span style="color: #0084C8; font-weight: bold;">p</span> = <span style="color: #2F8B58; font-weight: bold;">Point</span> <span style="color: #7388d6;">{</span> <span style="color: #0084C8; font-weight: bold;">x</span>: 5, <span style="color: #0084C8; font-weight: bold;">y</span>: 10 <span style="color: #7388d6;">}</span>;
 
-      <span style="color: #FF1493;">println!</span><span style="color: #5FD7FF;">(</span><span style="color: #CDC673;">"p.x = </span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">"</span>, p.x<span style="color: #87D700;">()</span><span style="color: #5FD7FF;">)</span>;
-  <span style="color: #AF87FF;">}</span>
-  <span style="color: #8B8878;">//</span><span style="color: #8B8878;">==========&#26368;&#22797;&#26434;&#30340;&#20363;&#23376;=====================================</span>
-<span style="color: #FF1493;">struct</span> <span style="color: #5FD7FF;">Point</span><span style="color: #AF87FF;">&lt;</span><span style="color: #5FD7FF;">T</span>, <span style="color: #5FD7FF;">U</span><span style="color: #AF87FF;">&gt;</span> <span style="color: #AF87FF;">{</span>
-    <span style="color: #FF8C00;">x</span>: <span style="color: #5FD7FF;">T</span>,
-    <span style="color: #FF8C00;">y</span>: <span style="color: #5FD7FF;">U</span>,
-<span style="color: #AF87FF;">}</span>
+      <span style="color: #A020F0;">println!</span><span style="color: #7388d6;">(</span><span style="color: #4E9A06;">"p.x = </span><span style="color: #4E9A06; font-style: italic;">{}</span><span style="color: #4E9A06;">"</span>, p.x<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>;
+  <span style="color: #707183;">}</span>
+  <span style="color: #204A87;">//</span><span style="color: #204A87;">==========&#26368;&#22797;&#26434;&#30340;&#20363;&#23376;=====================================</span>
+<span style="color: #A52A2A; font-weight: bold;">struct</span> <span style="color: #2F8B58; font-weight: bold;">Point</span><span style="color: #707183;">&lt;</span><span style="color: #2F8B58; font-weight: bold;">T</span>, <span style="color: #2F8B58; font-weight: bold;">U</span><span style="color: #707183;">&gt;</span> <span style="color: #707183;">{</span>
+    <span style="color: #0084C8; font-weight: bold;">x</span>: <span style="color: #2F8B58; font-weight: bold;">T</span>,
+    <span style="color: #0084C8; font-weight: bold;">y</span>: <span style="color: #2F8B58; font-weight: bold;">U</span>,
+<span style="color: #707183;">}</span>
 
-<span style="color: #FF1493;">impl</span><span style="color: #AF87FF;">&lt;</span><span style="color: #5FD7FF;">T</span>, <span style="color: #5FD7FF;">U</span><span style="color: #AF87FF;">&gt;</span> <span style="color: #5FD7FF;">Point</span><span style="color: #AF87FF;">&lt;</span><span style="color: #5FD7FF;">T</span>, <span style="color: #5FD7FF;">U</span><span style="color: #AF87FF;">&gt;</span> <span style="color: #AF87FF;">{</span>
-    <span style="color: #FF1493;">fn</span> <span style="color: #87D700;">mixup</span><span style="color: #5FD7FF;">&lt;</span><span style="color: #5FD7FF;">V</span>, <span style="color: #5FD7FF;">W</span><span style="color: #5FD7FF;">&gt;(</span><span style="color: #FF1493;">self</span>, <span style="color: #FF8C00;">other</span>: <span style="color: #5FD7FF;">Point</span><span style="color: #87D700;">&lt;</span><span style="color: #5FD7FF;">V</span>, <span style="color: #5FD7FF;">W</span><span style="color: #87D700;">&gt;</span><span style="color: #5FD7FF;">)</span> -&gt; <span style="color: #5FD7FF;">Point</span><span style="color: #5FD7FF;">&lt;</span><span style="color: #5FD7FF;">T</span>, <span style="color: #5FD7FF;">W</span><span style="color: #5FD7FF;">&gt;</span> <span style="color: #5FD7FF;">{</span>
-        <span style="color: #5FD7FF;">Point</span> <span style="color: #87D700;">{</span>
-            <span style="color: #FF8C00;">x</span>: <span style="color: #FF1493;">self</span>.x,
-            <span style="color: #FF8C00;">y</span>: other.y,
-        <span style="color: #87D700;">}</span>
-    <span style="color: #5FD7FF;">}</span>
-<span style="color: #AF87FF;">}</span>
+<span style="color: #A52A2A; font-weight: bold;">impl</span><span style="color: #707183;">&lt;</span><span style="color: #2F8B58; font-weight: bold;">T</span>, <span style="color: #2F8B58; font-weight: bold;">U</span><span style="color: #707183;">&gt;</span> <span style="color: #2F8B58; font-weight: bold;">Point</span><span style="color: #707183;">&lt;</span><span style="color: #2F8B58; font-weight: bold;">T</span>, <span style="color: #2F8B58; font-weight: bold;">U</span><span style="color: #707183;">&gt;</span> <span style="color: #707183;">{</span>
+    <span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">mixup</span><span style="color: #7388d6;">&lt;</span><span style="color: #2F8B58; font-weight: bold;">V</span>, <span style="color: #2F8B58; font-weight: bold;">W</span><span style="color: #7388d6;">&gt;(</span><span style="color: #A52A2A; font-weight: bold;">self</span>, <span style="color: #0084C8; font-weight: bold;">other</span>: <span style="color: #2F8B58; font-weight: bold;">Point</span><span style="color: #909183;">&lt;</span><span style="color: #2F8B58; font-weight: bold;">V</span>, <span style="color: #2F8B58; font-weight: bold;">W</span><span style="color: #909183;">&gt;</span><span style="color: #7388d6;">)</span> -&gt; <span style="color: #2F8B58; font-weight: bold;">Point</span><span style="color: #7388d6;">&lt;</span><span style="color: #2F8B58; font-weight: bold;">T</span>, <span style="color: #2F8B58; font-weight: bold;">W</span><span style="color: #7388d6;">&gt;</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #2F8B58; font-weight: bold;">Point</span> <span style="color: #909183;">{</span>
+            <span style="color: #0084C8; font-weight: bold;">x</span>: <span style="color: #A52A2A; font-weight: bold;">self</span>.x,
+            <span style="color: #0084C8; font-weight: bold;">y</span>: other.y,
+        <span style="color: #909183;">}</span>
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
 
-<span style="color: #FF1493;">fn</span> <span style="color: #87D700;">main</span><span style="color: #AF87FF;">()</span> <span style="color: #AF87FF;">{</span>
-    <span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">p1</span> = <span style="color: #5FD7FF;">Point</span> <span style="color: #5FD7FF;">{</span> <span style="color: #FF8C00;">x</span>: 5, <span style="color: #FF8C00;">y</span>: 10.4 <span style="color: #5FD7FF;">}</span>;
-    <span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">p2</span> = <span style="color: #5FD7FF;">Point</span> <span style="color: #5FD7FF;">{</span> <span style="color: #FF8C00;">x</span>: <span style="color: #CDC673;">"Hello"</span>, <span style="color: #FF8C00;">y</span>: <span style="color: #CDC673;">'c'</span><span style="color: #5FD7FF;">}</span>;
+<span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    <span style="color: #A52A2A; font-weight: bold;">let</span> <span style="color: #0084C8; font-weight: bold;">p1</span> = <span style="color: #2F8B58; font-weight: bold;">Point</span> <span style="color: #7388d6;">{</span> <span style="color: #0084C8; font-weight: bold;">x</span>: 5, <span style="color: #0084C8; font-weight: bold;">y</span>: 10.4 <span style="color: #7388d6;">}</span>;
+    <span style="color: #A52A2A; font-weight: bold;">let</span> <span style="color: #0084C8; font-weight: bold;">p2</span> = <span style="color: #2F8B58; font-weight: bold;">Point</span> <span style="color: #7388d6;">{</span> <span style="color: #0084C8; font-weight: bold;">x</span>: <span style="color: #4E9A06;">"Hello"</span>, <span style="color: #0084C8; font-weight: bold;">y</span>: <span style="color: #4E9A06;">'c'</span><span style="color: #7388d6;">}</span>;
 
-    <span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">p3</span> = p1.mixup<span style="color: #5FD7FF;">(</span>p2<span style="color: #5FD7FF;">)</span>;
+    <span style="color: #A52A2A; font-weight: bold;">let</span> <span style="color: #0084C8; font-weight: bold;">p3</span> = p1.mixup<span style="color: #7388d6;">(</span>p2<span style="color: #7388d6;">)</span>;
 
-    <span style="color: #FF1493;">println!</span><span style="color: #5FD7FF;">(</span><span style="color: #CDC673;">"p3.x = </span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">, p3.y = </span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">"</span>, p3.x, p3.y<span style="color: #5FD7FF;">)</span>;
-<span style="color: #AF87FF;">}</span>
+    <span style="color: #A020F0;">println!</span><span style="color: #7388d6;">(</span><span style="color: #4E9A06;">"p3.x = </span><span style="color: #4E9A06; font-style: italic;">{}</span><span style="color: #4E9A06;">, p3.y = </span><span style="color: #4E9A06; font-style: italic;">{}</span><span style="color: #4E9A06;">"</span>, p3.x, p3.y<span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
 </pre>
 </div>
 
@@ -158,12 +158,12 @@
 </div>
 </div>
 
-<div id="outline-container-org270f9f9" class="outline-2">
-<h2 id="org270f9f9"><span class="section-number-2">2</span> trait-直译就是：个性</h2>
+<div id="outline-container-org563046f" class="outline-2">
+<h2 id="org563046f"><span class="section-number-2">2</span> trait-直译就是：个性</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org7da7613" class="outline-3">
-<h3 id="org7da7613"><span class="section-number-3">2.1</span> 我们为什么需要trait？</h3>
+<div id="outline-container-org3aa29ea" class="outline-3">
+<h3 id="org3aa29ea"><span class="section-number-3">2.1</span> 我们为什么需要trait？</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 泛型可能看起来是一个很好的东西，但是这个东西有一个问题： <b>如果我实例化的类型符合我的泛型，那么泛型代码就可以很好地被执行。如果我实例化的类型里，缺少了某些操作，泛型就会出问题。</b> 上述问题最可怕的地方是： <b>编译时：我们并不知道我们的泛型适不适合这个类型</b> 。
@@ -193,16 +193,16 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 </div>
 </div>
 
-<div id="outline-container-orgfc24e05" class="outline-3">
-<h3 id="orgfc24e05"><span class="section-number-3">2.2</span> 使用trait约束函数或结构体</h3>
+<div id="outline-container-org4aa3657" class="outline-3">
+<h3 id="org4aa3657"><span class="section-number-3">2.2</span> 使用trait约束函数或结构体</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 先定义一个trait。
 </p>
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #FF1493;">pub</span> <span style="color: #FF1493;">trait</span> <span style="color: #5FD7FF;">Summary</span> <span style="color: #AF87FF;">{</span>
-    <span style="color: #FF1493;">fn</span> <span style="color: #87D700;">summarize</span><span style="color: #5FD7FF;">(</span>&amp;<span style="color: #FF1493;">self</span><span style="color: #5FD7FF;">)</span> -&gt; <span style="color: #5FD7FF;">String</span>;
-<span style="color: #AF87FF;">}</span>
+<pre class="src src-rust"><span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #A52A2A; font-weight: bold;">trait</span> <span style="color: #2F8B58; font-weight: bold;">Summary</span> <span style="color: #707183;">{</span>
+    <span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">summarize</span><span style="color: #7388d6;">(</span><span style="color: #2E3436; background-color: #EDEDED;">&amp;</span><span style="color: #A52A2A; font-weight: bold;">self</span><span style="color: #7388d6;">)</span> -&gt; <span style="color: #2F8B58; font-weight: bold;">String</span>;
+<span style="color: #707183;">}</span>
 
 </pre>
 </div>
@@ -214,38 +214,38 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 
 <div class="org-src-container">
 <pre class="src src-rust">
-<span style="color: #FF1493;">#!</span><span style="color: #AF87FF;">[</span><span style="color: #FF1493;">allow</span><span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">unused</span><span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">]</span>
-<span style="color: #FF1493;">fn</span> <span style="color: #87D700;">main</span><span style="color: #AF87FF;">()</span> <span style="color: #AF87FF;">{</span>
-<span style="color: #FF1493;">pub</span> <span style="color: #FF1493;">trait</span> <span style="color: #5FD7FF;">Summary</span> <span style="color: #5FD7FF;">{</span>
-    <span style="color: #FF1493;">fn</span> <span style="color: #87D700;">summarize</span><span style="color: #87D700;">(</span>&amp;<span style="color: #FF1493;">self</span><span style="color: #87D700;">)</span> -&gt; <span style="color: #5FD7FF;">String</span>;
-<span style="color: #5FD7FF;">}</span>
+<span style="color: #A020F0;">#!</span><span style="color: #707183;">[</span><span style="color: #A020F0;">allow</span><span style="color: #7388d6;">(</span><span style="color: #A020F0;">unused</span><span style="color: #7388d6;">)</span><span style="color: #707183;">]</span>
+<span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+<span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #A52A2A; font-weight: bold;">trait</span> <span style="color: #2F8B58; font-weight: bold;">Summary</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">summarize</span><span style="color: #909183;">(</span><span style="color: #2E3436; background-color: #EDEDED;">&amp;</span><span style="color: #A52A2A; font-weight: bold;">self</span><span style="color: #909183;">)</span> -&gt; <span style="color: #2F8B58; font-weight: bold;">String</span>;
+<span style="color: #7388d6;">}</span>
 
-<span style="color: #FF1493;">pub</span> <span style="color: #FF1493;">struct</span> <span style="color: #5FD7FF;">NewsArticle</span> <span style="color: #5FD7FF;">{</span>
-    <span style="color: #FF1493;">pub</span> <span style="color: #FF8C00;">headline</span>: <span style="color: #5FD7FF;">String</span>,
-    <span style="color: #FF1493;">pub</span> <span style="color: #FF8C00;">location</span>: <span style="color: #5FD7FF;">String</span>,
-    <span style="color: #FF1493;">pub</span> <span style="color: #FF8C00;">author</span>: <span style="color: #5FD7FF;">String</span>,
-    <span style="color: #FF1493;">pub</span> <span style="color: #FF8C00;">content</span>: <span style="color: #5FD7FF;">String</span>,
-<span style="color: #5FD7FF;">}</span>
+<span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #A52A2A; font-weight: bold;">struct</span> <span style="color: #2F8B58; font-weight: bold;">NewsArticle</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #0084C8; font-weight: bold;">headline</span>: <span style="color: #2F8B58; font-weight: bold;">String</span>,
+    <span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #0084C8; font-weight: bold;">location</span>: <span style="color: #2F8B58; font-weight: bold;">String</span>,
+    <span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #0084C8; font-weight: bold;">author</span>: <span style="color: #2F8B58; font-weight: bold;">String</span>,
+    <span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #0084C8; font-weight: bold;">content</span>: <span style="color: #2F8B58; font-weight: bold;">String</span>,
+<span style="color: #7388d6;">}</span>
 
-<span style="color: #FF1493;">impl</span> <span style="color: #5FD7FF;">Summary</span> <span style="color: #FF1493;">for</span> <span style="color: #5FD7FF;">NewsArticle</span> <span style="color: #5FD7FF;">{</span>
-    <span style="color: #FF1493;">fn</span> <span style="color: #87D700;">summarize</span><span style="color: #87D700;">(</span>&amp;<span style="color: #FF1493;">self</span><span style="color: #87D700;">)</span> -&gt; <span style="color: #5FD7FF;">String</span> <span style="color: #87D700;">{</span>
-        <span style="color: #FF1493;">format!</span><span style="color: #CDC673;">(</span><span style="color: #CDC673;">"</span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">, by </span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;"> (</span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">)"</span>, <span style="color: #FF1493;">self</span>.headline, <span style="color: #FF1493;">self</span>.author, <span style="color: #FF1493;">self</span>.location<span style="color: #CDC673;">)</span>
-    <span style="color: #87D700;">}</span>
-<span style="color: #5FD7FF;">}</span>
+<span style="color: #A52A2A; font-weight: bold;">impl</span> <span style="color: #2F8B58; font-weight: bold;">Summary</span> <span style="color: #A52A2A; font-weight: bold;">for</span> <span style="color: #2F8B58; font-weight: bold;">NewsArticle</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">summarize</span><span style="color: #909183;">(</span><span style="color: #2E3436; background-color: #EDEDED;">&amp;</span><span style="color: #A52A2A; font-weight: bold;">self</span><span style="color: #909183;">)</span> -&gt; <span style="color: #2F8B58; font-weight: bold;">String</span> <span style="color: #909183;">{</span>
+        <span style="color: #A020F0;">format!</span><span style="color: #709870;">(</span><span style="color: #4E9A06;">"</span><span style="color: #4E9A06; font-style: italic;">{}</span><span style="color: #4E9A06;">, by </span><span style="color: #4E9A06; font-style: italic;">{}</span><span style="color: #4E9A06;"> (</span><span style="color: #4E9A06; font-style: italic;">{}</span><span style="color: #4E9A06;">)"</span>, <span style="color: #A52A2A; font-weight: bold;">self</span>.headline, <span style="color: #A52A2A; font-weight: bold;">self</span>.author, <span style="color: #A52A2A; font-weight: bold;">self</span>.location<span style="color: #709870;">)</span>
+    <span style="color: #909183;">}</span>
+<span style="color: #7388d6;">}</span>
 
-<span style="color: #FF1493;">pub</span> <span style="color: #FF1493;">struct</span> <span style="color: #5FD7FF;">Tweet</span> <span style="color: #5FD7FF;">{</span>
-    <span style="color: #FF1493;">pub</span> <span style="color: #FF8C00;">username</span>: <span style="color: #5FD7FF;">String</span>,
-    <span style="color: #FF1493;">pub</span> <span style="color: #FF8C00;">content</span>: <span style="color: #5FD7FF;">String</span>,
-    <span style="color: #FF1493;">pub</span> <span style="color: #FF8C00;">reply</span>: <span style="color: #5FD7FF;">bool</span>,
-    <span style="color: #FF1493;">pub</span> <span style="color: #FF8C00;">retweet</span>: <span style="color: #5FD7FF;">bool</span>,
-<span style="color: #5FD7FF;">}</span>
+<span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #A52A2A; font-weight: bold;">struct</span> <span style="color: #2F8B58; font-weight: bold;">Tweet</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #0084C8; font-weight: bold;">username</span>: <span style="color: #2F8B58; font-weight: bold;">String</span>,
+    <span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #0084C8; font-weight: bold;">content</span>: <span style="color: #2F8B58; font-weight: bold;">String</span>,
+    <span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #0084C8; font-weight: bold;">reply</span>: <span style="color: #2F8B58; font-weight: bold;">bool</span>,
+    <span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #0084C8; font-weight: bold;">retweet</span>: <span style="color: #2F8B58; font-weight: bold;">bool</span>,
+<span style="color: #7388d6;">}</span>
 
-<span style="color: #FF1493;">impl</span> <span style="color: #5FD7FF;">Summary</span> <span style="color: #FF1493;">for</span> <span style="color: #5FD7FF;">Tweet</span> <span style="color: #5FD7FF;">{</span>
-    <span style="color: #FF1493;">fn</span> <span style="color: #87D700;">summarize</span><span style="color: #87D700;">(</span>&amp;<span style="color: #FF1493;">self</span><span style="color: #87D700;">)</span> -&gt; <span style="color: #5FD7FF;">String</span> <span style="color: #87D700;">{</span>
-        <span style="color: #FF1493;">format!</span><span style="color: #CDC673;">(</span><span style="color: #CDC673;">"</span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">: </span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">"</span>, <span style="color: #FF1493;">self</span>.username, <span style="color: #FF1493;">self</span>.content<span style="color: #CDC673;">)</span>
-    <span style="color: #87D700;">}</span>
-<span style="color: #5FD7FF;">}</span>
-<span style="color: #AF87FF;">}</span>
+<span style="color: #A52A2A; font-weight: bold;">impl</span> <span style="color: #2F8B58; font-weight: bold;">Summary</span> <span style="color: #A52A2A; font-weight: bold;">for</span> <span style="color: #2F8B58; font-weight: bold;">Tweet</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">summarize</span><span style="color: #909183;">(</span><span style="color: #2E3436; background-color: #EDEDED;">&amp;</span><span style="color: #A52A2A; font-weight: bold;">self</span><span style="color: #909183;">)</span> -&gt; <span style="color: #2F8B58; font-weight: bold;">String</span> <span style="color: #909183;">{</span>
+        <span style="color: #A020F0;">format!</span><span style="color: #709870;">(</span><span style="color: #4E9A06;">"</span><span style="color: #4E9A06; font-style: italic;">{}</span><span style="color: #4E9A06;">: </span><span style="color: #4E9A06; font-style: italic;">{}</span><span style="color: #4E9A06;">"</span>, <span style="color: #A52A2A; font-weight: bold;">self</span>.username, <span style="color: #A52A2A; font-weight: bold;">self</span>.content<span style="color: #709870;">)</span>
+    <span style="color: #909183;">}</span>
+<span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
 
 </pre>
 </div>
@@ -257,14 +257,14 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #FF1493;">let</span> <span style="color: #FF8C00;">tweet</span> = <span style="color: #5FD7FF;">Tweet</span> <span style="color: #AF87FF;">{</span>
-    <span style="color: #FF8C00;">username</span>: <span style="color: #5FD7FF;">String</span>::from<span style="color: #5FD7FF;">(</span><span style="color: #CDC673;">"horse_ebooks"</span><span style="color: #5FD7FF;">)</span>,
-    <span style="color: #FF8C00;">content</span>: <span style="color: #5FD7FF;">String</span>::from<span style="color: #5FD7FF;">(</span><span style="color: #CDC673;">"of course, as you probably already know, people"</span><span style="color: #5FD7FF;">)</span>,
-    <span style="color: #FF8C00;">reply</span>: <span style="color: #FF1493;">false</span>,
-    <span style="color: #FF8C00;">retweet</span>: <span style="color: #FF1493;">false</span>,
-<span style="color: #AF87FF;">}</span>;
+<pre class="src src-rust"><span style="color: #A52A2A; font-weight: bold;">let</span> <span style="color: #0084C8; font-weight: bold;">tweet</span> = <span style="color: #2F8B58; font-weight: bold;">Tweet</span> <span style="color: #707183;">{</span>
+    <span style="color: #0084C8; font-weight: bold;">username</span>: <span style="color: #2F8B58; font-weight: bold;">String</span>::from<span style="color: #7388d6;">(</span><span style="color: #4E9A06;">"horse_ebooks"</span><span style="color: #7388d6;">)</span>,
+    <span style="color: #0084C8; font-weight: bold;">content</span>: <span style="color: #2F8B58; font-weight: bold;">String</span>::from<span style="color: #7388d6;">(</span><span style="color: #4E9A06;">"of course, as you probably already know, people"</span><span style="color: #7388d6;">)</span>,
+    <span style="color: #0084C8; font-weight: bold;">reply</span>: <span style="color: #A52A2A; font-weight: bold;">false</span>,
+    <span style="color: #0084C8; font-weight: bold;">retweet</span>: <span style="color: #A52A2A; font-weight: bold;">false</span>,
+<span style="color: #707183;">}</span>;
 
-<span style="color: #FF1493;">println!</span><span style="color: #AF87FF;">(</span><span style="color: #CDC673;">"1 new tweet: </span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">"</span>, tweet.summarize<span style="color: #5FD7FF;">()</span><span style="color: #AF87FF;">)</span>;
+<span style="color: #A020F0;">println!</span><span style="color: #707183;">(</span><span style="color: #4E9A06;">"1 new tweet: </span><span style="color: #4E9A06; font-style: italic;">{}</span><span style="color: #4E9A06;">"</span>, tweet.summarize<span style="color: #7388d6;">()</span><span style="color: #707183;">)</span>;
 </pre>
 </div>
 
@@ -275,26 +275,26 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 
 <div class="org-src-container">
 <pre class="src src-rust">
-<span style="color: #FF1493;">#!</span><span style="color: #AF87FF;">[</span><span style="color: #FF1493;">allow</span><span style="color: #5FD7FF;">(</span><span style="color: #FF1493;">unused</span><span style="color: #5FD7FF;">)</span><span style="color: #AF87FF;">]</span>
-<span style="color: #FF1493;">fn</span> <span style="color: #87D700;">main</span><span style="color: #AF87FF;">()</span> <span style="color: #AF87FF;">{</span>
-<span style="color: #FF1493;">pub</span> <span style="color: #FF1493;">trait</span> <span style="color: #5FD7FF;">Summary</span> <span style="color: #5FD7FF;">{</span>
-    <span style="color: #FF1493;">fn</span> <span style="color: #87D700;">summarize</span><span style="color: #87D700;">(</span>&amp;<span style="color: #FF1493;">self</span><span style="color: #87D700;">)</span> -&gt; <span style="color: #5FD7FF;">String</span> <span style="color: #87D700;">{</span>
-        <span style="color: #5FD7FF;">String</span>::from<span style="color: #CDC673;">(</span><span style="color: #CDC673;">"(Read more...)"</span><span style="color: #CDC673;">)</span>
-    <span style="color: #87D700;">}</span>
-<span style="color: #5FD7FF;">}</span>
-<span style="color: #AF87FF;">}</span>
+<span style="color: #A020F0;">#!</span><span style="color: #707183;">[</span><span style="color: #A020F0;">allow</span><span style="color: #7388d6;">(</span><span style="color: #A020F0;">unused</span><span style="color: #7388d6;">)</span><span style="color: #707183;">]</span>
+<span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+<span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #A52A2A; font-weight: bold;">trait</span> <span style="color: #2F8B58; font-weight: bold;">Summary</span> <span style="color: #7388d6;">{</span>
+    <span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">summarize</span><span style="color: #909183;">(</span><span style="color: #2E3436; background-color: #EDEDED;">&amp;</span><span style="color: #A52A2A; font-weight: bold;">self</span><span style="color: #909183;">)</span> -&gt; <span style="color: #2F8B58; font-weight: bold;">String</span> <span style="color: #909183;">{</span>
+        <span style="color: #2F8B58; font-weight: bold;">String</span>::from<span style="color: #709870;">(</span><span style="color: #4E9A06;">"(Read more...)"</span><span style="color: #709870;">)</span>
+    <span style="color: #909183;">}</span>
+<span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
 
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgc0021dc" class="outline-3">
-<h3 id="orgc0021dc"><span class="section-number-3">2.3</span> 把trait当作一种高级类型，以约束函数和泛型</h3>
+<div id="outline-container-org034c2b6" class="outline-3">
+<h3 id="org034c2b6"><span class="section-number-3">2.3</span> 把trait当作一种高级类型，以约束函数和泛型</h3>
 <div class="outline-text-3" id="text-2-3">
 </div>
-<div id="outline-container-org0d0f2f1" class="outline-4">
-<h4 id="org0d0f2f1"><span class="section-number-4">2.3.1</span> 用trait约束函数</h4>
+<div id="outline-container-org70cd176" class="outline-4">
+<h4 id="org70cd176"><span class="section-number-4">2.3.1</span> 用trait约束函数</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <p>
 我们的函数过去通过数值的类型去判断输入是否合适，这当然是为了编译的检查。
@@ -306,9 +306,9 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #FF1493;">pub</span> <span style="color: #FF1493;">fn</span> <span style="color: #87D700;">notify</span><span style="color: #AF87FF;">(</span><span style="color: #FF8C00;">item</span>: <span style="color: #FF1493;">impl</span> <span style="color: #5FD7FF;">Summary</span><span style="color: #AF87FF;">)</span> <span style="color: #AF87FF;">{</span>
-    <span style="color: #FF1493;">println!</span><span style="color: #5FD7FF;">(</span><span style="color: #CDC673;">"Breaking news! </span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">"</span>, item.summarize<span style="color: #87D700;">()</span><span style="color: #5FD7FF;">)</span>;
-<span style="color: #AF87FF;">}</span>
+<pre class="src src-rust"><span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">notify</span><span style="color: #707183;">(</span><span style="color: #0084C8; font-weight: bold;">item</span>: <span style="color: #A52A2A; font-weight: bold;">impl</span> <span style="color: #2F8B58; font-weight: bold;">Summary</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #A020F0;">println!</span><span style="color: #7388d6;">(</span><span style="color: #4E9A06;">"Breaking news! </span><span style="color: #4E9A06; font-style: italic;">{}</span><span style="color: #4E9A06;">"</span>, item.summarize<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
 
 </pre>
 </div>
@@ -318,9 +318,9 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #FF1493;">pub</span> <span style="color: #FF1493;">fn</span> <span style="color: #87D700;">notify</span><span style="color: #AF87FF;">&lt;</span><span style="color: #FF8C00;">T</span>: <span style="color: #5FD7FF;">Summary</span><span style="color: #AF87FF;">&gt;(</span><span style="color: #FF8C00;">item</span>: <span style="color: #5FD7FF;">T</span><span style="color: #AF87FF;">)</span> <span style="color: #AF87FF;">{</span>
-    <span style="color: #FF1493;">println!</span><span style="color: #5FD7FF;">(</span><span style="color: #CDC673;">"Breaking news! </span><span style="color: #CDC673; font-style: italic;">{}</span><span style="color: #CDC673;">"</span>, item.summarize<span style="color: #87D700;">()</span><span style="color: #5FD7FF;">)</span>;
-<span style="color: #AF87FF;">}</span>
+<pre class="src src-rust"><span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">notify</span><span style="color: #707183;">&lt;</span><span style="color: #0084C8; font-weight: bold;">T</span>: <span style="color: #2F8B58; font-weight: bold;">Summary</span><span style="color: #707183;">&gt;(</span><span style="color: #0084C8; font-weight: bold;">item</span>: <span style="color: #2F8B58; font-weight: bold;">T</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+    <span style="color: #A020F0;">println!</span><span style="color: #7388d6;">(</span><span style="color: #4E9A06;">"Breaking news! </span><span style="color: #4E9A06; font-style: italic;">{}</span><span style="color: #4E9A06;">"</span>, item.summarize<span style="color: #909183;">()</span><span style="color: #7388d6;">)</span>;
+<span style="color: #707183;">}</span>
 </pre>
 </div>
 
@@ -328,16 +328,16 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 但如果较为复杂的泛型就简化不了了，如多个类型：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #FF1493;">pub</span> <span style="color: #FF1493;">fn</span> <span style="color: #87D700;">notify</span><span style="color: #AF87FF;">&lt;</span><span style="color: #FF8C00;">T</span>: <span style="color: #5FD7FF;">Summary</span><span style="color: #AF87FF;">&gt;(</span><span style="color: #FF8C00;">item1</span>: <span style="color: #5FD7FF;">T</span>, <span style="color: #FF8C00;">item2</span>: <span style="color: #5FD7FF;">T</span><span style="color: #AF87FF;">)</span> <span style="color: #AF87FF;">{</span>
-<span style="color: #AF87FF;">}</span>
+<pre class="src src-rust"><span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">notify</span><span style="color: #707183;">&lt;</span><span style="color: #0084C8; font-weight: bold;">T</span>: <span style="color: #2F8B58; font-weight: bold;">Summary</span><span style="color: #707183;">&gt;(</span><span style="color: #0084C8; font-weight: bold;">item1</span>: <span style="color: #2F8B58; font-weight: bold;">T</span>, <span style="color: #0084C8; font-weight: bold;">item2</span>: <span style="color: #2F8B58; font-weight: bold;">T</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
+<span style="color: #707183;">}</span>
 </pre>
 </div>
 <p>
 多个trait的话，同样地，也有两种形式：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #FF1493;">pub</span> <span style="color: #FF1493;">fn</span> <span style="color: #87D700;">notify</span><span style="color: #AF87FF;">(</span><span style="color: #FF8C00;">item</span>: <span style="color: #FF1493;">impl</span> <span style="color: #5FD7FF;">Summary</span> + <span style="color: #5FD7FF;">Display</span><span style="color: #AF87FF;">)</span> <span style="color: #AF87FF;">{}</span>
-<span style="color: #FF1493;">pub</span> <span style="color: #FF1493;">fn</span> <span style="color: #87D700;">notify</span><span style="color: #AF87FF;">&lt;</span><span style="color: #FF8C00;">T</span>: <span style="color: #5FD7FF;">Summary</span> + <span style="color: #5FD7FF;">Display</span><span style="color: #AF87FF;">&gt;(</span><span style="color: #FF8C00;">item</span>: <span style="color: #5FD7FF;">T</span><span style="color: #AF87FF;">)</span> <span style="color: #AF87FF;">{}</span>
+<pre class="src src-rust"><span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">notify</span><span style="color: #707183;">(</span><span style="color: #0084C8; font-weight: bold;">item</span>: <span style="color: #A52A2A; font-weight: bold;">impl</span> <span style="color: #2F8B58; font-weight: bold;">Summary</span> + <span style="color: #2F8B58; font-weight: bold;">Display</span><span style="color: #707183;">)</span> <span style="color: #707183;">{}</span>
+<span style="color: #A52A2A; font-weight: bold;">pub</span> <span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">notify</span><span style="color: #707183;">&lt;</span><span style="color: #0084C8; font-weight: bold;">T</span>: <span style="color: #2F8B58; font-weight: bold;">Summary</span> + <span style="color: #2F8B58; font-weight: bold;">Display</span><span style="color: #707183;">&gt;(</span><span style="color: #0084C8; font-weight: bold;">item</span>: <span style="color: #2F8B58; font-weight: bold;">T</span><span style="color: #707183;">)</span> <span style="color: #707183;">{}</span>
 
 </pre>
 </div>
@@ -346,13 +346,13 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 如果是不同类型的，就不能简化了：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust">      <span style="color: #FF1493;">fn</span> <span style="color: #87D700;">some_function</span><span style="color: #AF87FF;">&lt;</span><span style="color: #FF8C00;">T</span>: <span style="color: #5FD7FF;">Display</span> + <span style="color: #5FD7FF;">Clone</span>, <span style="color: #FF8C00;">U</span>: <span style="color: #5FD7FF;">Clone</span> + <span style="color: #5FD7FF;">Debug</span><span style="color: #AF87FF;">&gt;(</span><span style="color: #FF8C00;">t</span>: <span style="color: #5FD7FF;">T</span>, <span style="color: #FF8C00;">u</span>: <span style="color: #5FD7FF;">U</span><span style="color: #AF87FF;">)</span> -&gt; <span style="color: #5FD7FF;">i32</span> <span style="color: #AF87FF;">{</span>
-<span style="color: #AF87FF;">}</span>
-<span style="color: #8B8878;">//</span><span style="color: #8B8878;">&#31532;&#20108;&#31181;&#20889;&#27861;</span>
-<span style="color: #FF1493;">fn</span> <span style="color: #87D700;">some_function</span><span style="color: #AF87FF;">&lt;</span><span style="color: #5FD7FF;">T</span>, <span style="color: #5FD7FF;">U</span><span style="color: #AF87FF;">&gt;(</span><span style="color: #FF8C00;">t</span>: <span style="color: #5FD7FF;">T</span>, <span style="color: #FF8C00;">u</span>: <span style="color: #5FD7FF;">U</span><span style="color: #AF87FF;">)</span> -&gt; <span style="color: #5FD7FF;">i32</span>
-    <span style="color: #FF1493;">where</span> <span style="color: #FF8C00;">T</span>: <span style="color: #5FD7FF;">Display</span> + <span style="color: #5FD7FF;">Clone</span>,
-          <span style="color: #FF8C00;">U</span>: <span style="color: #5FD7FF;">Clone</span> + <span style="color: #5FD7FF;">Debug</span>
-<span style="color: #AF87FF;">{</span>
+<pre class="src src-rust">      <span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">some_function</span><span style="color: #707183;">&lt;</span><span style="color: #0084C8; font-weight: bold;">T</span>: <span style="color: #2F8B58; font-weight: bold;">Display</span> + <span style="color: #2F8B58; font-weight: bold;">Clone</span>, <span style="color: #0084C8; font-weight: bold;">U</span>: <span style="color: #2F8B58; font-weight: bold;">Clone</span> + <span style="color: #2F8B58; font-weight: bold;">Debug</span><span style="color: #707183;">&gt;(</span><span style="color: #0084C8; font-weight: bold;">t</span>: <span style="color: #2F8B58; font-weight: bold;">T</span>, <span style="color: #0084C8; font-weight: bold;">u</span>: <span style="color: #2F8B58; font-weight: bold;">U</span><span style="color: #707183;">)</span> -&gt; <span style="color: #2F8B58; font-weight: bold;">i32</span> <span style="color: #707183;">{</span>
+<span style="color: #707183;">}</span>
+<span style="color: #204A87;">//</span><span style="color: #204A87;">&#31532;&#20108;&#31181;&#20889;&#27861;</span>
+<span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">some_function</span><span style="color: #707183;">&lt;</span><span style="color: #2F8B58; font-weight: bold;">T</span>, <span style="color: #2F8B58; font-weight: bold;">U</span><span style="color: #707183;">&gt;(</span><span style="color: #0084C8; font-weight: bold;">t</span>: <span style="color: #2F8B58; font-weight: bold;">T</span>, <span style="color: #0084C8; font-weight: bold;">u</span>: <span style="color: #2F8B58; font-weight: bold;">U</span><span style="color: #707183;">)</span> -&gt; <span style="color: #2F8B58; font-weight: bold;">i32</span>
+    <span style="color: #A52A2A; font-weight: bold;">where</span> <span style="color: #0084C8; font-weight: bold;">T</span>: <span style="color: #2F8B58; font-weight: bold;">Display</span> + <span style="color: #2F8B58; font-weight: bold;">Clone</span>,
+          <span style="color: #0084C8; font-weight: bold;">U</span>: <span style="color: #2F8B58; font-weight: bold;">Clone</span> + <span style="color: #2F8B58; font-weight: bold;">Debug</span>
+<span style="color: #707183;">{</span>
 
 </pre>
 </div>
@@ -362,14 +362,14 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #FF1493;">fn</span> <span style="color: #87D700;">returns_summarizable</span><span style="color: #AF87FF;">()</span> -&gt; <span style="color: #FF1493;">impl</span> <span style="color: #5FD7FF;">Summary</span> <span style="color: #AF87FF;">{</span>
-    <span style="color: #5FD7FF;">Tweet</span> <span style="color: #5FD7FF;">{</span>
-        <span style="color: #FF8C00;">username</span>: <span style="color: #5FD7FF;">String</span>::from<span style="color: #87D700;">(</span><span style="color: #CDC673;">"horse_ebooks"</span><span style="color: #87D700;">)</span>,
-        <span style="color: #FF8C00;">content</span>: <span style="color: #5FD7FF;">String</span>::from<span style="color: #87D700;">(</span><span style="color: #CDC673;">"of course, as you probably already know, people"</span><span style="color: #87D700;">)</span>,
-        <span style="color: #FF8C00;">reply</span>: <span style="color: #FF1493;">false</span>,
-        <span style="color: #FF8C00;">retweet</span>: <span style="color: #FF1493;">false</span>,
-    <span style="color: #5FD7FF;">}</span>
-<span style="color: #AF87FF;">}</span>
+<pre class="src src-rust"><span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">returns_summarizable</span><span style="color: #707183;">()</span> -&gt; <span style="color: #A52A2A; font-weight: bold;">impl</span> <span style="color: #2F8B58; font-weight: bold;">Summary</span> <span style="color: #707183;">{</span>
+    <span style="color: #2F8B58; font-weight: bold;">Tweet</span> <span style="color: #7388d6;">{</span>
+        <span style="color: #0084C8; font-weight: bold;">username</span>: <span style="color: #2F8B58; font-weight: bold;">String</span>::from<span style="color: #909183;">(</span><span style="color: #4E9A06;">"horse_ebooks"</span><span style="color: #909183;">)</span>,
+        <span style="color: #0084C8; font-weight: bold;">content</span>: <span style="color: #2F8B58; font-weight: bold;">String</span>::from<span style="color: #909183;">(</span><span style="color: #4E9A06;">"of course, as you probably already know, people"</span><span style="color: #909183;">)</span>,
+        <span style="color: #0084C8; font-weight: bold;">reply</span>: <span style="color: #A52A2A; font-weight: bold;">false</span>,
+        <span style="color: #0084C8; font-weight: bold;">retweet</span>: <span style="color: #A52A2A; font-weight: bold;">false</span>,
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
 
 </pre>
 </div>
@@ -381,7 +381,7 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 <div id="postamble" class="status">
 <p class="date">Date: Thu Nov 18 21:36:05 2021</p>
 <p class="author">Author: Zi Liang</p>
-<p class="date">Created: 2022-01-10 Mon 20:52</p>
+<p class="date">Created: 2022-03-26 周六 21:55</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

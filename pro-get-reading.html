@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-01-10 Mon 20:52 -->
+<!-- 2022-03-26 周六 21:55 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>阅读《Pro Git》有感</title>
@@ -40,26 +40,26 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org04fb8be">1. VCS是什么？——以时间为方向的有向无环图。git是什么？——精妙的VCS</a></li>
-<li><a href="#orgc2293b6">2. 在上述有向无环图基础上添加一个新的维度：空间。——git里面的“储物间”以及储物间之间的“移动”方式</a></li>
-<li><a href="#orge559a2c">3. 形成一张版本控制图</a>
+<li><a href="#org98e41d6">1. VCS是什么？——以时间为方向的有向无环图。git是什么？——精妙的VCS</a></li>
+<li><a href="#org0c544cf">2. 在上述有向无环图基础上添加一个新的维度：空间。——git里面的“储物间”以及储物间之间的“移动”方式</a></li>
+<li><a href="#org7568d8f">3. 形成一张版本控制图</a>
 <ul>
-<li><a href="#org0a2f246">3.1. 通过branch、clone和fetch产生分支</a></li>
-<li><a href="#orgddee413">3.2. 通过merge和rebase合并分支</a></li>
-<li><a href="#org0624c98">3.3. 删除分支</a></li>
-<li><a href="#org4aaac4c">3.4. 通过log访问图中的节点</a></li>
+<li><a href="#org39e2e29">3.1. 通过branch、clone和fetch产生分支</a></li>
+<li><a href="#org9d7aff3">3.2. 通过merge和rebase合并分支</a></li>
+<li><a href="#org3e72da8">3.3. 删除分支</a></li>
+<li><a href="#org73cdbef">3.4. 通过log访问图中的节点</a></li>
 </ul>
 </li>
-<li><a href="#orgb37af4d">4. 工作流</a>
+<li><a href="#orgf71af19">4. 工作流</a>
 <ul>
-<li><a href="#org739adaf">4.1. 单人工作流</a></li>
-<li><a href="#orgfb49c89">4.2. 典型的多人工作流</a></li>
+<li><a href="#org8387f13">4.1. 单人工作流</a></li>
+<li><a href="#orgaeb9a25">4.2. 典型的多人工作流</a></li>
 </ul>
 </li>
-<li><a href="#org180d8f7">5. 我的git个人适配文档</a>
+<li><a href="#orga26a8c3">5. 我的git个人适配文档</a>
 <ul>
-<li><a href="#org3e74f5e">5.1. 我的gitignore</a></li>
-<li><a href="#org7306d0e">5.2. 我的git脚本</a></li>
+<li><a href="#orgc4e50b9">5.1. 我的gitignore</a></li>
+<li><a href="#orgb7093cf">5.2. 我的git脚本</a></li>
 </ul>
 </li>
 </ul>
@@ -69,8 +69,8 @@
 git真是一个非常不错的版本控制工具！我以前只是在用add，commit，push，pull这几个操作，把github之流的网站当作是云备份平台。如今需要使用git中的一些分支、历史信息等功能，所以就自然而然重新找书读起来了。
 这篇笔记是个人对git的一点理解，不无谬误。
 </p>
-<div id="outline-container-org04fb8be" class="outline-2">
-<h2 id="org04fb8be"><span class="section-number-2">1</span> VCS是什么？——以时间为方向的有向无环图。git是什么？——精妙的VCS</h2>
+<div id="outline-container-org98e41d6" class="outline-2">
+<h2 id="org98e41d6"><span class="section-number-2">1</span> VCS是什么？——以时间为方向的有向无环图。git是什么？——精妙的VCS</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 个人理解，git是服务于“文本文件”的，准确地说，是服务于程序代码那种文本文件的。所以git本自然的以 <b>行</b> 作为其最小粒度。所以后面在merge等处理冲突（或者说合并多个流）的时候，git都是以行为单位进行匹配。这样做比目前较为通用的云同步在粒度上稍微细了一点，因为后者主要是面向二进制文件的，而二进制文件，是一变百变的。
@@ -107,8 +107,8 @@ git则有些不同。git不以文件为单位，而以版本为单位，版本�
 </div>
 </div>
 
-<div id="outline-container-orgc2293b6" class="outline-2">
-<h2 id="orgc2293b6"><span class="section-number-2">2</span> 在上述有向无环图基础上添加一个新的维度：空间。——git里面的“储物间”以及储物间之间的“移动”方式</h2>
+<div id="outline-container-org0c544cf" class="outline-2">
+<h2 id="org0c544cf"><span class="section-number-2">2</span> 在上述有向无环图基础上添加一个新的维度：空间。——git里面的“储物间”以及储物间之间的“移动”方式</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 从物理上而言，git一般包含以下两类物理地址：若干个本地终端；若干个云终端。对不对？
@@ -180,8 +180,8 @@ git则有些不同。git不以文件为单位，而以版本为单位，版本�
 </p>
 </div>
 </div>
-<div id="outline-container-orge559a2c" class="outline-2">
-<h2 id="orge559a2c"><span class="section-number-2">3</span> 形成一张版本控制图</h2>
+<div id="outline-container-org7568d8f" class="outline-2">
+<h2 id="org7568d8f"><span class="section-number-2">3</span> 形成一张版本控制图</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 之前提及过，版本控制过程，本质上可以理解为一张有向无环图。那么两个操作是VCS中最重要的：建图，和看图。
@@ -193,8 +193,8 @@ git则有些不同。git不以文件为单位，而以版本为单位，版本�
 更特殊地，版本控制中，大多数节点其实入度出度都是一，就像是一个一字长蛇阵。我们在上一章节已经看到了怎么去用commit形成这样的一个一字长蛇阵，因此此处要玩点花样，看看同样频繁使用的分支等功能的实现。
 </p>
 </div>
-<div id="outline-container-org0a2f246" class="outline-3">
-<h3 id="org0a2f246"><span class="section-number-3">3.1</span> 通过branch、clone和fetch产生分支</h3>
+<div id="outline-container-org39e2e29" class="outline-3">
+<h3 id="org39e2e29"><span class="section-number-3">3.1</span> 通过branch、clone和fetch产生分支</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 分支（branch）很简单，就是为了验证一个新的功能，或者“开辟一个新的试验田”去干别的事情。所以产生分支的方式主要有两种：
@@ -216,8 +216,8 @@ git则有些不同。git不以文件为单位，而以版本为单位，版本�
 </p>
 </div>
 </div>
-<div id="outline-container-orgddee413" class="outline-3">
-<h3 id="orgddee413"><span class="section-number-3">3.2</span> 通过merge和rebase合并分支</h3>
+<div id="outline-container-org9d7aff3" class="outline-3">
+<h3 id="org9d7aff3"><span class="section-number-3">3.2</span> 通过merge和rebase合并分支</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 当分支上的功能完成了验证之后，后面就需要将其与主分支合并。一般而言，合并的方式有两种，merge形式，和rebase形式。二者的内核是一致的。
@@ -244,8 +244,8 @@ merge的过程是这样的：当前仓库处于分支A下，然后需要merge掉
 </div>
 </div>
 
-<div id="outline-container-org0624c98" class="outline-3">
-<h3 id="org0624c98"><span class="section-number-3">3.3</span> 删除分支</h3>
+<div id="outline-container-org3e72da8" class="outline-3">
+<h3 id="org3e72da8"><span class="section-number-3">3.3</span> 删除分支</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 git branch -d branchname
@@ -253,8 +253,8 @@ git branch -d branchname
 </div>
 </div>
 
-<div id="outline-container-org4aaac4c" class="outline-3">
-<h3 id="org4aaac4c"><span class="section-number-3">3.4</span> 通过log访问图中的节点</h3>
+<div id="outline-container-org73cdbef" class="outline-3">
+<h3 id="org73cdbef"><span class="section-number-3">3.4</span> 通过log访问图中的节点</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 前面已经对如何建立版本控制图进行了全方位的讨论，现在可以看看如何遍历地访问这张图中的一些节点了。
@@ -267,20 +267,20 @@ git branch -d branchname
 </div>
 </div>
 
-<div id="outline-container-orgb37af4d" class="outline-2">
-<h2 id="orgb37af4d"><span class="section-number-2">4</span> 工作流</h2>
+<div id="outline-container-orgf71af19" class="outline-2">
+<h2 id="orgf71af19"><span class="section-number-2">4</span> 工作流</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org739adaf" class="outline-3">
-<h3 id="org739adaf"><span class="section-number-3">4.1</span> 单人工作流</h3>
+<div id="outline-container-org8387f13" class="outline-3">
+<h3 id="org8387f13"><span class="section-number-3">4.1</span> 单人工作流</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 略。
 </p>
 </div>
 </div>
-<div id="outline-container-orgfb49c89" class="outline-3">
-<h3 id="orgfb49c89"><span class="section-number-3">4.2</span> 典型的多人工作流</h3>
+<div id="outline-container-orgaeb9a25" class="outline-3">
+<h3 id="orgaeb9a25"><span class="section-number-3">4.2</span> 典型的多人工作流</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 累了不想写了。。。。
@@ -303,18 +303,18 @@ git branch -d branchname
 </div>
 </div>
 
-<div id="outline-container-org180d8f7" class="outline-2">
-<h2 id="org180d8f7"><span class="section-number-2">5</span> 我的git个人适配文档</h2>
+<div id="outline-container-orga26a8c3" class="outline-2">
+<h2 id="orga26a8c3"><span class="section-number-2">5</span> 我的git个人适配文档</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 有时间补充
 </p>
 </div>
-<div id="outline-container-org3e74f5e" class="outline-3">
-<h3 id="org3e74f5e"><span class="section-number-3">5.1</span> 我的gitignore</h3>
+<div id="outline-container-orgc4e50b9" class="outline-3">
+<h3 id="orgc4e50b9"><span class="section-number-3">5.1</span> 我的gitignore</h3>
 </div>
-<div id="outline-container-org7306d0e" class="outline-3">
-<h3 id="org7306d0e"><span class="section-number-3">5.2</span> 我的git脚本</h3>
+<div id="outline-container-orgb7093cf" class="outline-3">
+<h3 id="orgb7093cf"><span class="section-number-3">5.2</span> 我的git脚本</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 没想到写一篇笔记的时间比看这本书的时间还长。。。
@@ -326,7 +326,7 @@ git branch -d branchname
 <div id="postamble" class="status">
 <p class="date">Date: Tue Sep 21 21:08:07 2021</p>
 <p class="author">Author: liangzid</p>
-<p class="date">Created: 2022-01-10 Mon 20:52</p>
+<p class="date">Created: 2022-03-26 周六 21:55</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
