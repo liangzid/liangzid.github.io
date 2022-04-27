@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-03-26 周六 21:54 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>rust是如何适配并发的？</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Zi Liang" />
+<link rel="stylesheet" type="text/css" href="./css/worg.css" />
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">rust是如何适配并发的？</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org91f2169">1. 什么是并发？</a></li>
+<li><a href="#orgdac9ebe">2. 处理并行、并发问题的计算机知识</a>
+<ul>
+<li><a href="#orgee806ae">2.1. 使用rust创建多线程</a></li>
+</ul>
+</li>
+<li><a href="#orgf07627e">3. 安全并发的若干解决方案</a>
+<ul>
+<li><a href="#org610d244">3.1. 消息传递：不要通过共享内存来通讯，而是通过通讯来共享内存</a></li>
+<li><a href="#orgaf750ba">3.2. 共享状态：</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org91f2169" class="outline-2">
+<h2 id="org91f2169"><span class="section-number-2">1</span> 什么是并发？</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+并发包括两个概念：并发（concurrent）和并行（parallel）。前者主要是指如何让程序的各个模块彼此独立的执行；而后者，主要指如何将多个程序同时执行。在rust中并不会对并发和并行进行特别清楚地区分。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgdac9ebe" class="outline-2">
+<h2 id="orgdac9ebe"><span class="section-number-2">2</span> 处理并行、并发问题的计算机知识</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgee806ae" class="outline-3">
+<h3 id="orgee806ae"><span class="section-number-3">2.1</span> 使用rust创建多线程</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+我们知道，一个正在执行的计算机程序一般就是一个进程，这个进程里可以包括很多个线程。
+所以，我们可以在主线程里创建别的线程，也就是下面所示：
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #A52A2A; font-weight: bold;">use</span> <span style="color: #F5666D;">std</span>::thread;
+<span style="color: #A52A2A; font-weight: bold;">use</span> <span style="color: #F5666D;">std</span>::<span style="color: #F5666D;">time</span>::<span style="color: #2F8B58; font-weight: bold;">Duration</span>;
+
+<span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    <span style="color: #A52A2A; font-weight: bold;">let</span> <span style="color: #0084C8; font-weight: bold;">handle</span> = <span style="color: #F5666D;">thread</span>::spawn<span style="color: #7388d6;">(</span>|| <span style="color: #909183;">{</span>
+        <span style="color: #A52A2A; font-weight: bold;">for</span> <span style="color: #0084C8; font-weight: bold;">i</span> <span style="color: #A52A2A; font-weight: bold;">in</span> 1..10 <span style="color: #709870;">{</span>
+            <span style="color: #A020F0;">println!</span><span style="color: #907373;">(</span><span style="color: #4E9A06;">"hi number </span><span style="color: #4E9A06; font-style: italic;">{}</span><span style="color: #4E9A06;"> from the spawned thread!"</span>, i<span style="color: #907373;">)</span>;
+            <span style="color: #F5666D;">thread</span>::sleep<span style="color: #907373;">(</span><span style="color: #2F8B58; font-weight: bold;">Duration</span>::from_millis<span style="color: #6276ba;">(</span>1<span style="color: #6276ba;">)</span><span style="color: #907373;">)</span>;
+        <span style="color: #709870;">}</span>
+    <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+
+    handle.join<span style="color: #7388d6;">()</span>.unwrap<span style="color: #7388d6;">()</span>;
+
+    <span style="color: #A52A2A; font-weight: bold;">for</span> <span style="color: #0084C8; font-weight: bold;">i</span> <span style="color: #A52A2A; font-weight: bold;">in</span> 1..5 <span style="color: #7388d6;">{</span>
+        <span style="color: #A020F0;">println!</span><span style="color: #909183;">(</span><span style="color: #4E9A06;">"hi number </span><span style="color: #4E9A06; font-style: italic;">{}</span><span style="color: #4E9A06;"> from the main thread!"</span>, i<span style="color: #909183;">)</span>;
+        <span style="color: #F5666D;">thread</span>::sleep<span style="color: #909183;">(</span><span style="color: #2F8B58; font-weight: bold;">Duration</span>::from_millis<span style="color: #709870;">(</span>1<span style="color: #709870;">)</span><span style="color: #909183;">)</span>;
+    <span style="color: #7388d6;">}</span>
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+<p>
+可以看出，thread::spawn就是用来创建新的线程的，而thead::sleep用来对这个定期做一个暂停，
+而除此之外还有一行，handle.join(),这一行用来做线程阻断（blocking），也就是要求handle所对应的线程，
+在这一行必须运行完成，如果不运行完成，程序就会在这里等待。
+</p>
+
+<p>
+以上示例主要适用于新线程不需要和主线程做数据交换的情况。下面我们先来看一个最简单的例子，
+用以介绍新线程如何借用主线程的数据：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust">   <span style="color: #A52A2A; font-weight: bold;">use</span> <span style="color: #F5666D;">std</span>::thread;
+<span style="color: #A52A2A; font-weight: bold;">fn</span> <span style="color: #00578E; font-weight: bold;">main</span><span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
+    <span style="color: #A52A2A; font-weight: bold;">let</span> <span style="color: #0084C8; font-weight: bold;">v</span> = <span style="color: #A020F0;">vec!</span><span style="color: #7388d6;">[</span>1, 2, 3<span style="color: #7388d6;">]</span>;
+
+    <span style="color: #A52A2A; font-weight: bold;">let</span> <span style="color: #0084C8; font-weight: bold;">handle</span> = <span style="color: #F5666D;">thread</span>::spawn<span style="color: #7388d6;">(</span><span style="color: #A52A2A; font-weight: bold;">move</span> || <span style="color: #909183;">{</span>
+        <span style="color: #A020F0;">println!</span><span style="color: #709870;">(</span><span style="color: #4E9A06;">"Here's a vector: </span><span style="color: #4E9A06; font-style: italic;">{:?}</span><span style="color: #4E9A06;">"</span>, v<span style="color: #709870;">)</span>;
+    <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
+
+    handle.join<span style="color: #7388d6;">()</span>.unwrap<span style="color: #7388d6;">()</span>;
+<span style="color: #707183;">}</span>
+</pre>
+</div>
+<p>
+从这个示例中可以看出，我们可以通过move来获取v的ownership，而非通过引用。因为我们将v的所有权移到了新线程里，原始的main函数将不再拥有处理新线程的作用。这样可以规避什么风险呢？很简单：如果我们在新线程里删掉了v，那么主线程里使用v就会访问一片不存在的内存区域，从而可能引发问题。那我们再来看一看为什么我们不能把v的引用传入到新线程里。这其实涉及到悬垂引用的问题。如果我们把v的引用传入到新线程里，当我们的v在老线程里被处理掉了，新线程必然会出现通过引用访问一片不存在的内存区域的情况。
+</p>
+
+<p>
+以上两种情况，总结一下就是： <b>由于线程之间执行时间上的弱相关性，如果没有ownership或者强限制的引用，
+程序很容易会出现错误。rust尝试在编译时解决以上问题，因此会进行非常严格的检查</b> 。
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgf07627e" class="outline-2">
+<h2 id="orgf07627e"><span class="section-number-2">3</span> 安全并发的若干解决方案</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org610d244" class="outline-3">
+<h3 id="org610d244"><span class="section-number-3">3.1</span> 消息传递：不要通过共享内存来通讯，而是通过通讯来共享内存</h3>
+</div>
+
+
+
+<div id="outline-container-orgaf750ba" class="outline-3">
+<h3 id="orgaf750ba"><span class="section-number-3">3.2</span> 共享状态：</h3>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: Sat Nov 20 09:19:26 2021</p>
+<p class="author">Author: Zi Liang</p>
+<p class="date">Created: 2022-03-26 周六 21:54</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
