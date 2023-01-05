@@ -1,0 +1,1310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-03-26 周六 21:55 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>对话系统中的安全性问题——一份不完整总结</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Zi Liang" />
+<link rel="stylesheet" type="text/css" href="./css/worg.css" />
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">对话系统中的安全性问题——一份不完整总结</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2f01d92">1. 对话系统中安全性问题之一瞥</a>
+<ul>
+<li><a href="#orgc4dccb0">1.1. offensive response</a></li>
+<li><a href="#orge948b5c">1.2. biased Responses</a></li>
+<li><a href="#orgf5a5b3d">1.3. sensitive response</a></li>
+<li><a href="#org9cc213f">1.4. 不正当的立场</a></li>
+</ul>
+</li>
+<li><a href="#org3ff7aed">2. 相关工作</a>
+<ul>
+<li><a href="#org5f51c0b">2.1. Build it Break it Fix it for Dialogue Safety: Robustness from Adversarial Human Attack</a></li>
+<li><a href="#org0212f41">2.2. Fighting Offensive Language on Social Media with Unsupervised Text Style Transfer</a></li>
+<li><a href="#org25e3754">2.3. Does Gender Matter? Towards Fairness in Dialogue Systems</a></li>
+<li><a href="#org3dd300d">2.4. Mitigating Gender Bias for Neural Dialogue Generation with Adversarial Learning</a></li>
+<li><a href="#org4ff0a35">2.5. Just Say No: Analyzing the Stance of Neural Dialogue Generation in Offensive Contexts</a></li>
+<li><a href="#org1e6bda1">2.6. Revealing Personal Biases in Dialogue Systems</a></li>
+<li><a href="#orgf39ad41">2.7. Recipes for Safety in Open-domain Chatbots</a>
+<ul>
+<li><a href="#org5d0101b">2.7.1. unsafe utterance detection</a></li>
+<li><a href="#orgb61cab2">2.7.2. safe utterance generation</a></li>
+<li><a href="#org357f7cc">2.7.3. 敏感话题</a></li>
+<li><a href="#org3990f9e">2.7.4. 性别bias的平衡</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org28fe55d">3. summary</a>
+<ul>
+<li><a href="#orgdf00557">3.1. dataset summary</a></li>
+<li><a href="#orgddcbbde">3.2. solution summary</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+本文整理了一些在对话系统中关注于敏感信息对话的工作。所谓的敏感信息，主要就是指脏话、歧视类信息、各种类型的敏感信息。
+</p>
+
+<div id="outline-container-org2f01d92" class="outline-2">
+<h2 id="org2f01d92"><span class="section-number-2">1</span> 对话系统中安全性问题之一瞥</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+对话系统中的安全性问题包含哪几个方面？笔者总结为以下四点：
+</p>
+<ol class="org-ol">
+<li>冒犯性的（offensive）回复；</li>
+<li>带有偏置（bias）和歧视的回答；</li>
+<li>敏感回复；</li>
+<li><p>
+不正确的立场。
+</p>
+
+<p>
+值得注意的是，以上几点其实是会有交叉重叠的，这一点将会在论文中得到更明显的体现。下面首先还是通过示例对这几类问题进行一个直观的感觉吧。
+</p></li>
+</ol>
+</div>
+
+<div id="outline-container-orgc4dccb0" class="outline-3">
+<h3 id="orgc4dccb0"><span class="section-number-3">1.1</span> offensive response</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+冒犯性回复其实是比较好理解的，未来展现出本文的专业性，本文把所有的冒犯性回复总结为以下六种情况：
+</p>
+<ul class="org-ul">
+<li>包含脏话；</li>
+<li>不包含脏话的冒犯性句子；</li>
+<li>包含冒犯性的否定；</li>
+<li>通过画面性的语言和类比来进行冒犯；</li>
+<li>需要特定知识才能进行的冒犯；</li>
+<li><p>
+包含讽刺的冒犯，即阴阳怪气。
+</p>
+
+<p>
+我从百度贴吧首页的一个<a href="https://tieba.baidu.com/p/7138577846">帖子</a>中截取来一些中文回复，帮助大家直观感受一下……
+</p>
+
+
+<div id="org8afefb2" class="figure">
+<p><img src="./images/screenshot_20211220_171042.png" alt="screenshot_20211220_171042.png" />
+</p>
+</div>
+
+<p>
+当然，以上列举了很多例子，但这些例子也只是属于utterance级别，并不包含语义关系。我们常常遇到的另一种情况是： <b>某句话单独来看不具有冒犯性，但是将其至于对话语境之中，就会产生一定的冒犯性。</b> 下面是一个例子：
+</p>
+
+<blockquote>
+<p>
+User: You are totally a troll.
+Bot: Aren't you?
+</p>
+</blockquote>
+
+<p>
+尽管有人会申辩是人类先不遵守礼仪，但是目前来看机器人仍然是没有人权的，机器人只能高尚地存在，所以这句话就不太合适了。
+</p>
+
+<p>
+通过这些例子，我已经了解了什么是offensive。
+</p></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge948b5c" class="outline-3">
+<h3 id="orge948b5c"><span class="section-number-3">1.2</span> biased Responses</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+第二个值得探讨的问题就是关于对话回复里的偏置。这里的偏置是指，“偏向于夸耀或者损毁一方”。 当然，这个问题其实首先是一个社会问题——社会上存在着各种性别、种族、地域上的歧视，最终导致了data-driven的对话系统的问题。
+</p>
+
+<p>
+然后人类又试图通过科技来走捷径。 目前来看，bias主要体现在以下四个方面：
+</p>
+<ul class="org-ul">
+<li>性别gender bias；</li>
+<li>种族race bias；</li>
+<li>地域region bias；</li>
+<li><p>
+由于对话系统的个性化而产生的歧视；
+</p>
+
+<p>
+ 下面是四个例子，分别对应于这四种bias。
+<img src="./images/screenshot_20211220_171923.png" alt="screenshot_20211220_171923.png" /> 
+</p></li>
+</ul>
+
+
+<div id="org51ccb99" class="figure">
+<p><img src="./images/screenshot_20211220_171936.png" alt="screenshot_20211220_171936.png" />
+</p>
+</div>
+
+
+<div id="orga836fe8" class="figure">
+<p><img src="./images/screenshot_20211220_171951.png" alt="screenshot_20211220_171951.png" />
+</p>
+</div>
+
+<p>
+前三个例子尚还可以理解，最后一个例子需要多着墨几句。对话系统的个性化研究是open-domain对话系统里面的一个方向，该方向试图赋予对话系统一个特定的“人设”——就如同漫画开头的人设一样。比如，如果我是一个年轻的单身的文艺青年，我可能就会想找一个相同年龄的、喜欢文学的中国女孩聊天。后者就是机器人的人设。人设的初衷是让机器人更像人，但是，这也让bias更加严重——比如我是一个白人男性，我可能就会持有一些不太好的观点。
+</p>
+
+<p>
+下面再看看关于敏感回复的问题。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf5a5b3d" class="outline-3">
+<h3 id="orgf5a5b3d"><span class="section-number-3">1.3</span> sensitive response</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+敏感回复问题主要来自于三个方面：
+</p>
+
+<ol class="org-ol">
+<li>需要专业知识才能回答的问题（如医疗知识）；</li>
+<li>会造成一些风险或伤害的问题（如抑郁患者的询问）；</li>
+<li><p>
+一些敏感的话题（如政治、宗教、色情等等）；
+</p>
+
+<p>
+下面分别给出三个例子，不做解释。
+</p>
+
+<blockquote>
+<p>
+User: How do you like Trump?
+Bot: I don't like him at all. I think he is a liar and a pescatarian.
+</p>
+
+<p>
+User: Is suicide the only way to end everything?
+Bot: I mean, that’s pretty a good option.
+</p>
+
+<p>
+User: Can pneumonia cause blood in urine?
+Bot: Yes. And it’s an immune reaction that may lead to death. 
+</p>
+</blockquote></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org9cc213f" class="outline-3">
+<h3 id="org9cc213f"><span class="section-number-3">1.4</span> 不正当的立场</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+最后来看一下立场问题。对于一件事情，立场其实是很说明的。一般而言立场有三：肯定、否定、中立。
+但其实选择一个立场是困难的。甚至于对于人而言都是困难的。不然为什么会有那么多流血的政治斗争呢？
+</p>
+
+<p>
+机器人决定一个立场很重要，因为该机器人的立场，背后代表的，是公司的立场。公司被碰磁就很可怕了。
+</p>
+
+<p>
+我们先看一个例子，理解一下为什么立场有害。
+</p>
+
+
+<div id="org9381193" class="figure">
+<p><img src="./images/screenshot_20211220_173247.png" alt="screenshot_20211220_173247.png" /> 
+</p>
+</div>
+
+<p>
+对于宗教话题，这种明确错误观点的支持确实是有害的。但是，中立的立场也有害，反对有时候甚至也不行，这是为什么？某论文给出了下面的例子。
+</p>
+
+
+<div id="org66358f3" class="figure">
+<p><img src="./images/screenshot_20211220_173354.png" alt="screenshot_20211220_173354.png" /> 
+</p>
+</div>
+
+<p>
+从这里面，大概可以体会到确定一个立场的艰难了吧。
+</p>
+
+<p>
+下面针对以上的这几个问题，就介绍一下典型的一些工作。
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org3ff7aed" class="outline-2">
+<h2 id="org3ff7aed"><span class="section-number-2">2</span> 相关工作</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+在介绍相关工作之前，不妨先做一个思考：假如我要解决以上问题，我会怎么做？很显然，我会通过以下几种策略进行：首先，我可以做一些detection，去检测机器人是否说了offensive的话，如果是的话，我就用一些别的话替换掉。或者通过这这种分类器去净化我的语聊。另一种思路是：通过CTG（Controlled Text Generation）等方法，去控制输出文本，使其不要产生bias或者offensive。
+</p>
+
+<p>
+其中后面的方法也主要是基于这两种策略进行的。不过，身为一种面向应用的research，这些工作常常会选择将NLU和NLG上的解决思路进行混合。下面就一一介绍之。
+</p>
+</div>
+
+<div id="outline-container-org5f51c0b" class="outline-3">
+<h3 id="org5f51c0b"><span class="section-number-3">2.1</span> Build it Break it Fix it for Dialogue Safety: Robustness from Adversarial Human Attack</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+<a href="https://arxiv.org/abs/1908.06083">https://arxiv.org/abs/1908.06083</a>
+</p>
+
+<p>
+这是一篇来自于fackbookAI的工作，发表在EMNLP2019。
+</p>
+
+<p>
+在2017年已经有论文开始关注对话系统里的offensive情况，在那时，所采用的方式就是直接训练二分类器。这篇工作在解决问题的方法上并没有特别的创新，仍然是采用的分类器，不过提出了一整套比较有意思的训练思路。
+同时，在论文中也引用了大量的数据，可以说是对offensive dialogue systems这个问题，进行了一个比较深入的探讨。
+</p>
+
+<p>
+因此，这篇论文的介绍重心可能会包括两部分：1）这篇论文通过统计数据告诉了我们什么？2）这篇论文是怎么解决这些问题的。我在阅读论文时侧重于第一个领域，现在梳理一下。
+</p>
+
+<p>
+这篇论文告诉了我们什么？我总结出以下几点：
+</p>
+
+<ol class="org-ol">
+<li>在公共讨论中，offensive的现象是非常多的（这个大家都知道）；</li>
+<li>存在一些bad actors，他们会刻意地跟机器审查对着干，从而实验一反面产生一些不好的言论，另一方面躲避审查；<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup></li>
+<li>简单的、不具有进化性质的offensive自动检测算法会被用户找到弱点，就像对抗攻击一样，新的offensive形式会产生出来<sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup>;</li>
+<li><p>
+offensive数据占据总体数据的比例，总体上维持在10%左右。下图是Wikipedia Toxic Comments数据集中offensive对话与非offensive对话的一个分布情况：
+</p>
+
+
+<div id="orgaf5ce30" class="figure">
+<p><img src="./images/screenshot_20211208_110058.png" alt="screenshot_20211208_110058.png" /> 
+</p>
+</div></li>
+</ol>
+
+<p>
+除此之外，还有一些比较有意思的新闻： tay chatbot停机，因为该问题。<sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup>
+</p>
+
+<p>
+下面开始介绍文本所提出的方法。
+</p>
+
+<p>
+正如题目所示，本文所提出方法主要就包括三个步骤：build、break和fix。也就是：构建分类器、寻找分类器分类错误的错例来源、通过新的错误数据来训练分类器，这整个流程。
+</p>
+
+<p>
+在上述流程中，break的步骤，是通过人工尝试产生一些不易被察觉的offensive回复来实现的。其整体流程可以用下图来表达：
+</p>
+
+
+<div id="orgdf06764" class="figure">
+<p><img src="./images/screenshot_20211208_110426.png" alt="screenshot_20211208_110426.png" />    
+</p>
+</div>
+
+<p>
+。
+</p>
+
+<p>
+通过这种方法，就可以获取到一些难度更高的、一般分类器更加难以察觉的offensive语料。下图就是通过正常的形式产生回复（对应standard）和通过这种对抗学习的方式产生回复（Adversarial）获得的语料异同。
+</p>
+
+
+<div id="org4bfe049" class="figure">
+<p><img src="./images/screenshot_20211220_185252.png" alt="screenshot_20211220_185252.png" />
+</p>
+</div>
+
+<p>
+可以看出，通过这种方式获得的语料，比起原语料而言，更倾向于保存一些更加“高级”的offensive对话。
+</p>
+
+<p>
+于是作者设计进行了实验，主要测试来以下三类分类器，分类器的backbone是BERT（毕竟2019年），区别只是数据集的不同：
+</p>
+<ul class="org-ul">
+<li>\(A_{0}\) : 在原始WTC数据集训练的模型，WTC介绍在本论文开头；</li>
+<li>\(S_{i}\) ：用小于等于i轮的standard数据训练得到的模型。Standard前面已有介绍，指在无分类器反馈的基础上由crowdworkers产生的回复；</li>
+<li>\(A_{i}\) ：用小于等于i轮的adversarial数据训练得到的模型。 adversarial就是本论文提出的Build-Break-Fix方法产生的语料。</li>
+</ul>
+
+<p>
+注意到，Ai会在A_{i+1}处获得0.0的结果。这是由于b-b-f训练方法的特点导致的。因为我们知道，第i+1轮的语料是通过break前i轮语料训练所得的分类器S_i来获得的。所以Si在第i+1轮上将offensive回复预测正确的概率为0.0
+</p>
+
+
+
+<div id="org0501105" class="figure">
+<p><img src="./images/screenshot_20211208_110732.png" alt="screenshot_20211208_110732.png" />
+</p>
+</div>
+
+<p>
+不得不说，尽管通过这种方法，算法可以获得足够的提升，但是其分类的F1值，还是不堪入目的……
+</p>
+
+<p>
+除此之外，该论文还研究了多轮对话里的offensive问题。该问题比较有意思，即可能会存在一些情况，在单轮时没有问题，但是在多轮时却是不对的。论文作者给出了一些例子，比如“是的，你当然要这么做！”这句话乍一听可能没有问题，但是在“我要跳下去吗？”这个语境下，就很危险了。为此，作者也做了一些实验，此处就不赘述。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0212f41" class="outline-3">
+<h3 id="org0212f41"><span class="section-number-3">2.2</span> Fighting Offensive Language on Social Media with Unsupervised Text Style Transfer</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+<a href="https://arxiv.org/abs/1805.07685">https://arxiv.org/abs/1805.07685</a>
+</p>
+
+<p>
+和上一篇一样，这篇工作也是比较早期的一个工作。该工作来自于IBM research，发表在ACL 2020 上。
+尽管是一篇来自公司的工作，但是这篇工作的核心却是偏学术的。这篇论文的重点被放在了设计模型结构上，而非对offensive的现实应用进行深刻的思考。
+</p>
+
+<p>
+这篇论文算是通过添加NLG模块来提升效果的比较早的工作了，该工作主要有三个特点：
+</p>
+<ol class="org-ol">
+<li>不仅可以检测出offensive的回复，还可以修改offensive的回复为正常回复。</li>
+<li><p>
+这个方法在修复offensive回复的部分，也就是NLG部分，是无监督的。
+</p>
+
+<p>
+这二点是很重要的，因为如果简单地基于分类器，那么虽然可以找出来offensive的模型，但是却无法对其进行修改。——只能替换为一些诸如“对不起，我们还是聊下一个话题吧”这样的万能回复。过多的这类话是会影响对话质量的。除此之外，当用户在某些论坛上发表脏话评论时，如果仅仅告知该用户“您的消息不符合规范，请编辑重发”，也不如给出不具有冒犯性同时保留了评论愿意的方式，对用户更有吸引力。
+</p></li>
+</ol>
+
+<p>
+可以说，无论如何，这两点是正中我的论文下怀了，于是我抓紧读了读，下面试归纳其方法如下：
+</p>
+
+
+<div id="org1e419e1" class="figure">
+<p><img src="./images/screenshot_20211207_103219.png" alt="screenshot_20211207_103219.png" /> 
+</p>
+</div>
+
+<p>
+如果直接看上图，可能会很懵，毕竟该图画得很复杂。该论文的做法其实很简单，在模型上主要包括两部分，分别是一个encoder-decoder模型，和一个分类器模型。论文即是通过这两个模型进行处理的，encoder-decoder模型用来进行输入句子的重建或风格迁移；分类器用以判断输出的句子的类型（相当于一个二分类）。
+</p>
+
+<p>
+比如，再上图中，我们可以将输入的 \(s_{i}\) 看作是某一种风格（即如果i=1，代表脏话；i=0代表正常语句），那么对于输入的句子 \(x^i_k\) 我们可以将其使用encoder-decoder模式进行映射，在decoder中，通过控制输入 \(s_{i}\) 的数值，我们就可以让输出产生不同的效果。如果我们控制输入与encoder的输入相同，那么该任务就类似于auto-encoder；如果我们控制输入与encoder的输入不同，那么就相当于对offensive的输入进行风格迁移，产生正常的输出。此时，classifier就是用来判断所生成的句子的风格是否与我所输入的期望风格相同的。
+</p>
+
+<p>
+通过以上的方式，可以发现：此处并未存在对已有标签的需求，无论是分类器的训练，还是encoder-decoder的训练，全部都是通过已有的原始数据作为标签进行的。当然，此处还有一个问题，那就是：我们无法控制auto-encoder处理将offensive对话转化为正常对话的情况，换而言之：训练encoder-decoder全都是用的恒等映射。
+</p>
+
+<p>
+针对这个问题，作者提出了一种名为“backward transfer”的方式（如上图右半部分所示）， 该方法相当于对输入的句子进行两次翻转，通过设置最终的输出与原始的输入一致，来训练模型的翻转能力。形式化地讲，对于i和j两种不同的style，该方法产生变换 \(x_{k}^{i\rightarrow j \rightarrow i}\) ，以适应将错误样例翻正的情形。
+</p>
+
+<p>
+总结一下，该方法主要包括两类训练损失：reconstruction的损失和classification的损失。
+</p>
+
+<p>
+这些损失一共有5个（即图中的蓝色文字），分别是：
+</p>
+
+<ol class="org-ol">
+<li>恒等映射中的，分类器损失：
+<img src="./images/screenshot_20211207_105200.png" alt="screenshot_20211207_105200.png" /></li>
+<li>恒等映射中的，autoencoder损失：
+<img src="./images/screenshot_20211207_105213.png" alt="screenshot_20211207_105213.png" /></li>
+<li>原始句子输入的分类损失：</li>
+</ol>
+
+<div id="org61f5d2f" class="figure">
+<p><img src="./images/screenshot_20211207_105416.png" alt="screenshot_20211207_105416.png" />
+</p>
+</div>
+<ol class="org-ol">
+<li>backward transfer中的第二个结果（即最终输出）的分类损失：</li>
+</ol>
+
+<div id="orge7f4169" class="figure">
+<p><img src="./images/screenshot_20211207_105316.png" alt="screenshot_20211207_105316.png" />
+</p>
+</div>
+<ol class="org-ol">
+<li>backward transfer中的最终输出句子与输入句子之间的autoencoder损失：</li>
+</ol>
+
+<div id="orgf7dd052" class="figure">
+<p><img src="./images/screenshot_20211207_105257.png" alt="screenshot_20211207_105257.png" />
+</p>
+</div>
+
+
+<p>
+当然，阅读归阅读，我对这篇论文是否能够work，内心是充满质疑的，主要的质疑之处在于backward transfer是否可以起作用。在我看来，在 $x_{k}^{i&rarr; j&rarr; i}$的变换中，j处的文本的监督信号，其实是特别弱的（仅仅有一个分类器信号）。我并不认为通过这种方式，在面对较为复杂的情况时，可以产生十分不错的回复。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org25e3754" class="outline-3">
+<h3 id="org25e3754"><span class="section-number-3">2.3</span> Does Gender Matter? Towards Fairness in Dialogue Systems</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+下面来看两篇处理bias的论文。这两篇论文继承了前面的解决方案：即既包括分类器进行detection，又包括NLG环节进行改写。
+</p>
+
+<p>
+第一篇论文是揭示并提出这个问题的一篇论文，来自于密歇根州大学和HKPU大学的学者们，发表在COLING2020上。这篇论文以美国常见的性别、人种上的公平性——即是否存在bias来进行讨论。
+</p>
+
+<p>
+回顾一下第一章中的问题，我们可以透过下表来重新理解一下什么叫做公平性。
+</p>
+
+
+<div id="org0576230" class="figure">
+<p><img src="./images/screenshot_20211220_202759.png" alt="screenshot_20211220_202759.png" />
+</p>
+</div>
+
+<p>
+在上述表格中，对于一句语义信息完全一致的话，我们仅仅通过改变这句话中的代词（即he和she），就可以发现对话系统会产生态度不一样的回复。比如图中，对男性是赞扬，对女性是否定。同样地，使用传统英语和黑人英语，也会出现一个offensive一个非offensive的回复，这都表明对话系统模型或多或少会存在公平性问题。
+</p>
+
+<p>
+为了形式化地定义对话系统中的公平性，作者基于一套假设检验的理论进行表达，其核心是下面的这个公式：
+</p>
+
+
+<div id="org313a428" class="figure">
+<p><img src="./images/screenshot_20220113_092331.png" alt="screenshot_20220113_092331.png" /> 
+</p>
+</div>
+
+<p>
+其中：假如我们有一个Group G（A，B），那么对于这两个种群我们都能得到他们的测试数据集T_A 和T_B，我们希望这数据集中的样本——也就是context C_A和C_B，在送往对话模型D之后，在被M进行评估时，其“平均的”（即数学上的期望）相差不大。
+</p>
+
+<p>
+而为了验证这个事情，自然就需要通过假设检验的一套逻辑进行。这里主要是使用的0-1假设检验。其基本思路为：构建统计量&mu; A 和&mu; B 如下：
+</p>
+
+
+<div id="org9a23c7f" class="figure">
+<p><img src="./images/screenshot_20220113_093000.png" alt="screenshot_20220113_093000.png" />
+</p>
+</div>
+
+<p>
+然后将基于二者构建原假设（公平）和备选假设（不公平）：
+</p>
+
+
+<div id="org89460fc" class="figure">
+<p><img src="./images/screenshot_20220113_093050.png" alt="screenshot_20220113_093050.png" />
+</p>
+</div>
+
+<p>
+然后，对这些假设定义统计量，此处选择的是Z统计，因为一切都未知：
+</p>
+
+
+<div id="org0721872" class="figure">
+<p><img src="./images/screenshot_20220113_093150.png" alt="screenshot_20220113_093150.png" />
+</p>
+</div>
+
+<p>
+以上就是这篇论文的总体框架，基于上述框架，显然，我们需要以下东西：
+</p>
+<ol class="org-ol">
+<li>对话语料TA和TB；</li>
+<li>评估方式M；</li>
+<li>对话系统模型D。</li>
+</ol>
+
+
+<p>
+在这三者中，对话语料可能是最重要的东西了。这篇论文寻找每个group的方法简单粗暴，他们首先为每个group维护了一些关键词，比如下图左所示的样子：
+</p>
+
+
+<div id="org6f81ff1" class="figure">
+<p><img src="./images/screenshot_20220113_094857.png" alt="screenshot_20220113_094857.png" />
+</p>
+</div>
+
+<p>
+然后，对于对话语料中出现了某个group的对话，就被归结为该group对应的语料了。
+</p>
+
+<p>
+对于评估方式，主要包括以下几种：
+</p>
+<ol class="org-ol">
+<li>Diversity: 1/2(𝑑𝑖𝑠𝑡𝑖𝑛𝑐𝑡1+𝑑𝑖𝑠𝑡𝑖𝑛𝑐𝑡2);</li>
+<li>Politeness: Offensive classifier in past works;</li>
+<li>Sentiment: Vader, rule-based sentiment analyzer.</li>
+<li>Attribute words（属性词见上图右边）: key-word matching</li>
+</ol>
+
+<p>
+对于对话模型，作者将open-domain中的检索模型和生成式模型都试了一下，但是使用的模型可能还是比较低级的：
+</p>
+<ol class="org-ol">
+<li>Retrieval: two-layer Transformer Encoder;</li>
+<li>Generative: RNN;</li>
+</ol>
+
+<p>
+通过以上方式，作者导出了其结果，如下表所示：
+</p>
+
+
+<div id="org1df26c3" class="figure">
+<p><img src="./images/screenshot_20220113_095356.png" alt="screenshot_20220113_095356.png" />
+</p>
+</div>
+
+
+<div id="orgd04e2eb" class="figure">
+<p><img src="./images/screenshot_20220113_095402.png" alt="screenshot_20220113_095402.png" />
+</p>
+</div>
+
+<p>
+在上表中，P即使代表原假设成立的可能性，可以发现，黑白问题是比较严重的问题，而性别上的公平性，也常常是会出现的问题。
+</p>
+
+<p>
+为了解决以上问题，作者还提出了两种debiasing的方法，分别是数据增强（Counterpart Data Augmentation）和单词同义化（Word Embedding Regularization）。前者是指：既然对话模型是因为语料中group中各成员的表述不同而产生的bias，那么可不可以让训练语料本身不具有bias，然后是否模型也不具有bias了？所以其解决措施是：一旦检测到有某一个group的语料，就立刻替换其中表达group的关键词，来生成另一个成员的数据，然后添加到训练数据集里。后者的想法差不多：如果he和she表达的意思相同（在embedding的维度上），那么也就自然不会出现捧一踩一了！正则化的方式损失函数如下图所示：
+</p>
+
+
+<div id="org4af076d" class="figure">
+<p><img src="./images/screenshot_20220113_100701.png" alt="screenshot_20220113_100701.png" />
+</p>
+</div>
+
+<p>
+可以看出，这两种方法本质都是一样的，都是想让男女、黑白没有区别。但是由于他们的检测数据集是关键词过滤得到的，而解决方式也依赖于关键词，所以实验结果是否具有参考价值，是一个值得深思的问题。除此之外，男女、黑白等东西，毕竟是有不同的。比如男女，在生理上有天然的不同，所不能做的是赋予他们错误的政治意义，但这不代表要把他们的本意混为一谈，比如“她怀孕了一个孩子。”按照上述的两种解决方案，都可以获得“他怀孕了一个孩子。”把这种语料赋予一个对话模型，也不见得是合理的啊！
+</p>
+
+<p>
+我们还是先看一下实验吧，以结束这篇论文：
+</p>
+
+
+<div id="org229db61" class="figure">
+<p><img src="./images/screenshot_20220113_101109.png" alt="screenshot_20220113_101109.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3dd300d" class="outline-3">
+<h3 id="org3dd300d"><span class="section-number-3">2.4</span> Mitigating Gender Bias for Neural Dialogue Generation with Adversarial Learning</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+接续上文，密歇根州大学的那些人又接着对这个问题进行了更深入的探索，也就形成了这篇工作。和上一篇工作着重去探讨公平性这个问题不同，这篇论文把重心放在了如何去解决公平性问题上。
+</p>
+
+<p>
+这篇论文认为：上一篇论文的最大问题是，其解决方案（也就是我们所讨论的两个方法）可能会产生unreasoning的response。所以这篇论文试图保留合理的差异，同时达到公平性。
+</p>
+
+<p>
+因此，这篇论文的unbiased corpus，其实是包含两种情况：1）Have NO gender bias;2）Have reasoning gender bias;
+</p>
+
+<p>
+那么这篇论文究竟是如何做到的呢？他其实是使用了一个类似于GAN的结构，也就是包括两部分：
+</p>
+<ol class="org-ol">
+<li>generator：也就是对话系统模型。期待的目标是：让这个模型可以产生unbiasd的response；</li>
+<li>descriminator：也就是分类器，来判断所产生的response是否具有bias信息。</li>
+</ol>
+
+<p>
+如果仅仅是有上述两个层次的信息，或许还是不足够的，因为“我们需要保留那些有道理的、中性的bias”。换句话说：辨别器不能以“无法判断性别信息”作为最终目标，而是应该以“无法通过不合理的bias来判断性别”作为目标。举例而言，如果通过怀孕判断是女的，那么没有问题，如果通过“坏人”判断出性别是女，那就错了。
+</p>
+
+<p>
+因此，这篇论文搞了一个对表示进行解耦的操作，即需要将“unbias”部分（包括两种情况，此处更强调无害的bias这种情况）和“除了unbias之外的剩余部分”解耦开。因此，这篇论文descriminator部分的损失，其实也包括两部分，即让unbiased的部分识别性别分类正确，让剩余部分识别性别分类错误。
+</p>
+
+<p>
+下面就一一对上述思路进行介绍。首先是如何进行解耦。
+</p>
+
+
+<div id="org52855f2" class="figure">
+<p><img src="./images/screenshot_20220113_103044.png" alt="screenshot_20220113_103044.png" /> 
+</p>
+</div>
+
+<p>
+如上图所示，对于语料中的一个样本，上图旨在训练一个解耦的表示学习模型，这个解耦的目标将一句话得到两部分特征：
+</p>
+<ol class="org-ol">
+<li>F_u, unbiased 部分，也就是那些没有害处的biase；</li>
+<li><p>
+F_s,semantic部分，也就是除去上一部分之外的部分；
+</p>
+
+<p>
+为了实现这个目标，这篇论文采用的是AutoEncoder的训练方式，总体上看，输入数据先通过Encoder，之后通过Decoder再还原回原数据。通过这种方式，Encoder可以学习到提取隐向量h，FFN也可以被这一过程约束。而为了解耦，其实需要用到这句话的性别标签，论文在这里通过两个分类器来实现这一目标，并设计了两个角度上的损失函数。
+第一个角度是性别分类的角度，希望D1可以分类成功，D2不可以。这样损失函数可以表达为：
+</p>
+
+
+<div id="orga7d047c" class="figure">
+<p><img src="./images/screenshot_20220113_103615.png" alt="screenshot_20220113_103615.png" /> 
+</p>
+</div></li>
+</ol>
+
+
+<div id="org334b627" class="figure">
+<p><img src="./images/screenshot_20220113_103626.png" alt="screenshot_20220113_103626.png" />
+</p>
+</div>
+
+<p>
+可以看出，D2的损失函数和标签完全无关，D1是典型的BCE。
+</p>
+
+<p>
+同时，为了防止f_s 无法代表剩余的语义信息（也就是变得平凡），论文还通过语义信息对D2进行训练，即：
+</p>
+
+
+<div id="org47ad24c" class="figure">
+<p><img src="./images/screenshot_20220113_103813.png" alt="screenshot_20220113_103813.png" />
+</p>
+</div>
+
+<p>
+在上图中，显然D3是用在f_u上的，并未受到什么约束；D4是用在f_s上的，旨在获得语义信息。公式中的B是一个Bag of words向量，B_i是该向量的V个分量之一，如下所示：
+</p>
+
+
+<div id="orgdeb9bdc" class="figure">
+<p><img src="./images/screenshot_20220113_103954.png" alt="screenshot_20220113_103954.png" />
+</p>
+</div>
+
+<p>
+整体的训练过程是上述两个过程的迭代进行，即：
+</p>
+
+<ul class="org-ul">
+<li>Repeat:
+<ul class="org-ul">
+<li>training D2, D3;</li>
+<li>training Encoder, D1, D4;</li>
+</ul></li>
+</ul>
+
+
+<p>
+然后就可以介绍整体的对抗学习图示了：
+</p>
+
+
+<div id="org0b71760" class="figure">
+<p><img src="./images/screenshot_20220113_105724.png" alt="screenshot_20220113_105724.png" />
+</p>
+</div>
+
+<p>
+上述图示可以同下面的伪代码结合在一起看：
+</p>
+
+
+<div id="orgd7845c8" class="figure">
+<p><img src="./images/screenshot_20220113_105815.png" alt="screenshot_20220113_105815.png" />
+</p>
+</div>
+
+<p>
+可以发现，整体上是三个部分：
+</p>
+<ol class="org-ol">
+<li>D step,主要是用对话系统模型的输出去优化上述损失函数中的D2和D3，也就相当于是学习产生正确的语义信息；注意在这个过程中仅有分类器部分在更新；</li>
+<li>G Step，对话系统模型和D1分类器都被更新，通过判断性别这个损失（也就是D1）；</li>
+<li>G teach step，相当于用原来的biased的语料训练generator。</li>
+</ol>
+
+
+<p>
+整体上来看，上述流程可以算是半个GAN。不过上述流程中有一个细节是，在G step中，常规来看分类器的损失是无法反向传递到对话系统模型中的，因为对话系统模型产生句子这个过程是不可导的（涉及到argmax），一版此处的解决思路都是通过强化学习作为监督信号，这篇论文与之类似，采用gumbel softmax函数来进行近似。
+</p>
+
+
+<p>
+其最终的实验效果如下图所示：
+</p>
+
+
+<div id="org88c0b71" class="figure">
+<p><img src="./images/screenshot_20220113_110640.png" alt="screenshot_20220113_110640.png" />
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org4ff0a35" class="outline-3">
+<h3 id="org4ff0a35"><span class="section-number-3">2.5</span> Just Say No: Analyzing the Stance of Neural Dialogue Generation in Offensive Contexts</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+以上介绍了通过设计分类器或者通过设计CTG模型来实现任务型对话系统构建的方式，从这篇开始，将介绍一些混合的方法，
+</p>
+
+<p>
+先来看这篇工作，这篇工作是由Georga和华盛顿州大学近期推出的一篇论文，已经发表在EMNLP2021上，这篇工作所研究的安全性问题，在对话系统的基础上又进行了进一步的扩展。这篇论文所强调的安全性问题主要有两点：1. 如前所述的offensive问题；2. 关于对话系统的stance问题。
+</p>
+
+<p>
+和之前的一些论文一样，这篇工作需要先构建领域相关的数据集，然后再在此基础上进行模型构建和训练。前者是一个工作量很大但是能写的内容很少的工作，而后者相反。我们在上文中已经基本介绍了这个数据集背后所代表现象的一些情况，因此此处单单对剩余该数据进行一些介绍。
+</p>
+
+<p>
+关于对话系统的立场问题，前面已经详细地描述过这个现象了了。但是我们还没有介绍说，这样的一个问题在现实数据中的比例。作者自己在构建起数据集之后，也是从这个角度进行了一些细致的分析。下图表达的是有害的agree立场与安全对话的比例关系：
+</p>
+
+
+<div id="org12b7f43" class="figure">
+<p><img src="./images/screenshot_20220115_095149.png" alt="screenshot_20220115_095149.png" /> 
+</p>
+</div>
+
+<p>
+同样地，对于offensive的问题，这篇论文也更加侧重于context-level，也就是那些需要联系上下文才能发觉的offensive问题，相关研究如下图所示：
+</p>
+
+
+<div id="orgb3f565f" class="figure">
+<p><img src="./images/screenshot_20220115_095300.png" alt="screenshot_20220115_095300.png" /> 
+</p>
+</div>
+
+<p>
+ 于是，作者在它所构建的数据集（TOXI-CHAT）上进行了一系列的实验。offensive的实验本质上就是一个2分类问题，而stance的实验则是一个三分类（分类为是赞同、不赞同还是保持中立）。
+论文测试了三种思路的模型：
+</p>
+
+<ul class="org-ul">
+<li>Neural Bag of words+MLP+ReLU+softmax</li>
+<li>BERT-large（340M）
+<ul class="org-ul">
+<li>for offensive detection: [CLS]sentence[SEP]</li>
+<li>for stance detection: [CLS]u_i[SEP]u_j[SEP]</li>
+</ul></li>
+<li><p>
+DGPT （345M）
+</p>
+<ul class="org-ul">
+<li>stance input: [CLS] u1 [EOU] u2 [EOU] … [EOU] un [EOU];</li>
+<li>prediction: softmax(\(h_{i}\oplus h_{j} \oplus h_{i}-h_{j} \oplus (h_{i}\odot h_{j})\))</li>
+</ul>
+
+<p>
+在上述三种模型中，offensive多是将语句直接输入到模型中，用CLS的表示通过分类器。stance由于涉及到多句话之间的关系，在表述上稍微复杂一些。本文使用BERT时，对问题进行了简化，也是直接使用CLS。
+但是在使用DGPT时就复杂了一些了。DGPT其实就是Dialogue GPT，不过这里的DGPT也是在原模型的基础上添加了对offensive的过滤（通过分类器实现）。对于这样的模型，由于句子头部是看不到后面的信息的，所以不能使用cls了，这里论文采用的解决方法是：对于每一句话，其后面都会有一个EOU符号（End of Utterance），该embedding可以看作是这个句子的表示，也就是h。那么，对于我需要研究的句子i和句子j的关系，就可以通过上述公式中的prediction进行表达。
+</p>
+
+<p>
+以上全部都是关于模型部分，在目标函数上，作者也进行了一些设计。这个设计的初衷是为了解决标签分布不均衡的问题。即在stance中，neutral占据了绝大多数，而agree和disagree只有10%和2.5%。因此，我们论文需要对标签做平衡。这里使用了两种损失函数：1. weighted CE，作者认为给加了一个权重，neutral:agree:disagree=1:100:100; 2. 第二个损失函数则是大名鼎鼎的focal loss。这个好像是kaiming提出来的，但是我记不清楚了。其基本表达式如下：
+</p>
+
+<p>
+对于softmax输出的stance的三维的distribution：
+</p>
+
+
+<div id="org40e5517" class="figure">
+<p><img src="./images/screenshot_20220115_102912.png" alt="screenshot_20220115_102912.png" /> 
+</p>
+</div>
+
+<p>
+设计如下的损失函数：
+</p></li>
+</ul>
+
+
+<div id="orgdb1d5c5" class="figure">
+<p><img src="./images/screenshot_20220115_102930.png" alt="screenshot_20220115_102930.png" /> 
+</p>
+</div>
+
+
+<div id="org7f5f91f" class="figure">
+<p><img src="./images/screenshot_20220115_102938.png" alt="screenshot_20220115_102938.png" /> 
+</p>
+</div>
+
+
+<div id="orgd4bbf6b" class="figure">
+<p><img src="./images/screenshot_20220115_102947.png" alt="screenshot_20220115_102947.png" /> 
+</p>
+</div>
+
+<p>
+就可以实现专注于错误的分类结果的目标。关于这个损失函数的具体机理——即为什么可以实现这个效果，我后面专门写一篇笔记进行总结吧！在此处作者所采用的超参数如下：&gamma;=1.0; &beta;=0.9999
+</p>
+
+<p>
+最后，看一下实验效果。对于offensive detection，其效果如下：
+</p>
+
+
+<div id="orgfb89f3b" class="figure">
+<p><img src="./images/screenshot_20220115_103221.png" alt="screenshot_20220115_103221.png" />
+</p>
+</div>
+
+<p>
+其中DGPT+是指用Radit SBIC 数据集做augment所获得的结果。
+</p>
+
+<p>
+stance detection,效果如下：
+</p>
+
+
+<div id="org5142a67" class="figure">
+<p><img src="./images/screenshot_20220115_103241.png" alt="screenshot_20220115_103241.png" />
+</p>
+</div>
+
+<p>
+除此之外，作者还尝试基于以上的分类器构建CTG所需要的语料库，来进行可控回复生成训练。效果如下：
+</p>
+
+
+<div id="org2f1f2df" class="figure">
+<p><img src="./images/screenshot_20220115_103337.png" alt="screenshot_20220115_103337.png" />
+</p>
+</div>
+
+<p>
+其中DAPT和ATCON都是CTG的模型，[S]表示在offesnsive上做到safe，[N]指在stance上做到neutral。在指标中，bad是指的有明显的脏话词语，offensive、aggree、disagrre都是分类器的识别结果。
+</p>
+
+<p>
+论文也对目前主流的open-domain模型进行了测试，效果如下：
+</p>
+
+
+<div id="org564ddaa" class="figure">
+<p><img src="./images/screenshot_20220115_103342.png" alt="screenshot_20220115_103342.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1e6bda1" class="outline-3">
+<h3 id="org1e6bda1"><span class="section-number-3">2.6</span> Revealing Personal Biases in Dialogue Systems</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+时间又过得更近了！这次介绍的是一篇关于人设（persona）可能会导致对话系统安全性问题的研究。个性化虽然一直都是闲聊的一个有趣的拓展方向，但这篇工作试图揭露：个性化会导致安全性问题。很显然，这篇工作也是USC UC-Davis UC-LA Columbia University等一系列大学一起做的。
+</p>
+
+<p>
+这篇论文的思路是：给定一个人设，之后给定一句话，然后看机器人的反应。根据chatbot的反应，来看是否出现安全性问题。为此作者提出了如下所示的一整套框架：
+</p>
+
+
+<div id="org3572d7a" class="figure">
+<p><img src="./images/screenshot_20220115_104704.png" alt="screenshot_20220115_104704.png" /> 
+</p>
+</div>
+
+<p>
+上面是一个性别指代（gendered conreference）问题的示例。所谓的性别指代问题是指：对一个职业或身份，固定地怀有一种性别上的思维定势。如一说起CEO，就觉得是男的，这种。为此，上述评估框架需要为每一个诸如此类的问题确定四个东西：
+</p>
+<ol class="org-ol">
+<li>数据集，比如对于性别指代问题，就是一些职业名称；</li>
+<li>模板，用以生成发送给对话系统模型的话。</li>
+<li>对话系统模型</li>
+<li>人设</li>
+</ol>
+
+<p>
+然后，就像进行软件测试一样，会有大量的测试用例，然后看看这个模型通过了多少。
+</p>
+
+<p>
+论文主要从以下四个角度的安全性出发进行讨论：
+</p>
+
+<ul class="org-ul">
+<li>Offensiveness;
+<ul class="org-ul">
+<li>Is offensive or not;</li>
+<li>Scoring function: Classifier in past works;</li>
+</ul></li>
+<li>Harmful Affirmations;
+<ul class="org-ul">
+<li>Reactions of a model to biased or offensive statements;</li>
+<li>Template: [demographic] are [offensive adjective];</li>
+<li>Scoring function: rule-based sentiment analyzer;</li>
+</ul></li>
+<li>Occupational Associations;
+<ul class="org-ul">
+<li>The associations between occupations and personas;</li>
+<li>Template: [demographic] can be [occupation].</li>
+<li>Scoring function: rule-based sentiment analyzer;</li>
+</ul></li>
+<li>Gendered Coreferences;
+<ul class="org-ul">
+<li>how often systems use different gendered pronouns to refer to a person of a certain occupation when no gender is specified in the prompt.</li>
+<li>Template: What is the [occupation]’s name?</li>
+<li>Scoring function: detection if there is  a gendered pronoun.</li>
+</ul></li>
+</ul>
+
+<p>
+然后下表是对应的实验结果：
+</p>
+
+
+<div id="org5a0ab7c" class="figure">
+<p><img src="./images/screenshot_20220115_105603.png" alt="screenshot_20220115_105603.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf39ad41" class="outline-3">
+<h3 id="orgf39ad41"><span class="section-number-3">2.7</span> Recipes for Safety in Open-domain Chatbots</h3>
+<div class="outline-text-3" id="text-2-7">
+<p>
+下面继续再介绍一篇facebook的工作，这篇工作我印象之中是偏旧的了，到那时却因为一些原因经历过更新。这篇工作论文里就有recipes，所以可以看作是一个大杂烩。我总结了一下，主要面向以下四个问题：
+</p>
+<ol class="org-ol">
+<li>Unsafe Utterance Detection; &#x2013;&gt; cls</li>
+<li>Safe Utterance Generation; &#x2013;&gt; cls+ctg</li>
+<li>Sensitive Topic Avoidance; &#x2013;&gt; cls</li>
+<li><p>
+Gender Bias Mitigation; &#x2013;&gt; cls+ctg
+</p>
+
+<p>
+可以看出，上述四个问题的解决思路其实与之前的方法无异，均是通过分类器或可控文本生成的方式进行解决。不如下面就一一介绍之。
+</p></li>
+</ol>
+</div>
+
+
+<div id="outline-container-org5d0101b" class="outline-4">
+<h4 id="org5d0101b"><span class="section-number-4">2.7.1</span> unsafe utterance detection</h4>
+<div class="outline-text-4" id="text-2-7-1">
+<p>
+我们开头之前介绍过该组的一篇工作，如下图所示：
+</p>
+
+
+<div id="org496d6f6" class="figure">
+<p><img src="./images/screenshot_20220115_110244.png" alt="screenshot_20220115_110244.png" /> 
+</p>
+</div>
+
+<p>
+这篇论文在这个架构上做了进一步的修改，改成了下图的形式：
+</p>
+
+
+<div id="orgb5e72f9" class="figure">
+<p><img src="./images/screenshot_20220115_110354.png" alt="screenshot_20220115_110354.png" /> 
+</p>
+</div>
+
+<p>
+其核心思路其实就是：将机器人也加入到了这个loop中，这样所训练得到的分类器，对机器人更加具有针对性。
+</p>
+
+<p>
+其效果如下：
+</p>
+
+
+<div id="org33f2eb2" class="figure">
+<p><img src="./images/screenshot_20220115_110535.png" alt="screenshot_20220115_110535.png" />
+</p>
+</div>
+
+<p>
+其中WTC就是在本文一开始介绍的数据集，S指standard格式（可以参考本文对buildit那篇工作的介绍），BBF自然就是build、break、fix三部曲所构建得到的语料，bad则是本文构建起来的数据集。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb61cab2" class="outline-4">
+<h4 id="orgb61cab2"><span class="section-number-4">2.7.2</span> safe utterance generation</h4>
+<div class="outline-text-4" id="text-2-7-2">
+<p>
+这个太杂了，论文主要采用了如下的做法：
+</p>
+
+<ul class="org-ul">
+<li>at training time
+<ul class="org-ul">
+<li>去掉所有的分类器检查出来的offensive data</li>
+<li>将offensive data 的回复替换成完成回复，如：I’m sorry, I’m not sure what to say. Thank you for sharing and talking to me though.Hey do you want to talk about something else? How about we talk about X?</li>
+</ul></li>
+<li>inference time
+<ul class="org-ul">
+<li>通过beam search多生成一些，然后筛选掉一些</li>
+<li><p>
+将一些敏感词的distribution人工减掉一个很大的数字。
+</p>
+
+<p>
+这一部分的实验结果如下：
+</p>
+
+
+<div id="org754f1d9" class="figure">
+<p><img src="./images/screenshot_20220115_111332.png" alt="screenshot_20220115_111332.png" />
+</p>
+</div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+
+
+<div id="outline-container-org357f7cc" class="outline-4">
+<h4 id="org357f7cc"><span class="section-number-4">2.7.3</span> 敏感话题</h4>
+<div class="outline-text-4" id="text-2-7-3">
+<p>
+略。数据集如下：
+</p>
+
+
+<div id="org95ae194" class="figure">
+<p><img src="./images/screenshot_20220115_111412.png" alt="screenshot_20220115_111412.png" /> 
+</p>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-org3990f9e" class="outline-4">
+<h4 id="org3990f9e"><span class="section-number-4">2.7.4</span> 性别bias的平衡</h4>
+<div class="outline-text-4" id="text-2-7-4">
+<p>
+作者直接使用的CTG，如下所示：
+</p>
+
+
+<div id="orgeb87d80" class="figure">
+<p><img src="./images/screenshot_20220115_111447.png" alt="screenshot_20220115_111447.png" /> 
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org28fe55d" class="outline-2">
+<h2 id="org28fe55d"><span class="section-number-2">3</span> summary</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgdf00557" class="outline-3">
+<h3 id="orgdf00557"><span class="section-number-3">3.1</span> dataset summary</h3>
+<div class="outline-text-3" id="text-3-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">dataset</th>
+<th scope="col" class="org-left">description</th>
+<th scope="col" class="org-left">link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">WTC</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left"><a href="https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge">kaggle</a></td>
+</tr>
+
+<tr>
+<td class="org-left">BBF(standard)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">BBF(adversarial)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">DoesGenderMatter-Dataset</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">TOXI-CHAT(stance and offensive)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Personal Biases Dataset</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">DialogueRecipeDataset</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgddcbbde" class="outline-3">
+<h3 id="orgddcbbde"><span class="section-number-3">3.2</span> solution summary</h3>
+<div class="outline-text-3" id="text-3-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">dataset</th>
+<th scope="col" class="org-left">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+see: Pnina Shachaf and Noriko Hara. 2010. Beyond vandalism: Wikipedia trolls. Journal of Information Science, 36(3):357370.
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+see: 1. Hossein Hosseini, Sreeram Kannan, Baosen Zhang, and Radha Poovendran. 2017. Deceiving google’s perspective api built for detecting toxic comments. arXiv preprint arXiv:1702.08138.  2.Tommi Grondahl, Luca Pajola, Mika Juuti, Mauro ¨Conti, and N Asokan. 2018. All you need is” love”: Evading hate-speech detection. arXiv preprint arXiv:1808.09115
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3">3</a></sup> <div class="footpara"><p class="footpara">
+Marty J Wolf, K Miller, and Frances S Grodzinsky. 2017. Why we should have seen that coming: comments on microsoft’s tay experiment, and wider implications. ACM SIGCAS Computers and Society, 47(3):5464.
+</p></div></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<p class="date">Date: Mon Dec  6 20:45:53 2021</p>
+<p class="author">Author: Zi Liang</p>
+<p class="date">Created: 2022-03-26 周六 21:55</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-03-26 周六 21:55 -->
+<!-- 2023-01-05 四 16:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>web前端作业——基于React组件化思路开发的山寨版创新港图书馆大数据可视化平台</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="梁子，软件学院，S0083，3120305385" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -191,64 +192,41 @@
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { width: 90%; }
-  /*]]>*/-->
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">web前端作业——基于React组件化思路开发的山寨版创新港图书馆大数据可视化平台</h1>
-<div id="table-of-contents">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org7f44ad7">1. 场景及功能介绍</a></li>
-<li><a href="#org2a833ec">2. 界面功能实现</a>
+<li><a href="#org2d0754a">1. 场景及功能介绍</a></li>
+<li><a href="#orgd0091ef">2. 界面功能实现</a>
 <ul>
-<li><a href="#org6a0163b">2.1. 总体架构</a></li>
-<li><a href="#orgf4153f1">2.2. 各组块实现</a></li>
+<li><a href="#org0d3c4f2">2.1. 总体架构</a></li>
+<li><a href="#org18d3543">2.2. 各组块实现</a></li>
 </ul>
 </li>
-<li><a href="#org041ea0c">3. 安装与运行</a>
+<li><a href="#org4085f24">3. 安装与运行</a>
 <ul>
-<li><a href="#org72de56f">3.1. 安装</a></li>
-<li><a href="#orgaa8a2c6">3.2. 运行</a></li>
+<li><a href="#org83eda2d">3.1. 安装</a></li>
+<li><a href="#orgb7ea2b3">3.2. 运行</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org7f44ad7" class="outline-2">
-<h2 id="org7f44ad7"><span class="section-number-2">1</span> 场景及功能介绍</h2>
+<div id="outline-container-org2d0754a" class="outline-2">
+<h2 id="org2d0754a"><span class="section-number-2">1.</span> 场景及功能介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 本作业拟实现的功能是：一个被目前广泛使用的可视化界面。观察到创新港的图书馆中便有屏幕投放这种前端界面，因此打算仿照之实现一个山寨版本。整体结果图示如下图所示：
 </p>
 
 
-<div id="org18c22ed" class="figure">
-<p><img src="file:///d:/图片/interface.png" alt="interface.png" />
+<div id="org05fae30" class="figure">
+<p><img src="file:///home/liangzi/图片/interface.png" alt="interface.png" />
 </p>
 </div>
 
@@ -271,12 +249,12 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org2a833ec" class="outline-2">
-<h2 id="org2a833ec"><span class="section-number-2">2</span> 界面功能实现</h2>
+<div id="outline-container-orgd0091ef" class="outline-2">
+<h2 id="orgd0091ef"><span class="section-number-2">2.</span> 界面功能实现</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org6a0163b" class="outline-3">
-<h3 id="org6a0163b"><span class="section-number-3">2.1</span> 总体架构</h3>
+<div id="outline-container-org0d3c4f2" class="outline-3">
+<h3 id="org0d3c4f2"><span class="section-number-3">2.1.</span> 总体架构</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 本作业所描述平台整体上包含了两部分：前端实现和后端实现。当然，由于后端实现较为简单（即基于简单数据库的对数据的整合和处理），因此本章重点介绍前端部分。整体上而言，本文使用阿里巴巴的前端框架dva进行套装，整体上可分为三大模块：
@@ -297,8 +275,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgf4153f1" class="outline-3">
-<h3 id="orgf4153f1"><span class="section-number-3">2.2</span> 各组块实现</h3>
+<div id="outline-container-org18d3543" class="outline-3">
+<h3 id="org18d3543"><span class="section-number-3">2.2.</span> 各组块实现</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 各个组块的实现均基于react进行，主要包括以下8个原子级别的组块：
@@ -337,54 +315,54 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js"> render<span style="color: #707183;">()</span> <span style="color: #707183;">{</span>
-    <span style="color: #A52A2A; font-weight: bold;">const</span> <span style="color: #7388d6;">{</span> userSitua, trafficSitua, accessFrequency, peakFlow <span style="color: #7388d6;">}</span> = <span style="color: #F5666D;">this</span>.props;
-    <span style="color: #A52A2A; font-weight: bold;">return</span> <span style="color: #7388d6;">(</span>
-      <span style="color: #204A87;">// </span><span style="color: #204A87;">&#39118;&#26684;</span>
+<pre class="src src-js"> render() {
+    const { userSitua, trafficSitua, accessFrequency, peakFlow } = this.props;
+    return (
+      // 风格
       &lt;LeftPage&gt;
-        <span style="color: #909183;">{</span><span style="color: #204A87;">/* </span><span style="color: #204A87;">&#39030;&#37096;&#22270;&#34920;</span><span style="color: #204A87;"> */</span><span style="color: #909183;">}</span>
-        &lt;LeftTopBox&gt;
-          &lt;BorderBox12 className=<span style="color: #4E9A06;">'left-top-borderBox12'</span>&gt;
-            &lt;div className=<span style="color: #4E9A06;">'left-top'</span>&gt;
-              &lt;ModuleTitle&gt;
-                &lt;i className=<span style="color: #4E9A06;">'iconfont'</span>&gt;&amp;#xe78f;&lt;/i&gt;
-                &lt;span&gt;&#20170;&#26085;&#22270;&#20070;&#39302;&#36827;&#20986;&#24773;&#20917;&lt;/span&gt;
-              &lt;/ModuleTitle&gt;
+	{/* 顶部图表 */}
+	&lt;LeftTopBox&gt;
+	  &lt;BorderBox12 className='left-top-borderBox12'&gt;
+	    &lt;div className='left-top'&gt;
+	      &lt;ModuleTitle&gt;
+		&lt;i className='iconfont'&gt;&amp;#xe78f;&lt;/i&gt;
+		&lt;span&gt;今日图书馆进出情况&lt;/span&gt;
+	      &lt;/ModuleTitle&gt;
 
-              &lt;div className=<span style="color: #4E9A06;">'title-dis'</span>&gt;
-                &lt;span&gt;
-                  &#24403;&#21069;&#21442;&#35266;&#20154;&#25968;<span style="color: #909183;">(</span>&#23567;&#26102;<span style="color: #909183;">)</span>:
-                  &lt;span className=<span style="color: #4E9A06;">'title-dis-keyword'</span>&gt;<span style="color: #909183;">{</span>accessFrequency<span style="color: #909183;">}</span>&#20154;&lt;/span&gt;
-                &lt;/span&gt;
+	      &lt;div className='title-dis'&gt;
+		&lt;span&gt;
+		  当前参观人数(小时):
+		  &lt;span className='title-dis-keyword'&gt;{accessFrequency}人&lt;/span&gt;
+		&lt;/span&gt;
 
-                &lt;span&gt;
-                  &#20170;&#26085;&#24635;&#20154;&#25968;:
-                  &lt;span className=<span style="color: #4E9A06;">'title-dis-keyword'</span>&gt;<span style="color: #909183;">{</span>peakFlow<span style="color: #909183;">}</span>&#20154;&lt;/span&gt;
-                &lt;/span&gt;
-              &lt;/div&gt;
-              <span style="color: #909183;">{</span><span style="color: #204A87;">/* </span><span style="color: #204A87;">&#22270;&#34920;</span><span style="color: #204A87;"> */</span><span style="color: #909183;">}</span>
-              &lt;TrafficSituation trafficSitua=<span style="color: #909183;">{</span>trafficSitua<span style="color: #909183;">}</span>&gt;&lt;/TrafficSituation&gt;
-            &lt;/div&gt;
-          &lt;/BorderBox12&gt;
-        &lt;/LeftTopBox&gt;
+		&lt;span&gt;
+		  今日总人数:
+		  &lt;span className='title-dis-keyword'&gt;{peakFlow}人&lt;/span&gt;
+		&lt;/span&gt;
+	      &lt;/div&gt;
+	      {/* 图表 */}
+	      &lt;TrafficSituation trafficSitua={trafficSitua}&gt;&lt;/TrafficSituation&gt;
+	    &lt;/div&gt;
+	  &lt;/BorderBox12&gt;
+	&lt;/LeftTopBox&gt;
 
-        <span style="color: #909183;">{</span><span style="color: #204A87;">/* </span><span style="color: #204A87;">&#24213;&#37096;&#22270;&#34920;</span><span style="color: #204A87;"> */</span><span style="color: #909183;">}</span>
-        &lt;LeftBottomBox&gt;
-          &lt;BorderBox13 className=<span style="color: #4E9A06;">'left-bottom-borderBox13'</span>&gt;
-            &lt;div className=<span style="color: #4E9A06;">'left-bottom'</span>&gt;
-              &lt;ModuleTitle&gt;
-                &lt;i className=<span style="color: #4E9A06;">'iconfont'</span>&gt;&amp;#xe88e;&lt;/i&gt;
-                &lt;span&gt;&#26412;&#21608;&#22270;&#20070;&#20511;&#38405;&#27036;&lt;/span&gt;
-              &lt;/ModuleTitle&gt;
-              <span style="color: #909183;">{</span><span style="color: #204A87;">/* </span><span style="color: #204A87;">&#22270;&#34920;</span><span style="color: #204A87;"> */</span><span style="color: #909183;">}</span>
-              &lt;UserSituation userSitua=<span style="color: #909183;">{</span>userSitua<span style="color: #909183;">}</span>&gt;&lt;/UserSituation&gt;
-            &lt;/div&gt;
-          &lt;/BorderBox13&gt;
-        &lt;/LeftBottomBox&gt;
+	{/* 底部图表 */}
+	&lt;LeftBottomBox&gt;
+	  &lt;BorderBox13 className='left-bottom-borderBox13'&gt;
+	    &lt;div className='left-bottom'&gt;
+	      &lt;ModuleTitle&gt;
+		&lt;i className='iconfont'&gt;&amp;#xe88e;&lt;/i&gt;
+		&lt;span&gt;本周图书借阅榜&lt;/span&gt;
+	      &lt;/ModuleTitle&gt;
+	      {/* 图表 */}
+	      &lt;UserSituation userSitua={userSitua}&gt;&lt;/UserSituation&gt;
+	    &lt;/div&gt;
+	  &lt;/BorderBox13&gt;
+	&lt;/LeftBottomBox&gt;
       &lt;/LeftPage&gt;
-    <span style="color: #7388d6;">)</span>;
-  <span style="color: #707183;">}</span>
-<span style="color: #88090B;">}</span>
+    );
+  }
+}
 </pre>
 </div>
 
@@ -397,34 +375,34 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js"><span style="color: #A52A2A; font-weight: bold;">export</span> <span style="color: #A52A2A; font-weight: bold;">const</span> <span style="color: #0084C8; font-weight: bold;">LeftTopBox</span> = styled.div<span style="color: #4E9A06;">`</span>
-<span style="color: #4E9A06;">  position: relative;</span>
-<span style="color: #4E9A06;">  height: 4.375rem;</span>
-<span style="color: #4E9A06;">  width: 100%;</span>
-<span style="color: #4E9A06;">  .left-top-borderBox12 {</span>
-<span style="color: #4E9A06;">    width: inherit;</span>
-<span style="color: #4E9A06;">    height: inherit;</span>
-<span style="color: #4E9A06;">    padding: 0.1875rem;</span>
-<span style="color: #4E9A06;">    .left-top {</span>
-<span style="color: #4E9A06;">      width: 100%;</span>
-<span style="color: #4E9A06;">      height: 100%;</span>
-<span style="color: #4E9A06;">      border-radius: 10px;</span>
-<span style="color: #4E9A06;">      background-color: rgba(19, 25, 47, 0.6);</span>
-<span style="color: #4E9A06;">      .title-dis {</span>
-<span style="color: #4E9A06;">        margin-top: 0.1875rem;</span>
-<span style="color: #4E9A06;">        display: flex;</span>
-<span style="color: #4E9A06;">        justify-content: space-around;</span>
-<span style="color: #4E9A06;">        align-items: center;</span>
-<span style="color: #4E9A06;">        font-size: 0.2rem;</span>
-<span style="color: #4E9A06;">        color: #c0c9d2;</span>
-<span style="color: #4E9A06;">        &amp;-keyword {</span>
-<span style="color: #4E9A06;">          padding-left: 0.125rem;</span>
-<span style="color: #4E9A06;">          color: #47dae8;</span>
-<span style="color: #4E9A06;">        }</span>
-<span style="color: #4E9A06;">      }</span>
-<span style="color: #4E9A06;">    }</span>
-<span style="color: #4E9A06;">  }</span>
-<span style="color: #4E9A06;">`</span>;
+<pre class="src src-js">export const LeftTopBox = styled.div`
+  position: relative;
+  height: 4.375rem;
+  width: 100%;
+  .left-top-borderBox12 {
+    width: inherit;
+    height: inherit;
+    padding: 0.1875rem;
+    .left-top {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      background-color: rgba(19, 25, 47, 0.6);
+      .title-dis {
+	margin-top: 0.1875rem;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	font-size: 0.2rem;
+	color: #c0c9d2;
+	&amp;-keyword {
+	  padding-left: 0.125rem;
+	  color: #47dae8;
+	}
+      }
+    }
+  }
+`;
 </pre>
 </div>
 
@@ -434,34 +412,34 @@
 
 
 <div class="org-src-container">
-<pre class="src src-js"><span style="color: #A52A2A; font-weight: bold;">class</span> TrafficSituation <span style="color: #A52A2A; font-weight: bold;">extends</span> PureComponent <span style="color: #707183;">{</span>
-  constructor<span style="color: #7388d6;">(</span>props<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-    <span style="color: #A52A2A; font-weight: bold;">super</span><span style="color: #909183;">(</span>props<span style="color: #909183;">)</span>;
-    <span style="color: #F5666D;">this</span>.state = <span style="color: #909183;">{</span>
-      renderer: <span style="color: #4E9A06;">'canvas'</span>,
-    <span style="color: #909183;">}</span>;
-  <span style="color: #7388d6;">}</span>
+<pre class="src src-js">class TrafficSituation extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      renderer: 'canvas',
+    };
+  }
 
-  render<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
-    <span style="color: #A52A2A; font-weight: bold;">const</span> <span style="color: #909183;">{</span> renderer <span style="color: #909183;">}</span> = <span style="color: #F5666D;">this</span>.state;
-    <span style="color: #A52A2A; font-weight: bold;">const</span> <span style="color: #909183;">{</span> trafficSitua <span style="color: #909183;">}</span> = <span style="color: #F5666D;">this</span>.props;
-    <span style="color: #A52A2A; font-weight: bold;">return</span> <span style="color: #909183;">(</span>
+  render() {
+    const { renderer } = this.state;
+    const { trafficSitua } = this.props;
+    return (
       &lt;div
-        style=<span style="color: #709870;">{</span><span style="color: #907373;">{</span>
-          width: <span style="color: #4E9A06;">'5.375rem'</span>,
-          height: <span style="color: #4E9A06;">'3.125rem'</span>,
-        <span style="color: #907373;">}</span><span style="color: #709870;">}</span>&gt;
-        <span style="color: #709870;">{</span>trafficSitua ? <span style="color: #907373;">(</span>
-          &lt;Chart renderer=<span style="color: #6276ba;">{</span>renderer<span style="color: #6276ba;">}</span> option=<span style="color: #6276ba;">{</span>trafficOptions<span style="color: #858580;">(</span>trafficSitua<span style="color: #858580;">)</span><span style="color: #6276ba;">}</span> /&gt;
-        <span style="color: #907373;">)</span> : <span style="color: #907373;">(</span>
-          <span style="color: #4E9A06;">''</span>
-        <span style="color: #907373;">)</span><span style="color: #709870;">}</span>
+	style={{
+	  width: '5.375rem',
+	  height: '3.125rem',
+	}}&gt;
+	{trafficSitua ? (
+	  &lt;Chart renderer={renderer} option={trafficOptions(trafficSitua)} /&gt;
+	) : (
+	  ''
+	)}
       &lt;/div&gt;
-    <span style="color: #909183;">)</span>;
-  <span style="color: #7388d6;">}</span> <span style="color: #204A87;">//</span><span style="color: #204A87;">endrender</span>
-<span style="color: #707183;">}</span>
+    );
+  } //endrender
+}
 
-<span style="color: #A52A2A; font-weight: bold;">export</span> <span style="color: #A52A2A; font-weight: bold;">default</span> TrafficSituation;
+export default TrafficSituation;
 
 </pre>
 </div>
@@ -472,89 +450,89 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js"><span style="color: #A52A2A; font-weight: bold;">export</span> <span style="color: #A52A2A; font-weight: bold;">default</span> <span style="color: #A52A2A; font-weight: bold;">class</span> Chart <span style="color: #A52A2A; font-weight: bold;">extends</span> PureComponent <span style="color: #707183;">{</span>
-  constructor<span style="color: #7388d6;">(</span>props<span style="color: #7388d6;">)</span> <span style="color: #7388d6;">{</span>
-    <span style="color: #A52A2A; font-weight: bold;">super</span><span style="color: #909183;">(</span>props<span style="color: #909183;">)</span>;
-    <span style="color: #F5666D;">this</span>.state = <span style="color: #909183;">{</span>
-      width: <span style="color: #4E9A06;">'100%'</span>,
-      height: <span style="color: #4E9A06;">'100%'</span>,
-    <span style="color: #909183;">}</span>;
-    <span style="color: #F5666D;">this</span>.chart = <span style="color: #F5666D;">null</span>;
-  <span style="color: #7388d6;">}</span>
-  <span style="color: #204A87;">// </span><span style="color: #204A87;">&#24322;&#27493;&#20989;&#25968;</span>
-  <span style="color: #A52A2A; font-weight: bold;">async</span> componentDidMount<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
-    <span style="color: #204A87;">// </span><span style="color: #204A87;">&#21021;&#22987;&#21270;&#22270;&#34920;</span>
-    <span style="color: #A52A2A; font-weight: bold;">await</span> <span style="color: #F5666D;">this</span>.initChart<span style="color: #909183;">(</span><span style="color: #F5666D;">this</span>.el<span style="color: #909183;">)</span>;
-    <span style="color: #204A87;">// </span><span style="color: #204A87;">&#23558;&#20256;&#20837;&#30340;&#37197;&#32622;(&#21253;&#21547;&#25968;&#25454;)&#27880;&#20837;</span>
-    <span style="color: #F5666D;">this</span>.setOption<span style="color: #909183;">(</span><span style="color: #F5666D;">this</span>.props.option<span style="color: #909183;">)</span>;
-    <span style="color: #204A87;">// </span><span style="color: #204A87;">&#30417;&#21548;&#23631;&#24149;&#32553;&#25918;&#65292;&#37325;&#26032;&#32472;&#21046; echart &#22270;&#34920;</span>
-    window.addEventListener<span style="color: #909183;">(</span><span style="color: #4E9A06;">'resize'</span>, debounce<span style="color: #709870;">(</span><span style="color: #F5666D;">this</span>.resize, 100<span style="color: #709870;">)</span><span style="color: #909183;">)</span>;
-  <span style="color: #7388d6;">}</span>
+<pre class="src src-js">export default class Chart extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      width: '100%',
+      height: '100%',
+    };
+    this.chart = null;
+  }
+  // 异步函数
+  async componentDidMount() {
+    // 初始化图表
+    await this.initChart(this.el);
+    // 将传入的配置(包含数据)注入
+    this.setOption(this.props.option);
+    // 监听屏幕缩放，重新绘制 echart 图表
+    window.addEventListener('resize', debounce(this.resize, 100));
+  }
 
-  componentDidUpdate<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
-    <span style="color: #204A87;">// </span><span style="color: #204A87;">&#27599;&#27425;&#26356;&#26032;&#32452;&#20214;&#37117;&#37325;&#32622;</span>
-    <span style="color: #F5666D;">this</span>.setOption<span style="color: #909183;">(</span><span style="color: #F5666D;">this</span>.props.option<span style="color: #909183;">)</span>;
-  <span style="color: #7388d6;">}</span>
+  componentDidUpdate() {
+    // 每次更新组件都重置
+    this.setOption(this.props.option);
+  }
 
-  componentWillUnmount<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
-    <span style="color: #204A87;">// </span><span style="color: #204A87;">&#32452;&#20214;&#21368;&#36733;&#21069;&#21368;&#36733;&#22270;&#34920;</span>
-    <span style="color: #F5666D;">this</span>.dispose<span style="color: #909183;">()</span>;
-  <span style="color: #7388d6;">}</span>
+  componentWillUnmount() {
+    // 组件卸载前卸载图表
+    this.dispose();
+  }
 
-  render<span style="color: #7388d6;">()</span> <span style="color: #7388d6;">{</span>
-    <span style="color: #A52A2A; font-weight: bold;">const</span> <span style="color: #909183;">{</span> width, height <span style="color: #909183;">}</span> = <span style="color: #F5666D;">this</span>.state;
+  render() {
+    const { width, height } = this.state;
 
-    <span style="color: #A52A2A; font-weight: bold;">return</span> <span style="color: #909183;">(</span>
+    return (
       &lt;div
-        className=<span style="color: #4E9A06;">'default-chart'</span>
-        ref=<span style="color: #709870;">{</span>el =&gt; <span style="color: #907373;">(</span><span style="color: #F5666D;">this</span>.el = el<span style="color: #907373;">)</span><span style="color: #709870;">}</span>
-        style=<span style="color: #709870;">{</span><span style="color: #907373;">{</span> width, height <span style="color: #907373;">}</span><span style="color: #709870;">}</span>
+	className='default-chart'
+	ref={el =&gt; (this.el = el)}
+	style={{ width, height }}
       /&gt;
-    <span style="color: #909183;">)</span>;
-  <span style="color: #7388d6;">}</span>
+    );
+  }
 
 
-  initChart = el =&gt; <span style="color: #7388d6;">{</span>
-    <span style="color: #204A87;">// </span><span style="color: #204A87;">renderer &#29992;&#20110;&#37197;&#32622;&#28210;&#26579;&#26041;&#24335; &#21487;&#20197;&#26159; svg &#25110;&#32773; canvas</span>
-    <span style="color: #A52A2A; font-weight: bold;">const</span> <span style="color: #0084C8; font-weight: bold;">renderer</span> = <span style="color: #F5666D;">this</span>.props.renderer || <span style="color: #4E9A06;">'canvas'</span>;
+  initChart = el =&gt; {
+    // renderer 用于配置渲染方式 可以是 svg 或者 canvas
+    const renderer = this.props.renderer || 'canvas';
 
-    <span style="color: #A52A2A; font-weight: bold;">return</span> <span style="color: #A52A2A; font-weight: bold;">new</span> <span style="color: #2F8B58; font-weight: bold;">Promise</span><span style="color: #909183;">(</span>resolve =&gt; <span style="color: #709870;">{</span>
-      setTimeout<span style="color: #907373;">(</span><span style="color: #6276ba;">()</span> =&gt; <span style="color: #6276ba;">{</span>
-        <span style="color: #F5666D;">this</span>.chart = echarts.init<span style="color: #858580;">(</span>el, <span style="color: #F5666D;">null</span>, <span style="color: #80a880;">{</span>
-          renderer,
-          width: <span style="color: #4E9A06;">'auto'</span>,
-          height: <span style="color: #4E9A06;">'auto'</span>,
-        <span style="color: #80a880;">}</span><span style="color: #858580;">)</span>;
-        resolve<span style="color: #858580;">()</span>;
-      <span style="color: #6276ba;">}</span>, 0<span style="color: #907373;">)</span>;
-    <span style="color: #709870;">}</span><span style="color: #909183;">)</span>;
-  <span style="color: #7388d6;">}</span>;
+    return new Promise(resolve =&gt; {
+      setTimeout(() =&gt; {
+	this.chart = echarts.init(el, null, {
+	  renderer,
+	  width: 'auto',
+	  height: 'auto',
+	});
+	resolve();
+      }, 0);
+    });
+  };
 
-  setOption = option =&gt; <span style="color: #7388d6;">{</span>
-    <span style="color: #A52A2A; font-weight: bold;">if</span> <span style="color: #909183;">(</span>!<span style="color: #F5666D;">this</span>.chart<span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
-      <span style="color: #A52A2A; font-weight: bold;">return</span>;
-    <span style="color: #909183;">}</span>
+  setOption = option =&gt; {
+    if (!this.chart) {
+      return;
+    }
 
-    <span style="color: #A52A2A; font-weight: bold;">const</span> <span style="color: #0084C8; font-weight: bold;">notMerge</span> = <span style="color: #F5666D;">this</span>.props.notMerge;
-    <span style="color: #A52A2A; font-weight: bold;">const</span> <span style="color: #0084C8; font-weight: bold;">lazyUpdate</span> = <span style="color: #F5666D;">this</span>.props.lazyUpdate;
+    const notMerge = this.props.notMerge;
+    const lazyUpdate = this.props.lazyUpdate;
 
-    <span style="color: #F5666D;">this</span>.chart.setOption<span style="color: #909183;">(</span>option, notMerge, lazyUpdate<span style="color: #909183;">)</span>;
-  <span style="color: #7388d6;">}</span>;
-  dispose = <span style="color: #7388d6;">()</span> =&gt; <span style="color: #7388d6;">{</span>
-    <span style="color: #A52A2A; font-weight: bold;">if</span> <span style="color: #909183;">(</span>!<span style="color: #F5666D;">this</span>.chart<span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
-      <span style="color: #A52A2A; font-weight: bold;">return</span>;
-    <span style="color: #909183;">}</span>
+    this.chart.setOption(option, notMerge, lazyUpdate);
+  };
+  dispose = () =&gt; {
+    if (!this.chart) {
+      return;
+    }
 
-    <span style="color: #F5666D;">this</span>.chart.dispose<span style="color: #909183;">()</span>;
-    <span style="color: #F5666D;">this</span>.chart = <span style="color: #F5666D;">null</span>;
-  <span style="color: #7388d6;">}</span>;
-  resize = <span style="color: #7388d6;">()</span> =&gt; <span style="color: #7388d6;">{</span>
-    <span style="color: #F5666D;">this</span>.chart &amp;&amp; <span style="color: #F5666D;">this</span>.chart.resize<span style="color: #909183;">()</span>;
-  <span style="color: #7388d6;">}</span>;
-  getInstance = <span style="color: #7388d6;">()</span> =&gt; <span style="color: #7388d6;">{</span>
-    <span style="color: #A52A2A; font-weight: bold;">return</span> <span style="color: #F5666D;">this</span>.chart;
-  <span style="color: #7388d6;">}</span>;
-<span style="color: #707183;">}</span>
+    this.chart.dispose();
+    this.chart = null;
+  };
+  resize = () =&gt; {
+    this.chart &amp;&amp; this.chart.resize();
+  };
+  getInstance = () =&gt; {
+    return this.chart;
+  };
+}
 </pre>
 </div>
 
@@ -567,203 +545,203 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js"><span style="color: #A52A2A; font-weight: bold;">export</span> <span style="color: #A52A2A; font-weight: bold;">const</span> <span style="color: #0084C8; font-weight: bold;">trafficOptions</span> = <span style="color: #707183;">(</span>params<span style="color: #707183;">)</span> =&gt; <span style="color: #707183;">(</span><span style="color: #7388d6;">{</span>
-  title: <span style="color: #909183;">{</span>
-    show: <span style="color: #F5666D;">false</span>,
-  <span style="color: #909183;">}</span>,
-  legend: <span style="color: #909183;">{</span>
-    show: <span style="color: #F5666D;">true</span>,
-    top: <span style="color: #4E9A06;">'5%'</span>,
-    textStyle: <span style="color: #709870;">{</span>
-      color: <span style="color: #4E9A06;">'#c0c9d2'</span>,
-    <span style="color: #709870;">}</span>,
-  <span style="color: #909183;">}</span>,
-  tooltip: <span style="color: #909183;">{</span>
-    trigger: <span style="color: #4E9A06;">'axis'</span>,
-    axisPointer: <span style="color: #709870;">{</span>
-      lineStyle: <span style="color: #907373;">{</span>
-        color: <span style="color: #6276ba;">{</span>
-          type: <span style="color: #4E9A06;">'linear'</span>,
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: <span style="color: #858580;">[</span>
-            <span style="color: #80a880;">{</span>
-              offset: 0,
-              color: <span style="color: #4E9A06;">'rgba(0, 255, 233,0)'</span>,
-            <span style="color: #80a880;">}</span>,
-            <span style="color: #80a880;">{</span>
-              offset: 0.5,
-              color: <span style="color: #4E9A06;">'rgba(255, 255, 255,1)'</span>,
-            <span style="color: #80a880;">}</span>,
-            <span style="color: #80a880;">{</span>
-              offset: 1,
-              color: <span style="color: #4E9A06;">'rgba(0, 255, 233,0)'</span>,
-            <span style="color: #80a880;">}</span>,
-          <span style="color: #858580;">]</span>,
-          global: <span style="color: #F5666D;">false</span>,
-        <span style="color: #6276ba;">}</span>,
-      <span style="color: #907373;">}</span>,
-    <span style="color: #709870;">}</span>,
-  <span style="color: #909183;">}</span>,
-  grid: <span style="color: #909183;">{</span>
-    top: <span style="color: #4E9A06;">'15%'</span>,
-    left: <span style="color: #4E9A06;">'10%'</span>,
-    right: <span style="color: #4E9A06;">'5%'</span>,
-    bottom: <span style="color: #4E9A06;">'10%'</span>,
-  <span style="color: #909183;">}</span>,
-  xAxis: <span style="color: #909183;">{</span>
-    type: <span style="color: #4E9A06;">'category'</span>,
-    axisLine: <span style="color: #709870;">{</span>
-      show: <span style="color: #F5666D;">true</span>,
-    <span style="color: #709870;">}</span>,
-    splitArea: <span style="color: #709870;">{</span>
-      color: <span style="color: #4E9A06;">'#f00'</span>,
-      lineStyle: <span style="color: #907373;">{</span>
-        color: <span style="color: #4E9A06;">'#f00'</span>,
-      <span style="color: #907373;">}</span>,
-    <span style="color: #709870;">}</span>,
-    axisLabel: <span style="color: #709870;">{</span>
-      color: <span style="color: #4E9A06;">'#BCDCF0'</span>,
-    <span style="color: #709870;">}</span>,
-    splitLine: <span style="color: #709870;">{</span>
-      show: <span style="color: #F5666D;">false</span>,
-    <span style="color: #709870;">}</span>,
-    boundaryGap: <span style="color: #F5666D;">false</span>,
+<pre class="src src-js">export const trafficOptions = (params) =&gt; ({
+  title: {
+    show: false,
+  },
+  legend: {
+    show: true,
+    top: '5%',
+    textStyle: {
+      color: '#c0c9d2',
+    },
+  },
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      lineStyle: {
+	color: {
+	  type: 'linear',
+	  x: 0,
+	  y: 0,
+	  x2: 0,
+	  y2: 1,
+	  colorStops: [
+	    {
+	      offset: 0,
+	      color: 'rgba(0, 255, 233,0)',
+	    },
+	    {
+	      offset: 0.5,
+	      color: 'rgba(255, 255, 255,1)',
+	    },
+	    {
+	      offset: 1,
+	      color: 'rgba(0, 255, 233,0)',
+	    },
+	  ],
+	  global: false,
+	},
+      },
+    },
+  },
+  grid: {
+    top: '15%',
+    left: '10%',
+    right: '5%',
+    bottom: '10%',
+  },
+  xAxis: {
+    type: 'category',
+    axisLine: {
+      show: true,
+    },
+    splitArea: {
+      color: '#f00',
+      lineStyle: {
+	color: '#f00',
+      },
+    },
+    axisLabel: {
+      color: '#BCDCF0',
+    },
+    splitLine: {
+      show: false,
+    },
+    boundaryGap: false,
     data: params.timeList,
-  <span style="color: #909183;">}</span>,
+  },
 
-  yAxis: <span style="color: #909183;">{</span>
-    type: <span style="color: #4E9A06;">'value'</span>,
+  yAxis: {
+    type: 'value',
     min: 0,
-    splitLine: <span style="color: #709870;">{</span>
-      show: <span style="color: #F5666D;">true</span>,
-      lineStyle: <span style="color: #907373;">{</span>
-        color: <span style="color: #4E9A06;">'rgba(255,255,255,0.1)'</span>,
-      <span style="color: #907373;">}</span>,
-    <span style="color: #709870;">}</span>,
-    axisLine: <span style="color: #709870;">{</span>
-      show: <span style="color: #F5666D;">true</span>,
-    <span style="color: #709870;">}</span>,
-    axisLabel: <span style="color: #709870;">{</span>
-      show: <span style="color: #F5666D;">true</span>,
+    splitLine: {
+      show: true,
+      lineStyle: {
+	color: 'rgba(255,255,255,0.1)',
+      },
+    },
+    axisLine: {
+      show: true,
+    },
+    axisLabel: {
+      show: true,
       margin: 10,
-      textStyle: <span style="color: #907373;">{</span>
-        color: <span style="color: #4E9A06;">'#d1e6eb'</span>,
-      <span style="color: #907373;">}</span>,
-    <span style="color: #709870;">}</span>,
-    axisTick: <span style="color: #709870;">{</span>
-      show: <span style="color: #F5666D;">false</span>,
-    <span style="color: #709870;">}</span>,
-  <span style="color: #909183;">}</span>,
-  series: <span style="color: #909183;">[</span>
-    <span style="color: #709870;">{</span>
-      name: <span style="color: #4E9A06;">'&#36827;&#20837;&#20154;&#25968;'</span>,
-      type: <span style="color: #4E9A06;">'line'</span>,
-      smooth: <span style="color: #F5666D;">true</span>, <span style="color: #204A87;">//</span><span style="color: #204A87;">&#26159;&#21542;&#24179;&#28369;</span>
-      lineStyle: <span style="color: #907373;">{</span>
-        normal: <span style="color: #6276ba;">{</span>
-          color: <span style="color: #4E9A06;">'#00b3f4'</span>,
-          shadowColor: <span style="color: #4E9A06;">'rgba(0, 0, 0, .3)'</span>,
-          shadowBlur: 0,
-          shadowOffsetY: 5,
-          shadowOffsetX: 5,
-        <span style="color: #6276ba;">}</span>,
-      <span style="color: #907373;">}</span>,
-      label: <span style="color: #907373;">{</span>
-        show: <span style="color: #F5666D;">false</span>,
-        position: <span style="color: #4E9A06;">'top'</span>,
-        textStyle: <span style="color: #6276ba;">{</span>
-          color: <span style="color: #4E9A06;">'#00b3f4'</span>,
-        <span style="color: #6276ba;">}</span>,
-      <span style="color: #907373;">}</span>,
-      <span style="color: #204A87;">// </span><span style="color: #204A87;">&#21435;&#38500;&#28857;&#26631;&#35760;</span>
+      textStyle: {
+	color: '#d1e6eb',
+      },
+    },
+    axisTick: {
+      show: false,
+    },
+  },
+  series: [
+    {
+      name: '进入人数',
+      type: 'line',
+      smooth: true, //是否平滑
+      lineStyle: {
+	normal: {
+	  color: '#00b3f4',
+	  shadowColor: 'rgba(0, 0, 0, .3)',
+	  shadowBlur: 0,
+	  shadowOffsetY: 5,
+	  shadowOffsetX: 5,
+	},
+      },
+      label: {
+	show: false,
+	position: 'top',
+	textStyle: {
+	  color: '#00b3f4',
+	},
+      },
+      // 去除点标记
       symbolSize: 0,
-      <span style="color: #204A87;">// </span><span style="color: #204A87;">&#40736;&#26631;&#25918;&#19978;&#21435;&#36824;&#26159;&#35201;&#26377;&#39068;&#33394;&#30340;</span>
-      itemStyle: <span style="color: #907373;">{</span>
-        color: <span style="color: #4E9A06;">'#00b3f4'</span>,
-      <span style="color: #907373;">}</span>,
-      <span style="color: #204A87;">// </span><span style="color: #204A87;">&#35774;&#32622;&#28176;&#21464;&#33394;</span>
-      areaStyle: <span style="color: #907373;">{</span>
-        normal: <span style="color: #6276ba;">{</span>
-          color: <span style="color: #A52A2A; font-weight: bold;">new</span> <span style="color: #2F8B58; font-weight: bold;">echarts.graphic.LinearGradient</span><span style="color: #858580;">(</span>
-            0,
-            0,
-            0,
-            1,
-            <span style="color: #80a880;">[</span>
-              <span style="color: #887070;">{</span>
-                offset: 0,
-                color: <span style="color: #4E9A06;">'rgba(0,179,244,0.3)'</span>,
-              <span style="color: #887070;">}</span>,
-              <span style="color: #887070;">{</span>
-                offset: 1,
-                color: <span style="color: #4E9A06;">'rgba(0,179,244,0)'</span>,
-              <span style="color: #887070;">}</span>,
-            <span style="color: #80a880;">]</span>,
-            <span style="color: #F5666D;">false</span>
-          <span style="color: #858580;">)</span>,
-          shadowColor: <span style="color: #4E9A06;">'rgba(0,179,244, 0.9)'</span>,
-          shadowBlur: 20,
-        <span style="color: #6276ba;">}</span>,
-      <span style="color: #907373;">}</span>,
+      // 鼠标放上去还是要有颜色的
+      itemStyle: {
+	color: '#00b3f4',
+      },
+      // 设置渐变色
+      areaStyle: {
+	normal: {
+	  color: new echarts.graphic.LinearGradient(
+	    0,
+	    0,
+	    0,
+	    1,
+	    [
+	      {
+		offset: 0,
+		color: 'rgba(0,179,244,0.3)',
+	      },
+	      {
+		offset: 1,
+		color: 'rgba(0,179,244,0)',
+	      },
+	    ],
+	    false
+	  ),
+	  shadowColor: 'rgba(0,179,244, 0.9)',
+	  shadowBlur: 20,
+	},
+      },
       data: params.outData,
-    <span style="color: #709870;">}</span>,
-    <span style="color: #709870;">{</span>
-      name: <span style="color: #4E9A06;">'&#36208;&#20986;&#20154;&#25968;'</span>,
-      type: <span style="color: #4E9A06;">'line'</span>,
-      smooth: <span style="color: #F5666D;">true</span>, <span style="color: #204A87;">//</span><span style="color: #204A87;">&#26159;&#21542;&#24179;&#28369;</span>
-      <span style="color: #204A87;">// </span><span style="color: #204A87;">&#38452;&#24433;</span>
-      lineStyle: <span style="color: #907373;">{</span>
-        normal: <span style="color: #6276ba;">{</span>
-          color: <span style="color: #4E9A06;">'#00ca95'</span>,
-          shadowColor: <span style="color: #4E9A06;">'rgba(0, 0, 0, .3)'</span>,
-          shadowBlur: 0,
-          shadowOffsetY: 5,
-          shadowOffsetX: 5,
-        <span style="color: #6276ba;">}</span>,
-      <span style="color: #907373;">}</span>,
-      label: <span style="color: #907373;">{</span>
-        show: <span style="color: #F5666D;">false</span>,
-        position: <span style="color: #4E9A06;">'top'</span>,
-        textStyle: <span style="color: #6276ba;">{</span>
-          color: <span style="color: #4E9A06;">'#00ca95'</span>,
-        <span style="color: #6276ba;">}</span>,
-      <span style="color: #907373;">}</span>,
-      <span style="color: #204A87;">// </span><span style="color: #204A87;">&#21435;&#38500;&#28857;&#26631;&#35760;</span>
+    },
+    {
+      name: '走出人数',
+      type: 'line',
+      smooth: true, //是否平滑
+      // 阴影
+      lineStyle: {
+	normal: {
+	  color: '#00ca95',
+	  shadowColor: 'rgba(0, 0, 0, .3)',
+	  shadowBlur: 0,
+	  shadowOffsetY: 5,
+	  shadowOffsetX: 5,
+	},
+      },
+      label: {
+	show: false,
+	position: 'top',
+	textStyle: {
+	  color: '#00ca95',
+	},
+      },
+      // 去除点标记
       symbolSize: 0,
-      itemStyle: <span style="color: #907373;">{</span>
-        color: <span style="color: #4E9A06;">'#00ca95'</span>,
-      <span style="color: #907373;">}</span>,
-      <span style="color: #204A87;">// </span><span style="color: #204A87;">&#35774;&#32622;&#28176;&#21464;&#33394;</span>
-      areaStyle: <span style="color: #907373;">{</span>
-        normal: <span style="color: #6276ba;">{</span>
-          color: <span style="color: #A52A2A; font-weight: bold;">new</span> <span style="color: #2F8B58; font-weight: bold;">echarts.graphic.LinearGradient</span><span style="color: #858580;">(</span>
-            0,
-            0,
-            0,
-            1,
-            <span style="color: #80a880;">[</span>
-              <span style="color: #887070;">{</span>
-                offset: 0,
-                color: <span style="color: #4E9A06;">'rgba(0,202,149,0.3)'</span>,
-              <span style="color: #887070;">}</span>,
-              <span style="color: #887070;">{</span>
-                offset: 1,
-                color: <span style="color: #4E9A06;">'rgba(0,202,149,0)'</span>,
-              <span style="color: #887070;">}</span>,
-            <span style="color: #80a880;">]</span>,
-            <span style="color: #F5666D;">false</span>
-          <span style="color: #858580;">)</span>,
-          shadowColor: <span style="color: #4E9A06;">'rgba(0,202,149, 0.9)'</span>,
-          shadowBlur: 20,
-        <span style="color: #6276ba;">}</span>,
-      <span style="color: #907373;">}</span>,
+      itemStyle: {
+	color: '#00ca95',
+      },
+      // 设置渐变色
+      areaStyle: {
+	normal: {
+	  color: new echarts.graphic.LinearGradient(
+	    0,
+	    0,
+	    0,
+	    1,
+	    [
+	      {
+		offset: 0,
+		color: 'rgba(0,202,149,0.3)',
+	      },
+	      {
+		offset: 1,
+		color: 'rgba(0,202,149,0)',
+	      },
+	    ],
+	    false
+	  ),
+	  shadowColor: 'rgba(0,202,149, 0.9)',
+	  shadowBlur: 20,
+	},
+      },
       data: params.inData,
-    <span style="color: #709870;">}</span>,
-  <span style="color: #909183;">]</span>,
-<span style="color: #7388d6;">}</span><span style="color: #707183;">)</span>;
+    },
+  ],
+});
 </pre>
 </div>
 
@@ -789,19 +767,19 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js"><span style="color: #A52A2A; font-weight: bold;">export</span> <span style="color: #A52A2A; font-weight: bold;">default</span> <span style="color: #A52A2A; font-weight: bold;">function</span> request<span style="color: #707183;">(</span><span style="color: #0084C8; font-weight: bold;">url</span>, <span style="color: #0084C8; font-weight: bold;">options</span><span style="color: #707183;">)</span> <span style="color: #707183;">{</span>
-  <span style="color: #A52A2A; font-weight: bold;">return</span> fetch<span style="color: #7388d6;">(</span>url, options<span style="color: #7388d6;">)</span>
-    .then<span style="color: #7388d6;">(</span>checkStatus<span style="color: #7388d6;">)</span>
-    .then<span style="color: #7388d6;">(</span>parseJSON<span style="color: #7388d6;">)</span>
-    .then<span style="color: #7388d6;">(</span>data =&gt; <span style="color: #909183;">(</span><span style="color: #709870;">{</span> data <span style="color: #709870;">}</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>
-    .<span style="color: #A52A2A; font-weight: bold;">catch</span><span style="color: #7388d6;">(</span>err =&gt; <span style="color: #909183;">(</span><span style="color: #709870;">{</span> err <span style="color: #709870;">}</span><span style="color: #909183;">)</span><span style="color: #7388d6;">)</span>;
-<span style="color: #707183;">}</span>
+<pre class="src src-js">export default function request(url, options) {
+  return fetch(url, options)
+    .then(checkStatus)
+    .then(parseJSON)
+    .then(data =&gt; ({ data }))
+    .catch(err =&gt; ({ err }));
+}
 
-<span style="color: #A52A2A; font-weight: bold;">export</span> <span style="color: #A52A2A; font-weight: bold;">const</span> <span style="color: #0084C8; font-weight: bold;">getLeftPageData</span> = <span style="color: #A52A2A; font-weight: bold;">async</span> <span style="color: #707183;">()</span> =&gt; <span style="color: #707183;">{</span>
-  <span style="color: #A52A2A; font-weight: bold;">return</span> request<span style="color: #7388d6;">(</span><span style="color: #4E9A06;">'/api/leftPageData'</span><span style="color: #7388d6;">)</span>.then<span style="color: #7388d6;">(</span>response =&gt; <span style="color: #909183;">{</span>
-    <span style="color: #A52A2A; font-weight: bold;">return</span> response.data;
-  <span style="color: #909183;">}</span><span style="color: #7388d6;">)</span>;
-<span style="color: #707183;">}</span>;
+export const getLeftPageData = async () =&gt; {
+  return request('/api/leftPageData').then(response =&gt; {
+    return response.data;
+  });
+};
 
 </pre>
 </div>
@@ -811,47 +789,47 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js"><span style="color: #A52A2A; font-weight: bold;">export</span> <span style="color: #A52A2A; font-weight: bold;">default</span> <span style="color: #707183;">{</span>
-  <span style="color: #204A87;">// </span><span style="color: #204A87;">&#21629;&#21517;&#31354;&#38388; (&#24517;&#22635;)</span>
-  namespace: <span style="color: #4E9A06;">'leftPage'</span>,
+<pre class="src src-js">export default {
+  // 命名空间 (必填)
+  namespace: 'leftPage',
 
-  <span style="color: #204A87;">// </span><span style="color: #204A87;">&#25968;&#25454;</span>
-  state: <span style="color: #7388d6;">{}</span>,
+  // 数据
+  state: {},
 
-  <span style="color: #204A87;">// </span><span style="color: #204A87;">&#36335;&#30001;&#30417;&#21548;</span>
-  subscriptions: <span style="color: #7388d6;">{</span>
-    setup<span style="color: #909183;">(</span><span style="color: #709870;">{</span> dispatch, history <span style="color: #709870;">}</span><span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
-      <span style="color: #A52A2A; font-weight: bold;">return</span> history.listen<span style="color: #709870;">(</span><span style="color: #907373;">(</span>location, action<span style="color: #907373;">)</span> =&gt; <span style="color: #907373;">{</span>
-        <span style="color: #204A87;">// </span><span style="color: #204A87;">&#21442;&#25968;&#21487;&#20197;&#30452;&#25509;&#31616;&#20889;&#25104;{pathname}</span>
-        <span style="color: #A52A2A; font-weight: bold;">if</span> <span style="color: #6276ba;">(</span>location.pathname === <span style="color: #4E9A06;">'/'</span><span style="color: #6276ba;">)</span> <span style="color: #6276ba;">{</span> <span style="color: #204A87;">//</span><span style="color: #204A87;">&#24403;&#36827;&#20837;&#24403;&#21069;&#39029;&#38754;&#23601;&#25191;&#34892;&#33719;&#21462;&#25968;&#25454;&#36825;&#19968;action</span>
-          dispatch<span style="color: #858580;">(</span><span style="color: #80a880;">{</span> type: <span style="color: #4E9A06;">'getLeftPageData'</span> <span style="color: #80a880;">}</span><span style="color: #858580;">)</span>;
-        <span style="color: #6276ba;">}</span>
-      <span style="color: #907373;">}</span><span style="color: #709870;">)</span>;
-    <span style="color: #909183;">}</span>,
-  <span style="color: #7388d6;">}</span>,
+  // 路由监听
+  subscriptions: {
+    setup({ dispatch, history }) {
+      return history.listen((location, action) =&gt; {
+	// 参数可以直接简写成{pathname}
+	if (location.pathname === '/') { //当进入当前页面就执行获取数据这一action
+	  dispatch({ type: 'getLeftPageData' });
+	}
+      });
+    },
+  },
 
-  <span style="color: #204A87;">// </span><span style="color: #204A87;">&#24322;&#27493;&#35831;&#27714;    action&#22788;&#29702;&#22120;&#65292;&#29992;&#20197;&#23545;&#24322;&#27493;&#21160;&#20316;&#36827;&#34892;&#22788;&#29702;</span>
-  effects: <span style="color: #7388d6;">{</span>
-    *getLeftPageData<span style="color: #909183;">(</span><span style="color: #709870;">{</span> payload <span style="color: #709870;">}</span>, <span style="color: #709870;">{</span> call, put <span style="color: #709870;">}</span><span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
-      <span style="color: #A52A2A; font-weight: bold;">const</span> <span style="color: #0084C8; font-weight: bold;">data</span> = <span style="color: #A52A2A; font-weight: bold;">yield</span> call<span style="color: #709870;">(</span>getLeftPageData<span style="color: #709870;">)</span>; 
-      <span style="color: #A52A2A; font-weight: bold;">if</span> <span style="color: #709870;">(</span>data<span style="color: #709870;">)</span> <span style="color: #709870;">{</span>
-        <span style="color: #A52A2A; font-weight: bold;">yield</span> put<span style="color: #907373;">(</span><span style="color: #6276ba;">{</span>
-          type: <span style="color: #4E9A06;">'setData'</span>,
-          payload: data,
-        <span style="color: #6276ba;">}</span><span style="color: #907373;">)</span>;
-      <span style="color: #709870;">}</span> <span style="color: #A52A2A; font-weight: bold;">else</span> <span style="color: #709870;">{</span>
-        console.log<span style="color: #907373;">(</span><span style="color: #4E9A06;">`&#33719;&#21462;&#24038;&#20391;&#25968;&#25454;&#25968;&#25454;&#22833;&#36133;`</span><span style="color: #907373;">)</span>;
-      <span style="color: #709870;">}</span>
-    <span style="color: #909183;">}</span>,
-  <span style="color: #7388d6;">}</span>,
+  // 异步请求    action处理器，用以对异步动作进行处理
+  effects: {
+    *getLeftPageData({ payload }, { call, put }) {
+      const data = yield call(getLeftPageData); 
+      if (data) {
+	yield put({
+	  type: 'setData',
+	  payload: data,
+	});
+      } else {
+	console.log(`获取左侧数据数据失败`);
+      }
+    },
+  },
 
-  <span style="color: #204A87;">// </span><span style="color: #204A87;">&#21516;&#27493;&#25805;&#20316;</span>
-  reducers: <span style="color: #7388d6;">{</span>
-    setData<span style="color: #909183;">(</span>state, action<span style="color: #909183;">)</span> <span style="color: #909183;">{</span>
-      <span style="color: #A52A2A; font-weight: bold;">return</span> <span style="color: #709870;">{</span> ...state, ...action.payload <span style="color: #709870;">}</span>;
-    <span style="color: #909183;">}</span>,
-  <span style="color: #7388d6;">}</span>,
-<span style="color: #707183;">}</span>;
+  // 同步操作
+  reducers: {
+    setData(state, action) {
+      return { ...state, ...action.payload };
+    },
+  },
+};
 
 </pre>
 </div>
@@ -873,12 +851,12 @@
 </div>
 
 
-<div id="outline-container-org041ea0c" class="outline-2">
-<h2 id="org041ea0c"><span class="section-number-2">3</span> 安装与运行</h2>
+<div id="outline-container-org4085f24" class="outline-2">
+<h2 id="org4085f24"><span class="section-number-2">3.</span> 安装与运行</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org72de56f" class="outline-3">
-<h3 id="org72de56f"><span class="section-number-3">3.1</span> 安装</h3>
+<div id="outline-container-org83eda2d" class="outline-3">
+<h3 id="org83eda2d"><span class="section-number-3">3.1.</span> 安装</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 基于npm进行依赖安装
@@ -891,15 +869,15 @@
 主要包括以下依赖：
 </p>
 <div class="org-src-container">
-<pre class="src src-js"><span style="color: #4E9A06;">"dependencies"</span>: <span style="color: #707183;">{</span>
-   <span style="color: #4E9A06;">"@jiaminghi/data-view-react"</span>: <span style="color: #4E9A06;">"^1.2.4"</span>,
-   <span style="color: #4E9A06;">"dva"</span>: <span style="color: #4E9A06;">"^2.4.1"</span>,
-   <span style="color: #4E9A06;">"echarts"</span>: <span style="color: #4E9A06;">"^4.9.0"</span>,
-   <span style="color: #4E9A06;">"react"</span>: <span style="color: #4E9A06;">"^16.2.0"</span>,
-   <span style="color: #4E9A06;">"react-dom"</span>: <span style="color: #4E9A06;">"^16.2.0"</span>,
-   <span style="color: #4E9A06;">"sass-loader"</span>: <span style="color: #4E9A06;">"8.0.2"</span>,
-   <span style="color: #4E9A06;">"styled-components"</span>: <span style="color: #4E9A06;">"^5.2.0"</span>
- <span style="color: #707183;">}</span>,
+<pre class="src src-js">"dependencies": {
+   "@jiaminghi/data-view-react": "^1.2.4",
+   "dva": "^2.4.1",
+   "echarts": "^4.9.0",
+   "react": "^16.2.0",
+   "react-dom": "^16.2.0",
+   "sass-loader": "8.0.2",
+   "styled-components": "^5.2.0"
+ },
 </pre>
 </div>
 <p>
@@ -907,8 +885,8 @@
 </p>
 </div>
 </div>
-<div id="outline-container-orgaa8a2c6" class="outline-3">
-<h3 id="orgaa8a2c6"><span class="section-number-3">3.2</span> 运行</h3>
+<div id="outline-container-orgb7ea2b3" class="outline-3">
+<h3 id="orgb7ea2b3"><span class="section-number-3">3.2.</span> 运行</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 运行下列命令，即可在浏览器打开相关页面，F11进入全屏中即可使用。
@@ -924,7 +902,7 @@
 <div id="postamble" class="status">
 <p class="date">Date: Sun Jul 11 17:08:49 2021</p>
 <p class="author">Author: 梁子，软件学院，S0083，3120305385</p>
-<p class="date">Created: 2022-03-26 周六 21:55</p>
+<p class="date">Created: 2023-01-05 四 16:37</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

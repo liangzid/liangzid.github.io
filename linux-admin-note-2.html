@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-04-27 周三 17:24 -->
+<!-- 2023-01-02 一 17:32 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>运维管理笔记二： 用户管理与硬盘挂载</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="ziliang" />
-<style type="text/css">
- <!--/*--><![CDATA[/*><!--*/
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
   .subtitle { text-align: center;
@@ -31,8 +31,9 @@
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
   pre {
-    border: 1px solid #ccc;
-    box-shadow: 3px 3px 3px #eee;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
     padding: 8pt;
     font-family: monospace;
     overflow: auto;
@@ -41,21 +42,21 @@
   pre.src {
     position: relative;
     overflow: auto;
-    padding-top: 1.2em;
   }
   pre.src:before {
     display: none;
     position: absolute;
-    background-color: white;
-    top: -10px;
-    right: 10px;
+    top: -8px;
+    right: 12px;
     padding: 3px;
-    border: 1px solid black;
+    color: #555;
+    background-color: #f2f2f299;
   }
   pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -191,49 +192,26 @@
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { width: 90%; }
-  /*]]>*/-->
 </style>
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">运维管理笔记二： 用户管理与硬盘挂载</h1>
-<div id="table-of-contents">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgfc11be4">1. 开账号</a></li>
-<li><a href="#orge792ee5">2. 修改账号的用户名</a></li>
-<li><a href="#org004a282">3. 数据备份</a></li>
+<li><a href="#org817ba50">1. 开账号</a></li>
+<li><a href="#org100422d">2. 修改账号的用户名</a></li>
+<li><a href="#orgae93b10">3. 数据备份</a></li>
 </ul>
 </div>
 </div>
 <p>
 在<a href="install-cuda-in-server.html">上一篇</a>笔记中我学会了如何为GPU硬件设置驱动和安装cuda，现在我又开始学习如何管理用户了。
 </p>
-<div id="outline-container-orgfc11be4" class="outline-2">
-<h2 id="orgfc11be4"><span class="section-number-2">1</span> 开账号</h2>
+<div id="outline-container-org817ba50" class="outline-2">
+<h2 id="org817ba50"><span class="section-number-2">1.</span> 开账号</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 开账号最简单的方式是用 <code>adduser</code> 而非 <code>useradd</code> 。
@@ -244,12 +222,12 @@
 </p>
 </div>
 </div>
-<div id="outline-container-orge792ee5" class="outline-2">
-<h2 id="orge792ee5"><span class="section-number-2">2</span> 修改账号的用户名</h2>
+<div id="outline-container-org100422d" class="outline-2">
+<h2 id="org100422d"><span class="section-number-2">2.</span> 修改账号的用户名</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
-<pre class="src src-sh">usermod -l newusername oldusername <span style="color: #586e75;"># </span><span style="color: #586e75;">&#36825;&#19968;&#34892;&#29992;&#26469;&#20462;&#25913;&#29992;&#25143;&#21517;</span>
-usermod -d /home/newusername -m newusername <span style="color: #586e75;"># </span><span style="color: #586e75;">&#36825;&#19968;&#34892;&#29992;&#26469;&#20462;&#25913;home&#19979;&#38754;&#30340;&#26087;&#25991;&#20214;&#21517;&#20026;&#26032;&#25991;&#20214;&#21517;</span>
+<pre class="src src-sh">usermod -l newusername oldusername <span style="color: #635C4A;"># </span><span style="color: #635C4A;">&#36825;&#19968;&#34892;&#29992;&#26469;&#20462;&#25913;&#29992;&#25143;&#21517;</span>
+usermod -d /home/newusername -m newusername <span style="color: #635C4A;"># </span><span style="color: #635C4A;">&#36825;&#19968;&#34892;&#29992;&#26469;&#20462;&#25913;home&#19979;&#38754;&#30340;&#26087;&#25991;&#20214;&#21517;&#20026;&#26032;&#25991;&#20214;&#21517;</span>
 </pre>
 </div>
 
@@ -258,8 +236,8 @@ usermod -d /home/newusername -m newusername <span style="color: #586e75;"># </sp
 </p>
 </div>
 </div>
-<div id="outline-container-org004a282" class="outline-2">
-<h2 id="org004a282"><span class="section-number-2">3</span> 数据备份</h2>
+<div id="outline-container-orgae93b10" class="outline-2">
+<h2 id="orgae93b10"><span class="section-number-2">3.</span> 数据备份</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 然后服务器扩容，我负责备份。硬盘备份的主要方式如下：
@@ -316,7 +294,7 @@ mount /dev/sdc2 /mnt/dir_you_set
 <div id="postamble" class="status">
 <p class="date">Date: Thu Mar 31 14:54:26 2022</p>
 <p class="author">Author: ziliang</p>
-<p class="date">Created: 2022-04-27 周三 17:24</p>
+<p class="date">Created: 2023-01-02 一 17:32</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

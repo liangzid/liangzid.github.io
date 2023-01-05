@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-03-26 周六 21:54 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>huggingface transformers 源码剖析(一)</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Zi Liang" />
+<link rel="stylesheet" type="text/css" href="./css/worg.css" />
+<script type="text/javascript">
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
+<!--/*--><![CDATA[/*><!--*/
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">huggingface transformers 源码剖析(一)</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org7e12447">1. Logging</a></li>
+<li><a href="#orgf948c5f">2. Tokenizer</a></li>
+<li><a href="#org198703f">3. Models</a></li>
+<li><a href="#org1cc82c6">4. Model outputs</a></li>
+<li><a href="#org73965e4">5. Optimization</a></li>
+<li><a href="#org1f028e1">6. Configuration</a></li>
+<li><a href="#orgba23707">7. Processors</a></li>
+<li><a href="#orgff658e5">8. Callbacks</a></li>
+<li><a href="#orgcdd0ffe">9. Pipelines</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org7e12447" class="outline-2">
+<h2 id="org7e12447"><span class="section-number-2">1</span> Logging</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+transformers也提供了logging功能，类似于python标准库中的实现。我还是建议使用默认的python库中的logging，你可以在<a href="https://docs.python.org/3/library/logging.html">这里</a>找到相关信息。如果你还是想使用transformers.logging做日志，那么你可以使用以下API：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #A52A2A; font-weight: bold;">import</span> transformers.logging <span style="color: #A52A2A; font-weight: bold;">as</span> logging
+
+<span style="color: #204A87;"># </span><span style="color: #204A87;">## get logger</span>
+<span style="color: #204A87;"># </span><span style="color: #204A87;">logging.get_logger()</span>
+
+<span style="color: #204A87;">## </span><span style="color: #204A87;">set level</span>
+logging.set_verbosity_error<span style="color: #707183;">()</span>
+logging.set_verbosity_warning<span style="color: #707183;">()</span>
+logging.set_verbosity_info<span style="color: #707183;">()</span>
+logging.set_verbosity_debug<span style="color: #707183;">()</span>
+
+logging.set_verbosity<span style="color: #707183;">(</span>p<span style="color: #707183;">)</span> <span style="color: #204A87;"># </span><span style="color: #204A87;">where p can be int: 10(debug),20(info),30(warning),40(error),50(critical)</span>
+<span style="color: #204A87;"># </span><span style="color: #204A87;">you can get the int value by logging.DEBUG, logging.INFO, ...</span>
+
+<span style="color: #204A87;">## </span><span style="color: #204A87;">get level</span>
+logging.get_verbosity<span style="color: #707183;">()</span>
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf948c5f" class="outline-2">
+<h2 id="orgf948c5f"><span class="section-number-2">2</span> Tokenizer</h2>
+</div>
+
+<div id="outline-container-org198703f" class="outline-2">
+<h2 id="org198703f"><span class="section-number-2">3</span> Models</h2>
+</div>
+
+<div id="outline-container-org1cc82c6" class="outline-2">
+<h2 id="org1cc82c6"><span class="section-number-2">4</span> Model outputs</h2>
+</div>
+
+<div id="outline-container-org73965e4" class="outline-2">
+<h2 id="org73965e4"><span class="section-number-2">5</span> Optimization</h2>
+</div>
+
+<div id="outline-container-org1f028e1" class="outline-2">
+<h2 id="org1f028e1"><span class="section-number-2">6</span> Configuration</h2>
+</div>
+
+<div id="outline-container-orgba23707" class="outline-2">
+<h2 id="orgba23707"><span class="section-number-2">7</span> Processors</h2>
+</div>
+
+<div id="outline-container-orgff658e5" class="outline-2">
+<h2 id="orgff658e5"><span class="section-number-2">8</span> Callbacks</h2>
+</div>
+
+<div id="outline-container-orgcdd0ffe" class="outline-2">
+<h2 id="orgcdd0ffe"><span class="section-number-2">9</span> Pipelines</h2>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: Tue Nov 23 15:37:36 2021</p>
+<p class="author">Author: Zi Liang</p>
+<p class="date">Created: 2022-03-26 周六 21:54</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

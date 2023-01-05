@@ -3,61 +3,39 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-03-26 周六 21:55 -->
+<!-- 2023-01-05 四 16:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>search on graph系列算法笔记</title>
-<meta name="generator" content="Org mode" />
 <meta name="author" content="LiangZi" />
+<meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="./css/worg.css" />
-<script type="text/javascript">
-// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
-<!--/*--><![CDATA[/*><!--*/
-     function CodeHighlightOn(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.add("code-highlighted");
-         target.classList.add("code-highlighted");
-       }
-     }
-     function CodeHighlightOff(elem, id)
-     {
-       var target = document.getElementById(id);
-       if(null != target) {
-         elem.classList.remove("code-highlighted");
-         target.classList.remove("code-highlighted");
-       }
-     }
-    /*]]>*///-->
-// @license-end
-</script>
 </head>
 <body>
-<div id="content">
+<div id="content" class="content">
 <h1 class="title">search on graph系列算法笔记</h1>
-<div id="table-of-contents">
+<div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
-<div id="text-table-of-contents">
+<div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge1adfa5">1. search on graph问题的两个步骤</a>
+<li><a href="#org7e244f4">1. search on graph问题的两个步骤</a>
 <ul>
-<li><a href="#org9b9efec">1.1. Delaunay graph 与 voronoi Diagram</a></li>
-<li><a href="#org242ca8b">1.2. 图的贪婪搜索与度量函数的凸特性</a></li>
+<li><a href="#orgb5c0e14">1.1. Delaunay graph 与 voronoi Diagram</a></li>
+<li><a href="#orgb5702e1">1.2. 图的贪婪搜索与度量函数的凸特性</a></li>
 </ul>
 </li>
-<li><a href="#orgbabb90b">2. NSW Navigation Small World</a></li>
-<li><a href="#orgeb7db2b">3. HNSW Hierarchical NSW</a></li>
-<li><a href="#orga0b0ae8">4. BFSG Binary Function Search on Graph</a></li>
-<li><a href="#orgbba9341">5. our method NISG: Neural interface metric search on Graph</a></li>
+<li><a href="#orgbef8061">2. NSW Navigation Small World</a></li>
+<li><a href="#org3685d94">3. HNSW Hierarchical NSW</a></li>
+<li><a href="#orga77eb98">4. BFSG Binary Function Search on Graph</a></li>
+<li><a href="#org7b8dc6c">5. our method NISG: Neural interface metric search on Graph</a></li>
 </ul>
 </div>
 </div>
 <p>
 今天阅读一篇需要复现的论文,发现自己对"search on graph"一直没有足够的了解.因此专门抽出一天时间学习这一类解决ANNS问题的方法,算是为以后的工作铺平道路吧.
 </p>
-<div id="outline-container-orge1adfa5" class="outline-2">
-<h2 id="orge1adfa5"><span class="section-number-2">1</span> search on graph问题的两个步骤</h2>
+<div id="outline-container-org7e244f4" class="outline-2">
+<h2 id="org7e244f4"><span class="section-number-2">1.</span> search on graph问题的两个步骤</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 一般而言,所有的search on graph算法都包含两个基本的环节:graph construction 与 graph search.正如LSH等算法需要建设一个向量点的sketch一样,search on graph的算法侧重于捕捉节点与节点之间的连接关系,即通过一张"图"去存储点集的预信息,而非存储哈希表.因此,这两个环节的基本功能是:
@@ -71,8 +49,8 @@
 为了澄清上述描述中的一些问题,需要对Delaunay graph进行一个简单的说明.
 </p>
 </div>
-<div id="outline-container-org9b9efec" class="outline-3">
-<h3 id="org9b9efec"><span class="section-number-3">1.1</span> Delaunay graph 与 voronoi Diagram</h3>
+<div id="outline-container-orgb5c0e14" class="outline-3">
+<h3 id="orgb5c0e14"><span class="section-number-3">1.1.</span> Delaunay graph 与 voronoi Diagram</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 你可以在<a href="https://www.bilibili.com/video/BV1Ck4y1z7VT?from=search&amp;seid=11009589865241430903">bilibili-delaunay三角</a>找到对delaunay划分的一些直观理解.
@@ -125,7 +103,7 @@
 </p>
 
 
-<div id="org6722f55" class="figure">
+<div id="org9211878" class="figure">
 <p><img src="./images/20200622160517.png" alt="20200622160517.png" />
 </p>
 </div>
@@ -139,14 +117,14 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org242ca8b" class="outline-3">
-<h3 id="org242ca8b"><span class="section-number-3">1.2</span> 图的贪婪搜索与度量函数的凸特性</h3>
+<div id="outline-container-orgb5702e1" class="outline-3">
+<h3 id="orgb5702e1"><span class="section-number-3">1.2.</span> 图的贪婪搜索与度量函数的凸特性</h3>
 </div>
 </div>
 
 
-<div id="outline-container-orgbabb90b" class="outline-2">
-<h2 id="orgbabb90b"><span class="section-number-2">2</span> NSW Navigation Small World</h2>
+<div id="outline-container-orgbef8061" class="outline-2">
+<h2 id="orgbef8061"><span class="section-number-2">2.</span> NSW Navigation Small World</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 那么,怎么去做这件事呢?!常见的一个思路是,NSW.在这一章,将从直观上先说一说NSW的基本思路,而后再给出该算法详细的伪代码.
@@ -188,28 +166,28 @@ NSW算法自然语言描述:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++">K-NNSearch<span style="color: #707183;">(</span><span style="color: #2F8B58; font-weight: bold;">object</span> <span style="color: #0084C8; font-weight: bold;">q</span>, integer: m, k<span style="color: #707183;">)</span>
-TreeSet <span style="color: #707183;">[</span>object<span style="color: #707183;">]</span> tempRes, candidates, visitedSet, result 
-<span style="color: #204A87;">// </span><span style="color: #204A87;">&#36827;&#34892;m&#27425;&#24490;&#29615;&#65292;&#36991;&#20813;&#38543;&#26426;&#24615;</span>
-<span style="color: #A52A2A; font-weight: bold;">for</span> <span style="color: #707183;">(</span>i&#8592;0; i &lt; m; i++<span style="color: #707183;">)</span> <span style="color: #A52A2A; font-weight: bold;">do</span>:
+<pre class="src src-C++">K-NNSearch(object q, integer: m, k)
+TreeSet [object] tempRes, candidates, visitedSet, result 
+// 进行m次循环，避免随机性
+for (i←0; i &lt; m; i++) do:
     put random entry point in candidates
-    tempRes&#8592;null
+    tempRes←null
     repeat:
-        <span style="color: #204A87;">// </span><span style="color: #204A87;">&#21033;&#29992;&#19978;&#36848;&#25552;&#21040;&#30340;&#36138;&#23146;&#25628;&#32034;&#31639;&#27861;&#25214;&#21040;&#36317;&#31163;q&#26368;&#36817;&#30340;&#28857;c</span>
-        get element c closest from candidates to q
-        remove c from candidates
-        <span style="color: #204A87;">// </span><span style="color: #204A87;">&#21028;&#26029;&#32467;&#26463;&#26465;&#20214;</span>
-        <span style="color: #A52A2A; font-weight: bold;">if</span> c is further than k-th element from result then
-            <span style="color: #A52A2A; font-weight: bold;">break</span> repeat
-        <span style="color: #204A87;">// </span><span style="color: #204A87;">&#26356;&#26032;&#21518;&#36873;&#25321;&#21015;&#34920;</span>
-        <span style="color: #A52A2A; font-weight: bold;">for</span> every element e from friends of c <span style="color: #A52A2A; font-weight: bold;">do</span>:
-            <span style="color: #A52A2A; font-weight: bold;">if</span> e is <span style="color: #A52A2A; font-weight: bold;">not</span> in visitedSet then
-                add e to visitedSet, candidates, tempRes
+	// 利用上述提到的贪婪搜索算法找到距离q最近的点c
+	get element c closest from candidates to q
+	remove c from candidates
+	// 判断结束条件
+	if c is further than k-th element from result then
+	    break repeat
+	// 更新后选择列表
+	for every element e from friends of c do:
+	    if e is not in visitedSet then
+		add e to visitedSet, candidates, tempRes
     end repeat
-    <span style="color: #204A87;">// </span><span style="color: #204A87;">&#27719;&#24635;&#32467;&#26524;</span>
-    add objects from tempRes to <span style="color: #2F8B58; font-weight: bold;">result</span> 
-<span style="color: #0084C8; font-weight: bold;">end</span> <span style="color: #A52A2A; font-weight: bold;">for</span> 
-<span style="color: #A52A2A; font-weight: bold;">return</span> best k elements from result
+    // 汇总结果
+    add objects from tempRes to result 
+end for 
+return best k elements from result
 
 </pre>
 </div>
@@ -219,8 +197,8 @@ TreeSet <span style="color: #707183;">[</span>object<span style="color: #707183;
 </div>
 </div>
 
-<div id="outline-container-orgeb7db2b" class="outline-2">
-<h2 id="orgeb7db2b"><span class="section-number-2">3</span> HNSW Hierarchical NSW</h2>
+<div id="outline-container-org3685d94" class="outline-2">
+<h2 id="org3685d94"><span class="section-number-2">3.</span> HNSW Hierarchical NSW</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 学长就让我看到HNSW.或许这就是目前比较好的算法了吧!其实,HNSW本质上就是对NSW的增量研究,因而解释起来应该比较简单.
@@ -239,7 +217,7 @@ TreeSet <span style="color: #707183;">[</span>object<span style="color: #707183;
 </p>
 
 
-<div id="orge1ce201" class="figure">
+<div id="org37ad539" class="figure">
 <p><img src="images/20200622165904.png" alt="20200622165904.png" />
 </p>
 </div>
@@ -264,7 +242,7 @@ TreeSet <span style="color: #707183;">[</span>object<span style="color: #707183;
 </p>
 
 
-<div id="org9621b58" class="figure">
+<div id="org65ac356" class="figure">
 <p><img src="images/20200622172455.png" alt="20200622172455.png" />
 </p>
 </div>
@@ -275,7 +253,7 @@ TreeSet <span style="color: #707183;">[</span>object<span style="color: #707183;
 </p>
 
 
-<div id="org384f549" class="figure">
+<div id="org6a3fdcd" class="figure">
 <p><img src="images/20200622172615.png" alt="20200622172615.png" />
 </p>
 </div>
@@ -285,13 +263,13 @@ TreeSet <span style="color: #707183;">[</span>object<span style="color: #707183;
 </p>
 
 
-<div id="org9c274a5" class="figure">
+<div id="orgf417002" class="figure">
 <p><img src="images/20200622172709.png" alt="20200622172709.png" />
 </p>
 </div>
 
 
-<div id="orgd4ae367" class="figure">
+<div id="orgae88a01" class="figure">
 <p><img src="images/20200622172743.png" alt="20200622172743.png" />
 </p>
 </div>
@@ -301,7 +279,7 @@ TreeSet <span style="color: #707183;">[</span>object<span style="color: #707183;
 </p>
 
 
-<div id="orgea9939b" class="figure">
+<div id="org5fca9d4" class="figure">
 <p><img src="images/20200622173018.png" alt="20200622173018.png" />
 </p>
 </div>
@@ -309,8 +287,8 @@ TreeSet <span style="color: #707183;">[</span>object<span style="color: #707183;
 </div>
 
 
-<div id="outline-container-orga0b0ae8" class="outline-2">
-<h2 id="orga0b0ae8"><span class="section-number-2">4</span> BFSG Binary Function Search on Graph</h2>
+<div id="outline-container-orga77eb98" class="outline-2">
+<h2 id="orga77eb98"><span class="section-number-2">4.</span> BFSG Binary Function Search on Graph</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Binary function是指以两个输入为自变量的神经网络函数.从某意义上讲,这种函数也可以被认为是一种勉强而特殊的距离度量.当然,与L2,consine等不同的是,这种距离度量是非凸的,因此直接的search on graph 方法或许无法使用.
@@ -341,7 +319,7 @@ WSDM2020中的Fast item ranking一文中给出了一种基于search on graph的�
 </ol>
 
 
-<div id="orga72724d" class="figure">
+<div id="orgac53043" class="figure">
 <p><img src="images/20200623095623.png" alt="20200623095623.png" />
 </p>
 </div>
@@ -351,7 +329,7 @@ WSDM2020中的Fast item ranking一文中给出了一种基于search on graph的�
 </ol>
 
 
-<div id="orga4886be" class="figure">
+<div id="org86e887f" class="figure">
 <p><img src="images/20200623095658.png" alt="20200623095658.png" />
 </p>
 </div>
@@ -360,8 +338,8 @@ WSDM2020中的Fast item ranking一文中给出了一种基于search on graph的�
 
 
 
-<div id="outline-container-orgbba9341" class="outline-2">
-<h2 id="orgbba9341"><span class="section-number-2">5</span> our method NISG: Neural interface metric search on Graph</h2>
+<div id="outline-container-org7b8dc6c" class="outline-2">
+<h2 id="org7b8dc6c"><span class="section-number-2">5.</span> our method NISG: Neural interface metric search on Graph</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 在进行graph construction的过程中,单纯使用L2距离并不是一个美妙的决定,同时,使用神经网络作为search函数又难以满足众多非凸的性质.为了解决这个问题,我们采用了一种新的方法, blablabla&#x2026;
@@ -371,7 +349,7 @@ WSDM2020中的Fast item ranking一文中给出了一种基于search on graph的�
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: LiangZi</p>
-<p class="date">Created: 2022-03-26 周六 21:55</p>
+<p class="date">Created: 2023-01-05 四 16:37</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
