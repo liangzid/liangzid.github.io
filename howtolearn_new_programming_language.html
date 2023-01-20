@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-01-20 五 11:51 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>学习一门新的编程语言的方法和原则</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="./css/worg.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">学习一门新的编程语言的方法和原则</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org4724347">1. Python中常用编程知识的移植清单</a>
+<ul>
+<li><a href="#org46eec27">1.1. 基本控制流（15 min）</a></li>
+<li><a href="#org072812e">1.2. 基本数据结构（15 min）</a></li>
+<li><a href="#org7243308">1.3. 基本操作 （20 min）</a></li>
+<li><a href="#orgec4b85f">1.4. 基本函数库</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+近期由于一些科研需求，需要学习一些新的编程语言。为提升效率，优化学习的效果，笔者对如何学习新的编程语言进行了思考，并在本文记录之。
+</p>
+
+<p>
+目前来看，学习一门新语言的方法论主要包括以下几点：
+</p>
+<ol class="org-ol">
+<li>必须同已学会的编程语言进行对比</li>
+<li>必须同使用该语言的目标所切合</li>
+<li>必须专门学习该语言的特色之处。</li>
+</ol>
+
+<p>
+以上述三点为指导，那么一门编程语言的学习大概应当是如下的流程：
+</p>
+<ol class="org-ol">
+<li>首先，需要先有一门已经学会的编程语言，比如python。然后我们有一个目标语言，比如Rust</li>
+<li>之后，我们要分析为什么要学习Rust，比如我的需求是要完成一篇和密码学相关的工作，该工作的源码使用了Rust。因此，我学习rust的主要目标是使用该密码学的源码并修改。</li>
+<li>再之后，要开始进行移植。也就是说，通过总结写python代码中常用的一些东西，然后去rust里寻找对应的目标东西。比如python里有 <code>List</code> 类型，很常用，那么就应该找Rust里对应的，发现是 <code>Vec</code> 。于是对应的method，比如 <code>append</code> 便是对应的 <code>push</code> ，等等等等。</li>
+<li>再之后，便是对一些明显的差异化的东西的学习。比如Rust和Python之间有静态语言和脚本语言之间的区别等等。这之后,还需要涉及到一些语言的特色，如Rust为安全性所进行的各种显式声明设计等等。</li>
+<li>最后，便是不断地通过选择对比各类已知语言来完成学习，最终达成在目标源码中使用的目的。</li>
+</ol>
+
+
+
+<div id="outline-container-org4724347" class="outline-2">
+<h2 id="org4724347"><span class="section-number-2">1.</span> Python中常用编程知识的移植清单</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org46eec27" class="outline-3">
+<h3 id="org46eec27"><span class="section-number-3">1.1.</span> 基本控制流（15 min）</h3>
+<div class="outline-text-3" id="text-1-1">
+<ol class="org-ol">
+<li>函数
+<ol class="org-ol">
+<li>如何定义</li>
+<li>是否支持函数重载</li>
+<li>为参数设置default value</li>
+</ol></li>
+<li>类与方法
+<ol class="org-ol">
+<li>关键词：类内调用变量，类内调用方法</li>
+</ol></li>
+<li>错误处理</li>
+<li>条件，循环</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org072812e" class="outline-3">
+<h3 id="org072812e"><span class="section-number-3">1.2.</span> 基本数据结构（15 min）</h3>
+<div class="outline-text-3" id="text-1-2">
+<ol class="org-ol">
+<li>List, 变长列表（向量）
+<ol class="org-ol">
+<li>迭代
+<ol class="org-ol">
+<li><code>for i,x in enumerate(ls)</code></li>
+<li><code>for x in ls</code></li>
+<li><code>for i in range(N)</code></li>
+</ol></li>
+<li>一些切片操作
+<ol class="org-ol">
+<li><code>ls[-1]</code></li>
+<li><code>ls[:3]</code></li>
+</ol></li>
+<li>添加删除
+<ol class="org-ol">
+<li><code>ls.append()</code></li>
+</ol></li>
+</ol></li>
+<li>Dict，字典
+<ol class="org-ol">
+<li>插入元素
+<ol class="org-ol">
+<li><code>adict[x]=y</code></li>
+</ol></li>
+<li>查询
+<ol class="org-ol">
+<li><code>y=adict[x]</code></li>
+</ol></li>
+<li>遍历
+<ol class="org-ol">
+<li><code>[(a,b) for a,b in adict.items()]</code></li>
+</ol></li>
+</ol></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org7243308" class="outline-3">
+<h3 id="org7243308"><span class="section-number-3">1.3.</span> 基本操作 （20 min）</h3>
+<div class="outline-text-3" id="text-1-3">
+<ul class="org-ul">
+<li>文件处理
+<ul class="org-ul">
+<li>文本文件读取与存储</li>
+<li>json</li>
+<li>存储常见的数据结构类型到文件</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgec4b85f" class="outline-3">
+<h3 id="orgec4b85f"><span class="section-number-3">1.4.</span> 基本函数库</h3>
+<div class="outline-text-3" id="text-1-4">
+<ul class="org-ul">
+<li>线性代数
+<ul class="org-ul">
+<li>类似于numpy</li>
+</ul></li>
+<li>GUI
+<ul class="org-ul">
+<li>类似于flet</li>
+</ul></li>
+</ul>
+
+
+<p>
+待补充。
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: Fri Jan 20 08:41:15 2023</p>
+<p class="author">Author: Zi Liang</p>
+<p class="date">Created: 2023-01-20 五 11:51</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
