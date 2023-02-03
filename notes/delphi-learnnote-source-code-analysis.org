@@ -1,0 +1,259 @@
+#+title: Delphi源码学习与分析
+#+OPTIONS: html-style:nil
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="./css/worg.css" />
+#+date: Fri Feb  3 14:59:27 2023
+#+author: Zi Liang
+#+email: liangzid@stu.xjtu.edu.cn
+#+latex_class: elegantpaper
+#+filetags: ::
+* 
+* Rust部分代码分析
+** algebra：
+
+algebra文件夹提供了基本的代数操作，主要包括：
+1. 如何将一个整数表示为二进制流，以及对应的数字的写入写出
+2. 大整数
+3. 多项式操作
+4. 固定点
+5. 域相关
+
+从中可以看出，algebra中不涉及到加密解密算法，仅仅是定义一些基本的结构和操作。
+
+*** Polynomial
+1. struct
+   1. Plymomial:该结构体主要用来存储多项式的参数，Vec<F>
+   2. 方法：唯一值得重视的是evalute,给定一组二进制向量，计算带入多项式的结果
+*** bytes
+整数数据的二进制形式的读取与写入
+
+1. trait   ToBytes, FromBytes:写入成byte，读取一个byte
+2. macro
+   1. array_bytes,该宏用于负责u8,u16 u32 u64等数据的二进制的写入写出
+   2. to_bytes:
+   3. push_to_vec:
+*** biginteger
+1. traits
+   1. BigInteger，除了byte写入写出的操作，就是字节遍历的操作和各类数学运算
+   2. BigInteger32
+   3. BigInteger64
+2. mod
+   1. arithmetic，封装了一些算术运算，不知道具体在哪里使用的
+   2. adc, carry=a+b+carry
+   3. sbb: borrow=a-b-borrow
+   4. mac_with_carry: carry=a+b*c+carry
+*** fixed_point
+1. trait
+   1. FixedPointParameters：为一个固定点设置的参数
+      1. 参数包括：MANTISSA_CAPACITY, EXPONENT_CAPACITY
+      2. 函数：truncate_float
+2. Struct
+   1. FixedPoint
+      1. 参数：inner， inner满足域的性质。num_muls, u8。\_params: phantomdata类型的一个FixedPointParameters
+      4. ...
+
+相关的操作运算：
+1. One
+2. Zero
+3. PhantomData
+4. Add,AddAssign
+5. Mul,M...
+6. Neg
+7. Sub,S...
+*** fields
+1. trait
+   1. Field,一个域满足很多数学计算性质，除此之外还有编程上的一些性质,无参数
+   2. FpParameters, 有限域所涉及到的参数集合。所涉及到的变量
+      1. 模数（modulus）,模数的位数
+      2. shave bits
+      3. R，R^2，INVariant
+      4. generator,一个乘法生成器，也是一个二次非剩余
+      5. capacity,
+      6. others...
+   3. PrimeField,素数域的trait，包含如下的函数集合：
+      1. from_repr,into_repr，即根据一个大数构造一个有效域出来
+      2. from_random_bytes，根据一个bytes返回有限域中的一个元素
+      3. characteristic，不知道，实现上返回了模数
+      4. ...
+   4. SquareRootField,支持高效的平方根操作的field,包含以下函数：
+      1. legendre,返回勒让得符号
+      2. sqrt,...，平方根操作相关
+2. 其他
+3. 枚举变量勒让德符号，包括0,平方根剩余、平方根非剩余三种
+4. BitIterator,结构体包含变量的指针及其长度，可以遍历
+5. macros
+   1. impl_filed_into_bigint:为大数构建对应的有限域！
+6. 函数
+   1. batch_inversion: AES算法中涉及到的inversion操作
+
+*** 其他
+1. trait
+   1. UniformRandom
+      1. 包含有一个函数，uniform。给定一个随机数，返回自身。
+
+
+** crypto-primitives
+加密运算环节主要实现了三种简单的加密运算，分别是additive_share，beavers_mul以及garbled circuits。其中加法的共享主要用来进行线性的加密运算，beavers mul主要用来进行乘法同态运算，而gc则用来进行非线性激活函数的运算。
+
+TODO beavers_mul缺少介绍
+*** additive_share
+1. trait
+   1. Share，一个复杂的trait，本身是一个变量，包含以下函数：
+      1. share，将一个随机数一分为两个AdditiveShare变量
+      2. share_with_randomness，完成1所用
+      3. randomize_local_share(&AdditiveShare<Self>,&self::Ring)，使用ring将当前的share岁计划.
+2. Struct
+   1. AdditiveShare,结构体,只有一个share类型的参数inner.方法包括：
+      1. combine，解密
+      2. add_constant...
+   2. ShareIterator, 顾名思义，Share的一个iterator
+3. others
+   1. 类型：FixedPoint<FixedPointparameters>
+      1. From <Additiveshare<FixedPoint<Fixedpointparameters>>> 函数
+      2. 为FixedPoint<FixedPointparameters> 实现Share trait
+	 1. 此时，Ring便是Field，constant类型与FixedPoint<FixedPointparameters>相同
+*** beavers_mul
+1. struct
+
+略
+*** gc (garbled circuits)
+略
+
+
+** neural-network
+neural-network主要封装了：
+1. fc,conv等线性层
+2. relu，relu的多项式近似等非线性层
+3. input,output的additive share实现
+4. layer和neural network的抽象
+
+*** layers
+1. LayerDims, 包含inputdims和outputdims
+2. Layer, 包含线性和非线性
+3. LayerInfo, 包含layerdims和linearlayerinfo等东西
+其中linearlayer包含如下：
+
+#+BEGIN_SRC rust
+  pub enum LinearLayer<F, C> {
+      Conv2d {
+	  dims: LayerDims,
+	  params: Conv2dParams<F, C>,
+      },
+      FullyConnected {
+	  dims: LayerDims,
+	  params: FullyConnectedParams<F, C>,
+      },
+      FullyConnectedD {
+	  dims: LayerDims,
+	  params: FullyConnectedParamsD<F, C>,
+      },
+      AvgPool {
+	  dims: LayerDims,
+	  params: AvgPoolParams<F, C>,
+      },
+      Identity {
+	  dims: LayerDims,
+      },
+  }
+#+END_SRC
+
+linear layer info包含如下：
+
+#+BEGIN_SRC rust
+  pub enum LinearLayerInfo<F, C> {
+      Conv2d {
+	  kernel: (usize, usize, usize, usize),
+	  padding: Padding,
+	  stride: usize,
+      },
+      FullyConnected,
+      FullyConnectedD,
+      AvgPool {
+	  pool_h: usize,
+	  pool_w: usize,
+	  stride: usize,
+	  normalizer: C,
+	  _variable: PhantomData<F>,
+      },
+      Identity,
+  }
+#+END_SRC
+
+想查找哪些layer，请自己查。
+
+*** tensors
+tensors主要包括Input<T>和Output<T>两种范型，二者都是四维张量。
+T的实例化一般就是share和AdditiveShare。
+
+此处比较简单，故略
+*** others
+1. enum
+   1. EvalMethod, 其实就是device，是cpu还是cuda
+2. trait
+   1. Evaluate，相当于pytorch中的forward，包含两种函数，一个是在cpu上forward，另一个是cuda上
+3. struct
+   1. NeuralNetwork,包含一个layer的Vec，还有一个EvalMethod。包含以下函数：
+      1. validate，返回一个bool值，代表该神经网络是否有效前一层的输出是否贴合后一层的输入
+      2. from_numpy,给定npy文件的路径，读取得到神经网络模型中的所有参数
+      3. Ealuate trait实现
+   2. NeuralArchitecture,包含Vec<LayerInfo<F,C>>，主要就是介绍神经网络的结构信息
+
+** protocols-sys
+protocols-sys定义了完整的密钥交换协议系统。主要包括：
+1. 调用C++的加密解密服务
+2. 为神经网络层和输入输出定义加密解密的结构体，实现对应的流程
+
+*** client_cg
+1. struct & enum
+   1. Conv2D,Fullyconnected, 二者都是包含了四个变量
+      1. Metadata:有关于该层神经网络的一些元信息，被C++侧定义
+      2. ClientFHE:同态加密的一些需求，如加密器，解密器等
+      3. ClientShares:顾名思义
+   2. SealclientCG,上述两种中的一种
+2. trait
+   1. ClientCG,封装了上述结构体一些必须的操作，包括：
+      1. 参数， 包括密钥、层信息、输入维度、输出维度等。
+      2. 预处理
+      3. 后处理
+      4. 解密
+*** client_gen
+1. struct
+   1. SealClientGen，仅包含一个参数，即上面提到的ClientFHE
+2. trait
+   1. ClientGen，trait，包含三个函数
+      1. new，略
+      2. triples_preprocess
+      3. triples_postprocess
+*** key_share
+1. struct
+   1. KeyShare. KeyShare便是C++版里的SerialCT,其定义为：
+      #+BEGIN_SRC rust
+    pub struct SerialCT {
+    pub inner: *mut ::std::os::raw::c_char,
+    pub size: u64,
+}
+      #+END_SRC
+2. trait
+   1. KeyShare,最主要的函数就是generate。该函数会基于密钥构建出一个包含了同态加密和解密的函数
+*** server_cg
+类似于client_cg,略
+*** server_gen
+类似于client_gen,略
+*** others
+1. struct
+   1. SealCT: SerialCT的rust封装，其格式类似于：
+      #+BEGIN_SRC rust
+	pub struct SerialCT {
+	    pub inner: *mut ::std::os::raw::c_char,
+	    pub size: u64,
+	}
+      #+END_SRC
+   2. 包含如下函数： en(de)crypt_vec，顾名思义，加解密一个向量
+
+** protocols
+关于通讯的一些东西，略
+
+
+
+
+
+
