@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-01-05 四 16:37 -->
+<!-- 2023-02-22 周三 18:00 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>密码学知识思考一之有限域上的计算</title>
@@ -18,7 +18,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org14c88aa">1. 有限域的性质，以及，为什么需要有限域</a></li>
+<li><a href="#org65e3973">1. 有限域的性质，以及，为什么需要有限域</a></li>
 </ul>
 </div>
 </div>
@@ -26,8 +26,8 @@
 笔者曾经在2020年选修过密码学课程，然而，如今已是2023年新春，密码学的知识又断断续续忘了很多，如今需要快速入门，故撰写笔记记录之。
 </p>
 
-<div id="outline-container-org14c88aa" class="outline-2">
-<h2 id="org14c88aa"><span class="section-number-2">1.</span> 有限域的性质，以及，为什么需要有限域</h2>
+<div id="outline-container-org65e3973" class="outline-2">
+<h2 id="org65e3973"><span class="section-number-2">1.</span> 有限域的性质，以及，为什么需要有限域</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 关于一些关于近世代数的知识，可以通过<a href="https://blog.csdn.net/Stu_YangPeng/article/details/119329168">https://blog.csdn.net/Stu_YangPeng/article/details/119329168</a> 这篇笔记得到一些介绍。
@@ -58,7 +58,7 @@
 
 
 <p>
-从上述理解中我们可以发现，有限域的最大难点在于：难于构造。难于构造的点在于，我们需要确保 集合内的元素在运算之后的结果也属于这个集合 。对于这一点，一个取巧的方法便是取模。 比如我们构造一个集合S<sub>5</sub>={0,1,2,3,4}，我们可以发现如果我们把加法运算定义为 a+b mod 5
+从上述理解中我们可以发现，有限域的最大难点在于：难于构造。难于构造的点在于，我们需要确保 集合内的元素在运算之后的结果也属于这个集合 。对于这一点，一个取巧的方法便是取模。 比如我们构造一个集合S_{5}={0,1,2,3,4}，我们可以发现如果我们把加法运算定义为 a+b mod 5
 ,乘法定义为a*b mod 5，那么上述的集合便是一个有限域了，因为怎么计算都超不出这个范畴。
 </p>
 
@@ -67,7 +67,7 @@
 </p>
 
 <p>
-其实AES之类的方法便是建构在GF(P)这样的大素数之上的，不过中间还有一些弯弯肠子。我们知道，计算机里所有的数据都可以用二进制串来表示，加密解密的需求也是对应着这些二进制串。例如，对于一个int8类型的整数，我们可以用类似于01011100这样的二进制串来表示。那么，为了构造二进制串上的有限域，我们应当先考虑二进制串上的加法和乘法操作。为了方便，大家会把这个加法和乘法操作用多项式之间的加法和乘法来表达。这当然只是为了直观和方便。例如上面的那一串，写成多项式便是：0*x<sup>0</sup>+1*x<sup>1</sup>+&#x2026;+0*x<sup>7</sup>。对于这样的多项式，多项式与多项式之间的模加与模乘便是一个有限域了。其中，每个多项式的系数便等价于GF(P)中的一个数字的二进制串，而多项式计算中所模的多项式的各个系数便是P的二进制的每一位。一般而言，把这种多项式有限域记作GF(2<sup>n</sup>)，其中n便是二进制串的位数，一般而言,我们会选一个P&gt;2<sup>n</sup>，应该是这样吧？
+其实AES之类的方法便是建构在GF(P)这样的大素数之上的，不过中间还有一些弯弯肠子。我们知道，计算机里所有的数据都可以用二进制串来表示，加密解密的需求也是对应着这些二进制串。例如，对于一个int8类型的整数，我们可以用类似于01011100这样的二进制串来表示。那么，为了构造二进制串上的有限域，我们应当先考虑二进制串上的加法和乘法操作。为了方便，大家会把这个加法和乘法操作用多项式之间的加法和乘法来表达。这当然只是为了直观和方便。例如上面的那一串，写成多项式便是：0*x^0+1*x^1+&#x2026;+0*x^7。对于这样的多项式，多项式与多项式之间的模加与模乘便是一个有限域了。其中，每个多项式的系数便等价于GF(P)中的一个数字的二进制串，而多项式计算中所模的多项式的各个系数便是P的二进制的每一位。一般而言，把这种多项式有限域记作GF(2^n)，其中n便是二进制串的位数，一般而言,我们会选一个P&gt;2^n，应该是这样吧？
 </p>
 </div>
 </div>
@@ -75,7 +75,7 @@
 <div id="postamble" class="status">
 <p class="date">Date: Mon Jan  2 15:35:09 2023</p>
 <p class="author">Author: Zi Liang</p>
-<p class="date">Created: 2023-01-05 四 16:37</p>
+<p class="date">Created: 2023-02-22 周三 18:00</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
