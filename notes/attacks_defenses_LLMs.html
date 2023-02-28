@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2023-02-28 周二 09:23 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Attacks and Defenses of LLMs: 大型语言模型的攻击与防御</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+</style>
+<link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/> 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Attacks and Defenses of LLMs: 大型语言模型的攻击与防御</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgb1a4d70">1. Backgrounds: LM &amp;LLM</a></li>
+<li><a href="#org4f7d10e">2. Background: LM &amp; LLM</a></li>
+<li><a href="#org2455917">3. Background: LM &amp; LLM</a></li>
+<li><a href="#org7e21ba3">4. Background: LM &amp; LLM</a></li>
+<li><a href="#orge9ed7ed">5. Contents</a></li>
+<li><a href="#org4bd559f">6. Ethical and social risks of harm from Language Models</a></li>
+<li><a href="#orge45a1f7">7. Ethical and social risks of harm from Language Models</a></li>
+<li><a href="#orgeaa11e2">8. Predictability and Surprise in Large Generative Models</a></li>
+<li><a href="#orgca5df3e">9. Predictability and Surprise in Large Generative Models</a></li>
+<li><a href="#orgc2ecaa6">10. Predictability and Surprise in Large Generative Models</a></li>
+<li><a href="#orga0f7e20">11. On the Opportunities and Risks of Foundation Models</a></li>
+<li><a href="#org7d57861">12. HELM(Holistic Evaluation of LMs)</a></li>
+<li><a href="#orgfef2211">13. RL from Human Feedback (RLHF)</a></li>
+<li><a href="#org6d464b0">14. RL from Human Feedback (RLHF)</a></li>
+<li><a href="#org8c9fc34">15. Corpus</a></li>
+<li><a href="#org7245535">16. Results</a></li>
+<li><a href="#org362764f">17. Sparrow</a></li>
+<li><a href="#org2260548">18. Sparrow</a></li>
+<li><a href="#orgad81a5c">19. Self-Correction of LLMs</a></li>
+<li><a href="#orgf055b27">20. Self-Correction of LLMs</a></li>
+<li><a href="#orgc2b097e">21. Self-Correction of LLMs</a></li>
+<li><a href="#orgd1c3c14">22. Self-Correction of LLMs</a></li>
+<li><a href="#orgda1a66e">23. Self-Correction of LLMs</a></li>
+<li><a href="#org9abe03d">24. Constitutional AI (CAI): RL with AI Feedback (RLAIF)</a></li>
+<li><a href="#org3d0630a">25. SL-CAI</a></li>
+<li><a href="#org0f49aa2">26. RL with AI Feedback (RLAIF)</a></li>
+<li><a href="#orgccd7865">27. Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks</a></li>
+<li><a href="#orgce96ac1">28. Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks</a></li>
+<li><a href="#orgeb8a70f">29. LLMs Behave Like Programs</a></li>
+<li><a href="#org5d15668">30. Attack mechanisms</a></li>
+<li><a href="#org8131b61">31. Attack mechanisms</a></li>
+<li><a href="#org06aa8a6">32. Attack mechanisms</a></li>
+<li><a href="#org148aaf3">33. Results</a></li>
+<li><a href="#org4bf4761">34. Generation Quality &amp;Economic Benefits</a></li>
+<li><a href="#org0656988">35. Conclusion &amp; Future works</a></li>
+</ul>
+</div>
+</div>
+<pre class="example">
+本文来自于之前所作报告的PPT. 现整理后可生成beamer  
+</pre>
+<div id="outline-container-orgb1a4d70" class="outline-2">
+<h2 id="orgb1a4d70"><span class="section-number-2">1.</span> Backgrounds: LM &amp;LLM</h2>
+<div class="outline-text-2" id="text-1">
+
+<div id="org603473d" class="figure">
+<p><img src="./images/screenshot_20230228_085719.png" alt="screenshot_20230228_085719.png">
+</p>
+</div>
+
+<ul class="org-ul">
+<li>Training on code (TOC): 逻辑推理，chain of thoughts(CoT)</li>
+<li>Prompt Tuning: alignment tax</li>
+<li>RLHF: ~</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org4f7d10e" class="outline-2">
+<h2 id="org4f7d10e"><span class="section-number-2">2.</span> Background: LM &amp; LLM</h2>
+<div class="outline-text-2" id="text-2">
+
+<div id="org70a404b" class="figure">
+<p><img src="./images/screenshot_20230228_085755.png" alt="screenshot_20230228_085755.png">
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org2455917" class="outline-2">
+<h2 id="org2455917"><span class="section-number-2">3.</span> Background: LM &amp; LLM</h2>
+<div class="outline-text-2" id="text-3">
+
+<div id="org726f912" class="figure">
+<p><img src="./images/screenshot_20230228_085835.png" alt="screenshot_20230228_085835.png">
+</p>
+</div>
+
+
+<div id="orgad6c6ef" class="figure">
+<p><img src="./images/screenshot_20230228_085840.png" alt="screenshot_20230228_085840.png">
+</p>
+</div>
+
+<p>
+refer: <a href="https://yaofu.notion.site/GPT-3-5-360081d91ec245f29029d37b54573756">https://yaofu.notion.site/GPT-3-5-360081d91ec245f29029d37b54573756</a>
+</p>
+</div>
+</div>
+<div id="outline-container-org7e21ba3" class="outline-2">
+<h2 id="org7e21ba3"><span class="section-number-2">4.</span> Background: LM &amp; LLM</h2>
+<div class="outline-text-2" id="text-4">
+
+<div id="org852c6f0" class="figure">
+<p><img src="./images/screenshot_20230228_085912.png" alt="screenshot_20230228_085912.png">
+</p>
+</div>
+
+
+<div id="orgb7f4faa" class="figure">
+<p><img src="./images/screenshot_20230228_085917.png" alt="screenshot_20230228_085917.png">
+</p>
+</div>
+
+<p>
+ref: Deep Ganguli, et.al. Predictability and Surprise in Large Generative Models. FAccT 2022: 1747-1764 Anthropic
+</p>
+</div>
+</div>
+<div id="outline-container-orge9ed7ed" class="outline-2">
+<h2 id="orge9ed7ed"><span class="section-number-2">5.</span> Contents</h2>
+<div class="outline-text-2" id="text-5">
+<ul class="org-ul">
+<li>Discovery
+<ul class="org-ul">
+<li>HELM</li>
+<li>Ethical and social risks of harm from LMs</li>
+<li>Predictability and Surprise in Large Generative Models</li>
+<li>On the Opportunities and Risks of Foundation</li>
+</ul></li>
+<li>Defenses:
+<ul class="org-ul">
+<li>RLHF</li>
+<li>Sparrow</li>
+<li><code>Self-Correction</code></li>
+<li>Constitutional AI (RLAIF)</li>
+</ul></li>
+<li>Attacks
+<ul class="org-ul">
+<li><code>By Code</code></li>
+</ul></li>
+<li>Others</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org4bd559f" class="outline-2">
+<h2 id="org4bd559f"><span class="section-number-2">6.</span> Ethical and social risks of harm from Language Models</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Risks area:
+</p>
+<ul class="org-ul">
+<li>Discrimination, Exclusion, and Toxicity</li>
+<li>Information Hazards</li>
+<li>Misinformation Harms</li>
+<li>Malicious Uses</li>
+<li>Human-Computer Interaction (conversational agents) Harms</li>
+<li><p>
+Automation, Access, and Environmental Harms
+</p>
+
+<p>
+ref: Laura Weidinger, et.al. Ethical and social risks of harm from Language Models. CoRR abs/2112.04359 (2021) Deepmind
+</p></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge45a1f7" class="outline-2">
+<h2 id="orge45a1f7"><span class="section-number-2">7.</span> Ethical and social risks of harm from Language Models</h2>
+<div class="outline-text-2" id="text-7">
+
+<div id="orge8c1ffd" class="figure">
+<p><img src="./images/screenshot_20230228_090227.png" alt="screenshot_20230228_090227.png">
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgeaa11e2" class="outline-2">
+<h2 id="orgeaa11e2"><span class="section-number-2">8.</span> Predictability and Surprise in Large Generative Models</h2>
+<div class="outline-text-2" id="text-8">
+<ul class="org-ul">
+<li>highlight a counterintuitive property of LLMs and discuss the policy implications of this property</li>
+<li>Situation: with the development of LMs:
+<ul class="org-ul">
+<li>helpness ↑  \(\rightarrow\) scaling law</li>
+<li>but “difficult to anticipate the consequences of model deployment”</li>
+</ul></li>
+</ul>
+
+
+<div id="org2abfa2b" class="figure">
+<p><img src="./images/screenshot_20230228_090331.png" alt="screenshot_20230228_090331.png">
+</p>
+</div>
+
+<p>
+ref: Deep Ganguli, et.al. Predictability and Surprise in Large Generative Models. FAccT 2022: 1747-1764 Anthropic
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgca5df3e" class="outline-2">
+<h2 id="orgca5df3e"><span class="section-number-2">9.</span> Predictability and Surprise in Large Generative Models</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+Surprise on some specific tasks:
+</p>
+
+
+<div id="org465a256" class="figure">
+<p><img src="./images/screenshot_20230228_090423.png" alt="screenshot_20230228_090423.png">
+</p>
+</div>
+
+<p>
+ref: Deep Ganguli, et.al. Predictability and Surprise in Large Generative Models. FAccT 2022: 1747-1764 Anthropic
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc2ecaa6" class="outline-2">
+<h2 id="orgc2ecaa6"><span class="section-number-2">10.</span> Predictability and Surprise in Large Generative Models</h2>
+<div class="outline-text-2" id="text-10">
+<p>
+Surprise from <code>open-ended</code> :
+</p>
+
+
+<div id="org59c3f48" class="figure">
+<p><img src="./images/screenshot_20230228_090522.png" alt="screenshot_20230228_090522.png">
+</p>
+</div>
+
+
+<div id="org276d5be" class="figure">
+<p><img src="./images/screenshot_20230228_090529.png" alt="screenshot_20230228_090529.png">
+</p>
+</div>
+
+<p>
+ref: Deep Ganguli, et.al. Predictability and Surprise in Large Generative Models. FAccT 2022: 1747-1764 Anthropic
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga0f7e20" class="outline-2">
+<h2 id="orga0f7e20"><span class="section-number-2">11.</span> On the Opportunities and Risks of Foundation Models</h2>
+<div class="outline-text-2" id="text-11">
+<ul class="org-ul">
+<li>Security and privacy</li>
+<li>AI safety and alignment</li>
+<li>Inequity and fairness</li>
+<li>Misuse</li>
+<li>Environment</li>
+<li>Legality</li>
+<li>Economics</li>
+<li><p>
+Ethics of scale
+</p>
+
+<p>
+ref: Rishi Bommasani, et.al On the Opportunities and Risks of Foundation Models. CoRR abs/2108.07258 (2022) Stanford
+</p></li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org7d57861" class="outline-2">
+<h2 id="org7d57861"><span class="section-number-2">12.</span> HELM(Holistic Evaluation of LMs)</h2>
+<div class="outline-text-2" id="text-12">
+<p>
+A holistic evaluation of 30 models, under 42 scenarios, with 52 metrics.
+</p>
+
+<p>
+Metrics Type: Accuracy, Calibration, Robustness, Fairness, Bias, Toxicity, Efficiency, Others.
+</p>
+
+
+<div id="orge9410a0" class="figure">
+<p><img src="./images/screenshot_20230228_090658.png" alt="screenshot_20230228_090658.png">
+</p>
+</div>
+
+
+<div id="orgf364b50" class="figure">
+<p><img src="./images/screenshot_20230228_090704.png" alt="screenshot_20230228_090704.png">
+</p>
+</div>
+
+
+<div id="org933c57b" class="figure">
+<p><img src="./images/screenshot_20230228_090709.png" alt="screenshot_20230228_090709.png">
+</p>
+</div>
+
+
+<div id="org1bdd2c7" class="figure">
+<p><img src="./images/screenshot_20230228_090716.png" alt="screenshot_20230228_090716.png">
+</p>
+</div>
+
+<p>
+ref: <a href="https://crfm.stanford.edu/helm/v0.1.0/">https://crfm.stanford.edu/helm/v0.1.0/</a>
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgfef2211" class="outline-2">
+<h2 id="orgfef2211"><span class="section-number-2">13.</span> RL from Human Feedback (RLHF)</h2>
+<div class="outline-text-2" id="text-13">
+<ul class="org-ul">
+<li>Target: Improve both helpful and harmless of dialogue models.</li>
+<li>HHH: Helpful, Harmless, Honest</li>
+</ul>
+
+
+<div id="org6a4662c" class="figure">
+<p><img src="./images/screenshot_20230228_090746.png" alt="screenshot_20230228_090746.png">
+</p>
+</div>
+
+<p>
+ref: Yuntao Bai, et.al.Training a Helpful and Harmless Assistant with Reinforcement Learning from Human Feedback. CoRR abs/2204.05862 (2022) Anthropic
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org6d464b0" class="outline-2">
+<h2 id="org6d464b0"><span class="section-number-2">14.</span> RL from Human Feedback (RLHF)</h2>
+<div class="outline-text-2" id="text-14">
+<ul class="org-ul">
+<li>Target: Improve both helpful and harmless of dialogue models.</li>
+<li>HHH: Helpful, Harmless, Honest</li>
+</ul>
+
+
+<ul class="org-ul">
+<li>HHH Distilled 52B LM \(\rightarrow\) 44K+42K</li>
+<li>Rejection Sampling \(\rightarrow\) 52k+2k</li>
+<li><p>
+RLHF-Finetuned Models  \(\rightarrow\) 22k
+</p>
+
+
+<div id="org3d15d6e" class="figure">
+<p><img src="./images/screenshot_20230228_090914.png" alt="screenshot_20230228_090914.png"> 
+</p>
+</div></li>
+</ul>
+
+
+<div id="orgdb76085" class="figure">
+<p><img src="./images/screenshot_20230228_090918.png" alt="screenshot_20230228_090918.png"> 
+</p>
+</div>
+
+<p>
+ref: Yuntao Bai, et.al.Training a Helpful and Harmless Assistant with Reinforcement Learning from Human Feedback. CoRR abs/2204.05862 (2022) Anthropic
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8c9fc34" class="outline-2">
+<h2 id="org8c9fc34"><span class="section-number-2">15.</span> Corpus</h2>
+<div class="outline-text-2" id="text-15">
+
+<div id="org8c3293e" class="figure">
+<p><img src="./images/screenshot_20230228_090932.png" alt="screenshot_20230228_090932.png">
+</p>
+</div>
+
+<p>
+ref: Yuntao Bai, et.al.Training a Helpful and Harmless Assistant with Reinforcement Learning from Human Feedback. CoRR abs/2204.05862 (2022) Anthropic
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org7245535" class="outline-2">
+<h2 id="org7245535"><span class="section-number-2">16.</span> Results</h2>
+<div class="outline-text-2" id="text-16">
+
+<div id="orgeac6000" class="figure">
+<p><img src="./images/screenshot_20230228_090957.png" alt="screenshot_20230228_090957.png">
+</p>
+</div>
+
+<p>
+ref: Yuntao Bai, et.al.Training a Helpful and Harmless Assistant with Reinforcement Learning from Human Feedback. CoRR abs/2204.05862 (2022) Anthropic
+</p>
+</div>
+</div>
+
+<div id="outline-container-org362764f" class="outline-2">
+<h2 id="org362764f"><span class="section-number-2">17.</span> Sparrow</h2>
+<div class="outline-text-2" id="text-17">
+
+<div id="orge13be98" class="figure">
+<p><img src="./images/screenshot_20230228_091017.png" alt="screenshot_20230228_091017.png">
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2260548" class="outline-2">
+<h2 id="org2260548"><span class="section-number-2">18.</span> Sparrow</h2>
+<div class="outline-text-2" id="text-18">
+
+<div id="orgda1c93b" class="figure">
+<p><img src="./images/screenshot_20230228_091028.png" alt="screenshot_20230228_091028.png">
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgad81a5c" class="outline-2">
+<h2 id="orgad81a5c"><span class="section-number-2">19.</span> Self-Correction of LLMs</h2>
+<div class="outline-text-2" id="text-19">
+<p>
+Findings:
+</p>
+<ul class="org-ul">
+<li>the capacity for moral self-correction emerges at 22B model parameters</li>
+<li><p>
+Improve Safety by “Prompt”:
+</p>
+
+
+<div id="org17be4fb" class="figure">
+<p><img src="./images/screenshot_20230228_091058.png" alt="screenshot_20230228_091058.png"> 
+</p>
+</div>
+
+<p>
+ref: Deep Ganguli, et.al. The Capacity for Moral Self-Correction in Large Language Models. CoRR abs/2302.07459 (2023) Anthropic
+</p></li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-orgf055b27" class="outline-2">
+<h2 id="orgf055b27"><span class="section-number-2">20.</span> Self-Correction of LLMs</h2>
+<div class="outline-text-2" id="text-20">
+<p>
+Benchmark:
+</p>
+<ul class="org-ul">
+<li>BBQ (Bias Benchmark for QA)</li>
+<li>Winogender</li>
+</ul>
+
+
+<p>
+Methods: 
+</p>
+<ul class="org-ul">
+<li>Q: vanilla QA</li>
+<li>IF : with Instruction Following</li>
+<li><p>
+CoT:  Chain of Thoughts
+</p>
+
+
+<div id="org3ad503d" class="figure">
+<p><img src="./images/screenshot_20230228_091210.png" alt="screenshot_20230228_091210.png"> 
+</p>
+</div></li>
+</ul>
+
+
+<div id="orgbbd7695" class="figure">
+<p><img src="./images/screenshot_20230228_091215.png" alt="screenshot_20230228_091215.png"> 
+</p>
+</div>
+
+<p>
+ref: Deep Ganguli, et.al. The Capacity for Moral Self-Correction in Large Language Models. CoRR abs/2302.07459 (2023) Anthropic
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgc2b097e" class="outline-2">
+<h2 id="orgc2b097e"><span class="section-number-2">21.</span> Self-Correction of LLMs</h2>
+<div class="outline-text-2" id="text-21">
+<p>
+Methods: 
+</p>
+<ul class="org-ul">
+<li>Q: vanilla QA</li>
+<li>IF : with Instruction Following</li>
+<li>CoT:  Chain of Thoughts</li>
+</ul>
+
+
+<div id="org238d2ff" class="figure">
+<p><img src="./images/screenshot_20230228_091243.png" alt="screenshot_20230228_091243.png">
+</p>
+</div>
+
+
+<p>
+ref: Deep Ganguli, et.al. The Capacity for Moral Self-Correction in Large Language Models. CoRR abs/2302.07459 (2023) Anthropic
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd1c3c14" class="outline-2">
+<h2 id="orgd1c3c14"><span class="section-number-2">22.</span> Self-Correction of LLMs</h2>
+<div class="outline-text-2" id="text-22">
+<p>
+Methods: 
+</p>
+<ul class="org-ul">
+<li>Q: vanilla QA</li>
+<li>IF : with Instruction Following</li>
+<li>CoT:  Chain of Thoughts</li>
+</ul>
+
+
+<div id="org7ab0c82" class="figure">
+<p><img src="./images/screenshot_20230228_091302.png" alt="screenshot_20230228_091302.png">
+</p>
+</div>
+
+<p>
+ref: Deep Ganguli, et.al. The Capacity for Moral Self-Correction in Large Language Models. CoRR abs/2302.07459 (2023) Anthropic
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgda1a66e" class="outline-2">
+<h2 id="orgda1a66e"><span class="section-number-2">23.</span> Self-Correction of LLMs</h2>
+<div class="outline-text-2" id="text-23">
+
+<div id="org46e3d7a" class="figure">
+<p><img src="./images/screenshot_20230228_091315.png" alt="screenshot_20230228_091315.png">
+</p>
+</div>
+
+<p>
+ref: Deep Ganguli, et.al. The Capacity for Moral Self-Correction in Large Language Models. CoRR abs/2302.07459 (2023) Anthropic
+</p>
+</div>
+</div>
+
+
+
+<div id="outline-container-org9abe03d" class="outline-2">
+<h2 id="org9abe03d"><span class="section-number-2">24.</span> Constitutional AI (CAI): RL with AI Feedback (RLAIF)</h2>
+<div class="outline-text-2" id="text-24">
+<ol class="org-ol">
+<li>Target: Less annotation cost</li>
+<li>Motivation: the critique ability of LLM</li>
+<li>Training Procedure
+<ul class="org-ul">
+<li>Supervised Stage:
+<ul class="org-ul">
+<li>Generate harmful responses with “toxic” prompts;</li>
+<li>Critique</li>
+<li>Revise</li>
+<li>Finetuning (SL)</li>
+</ul></li>
+<li>RL Stage:
+<ul class="org-ul">
+<li>Finetuning a Preference Model (PM)</li>
+<li>RL</li>
+</ul></li>
+</ul></li>
+</ol>
+
+
+<div id="orgceaac04" class="figure">
+<p><img src="./images/screenshot_20230228_091509.png" alt="screenshot_20230228_091509.png">
+</p>
+</div>
+
+<p>
+ref: Yuntao Bai, et.al. Constitutional AI: Harmlessness from AI Feedback. CoRR abs/2212.08073 (2022) Anthropic
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org3d0630a" class="outline-2">
+<h2 id="org3d0630a"><span class="section-number-2">25.</span> SL-CAI</h2>
+<div class="outline-text-2" id="text-25">
+
+<div id="orgbf6d5a8" class="figure">
+<p><img src="./images/screenshot_20230228_091613.png" alt="screenshot_20230228_091613.png">
+</p>
+</div>
+
+<p>
+ref: Yuntao Bai, et.al. Constitutional AI: Harmlessness from AI Feedback. CoRR abs/2212.08073 (2022) Anthropic
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0f49aa2" class="outline-2">
+<h2 id="org0f49aa2"><span class="section-number-2">26.</span> RL with AI Feedback (RLAIF)</h2>
+<div class="outline-text-2" id="text-26">
+
+<div id="orgd1e002c" class="figure">
+<p><img src="./images/screenshot_20230228_091633.png" alt="screenshot_20230228_091633.png">
+</p>
+</div>
+
+<p>
+ref: Yuntao Bai, et.al. Constitutional AI: Harmlessness from AI Feedback. CoRR abs/2212.08073 (2022) Anthropic
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgccd7865" class="outline-2">
+<h2 id="orgccd7865"><span class="section-number-2">27.</span> Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks</h2>
+<div class="outline-text-2" id="text-27">
+<ul class="org-ul">
+<li>Background: Instruction-following LLMs have a potential for dual-use, where their language generation capabilities are used for malicious or nefarious ends.</li>
+<li>Target: Attack for producing hateful</li>
+<li>Observation:
+<ul class="org-ul">
+<li>There exists the defenders before and after LLM, e.g. the input and output filter.</li>
+<li>LLMs Behave Like Programs</li>
+</ul></li>
+<li>Motivation: Bypass the defender based on the programmatic behavior of LLMs</li>
+</ul>
+
+
+<div id="orgd4c58af" class="figure">
+<p><img src="./images/screenshot_20230228_091719.png" alt="screenshot_20230228_091719.png">
+</p>
+</div>
+
+<p>
+ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsunori Hashimoto: Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks. CoRR abs/2302.05733 (2023) University of Illinois, Urbana-Champaign 2Stanford University
+3University of California, Berkeley
+</p>
+</div>
+</div>
+
+
+
+<div id="outline-container-orgce96ac1" class="outline-2">
+<h2 id="orgce96ac1"><span class="section-number-2">28.</span> Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks</h2>
+<div class="outline-text-2" id="text-28">
+<ul class="org-ul">
+<li>Background: Instruction-following LLMs have a potential for dual-use, where their language generation capabilities are used for malicious or nefarious ends.</li>
+<li>Target: Attack for producing hateful</li>
+<li>Observation:
+<ul class="org-ul">
+<li>There exists the defenders before and after LLM, e.g. the input and output filter.</li>
+<li>LLMs Behave Like Programs</li>
+</ul></li>
+<li>Motivation: Bypass the defender based on the programmatic behavior of LLMs</li>
+</ul>
+
+
+
+<div id="orgdf0a7ed" class="figure">
+<p><img src="./images/screenshot_20230228_091719.png" alt="screenshot_20230228_091719.png">
+</p>
+</div>
+
+
+<p>
+ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsunori Hashimoto: Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks. CoRR abs/2302.05733 (2023) University of Illinois, Urbana-Champaign 2Stanford University3University of California, Berkeley
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgeb8a70f" class="outline-2">
+<h2 id="orgeb8a70f"><span class="section-number-2">29.</span> LLMs Behave Like Programs</h2>
+<div class="outline-text-2" id="text-29">
+<ul class="org-ul">
+<li>String concatenation</li>
+<li>Variable assignment</li>
+<li>Sequential Composition</li>
+<li>Branching</li>
+</ul>
+
+
+
+<div id="org6a86538" class="figure">
+<p><img src="./images/screenshot_20230228_091849.png" alt="screenshot_20230228_091849.png">
+</p>
+</div>
+
+<p>
+ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsunori Hashimoto: Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks. CoRR abs/2302.05733 (2023) University of Illinois, Urbana-Champaign 2Stanford University3University of California, Berkeley
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org5d15668" class="outline-2">
+<h2 id="org5d15668"><span class="section-number-2">30.</span> Attack mechanisms</h2>
+<div class="outline-text-2" id="text-30">
+<ul class="org-ul">
+<li>Obfuscation (混淆)</li>
+<li><b>Code Injection/Payload splitting</b></li>
+<li>Virtualization</li>
+</ul>
+
+
+
+<div id="org7dafe36" class="figure">
+<p><img src="./images/screenshot_20230228_091911.png" alt="screenshot_20230228_091911.png">
+</p>
+</div>
+
+
+<p>
+ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsunori Hashimoto: Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks. CoRR abs/2302.05733 (2023) University of Illinois, Urbana-Champaign 2Stanford University3University of California, Berkeley
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8131b61" class="outline-2">
+<h2 id="org8131b61"><span class="section-number-2">31.</span> Attack mechanisms</h2>
+<div class="outline-text-2" id="text-31">
+<ul class="org-ul">
+<li>Obfuscation (混淆)</li>
+<li>Code Injection/Payload splitting</li>
+<li><p>
+<b>Virtualization</b>
+</p>
+
+
+<div id="orga5b6cf7" class="figure">
+<p><img src="./images/screenshot_20230228_092009.png" alt="screenshot_20230228_092009.png"> 
+</p>
+</div></li>
+</ul>
+
+
+<p>
+ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsunori Hashimoto: Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks. CoRR abs/2302.05733 (2023) University of Illinois, Urbana-Champaign 2Stanford University3University of California, Berkeley
+</p>
+</div>
+</div>
+
+<div id="outline-container-org06aa8a6" class="outline-2">
+<h2 id="org06aa8a6"><span class="section-number-2">32.</span> Attack mechanisms</h2>
+<div class="outline-text-2" id="text-32">
+
+<div id="orgc263dab" class="figure">
+<p><img src="./images/screenshot_20230228_092022.png" alt="screenshot_20230228_092022.png">
+</p>
+</div>
+
+
+<div id="orgc14aec1" class="figure">
+<p><img src="./images/screenshot_20230228_092032.png" alt="screenshot_20230228_092032.png">
+</p>
+</div>
+
+<p>
+ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsunori Hashimoto: Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks. CoRR abs/2302.05733 (2023) University of Illinois, Urbana-Champaign 2Stanford University3University of California, Berkeley
+</p>
+</div>
+</div>
+
+<div id="outline-container-org148aaf3" class="outline-2">
+<h2 id="org148aaf3"><span class="section-number-2">33.</span> Results</h2>
+<div class="outline-text-2" id="text-33">
+<ul class="org-ul">
+<li>Domain: Generating hate speech, conspiracy theory promotion, phishing attacks, scams, and product astroturfing.</li>
+<li>We templatized the prompt for each attack and medium. Indirection achieved an overall success rate of 92% when only counting the scenarios that did not initially bypass OpenAI’s filters.</li>
+<li>Every prompt was generated in fewer than 10 attempts. Furthermore, we were able to generate prompts for every commonly listed scam in the US government list of common scams</li>
+</ul>
+
+
+<div id="orge70ebde" class="figure">
+<p><img src="./images/screenshot_20230228_092119.png" alt="screenshot_20230228_092119.png">
+</p>
+</div>
+
+<p>
+ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsunori Hashimoto: Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks. CoRR abs/2302.05733 (2023) University of Illinois, Urbana-Champaign 2Stanford University3University of California, Berkeley
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4bf4761" class="outline-2">
+<h2 id="org4bf4761"><span class="section-number-2">34.</span> Generation Quality &amp;Economic Benefits</h2>
+<div class="outline-text-2" id="text-34">
+
+<div id="org0211a5b" class="figure">
+<p><img src="./images/screenshot_20230228_092139.png" alt="screenshot_20230228_092139.png">
+</p>
+</div>
+
+
+<p>
+Email Generation:
+</p>
+<ul class="org-ul">
+<li>Human:  $0.15~$0.45</li>
+<li>Text-davinci-003: $0.0064</li>
+<li>Estimation of ChatGPT: $0.016</li>
+</ul>
+
+
+<div id="org10e0ce5" class="figure">
+<p><img src="./images/screenshot_20230228_092158.png" alt="screenshot_20230228_092158.png">
+</p>
+</div>
+
+
+<p>
+ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsunori Hashimoto: Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks. CoRR abs/2302.05733 (2023) University of Illinois, Urbana-Champaign 2Stanford University3University of California, Berkeley
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0656988" class="outline-2">
+<h2 id="org0656988"><span class="section-number-2">35.</span> Conclusion &amp; Future works</h2>
+<div class="outline-text-2" id="text-35">
+<ul class="org-ul">
+<li>Prompt can help to improve the safety, or help to bypass the safety layers.</li>
+<li>Analysis of LLMs is still an interesting work.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: Tue Feb 28 08:55:07 2023</p>
+<p class="author">Author: Zi Liang</p>
+<p class="date">Created: 2023-02-28 周二 09:23</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

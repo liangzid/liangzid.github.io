@@ -1,0 +1,365 @@
+#+title: Attacks and Defenses of LLMs: 大型语言模型的攻击与防御
+#+date: Tue Feb 28 08:55:07 2023
+#+author: Zi Liang
+#+email: liangzid@stu.xjtu.edu.cn
+#+latex_class: elegantpaper
+
+#+begin_src 
+本文来自于之前所作报告的PPT. 现整理后可生成beamer  
+#+end_src
+** Backgrounds: LM &LLM
+
+[[file:./images/screenshot_20230228_085719.png]]
+
++ Training on code (TOC): 逻辑推理，chain of thoughts(CoT)
++ Prompt Tuning: alignment tax
++ RLHF: ~
+** Background: LM & LLM
+
+[[file:./images/screenshot_20230228_085755.png]]
+** Background: LM & LLM
+
+[[file:./images/screenshot_20230228_085835.png]]
+
+[[file:./images/screenshot_20230228_085840.png]]
+
+refer: https://yaofu.notion.site/GPT-3-5-360081d91ec245f29029d37b54573756
+** Background: LM & LLM
+
+[[file:./images/screenshot_20230228_085912.png]]
+
+[[file:./images/screenshot_20230228_085917.png]]
+
+ref: Deep Ganguli, et.al. Predictability and Surprise in Large Generative Models. FAccT 2022: 1747-1764 Anthropic
+** Contents
+
++ Discovery
+  + HELM
+  + Ethical and social risks of harm from LMs
+  + Predictability and Surprise in Large Generative Models
+  + On the Opportunities and Risks of Foundation
++ Defenses:
+  + RLHF
+  + Sparrow
+  + ~Self-Correction~
+  + Constitutional AI (RLAIF)
++ Attacks
+  + ~By Code~
++ Others
+** Ethical and social risks of harm from Language Models
+Risks area:
++ Discrimination, Exclusion, and Toxicity
++ Information Hazards
++ Misinformation Harms
++ Malicious Uses
++ Human-Computer Interaction (conversational agents) Harms
++ Automation, Access, and Environmental Harms
+
+  ref: Laura Weidinger, et.al. Ethical and social risks of harm from Language Models. CoRR abs/2112.04359 (2021) Deepmind
+
+** Ethical and social risks of harm from Language Models
+
+[[file:./images/screenshot_20230228_090227.png]]
+
+** Predictability and Surprise in Large Generative Models
+- highlight a counterintuitive property of LLMs and discuss the policy implications of this property
+- Situation: with the development of LMs:
+  - helpness ↑  $\rightarrow$ scaling law
+  - but “difficult to anticipate the consequences of model deployment”
+
+[[file:./images/screenshot_20230228_090331.png]]
+
+ref: Deep Ganguli, et.al. Predictability and Surprise in Large Generative Models. FAccT 2022: 1747-1764 Anthropic
+
+** Predictability and Surprise in Large Generative Models
+Surprise on some specific tasks:
+
+[[file:./images/screenshot_20230228_090423.png]]
+
+ref: Deep Ganguli, et.al. Predictability and Surprise in Large Generative Models. FAccT 2022: 1747-1764 Anthropic
+
+** Predictability and Surprise in Large Generative Models
+
+Surprise from =open-ended= :
+
+[[file:./images/screenshot_20230228_090522.png]]
+
+[[file:./images/screenshot_20230228_090529.png]]
+
+ref: Deep Ganguli, et.al. Predictability and Surprise in Large Generative Models. FAccT 2022: 1747-1764 Anthropic
+
+** On the Opportunities and Risks of Foundation Models
++ Security and privacy
++ AI safety and alignment
++ Inequity and fairness
++ Misuse
++ Environment
++ Legality
++ Economics
++ Ethics of scale
+
+  ref: Rishi Bommasani, et.al On the Opportunities and Risks of Foundation Models. CoRR abs/2108.07258 (2022) Stanford
+
+
+** HELM(Holistic Evaluation of LMs)
+A holistic evaluation of 30 models, under 42 scenarios, with 52 metrics.
+
+Metrics Type: Accuracy, Calibration, Robustness, Fairness, Bias, Toxicity, Efficiency, Others.
+
+[[file:./images/screenshot_20230228_090658.png]]
+
+[[file:./images/screenshot_20230228_090704.png]]
+
+[[file:./images/screenshot_20230228_090709.png]]
+
+[[file:./images/screenshot_20230228_090716.png]]
+
+ref: https://crfm.stanford.edu/helm/v0.1.0/
+
+
+** RL from Human Feedback (RLHF)
+
++ Target: Improve both helpful and harmless of dialogue models.
++ HHH: Helpful, Harmless, Honest
+
+[[file:./images/screenshot_20230228_090746.png]]
+
+ref: Yuntao Bai, et.al.Training a Helpful and Harmless Assistant with Reinforcement Learning from Human Feedback. CoRR abs/2204.05862 (2022) Anthropic
+
+
+** RL from Human Feedback (RLHF)
+
++ Target: Improve both helpful and harmless of dialogue models.
++ HHH: Helpful, Harmless, Honest
+
+  
++ HHH Distilled 52B LM $\rightarrow$ 44K+42K
++ Rejection Sampling $\rightarrow$ 52k+2k
++ RLHF-Finetuned Models  $\rightarrow$ 22k
+
+ [[file:./images/screenshot_20230228_090914.png]] 
+
+[[file:./images/screenshot_20230228_090918.png]] 
+
+ref: Yuntao Bai, et.al.Training a Helpful and Harmless Assistant with Reinforcement Learning from Human Feedback. CoRR abs/2204.05862 (2022) Anthropic
+
+** Corpus
+
+[[file:./images/screenshot_20230228_090932.png]]
+
+ref: Yuntao Bai, et.al.Training a Helpful and Harmless Assistant with Reinforcement Learning from Human Feedback. CoRR abs/2204.05862 (2022) Anthropic
+
+
+** Results
+
+[[file:./images/screenshot_20230228_090957.png]]
+
+ref: Yuntao Bai, et.al.Training a Helpful and Harmless Assistant with Reinforcement Learning from Human Feedback. CoRR abs/2204.05862 (2022) Anthropic
+
+** Sparrow
+
+[[file:./images/screenshot_20230228_091017.png]]
+
+** Sparrow
+
+[[file:./images/screenshot_20230228_091028.png]]
+
+** Self-Correction of LLMs
+
+Findings:
++ the capacity for moral self-correction emerges at 22B model parameters
++ Improve Safety by “Prompt”:
+
+ [[file:./images/screenshot_20230228_091058.png]] 
+
+ ref: Deep Ganguli, et.al. The Capacity for Moral Self-Correction in Large Language Models. CoRR abs/2302.07459 (2023) Anthropic
+
+
+** Self-Correction of LLMs
+
+Benchmark:
++ BBQ (Bias Benchmark for QA)
++ Winogender
+
+
+Methods: 
++ Q: vanilla QA
++ IF : with Instruction Following
++ CoT:  Chain of Thoughts
+
+ [[file:./images/screenshot_20230228_091210.png]] 
+
+[[file:./images/screenshot_20230228_091215.png]] 
+
+ ref: Deep Ganguli, et.al. The Capacity for Moral Self-Correction in Large Language Models. CoRR abs/2302.07459 (2023) Anthropic
+
+
+** Self-Correction of LLMs
+
+
+Methods: 
++ Q: vanilla QA
++ IF : with Instruction Following
++ CoT:  Chain of Thoughts
+
+[[file:./images/screenshot_20230228_091243.png]]
+
+
+ ref: Deep Ganguli, et.al. The Capacity for Moral Self-Correction in Large Language Models. CoRR abs/2302.07459 (2023) Anthropic
+
+** Self-Correction of LLMs
+
+
+Methods: 
++ Q: vanilla QA
++ IF : with Instruction Following
++ CoT:  Chain of Thoughts
+
+[[file:./images/screenshot_20230228_091302.png]]
+
+ ref: Deep Ganguli, et.al. The Capacity for Moral Self-Correction in Large Language Models. CoRR abs/2302.07459 (2023) Anthropic
+
+** Self-Correction of LLMs
+
+[[file:./images/screenshot_20230228_091315.png]]
+
+ ref: Deep Ganguli, et.al. The Capacity for Moral Self-Correction in Large Language Models. CoRR abs/2302.07459 (2023) Anthropic
+
+
+ 
+** Constitutional AI (CAI): RL with AI Feedback (RLAIF)
+
+1. Target: Less annotation cost
+2. Motivation: the critique ability of LLM
+3. Training Procedure
+   - Supervised Stage:
+     + Generate harmful responses with “toxic” prompts;
+     + Critique
+     + Revise
+     + Finetuning (SL)
+   - RL Stage:
+     + Finetuning a Preference Model (PM)
+     + RL
+
+[[file:./images/screenshot_20230228_091509.png]]
+
+ref: Yuntao Bai, et.al. Constitutional AI: Harmlessness from AI Feedback. CoRR abs/2212.08073 (2022) Anthropic
+
+
+** SL-CAI
+
+[[file:./images/screenshot_20230228_091613.png]]
+
+ref: Yuntao Bai, et.al. Constitutional AI: Harmlessness from AI Feedback. CoRR abs/2212.08073 (2022) Anthropic
+
+** RL with AI Feedback (RLAIF)
+
+[[file:./images/screenshot_20230228_091633.png]]
+
+ref: Yuntao Bai, et.al. Constitutional AI: Harmlessness from AI Feedback. CoRR abs/2212.08073 (2022) Anthropic
+
+** Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks
+
++ Background: Instruction-following LLMs have a potential for dual-use, where their language generation capabilities are used for malicious or nefarious ends.
++ Target: Attack for producing hateful
++ Observation:
+  + There exists the defenders before and after LLM, e.g. the input and output filter.
+  + LLMs Behave Like Programs
++ Motivation: Bypass the defender based on the programmatic behavior of LLMs
+
+[[file:./images/screenshot_20230228_091719.png]]
+
+ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsunori Hashimoto: Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks. CoRR abs/2302.05733 (2023) University of Illinois, Urbana-Champaign 2Stanford University
+3University of California, Berkeley
+
+
+
+** Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks
+
++ Background: Instruction-following LLMs have a potential for dual-use, where their language generation capabilities are used for malicious or nefarious ends.
++ Target: Attack for producing hateful
++ Observation:
+  + There exists the defenders before and after LLM, e.g. the input and output filter.
+  + LLMs Behave Like Programs
++ Motivation: Bypass the defender based on the programmatic behavior of LLMs
+
+
+[[file:./images/screenshot_20230228_091719.png]]
+
+
+ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsunori Hashimoto: Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks. CoRR abs/2302.05733 (2023) University of Illinois, Urbana-Champaign 2Stanford University3University of California, Berkeley
+
+
+** LLMs Behave Like Programs 
+
++ String concatenation
++ Variable assignment
++ Sequential Composition
++ Branching
+
+
+[[file:./images/screenshot_20230228_091849.png]]
+
+ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsunori Hashimoto: Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks. CoRR abs/2302.05733 (2023) University of Illinois, Urbana-Champaign 2Stanford University3University of California, Berkeley
+
+
+** Attack mechanisms
+
++ Obfuscation (混淆)
++ *Code Injection/Payload splitting*
++ Virtualization
+
+
+[[file:./images/screenshot_20230228_091911.png]]
+
+
+ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsunori Hashimoto: Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks. CoRR abs/2302.05733 (2023) University of Illinois, Urbana-Champaign 2Stanford University3University of California, Berkeley
+
+** Attack mechanisms
+
++ Obfuscation (混淆)
++ Code Injection/Payload splitting
++ *Virtualization*
+
+ [[file:./images/screenshot_20230228_092009.png]] 
+
+
+ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsunori Hashimoto: Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks. CoRR abs/2302.05733 (2023) University of Illinois, Urbana-Champaign 2Stanford University3University of California, Berkeley
+
+** Attack mechanisms
+
+[[file:./images/screenshot_20230228_092022.png]]
+
+[[file:./images/screenshot_20230228_092032.png]]
+
+ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsunori Hashimoto: Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks. CoRR abs/2302.05733 (2023) University of Illinois, Urbana-Champaign 2Stanford University3University of California, Berkeley
+
+** Results
+
++ Domain: Generating hate speech, conspiracy theory promotion, phishing attacks, scams, and product astroturfing.
++ We templatized the prompt for each attack and medium. Indirection achieved an overall success rate of 92% when only counting the scenarios that did not initially bypass OpenAI’s filters.
++ Every prompt was generated in fewer than 10 attempts. Furthermore, we were able to generate prompts for every commonly listed scam in the US government list of common scams 
+
+[[file:./images/screenshot_20230228_092119.png]]
+
+ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsunori Hashimoto: Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks. CoRR abs/2302.05733 (2023) University of Illinois, Urbana-Champaign 2Stanford University3University of California, Berkeley
+
+** Generation Quality &Economic Benefits
+
+[[file:./images/screenshot_20230228_092139.png]]
+
+
+Email Generation:
++ Human:  $0.15~$0.45
++ Text-davinci-003: $0.0064
++ Estimation of ChatGPT: $0.016
+
+[[file:./images/screenshot_20230228_092158.png]]
+
+
+ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsunori Hashimoto: Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks. CoRR abs/2302.05733 (2023) University of Illinois, Urbana-Champaign 2Stanford University3University of California, Berkeley
+
+** Conclusion & Future works
+
++ Prompt can help to improve the safety, or help to bypass the safety layers.
++ Analysis of LLMs is still an interesting work.
