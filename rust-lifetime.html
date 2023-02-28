@@ -1,15 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<!-- 2023-01-05 四 16:37 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2023-02-28 周二 10:54 -->
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>rust 生命周期（lifetime）解析</title>
 <meta name="author" content="Zi Liang" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="./css/worg.css" />
+<link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/>
 </head>
 <body>
 <div id="content" class="content">
@@ -18,12 +16,12 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgc7e0a11">1. 回顾ownership和reference。</a></li>
-<li><a href="#org486a218">2. rust设计哲学</a></li>
-<li><a href="#orgeac101f">3. 生命周期解析</a>
+<li><a href="#orgcd9f1a2">1. 回顾ownership和reference。</a></li>
+<li><a href="#org40182a7">2. rust设计哲学</a></li>
+<li><a href="#org3835b95">3. 生命周期解析</a>
 <ul>
-<li><a href="#org9449851">3.1. 先复杂化：引入生命周期</a></li>
-<li><a href="#orgf7f8838">3.2. 简化生命周期的描述</a></li>
+<li><a href="#orgbe07425">3.1. 先复杂化：引入生命周期</a></li>
+<li><a href="#org933ccc1">3.2. 简化生命周期的描述</a></li>
 </ul>
 </li>
 </ul>
@@ -37,8 +35,8 @@
 如果我之前学过所有权相关的知识，那么就不用去看了。
 </p>
 
-<div id="outline-container-orgc7e0a11" class="outline-2">
-<h2 id="orgc7e0a11"><span class="section-number-2">1.</span> 回顾ownership和reference。</h2>
+<div id="outline-container-orgcd9f1a2" class="outline-2">
+<h2 id="orgcd9f1a2"><span class="section-number-2">1.</span> 回顾ownership和reference。</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 首先试图回顾一下关于所有权和引用的一些问题。
@@ -57,8 +55,8 @@
 </div>
 
 
-<div id="outline-container-org486a218" class="outline-2">
-<h2 id="org486a218"><span class="section-number-2">2.</span> rust设计哲学</h2>
+<div id="outline-container-org40182a7" class="outline-2">
+<h2 id="org40182a7"><span class="section-number-2">2.</span> rust设计哲学</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 在介绍什么是生命周期之前，可能还需要简单介绍一下rust的设计哲学。我理解rust的设计哲学是：
@@ -76,12 +74,12 @@
 </div>
 </div>
 
-<div id="outline-container-orgeac101f" class="outline-2">
-<h2 id="orgeac101f"><span class="section-number-2">3.</span> 生命周期解析</h2>
+<div id="outline-container-org3835b95" class="outline-2">
+<h2 id="org3835b95"><span class="section-number-2">3.</span> 生命周期解析</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org9449851" class="outline-3">
-<h3 id="org9449851"><span class="section-number-3">3.1.</span> 先复杂化：引入生命周期</h3>
+<div id="outline-container-orgbe07425" class="outline-3">
+<h3 id="orgbe07425"><span class="section-number-3">3.1.</span> 先复杂化：引入生命周期</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 我们先以一个返回两个字符串中最长的一个的函数，来引入生命周期的概念。
@@ -89,13 +87,13 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust">fn longest(x: &amp;str, y: &amp;str) -&gt; &amp;str {
-    if x.len() &gt; y.len() {
-	x
-    } else {
-	y
-    }
-}
+<pre class="src src-rust"><span style="color: #5180b3;">fn</span> <span style="color: #6aaf50;">longest</span><span style="color: #81b0e3;">(</span><span style="color: #baba36;">x</span>: <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span><span style="color: #cd5542;">str</span>, <span style="color: #baba36;">y</span>: <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span><span style="color: #cd5542;">str</span><span style="color: #81b0e3;">)</span> -&gt; <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span><span style="color: #cd5542;">str</span> <span style="color: #81b0e3;">{</span>
+    <span style="color: #5180b3;">if</span> x.len<span style="color: #a5a5a5;">()</span> &gt; y.len<span style="color: #a5a5a5;">()</span> <span style="color: #a5a5a5;">{</span>
+        x
+    <span style="color: #a5a5a5;">}</span> <span style="color: #5180b3;">else</span> <span style="color: #a5a5a5;">{</span>
+        y
+    <span style="color: #a5a5a5;">}</span>
+<span style="color: #81b0e3;">}</span>
 </pre>
 </div>
 <p>
@@ -104,13 +102,13 @@
 
 <div class="org-src-container">
 <pre class="src src-rust">
-let s2="blabla";
-let smax;
-{
-let s1=String::from("abcccccccccccc");
-    smax=longest(s1.as_str(),s2);
-}
-println!("{}", smax);
+<span style="color: #5180b3;">let</span> s2=<span style="color: #bdbc61;">"blabla"</span>;
+<span style="color: #5180b3;">let</span> <span style="color: #baba36;">smax</span>;
+<span style="color: #81b0e3;">{</span>
+<span style="color: #5180b3;">let</span> s1=<span style="color: #cd5542;">String</span>::from<span style="color: #a5a5a5;">(</span><span style="color: #bdbc61;">"abcccccccccccc"</span><span style="color: #a5a5a5;">)</span>;
+    smax=longest<span style="color: #a5a5a5;">(</span>s1.as_str<span style="color: #6190c3;">()</span>,s2<span style="color: #a5a5a5;">)</span>;
+<span style="color: #81b0e3;">}</span>
+<span style="color: #528fd1;">println!</span><span style="color: #81b0e3;">(</span><span style="color: #bdbc61;">"</span><span style="color: #bdbc61; font-style: italic;">{}</span><span style="color: #bdbc61;">"</span>, smax<span style="color: #81b0e3;">)</span>;
 
 </pre>
 </div>
@@ -128,13 +126,13 @@ println!("{}", smax);
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust">fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str {
-    if x.len() &gt; y.len() {
-	x
-    } else {
-	y
-    }
-}
+<pre class="src src-rust"><span style="color: #5180b3;">fn</span> <span style="color: #6aaf50;">longest</span><span style="color: #81b0e3;">&lt;</span>'<span style="color: #baba36;">a</span><span style="color: #81b0e3;">&gt;(</span><span style="color: #baba36;">x</span>: <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span>'<span style="color: #baba36;">a</span> <span style="color: #cd5542;">str</span>, <span style="color: #baba36;">y</span>: <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span>'<span style="color: #baba36;">a</span> <span style="color: #cd5542;">str</span><span style="color: #81b0e3;">)</span> -&gt; <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span>'<span style="color: #baba36;">a</span> <span style="color: #cd5542;">str</span> <span style="color: #81b0e3;">{</span>
+    <span style="color: #5180b3;">if</span> x.len<span style="color: #a5a5a5;">()</span> &gt; y.len<span style="color: #a5a5a5;">()</span> <span style="color: #a5a5a5;">{</span>
+        x
+    <span style="color: #a5a5a5;">}</span> <span style="color: #5180b3;">else</span> <span style="color: #a5a5a5;">{</span>
+        y
+    <span style="color: #a5a5a5;">}</span>
+<span style="color: #81b0e3;">}</span>
 </pre>
 </div>
 
@@ -147,11 +145,11 @@ println!("{}", smax);
 </p>
 <div class="org-src-container">
 <pre class="src src-rust">
-let s2="blabla";
-let smax;
-let s1=String::from("abcccccccccccc");
-    smax=longest(s1.as_str(),s2);
-println!("{}", smax);
+<span style="color: #5180b3;">let</span> s2=<span style="color: #bdbc61;">"blabla"</span>;
+<span style="color: #5180b3;">let</span> <span style="color: #baba36;">smax</span>;
+<span style="color: #5180b3;">let</span> s1=<span style="color: #cd5542;">String</span>::from<span style="color: #81b0e3;">(</span><span style="color: #bdbc61;">"abcccccccccccc"</span><span style="color: #81b0e3;">)</span>;
+    smax=longest<span style="color: #81b0e3;">(</span>s1.as_str<span style="color: #a5a5a5;">()</span>,s2<span style="color: #81b0e3;">)</span>;
+<span style="color: #528fd1;">println!</span><span style="color: #81b0e3;">(</span><span style="color: #bdbc61;">"</span><span style="color: #bdbc61; font-style: italic;">{}</span><span style="color: #bdbc61;">"</span>, smax<span style="color: #81b0e3;">)</span>;
 
 </pre>
 </div>
@@ -171,21 +169,21 @@ println!("{}", smax);
 
 <div class="org-src-container">
 <pre class="src src-rust">
-fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;str) -&gt; &amp;'a str {
+<span style="color: #5180b3;">fn</span> <span style="color: #6aaf50;">longest</span><span style="color: #81b0e3;">&lt;</span>'<span style="color: #baba36;">a</span><span style="color: #81b0e3;">&gt;(</span><span style="color: #baba36;">x</span>: <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span>'<span style="color: #baba36;">a</span> <span style="color: #cd5542;">str</span>, <span style="color: #baba36;">y</span>: <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span><span style="color: #cd5542;">str</span><span style="color: #81b0e3;">)</span> -&gt; <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span>'<span style="color: #baba36;">a</span> <span style="color: #cd5542;">str</span> <span style="color: #81b0e3;">{</span>
     x
-}
+<span style="color: #81b0e3;">}</span>
 
-struct ImportantExcerpt&lt;'a&gt; {
-    part: &amp;'a str,
-}
+<span style="color: #5180b3;">struct</span> <span style="color: #cd5542;">ImportantExcerpt</span><span style="color: #81b0e3;">&lt;</span>'<span style="color: #baba36;">a</span><span style="color: #81b0e3;">&gt;</span> <span style="color: #81b0e3;">{</span>
+    <span style="color: #baba36;">part</span>: <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span>'<span style="color: #baba36;">a</span> <span style="color: #cd5542;">str</span>,
+<span style="color: #81b0e3;">}</span>
 
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgf7f8838" class="outline-3">
-<h3 id="orgf7f8838"><span class="section-number-3">3.2.</span> 简化生命周期的描述</h3>
+<div id="outline-container-org933ccc1" class="outline-3">
+<h3 id="org933ccc1"><span class="section-number-3">3.2.</span> 简化生命周期的描述</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 下面来试着简化生命周期的描述。如果一直写生命周期，就显得有些繁琐，因此rust也设计了简化生命周期描述的方式。主要包括三条规则：
@@ -201,9 +199,9 @@ struct ImportantExcerpt&lt;'a&gt; {
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust">fn first_word(s: &amp;str) -&gt; &amp;str {}
-//等价于
-fn first_word&lt;'a&gt;(s: &amp;'a str) -&gt; &amp;'a str {}
+<pre class="src src-rust"><span style="color: #5180b3;">fn</span> <span style="color: #6aaf50;">first_word</span><span style="color: #81b0e3;">(</span><span style="color: #baba36;">s</span>: <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span><span style="color: #cd5542;">str</span><span style="color: #81b0e3;">)</span> -&gt; <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span><span style="color: #cd5542;">str</span> <span style="color: #81b0e3;">{}</span>
+<span style="color: #656565;">//</span><span style="color: #757575;">&#31561;&#20215;&#20110;</span>
+<span style="color: #5180b3;">fn</span> <span style="color: #6aaf50;">first_word</span><span style="color: #81b0e3;">&lt;</span>'<span style="color: #baba36;">a</span><span style="color: #81b0e3;">&gt;(</span><span style="color: #baba36;">s</span>: <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span>'<span style="color: #baba36;">a</span> <span style="color: #cd5542;">str</span><span style="color: #81b0e3;">)</span> -&gt; <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span>'<span style="color: #baba36;">a</span> <span style="color: #cd5542;">str</span> <span style="color: #81b0e3;">{}</span>
 </pre>
 </div>
 
@@ -213,19 +211,19 @@ fn first_word&lt;'a&gt;(s: &amp;'a str) -&gt; &amp;'a str {}
 
 <div class="org-src-container">
 <pre class="src src-rust">
-#![allow(unused)]
-fn main() {
-struct ImportantExcerpt&lt;'a&gt; {
-    part: &amp;'a str,
-}
+<span style="color: #dF9522;">#!</span><span style="color: #81b0e3;">[</span><span style="color: #dF9522;">allow</span><span style="color: #a5a5a5;">(</span><span style="color: #dF9522;">unused</span><span style="color: #a5a5a5;">)</span><span style="color: #81b0e3;">]</span>
+<span style="color: #5180b3;">fn</span> <span style="color: #6aaf50;">main</span><span style="color: #81b0e3;">()</span> <span style="color: #81b0e3;">{</span>
+<span style="color: #5180b3;">struct</span> <span style="color: #cd5542;">ImportantExcerpt</span><span style="color: #a5a5a5;">&lt;</span>'<span style="color: #baba36;">a</span><span style="color: #a5a5a5;">&gt;</span> <span style="color: #a5a5a5;">{</span>
+    <span style="color: #baba36;">part</span>: <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span>'<span style="color: #baba36;">a</span> <span style="color: #cd5542;">str</span>,
+<span style="color: #a5a5a5;">}</span>
 
-impl&lt;'a&gt; ImportantExcerpt&lt;'a&gt; {
-    fn announce_and_return_part(&amp;self, announcement: &amp;str) -&gt; &amp;str {
-	println!("Attention please: {}", announcement);
-	self.part
-    }
-}
-}
+<span style="color: #5180b3;">impl</span><span style="color: #a5a5a5;">&lt;</span>'<span style="color: #baba36;">a</span><span style="color: #a5a5a5;">&gt;</span> <span style="color: #cd5542;">ImportantExcerpt</span><span style="color: #a5a5a5;">&lt;</span>'<span style="color: #baba36;">a</span><span style="color: #a5a5a5;">&gt;</span> <span style="color: #a5a5a5;">{</span>
+    <span style="color: #5180b3;">fn</span> <span style="color: #6aaf50;">announce_and_return_part</span><span style="color: #6190c3;">(</span><span style="color: #e6e6e8; background-color: #14141e;">&amp;</span><span style="color: #5180b3;">self</span>, <span style="color: #baba36;">announcement</span>: <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span><span style="color: #cd5542;">str</span><span style="color: #6190c3;">)</span> -&gt; <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span><span style="color: #cd5542;">str</span> <span style="color: #6190c3;">{</span>
+        <span style="color: #528fd1;">println!</span><span style="color: #959595;">(</span><span style="color: #bdbc61;">"Attention please: </span><span style="color: #bdbc61; font-style: italic;">{}</span><span style="color: #bdbc61;">"</span>, announcement<span style="color: #959595;">)</span>;
+        <span style="color: #5180b3;">self</span>.part
+    <span style="color: #6190c3;">}</span>
+<span style="color: #a5a5a5;">}</span>
+<span style="color: #81b0e3;">}</span>
 
 </pre>
 </div>
@@ -234,9 +232,9 @@ impl&lt;'a&gt; ImportantExcerpt&lt;'a&gt; {
 第三种情况：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust">  fn longest(x: &amp;str, y: &amp;str) -&gt; &amp;str {}
-    //等价于
-fn longest&lt;'a, 'b&gt;(x: &amp;'a str, y: &amp;'b str) -&gt; &amp;str {}
+<pre class="src src-rust">  <span style="color: #5180b3;">fn</span> <span style="color: #6aaf50;">longest</span><span style="color: #81b0e3;">(</span><span style="color: #baba36;">x</span>: <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span><span style="color: #cd5542;">str</span>, <span style="color: #baba36;">y</span>: <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span><span style="color: #cd5542;">str</span><span style="color: #81b0e3;">)</span> -&gt; <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span><span style="color: #cd5542;">str</span> <span style="color: #81b0e3;">{}</span>
+    <span style="color: #656565;">//</span><span style="color: #757575;">&#31561;&#20215;&#20110;</span>
+<span style="color: #5180b3;">fn</span> <span style="color: #6aaf50;">longest</span><span style="color: #81b0e3;">&lt;</span>'<span style="color: #baba36;">a</span>, '<span style="color: #baba36;">b</span><span style="color: #81b0e3;">&gt;(</span><span style="color: #baba36;">x</span>: <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span>'<span style="color: #baba36;">a</span> <span style="color: #cd5542;">str</span>, <span style="color: #baba36;">y</span>: <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span>'<span style="color: #baba36;">b</span> <span style="color: #cd5542;">str</span><span style="color: #81b0e3;">)</span> -&gt; <span style="color: #e6e6e8; background-color: #14141e;">&amp;</span><span style="color: #cd5542;">str</span> <span style="color: #81b0e3;">{}</span>
 </pre>
 </div>
 
@@ -251,7 +249,7 @@ fn longest&lt;'a, 'b&gt;(x: &amp;'a str, y: &amp;'b str) -&gt; &amp;str {}
 <div id="postamble" class="status">
 <p class="date">Date: Fri Nov 19 09:36:11 2021</p>
 <p class="author">Author: Zi Liang</p>
-<p class="date">Created: 2023-01-05 四 16:37</p>
+<p class="date">Created: 2023-02-28 周二 10:54</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

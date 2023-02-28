@@ -1,15 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<!-- 2023-01-02 一 17:32 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2023-02-28 周二 10:54 -->
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>C++中template模板的学习</title>
 <meta name="author" content="LiangZi" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="./css/worg.css" />
+<link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/>
 </head>
 <body>
 <div id="content" class="content">
@@ -18,20 +16,20 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org790bd67">1. 模板的定义</a>
+<li><a href="#org87dfaae">1. 模板的定义</a>
 <ul>
-<li><a href="#org7500f00">1.1. 函数模板</a>
+<li><a href="#orge39adc6">1.1. 函数模板</a>
 <ul>
-<li><a href="#org34f058e">1.1.1. 基本的函数模板定义与调用形式</a></li>
-<li><a href="#org5ce4139">1.1.2. 函数模板的参数问题(类型参数与非类型参数)</a></li>
+<li><a href="#org0d3feff">1.1.1. 基本的函数模板定义与调用形式</a></li>
+<li><a href="#orgfccb264">1.1.2. 函数模板的参数问题(类型参数与非类型参数)</a></li>
 </ul>
 </li>
-<li><a href="#org26816c4">1.2. 类模板</a></li>
+<li><a href="#org8978113">1.2. 类模板</a></li>
 </ul>
 </li>
-<li><a href="#orgecd21ee">2. <span class="todo TODO">TODO</span> 模板的实参推断</a></li>
-<li><a href="#org64a197c">3. <span class="todo TODO">TODO</span> 重载与模板</a></li>
-<li><a href="#orge2ec75a">4. <span class="todo TODO">TODO</span> 模板的特例化</a></li>
+<li><a href="#org5c90979">2. <span class="todo TODO">TODO</span> 模板的实参推断</a></li>
+<li><a href="#orgaef5186">3. <span class="todo TODO">TODO</span> 重载与模板</a></li>
+<li><a href="#org1b2a017">4. <span class="todo TODO">TODO</span> 模板的特例化</a></li>
 </ul>
 </div>
 </div>
@@ -42,32 +40,32 @@
 <p>
 primer中说:"一个模板就是一个创建类或函数的蓝图(公式)".
 </p>
-<div id="outline-container-org790bd67" class="outline-2">
-<h2 id="org790bd67"><span class="section-number-2">1.</span> 模板的定义</h2>
+<div id="outline-container-org87dfaae" class="outline-2">
+<h2 id="org87dfaae"><span class="section-number-2">1.</span> 模板的定义</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 模板的灵活性,多是体现在"对类型的推断上".比如,针对一个比较两个数谁大谁小的函数,我们哪里知道这两个数是什么类型的呢?因此可以用到模板.
 </p>
 </div>
 
-<div id="outline-container-org7500f00" class="outline-3">
-<h3 id="org7500f00"><span class="section-number-3">1.1.</span> 函数模板</h3>
+<div id="outline-container-orge39adc6" class="outline-3">
+<h3 id="orge39adc6"><span class="section-number-3">1.1.</span> 函数模板</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-org34f058e" class="outline-4">
-<h4 id="org34f058e"><span class="section-number-4">1.1.1.</span> 基本的函数模板定义与调用形式</h4>
+<div id="outline-container-org0d3feff" class="outline-4">
+<h4 id="org0d3feff"><span class="section-number-4">1.1.1.</span> 基本的函数模板定义与调用形式</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
 顾名思义,就是通过一个固定的架构来生成一堆函数.
 比如刚刚提到的:
 </p>
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #49bdb0;">template</span><span style="color: #4d9391;">&lt;</span><span style="color: #49bdb0;">typename</span> <span style="color: #eed891;">T</span><span style="color: #4d9391;">&gt;</span>
-<span style="color: #eed891;">int</span> <span style="color: #7ED7E6;">compare</span><span style="color: #4d9391;">(</span><span style="color: #49bdb0;">const</span> <span style="color: #eed891;">T</span> &amp;<span style="color: #ef6787;">a</span>, <span style="color: #49bdb0;">const</span> <span style="color: #eed891;">T</span> &amp;<span style="color: #ef6787;">b</span><span style="color: #4d9391;">){</span>
-  <span style="color: #49bdb0;">if</span> <span style="color: #47ba99;">(</span>a&lt;b<span style="color: #47ba99;">)</span> <span style="color: #49bdb0;">return</span> -1;
-  <span style="color: #49bdb0;">if</span> <span style="color: #47ba99;">(</span>a&gt;b<span style="color: #47ba99;">)</span> <span style="color: #49bdb0;">return</span> +1;
-  <span style="color: #49bdb0;">return</span> 0;
-<span style="color: #4d9391;">}</span>
+<pre class="src src-C++"><span style="color: #5180b3;">template</span><span style="color: #81b0e3;">&lt;</span><span style="color: #5180b3;">typename</span> <span style="color: #cd5542;">T</span><span style="color: #81b0e3;">&gt;</span>
+<span style="color: #cd5542;">int</span> <span style="color: #6aaf50;">compare</span><span style="color: #81b0e3;">(</span><span style="color: #5180b3;">const</span> <span style="color: #cd5542;">T</span> &amp;<span style="color: #baba36;">a</span>, <span style="color: #5180b3;">const</span> <span style="color: #cd5542;">T</span> &amp;<span style="color: #baba36;">b</span><span style="color: #81b0e3;">){</span>
+  <span style="color: #5180b3;">if</span> <span style="color: #a5a5a5;">(</span>a&lt;b<span style="color: #a5a5a5;">)</span> <span style="color: #5180b3;">return</span> -1;
+  <span style="color: #5180b3;">if</span> <span style="color: #a5a5a5;">(</span>a&gt;b<span style="color: #a5a5a5;">)</span> <span style="color: #5180b3;">return</span> +1;
+  <span style="color: #5180b3;">return</span> 0;
+<span style="color: #81b0e3;">}</span>
 </pre>
 </div>
 <p>
@@ -75,10 +73,10 @@ primer中说:"一个模板就是一个创建类或函数的蓝图(公式)".
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #eed891;">int</span> <span style="color: #ef6787;">a</span>=1;
-<span style="color: #eed891;">int</span> <span style="color: #ef6787;">b</span>=0;
-<span style="color: #eed891;">int</span> <span style="color: #ef6787;">c</span>;
-c=compare<span style="color: #4d9391;">(</span>a,b<span style="color: #4d9391;">)</span>
+<pre class="src src-C++"><span style="color: #cd5542;">int</span> <span style="color: #baba36;">a</span>=1;
+<span style="color: #cd5542;">int</span> <span style="color: #baba36;">b</span>=0;
+<span style="color: #cd5542;">int</span> <span style="color: #baba36;">c</span>;
+c=compare<span style="color: #81b0e3;">(</span>a,b<span style="color: #81b0e3;">)</span>
 </pre>
 </div>
 <p>
@@ -87,8 +85,8 @@ c=compare<span style="color: #4d9391;">(</span>a,b<span style="color: #4d9391;">
 </div>
 </div>
 
-<div id="outline-container-org5ce4139" class="outline-4">
-<h4 id="org5ce4139"><span class="section-number-4">1.1.2.</span> 函数模板的参数问题(类型参数与非类型参数)</h4>
+<div id="outline-container-orgfccb264" class="outline-4">
+<h4 id="orgfccb264"><span class="section-number-4">1.1.2.</span> 函数模板的参数问题(类型参数与非类型参数)</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <ol class="org-ol">
 <li>类型参数. 类型参数就是单指对"对象"的"类型"进行确定的参数.每一个类型参数前面都需要加一个"typename",或者"class".这样被定义的类型一般可以被使用在函数的任何地方.</li>
@@ -97,13 +95,13 @@ c=compare<span style="color: #4d9391;">(</span>a,b<span style="color: #4d9391;">
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #635C4A;">//</span><span style="color: #635C4A;">&#19979;&#38754;&#30340;T,A&#26159;&#31867;&#22411;&#21442;&#25968;,m,n&#26159;&#38750;&#31867;&#22411;&#21442;&#25968;.</span>
-<span style="color: #49bdb0;">template</span><span style="color: #4d9391;">&lt;</span><span style="color: #49bdb0;">typename</span> <span style="color: #eed891;">T</span>, <span style="color: #49bdb0;">class</span> <span style="color: #eed891;">A</span>, <span style="color: #eed891;">unsigned</span> <span style="color: #eed891;">int</span> <span style="color: #ef6787;">m</span>, <span style="color: #eed891;">unsigned</span> <span style="color: #eed891;">int</span> <span style="color: #ef6787;">n</span><span style="color: #4d9391;">&gt;</span>
-<span style="color: #eed891;">int</span> <span style="color: #7ED7E6;">concat</span><span style="color: #4d9391;">(</span><span style="color: #49bdb0;">const</span> <span style="color: #eed891;">T</span> &amp;<span style="color: #ef6787;">a</span><span style="color: #47ba99;">[</span>m<span style="color: #47ba99;">]</span>, <span style="color: #49bdb0;">const</span> <span style="color: #eed891;">T</span> &amp;<span style="color: #ef6787;">b</span><span style="color: #47ba99;">[</span>n<span style="color: #47ba99;">]</span>, <span style="color: #49bdb0;">const</span> <span style="color: #eed891;">A</span> <span style="color: #ef6787;">c</span><span style="color: #4d9391;">)</span>
-<span style="color: #4d9391;">{</span>
+<pre class="src src-C++"><span style="color: #656565;">//</span><span style="color: #757575;">&#19979;&#38754;&#30340;T,A&#26159;&#31867;&#22411;&#21442;&#25968;,m,n&#26159;&#38750;&#31867;&#22411;&#21442;&#25968;.</span>
+<span style="color: #5180b3;">template</span><span style="color: #81b0e3;">&lt;</span><span style="color: #5180b3;">typename</span> <span style="color: #cd5542;">T</span>, <span style="color: #5180b3;">class</span> <span style="color: #cd5542;">A</span>, <span style="color: #cd5542;">unsigned</span> <span style="color: #cd5542;">int</span> <span style="color: #baba36;">m</span>, <span style="color: #cd5542;">unsigned</span> <span style="color: #cd5542;">int</span> <span style="color: #baba36;">n</span><span style="color: #81b0e3;">&gt;</span>
+<span style="color: #cd5542;">int</span> <span style="color: #6aaf50;">concat</span><span style="color: #81b0e3;">(</span><span style="color: #5180b3;">const</span> <span style="color: #cd5542;">T</span> &amp;<span style="color: #baba36;">a</span><span style="color: #a5a5a5;">[</span>m<span style="color: #a5a5a5;">]</span>, <span style="color: #5180b3;">const</span> <span style="color: #cd5542;">T</span> &amp;<span style="color: #baba36;">b</span><span style="color: #a5a5a5;">[</span>n<span style="color: #a5a5a5;">]</span>, <span style="color: #5180b3;">const</span> <span style="color: #cd5542;">A</span> <span style="color: #baba36;">c</span><span style="color: #81b0e3;">)</span>
+<span style="color: #81b0e3;">{</span>
   something;
-  <span style="color: #49bdb0;">return</span> 0
-<span style="color: #4d9391;">}</span>
+  <span style="color: #5180b3;">return</span> 0
+<span style="color: #81b0e3;">}</span>
 #+BEGIN_SRC C++
 
 </pre>
@@ -116,41 +114,41 @@ c=compare<span style="color: #4d9391;">(</span>a,b<span style="color: #4d9391;">
 </div>
 </div>
 
-<div id="outline-container-org26816c4" class="outline-3">
-<h3 id="org26816c4"><span class="section-number-3">1.2.</span> 类模板</h3>
+<div id="outline-container-org8978113" class="outline-3">
+<h3 id="org8978113"><span class="section-number-3">1.2.</span> 类模板</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 与函数模板不同,类模板自定义的类型参数无法通过编译器的推理获得.因此,类模板需要提供额外的参数信息.下面是一个关于类模板的简单示例.
 </p>
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #49bdb0;">template</span><span style="color: #4d9391;">&lt;</span><span style="color: #49bdb0;">typename</span> <span style="color: #eed891;">T</span><span style="color: #4d9391;">&gt;</span> <span style="color: #49bdb0;">class</span> <span style="color: #eed891;">Blob</span><span style="color: #4d9391;">{</span>
-<span style="color: #49bdb0;">public</span>:
-  <span style="color: #49bdb0;">typedef</span> <span style="color: #eed891;">T</span> <span style="color: #eed891;">value_type</span>;
-  <span style="color: #49bdb0;">typedef</span> <span style="color: #eed891;">T</span> <span style="color: #ef6787;">std</span>::<span style="color: #ef6787;">vector</span><span style="color: #47ba99;">&lt;</span><span style="color: #eed891;">T</span><span style="color: #47ba99;">&gt;</span>::<span style="color: #eed891;">size_type</span> <span style="color: #eed891;">size_type</span>;
+<pre class="src src-C++"><span style="color: #5180b3;">template</span><span style="color: #81b0e3;">&lt;</span><span style="color: #5180b3;">typename</span> <span style="color: #cd5542;">T</span><span style="color: #81b0e3;">&gt;</span> <span style="color: #5180b3;">class</span> <span style="color: #cd5542;">Blob</span><span style="color: #81b0e3;">{</span>
+<span style="color: #5180b3;">public</span>:
+  <span style="color: #5180b3;">typedef</span> <span style="color: #cd5542;">T</span> <span style="color: #cd5542;">value_type</span>;
+  <span style="color: #5180b3;">typedef</span> <span style="color: #cd5542;">T</span> <span style="color: #ab75c3;">std</span>::<span style="color: #ab75c3;">vector</span><span style="color: #a5a5a5;">&lt;</span><span style="color: #cd5542;">T</span><span style="color: #a5a5a5;">&gt;</span>::<span style="color: #cd5542;">size_type</span> <span style="color: #cd5542;">size_type</span>;
 
-  <span style="color: #635C4A;">//</span><span style="color: #635C4A;">constrcution function</span>
-  <span style="color: #7ED7E6;">Blob</span><span style="color: #47ba99;">()</span>;
-  <span style="color: #7ED7E6;">Blob</span><span style="color: #47ba99;">(</span><span style="color: #ef6787;">std</span>::<span style="color: #eed891;">initializer_list</span><span style="color: #9d81ba;">&lt;</span><span style="color: #eed891;">T</span><span style="color: #9d81ba;">&gt;</span> <span style="color: #ef6787;">il</span><span style="color: #47ba99;">)</span>;
-  <span style="color: #eed891;">size_type</span> <span style="color: #7ED7E6;">size</span><span style="color: #47ba99;">()</span> <span style="color: #49bdb0;">const</span> <span style="color: #47ba99;">{</span>
-    <span style="color: #49bdb0;">return</span> data-&gt;size<span style="color: #9d81ba;">()</span>;
-  <span style="color: #47ba99;">}</span>
-  <span style="color: #eed891;">bool</span> <span style="color: #7ED7E6;">empty</span><span style="color: #47ba99;">()</span> <span style="color: #49bdb0;">const</span> <span style="color: #47ba99;">{</span>
-    <span style="color: #49bdb0;">return</span> data-&gt;empty<span style="color: #9d81ba;">()</span>;
-  <span style="color: #47ba99;">}</span>
-  <span style="color: #eed891;">void</span> <span style="color: #7ED7E6;">push_back</span><span style="color: #47ba99;">(</span><span style="color: #49bdb0;">const</span> <span style="color: #eed891;">T</span> &amp;<span style="color: #ef6787;">t</span><span style="color: #47ba99;">){</span>
-    data-&gt;push_back<span style="color: #9d81ba;">(</span>t<span style="color: #9d81ba;">)</span>;
-  <span style="color: #47ba99;">}</span>
-  <span style="color: #eed891;">void</span> <span style="color: #7ED7E6;">push_back</span><span style="color: #47ba99;">(</span><span style="color: #eed891;">T</span> &amp;&amp;<span style="color: #ef6787;">t</span><span style="color: #47ba99;">){</span>
-    data-&gt;push_back<span style="color: #9d81ba;">(</span><span style="color: #ef6787;">std</span>::<span style="color: #eed891;">mouve</span>(<span style="color: #ef6787;">t</span>)<span style="color: #9d81ba;">)</span>;
-  <span style="color: #47ba99;">}</span>
-  <span style="color: #eed891;">void</span> <span style="color: #7ED7E6;">pop_back</span><span style="color: #47ba99;">()</span>;
+  <span style="color: #656565;">//</span><span style="color: #757575;">constrcution function</span>
+  <span style="color: #6aaf50;">Blob</span><span style="color: #a5a5a5;">()</span>;
+  <span style="color: #6aaf50;">Blob</span><span style="color: #a5a5a5;">(</span><span style="color: #ab75c3;">std</span>::<span style="color: #cd5542;">initializer_list</span><span style="color: #6190c3;">&lt;</span><span style="color: #cd5542;">T</span><span style="color: #6190c3;">&gt;</span> <span style="color: #baba36;">il</span><span style="color: #a5a5a5;">)</span>;
+  <span style="color: #cd5542;">size_type</span> <span style="color: #6aaf50;">size</span><span style="color: #a5a5a5;">()</span> <span style="color: #5180b3;">const</span> <span style="color: #a5a5a5;">{</span>
+    <span style="color: #5180b3;">return</span> data-&gt;size<span style="color: #6190c3;">()</span>;
+  <span style="color: #a5a5a5;">}</span>
+  <span style="color: #cd5542;">bool</span> <span style="color: #6aaf50;">empty</span><span style="color: #a5a5a5;">()</span> <span style="color: #5180b3;">const</span> <span style="color: #a5a5a5;">{</span>
+    <span style="color: #5180b3;">return</span> data-&gt;empty<span style="color: #6190c3;">()</span>;
+  <span style="color: #a5a5a5;">}</span>
+  <span style="color: #cd5542;">void</span> <span style="color: #6aaf50;">push_back</span><span style="color: #a5a5a5;">(</span><span style="color: #5180b3;">const</span> <span style="color: #cd5542;">T</span> &amp;<span style="color: #baba36;">t</span><span style="color: #a5a5a5;">){</span>
+    data-&gt;push_back<span style="color: #6190c3;">(</span>t<span style="color: #6190c3;">)</span>;
+  <span style="color: #a5a5a5;">}</span>
+  <span style="color: #cd5542;">void</span> <span style="color: #6aaf50;">push_back</span><span style="color: #a5a5a5;">(</span><span style="color: #cd5542;">T</span> &amp;&amp;<span style="color: #baba36;">t</span><span style="color: #a5a5a5;">){</span>
+    data-&gt;push_back<span style="color: #6190c3;">(</span><span style="color: #ab75c3;">std</span>::<span style="color: #cd5542;">mouve</span><span style="color: #959595;">(</span><span style="color: #baba36;">t</span><span style="color: #959595;">)</span><span style="color: #6190c3;">)</span>;
+  <span style="color: #a5a5a5;">}</span>
+  <span style="color: #cd5542;">void</span> <span style="color: #6aaf50;">pop_back</span><span style="color: #a5a5a5;">()</span>;
 
-  <span style="color: #635C4A;">//</span><span style="color: #635C4A;">&#20803;&#32032;&#35775;&#38382;</span>
-  <span style="color: #eed891;">T</span> &amp; <span style="color: #7ED7E6;">back</span><span style="color: #47ba99;">()</span>;
-  <span style="color: #eed891;">T</span> &amp; <span style="color: #49bdb0;">operator</span><span style="color: #47ba99;">[]</span><span style="color: #47ba99;">(</span><span style="color: #eed891;">size_type</span> <span style="color: #ef6787;">i</span><span style="color: #47ba99;">)</span>;;
-<span style="color: #49bdb0;">private</span>:
-  <span style="color: #ef6787;">std</span>::<span style="color: #eed891;">shared_ptr</span><span style="color: #47ba99;">&lt;</span><span style="color: #ef6787;">std</span>::<span style="color: #eed891;">vector</span><span style="color: #9d81ba;">&lt;</span><span style="color: #eed891;">T</span><span style="color: #9d81ba;">&gt;</span><span style="color: #47ba99;">&gt;</span><span style="color: #ef6787;">data</span>;
-<span style="color: #4d9391;">}</span>
+  <span style="color: #656565;">//</span><span style="color: #757575;">&#20803;&#32032;&#35775;&#38382;</span>
+  <span style="color: #cd5542;">T</span> &amp; <span style="color: #6aaf50;">back</span><span style="color: #a5a5a5;">()</span>;
+  <span style="color: #cd5542;">T</span> &amp; <span style="color: #5180b3;">operator</span><span style="color: #a5a5a5;">[]</span><span style="color: #a5a5a5;">(</span><span style="color: #cd5542;">size_type</span> <span style="color: #baba36;">i</span><span style="color: #a5a5a5;">)</span>;;
+<span style="color: #5180b3;">private</span>:
+  <span style="color: #ab75c3;">std</span>::<span style="color: #cd5542;">shared_ptr</span><span style="color: #a5a5a5;">&lt;</span><span style="color: #ab75c3;">std</span>::<span style="color: #cd5542;">vector</span><span style="color: #6190c3;">&lt;</span><span style="color: #cd5542;">T</span><span style="color: #6190c3;">&gt;</span><span style="color: #a5a5a5;">&gt;</span><span style="color: #baba36;">data</span>;
+<span style="color: #81b0e3;">}</span>
 </pre>
 </div>
 
@@ -159,8 +157,8 @@ c=compare<span style="color: #4d9391;">(</span>a,b<span style="color: #4d9391;">
 啊,非常简单:
 </p>
 <div class="org-src-container">
-<pre class="src src-C++"><span style="color: #eed891;">Blob</span><span style="color: #4d9391;">&lt;</span><span style="color: #eed891;">int</span><span style="color: #4d9391;">&gt;</span> <span style="color: #ef6787;">ia</span>;
-<span style="color: #eed891;">Blob</span><span style="color: #4d9391;">&lt;</span><span style="color: #eed891;">int</span><span style="color: #4d9391;">&gt;</span><span style="color: #ef6787;">ia1</span>=<span style="color: #4d9391;">{</span>0,1,2,3,4<span style="color: #4d9391;">}</span>;
+<pre class="src src-C++"><span style="color: #cd5542;">Blob</span><span style="color: #81b0e3;">&lt;</span><span style="color: #cd5542;">int</span><span style="color: #81b0e3;">&gt;</span> <span style="color: #baba36;">ia</span>;
+<span style="color: #cd5542;">Blob</span><span style="color: #81b0e3;">&lt;</span><span style="color: #cd5542;">int</span><span style="color: #81b0e3;">&gt;</span><span style="color: #baba36;">ia1</span>=<span style="color: #81b0e3;">{</span>0,1,2,3,4<span style="color: #81b0e3;">}</span>;
 </pre>
 </div>
 <p>
@@ -175,19 +173,19 @@ c=compare<span style="color: #4d9391;">(</span>a,b<span style="color: #4d9391;">
 </div>
 
 
-<div id="outline-container-orgecd21ee" class="outline-2">
-<h2 id="orgecd21ee"><span class="section-number-2">2.</span> <span class="todo TODO">TODO</span> 模板的实参推断</h2>
+<div id="outline-container-org5c90979" class="outline-2">
+<h2 id="org5c90979"><span class="section-number-2">2.</span> <span class="todo TODO">TODO</span> 模板的实参推断</h2>
 </div>
-<div id="outline-container-org64a197c" class="outline-2">
-<h2 id="org64a197c"><span class="section-number-2">3.</span> <span class="todo TODO">TODO</span> 重载与模板</h2>
+<div id="outline-container-orgaef5186" class="outline-2">
+<h2 id="orgaef5186"><span class="section-number-2">3.</span> <span class="todo TODO">TODO</span> 重载与模板</h2>
 </div>
-<div id="outline-container-orge2ec75a" class="outline-2">
-<h2 id="orge2ec75a"><span class="section-number-2">4.</span> <span class="todo TODO">TODO</span> 模板的特例化</h2>
+<div id="outline-container-org1b2a017" class="outline-2">
+<h2 id="org1b2a017"><span class="section-number-2">4.</span> <span class="todo TODO">TODO</span> 模板的特例化</h2>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: LiangZi</p>
-<p class="date">Created: 2023-01-02 一 17:32</p>
+<p class="date">Created: 2023-02-28 周二 10:54</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

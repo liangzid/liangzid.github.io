@@ -1,15 +1,197 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<!-- 2023-02-22 周三 18:00 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2023-02-28 周二 10:53 -->
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Delphi源码学习与分析</title>
 <meta name="author" content="Zi Liang" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="./css/worg.css" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+</style>
+<link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/>
 </head>
 <body>
 <div id="content" class="content">
@@ -42,7 +224,7 @@
 <ul>
 <li><a href="#org7b1019b">2.3.1. layers</a></li>
 <li><a href="#org2e1ab87">2.3.2. tensors</a></li>
-<li><a href="#orgf3db6e7">2.3.3. others</a></li>
+<li><a href="#org350e2ca">2.3.3. others</a></li>
 </ul>
 </li>
 <li><a href="#org6ad44aa">2.4. protocols-sys</a>
@@ -52,7 +234,7 @@
 <li><a href="#orga4f00ed">2.4.3. key_share</a></li>
 <li><a href="#org19be2a7">2.4.4. server_cg</a></li>
 <li><a href="#org9cef3c0">2.4.5. server_gen</a></li>
-<li><a href="#org350e2ca">2.4.6. others</a></li>
+<li><a href="#org9ff502f">2.4.6. others</a></li>
 </ul>
 </li>
 <li><a href="#org9d14d0d">2.5. protocols</a></li>
@@ -331,27 +513,27 @@ neural-network主要封装了：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #598bc1;">pub</span> <span style="color: #598bc1;">enum</span> <span style="color: #d65946;">LinearLayer</span><span style="color: #ab75c3;">&lt;</span><span style="color: #d65946;">F</span>, <span style="color: #d65946;">C</span><span style="color: #ab75c3;">&gt;</span> <span style="color: #ab75c3;">{</span>
-    <span style="color: #d65946;">Conv2d</span> <span style="color: #6aaf50;">{</span>
-        <span style="color: #baba36;">dims</span>: <span style="color: #d65946;">LayerDims</span>,
-        <span style="color: #baba36;">params</span>: <span style="color: #d65946;">Conv2dParams</span><span style="color: #df9522;">&lt;</span><span style="color: #d65946;">F</span>, <span style="color: #d65946;">C</span><span style="color: #df9522;">&gt;</span>,
-    <span style="color: #6aaf50;">}</span>,
-    <span style="color: #d65946;">FullyConnected</span> <span style="color: #6aaf50;">{</span>
-        <span style="color: #baba36;">dims</span>: <span style="color: #d65946;">LayerDims</span>,
-        <span style="color: #baba36;">params</span>: <span style="color: #d65946;">FullyConnectedParams</span><span style="color: #df9522;">&lt;</span><span style="color: #d65946;">F</span>, <span style="color: #d65946;">C</span><span style="color: #df9522;">&gt;</span>,
-    <span style="color: #6aaf50;">}</span>,
-    <span style="color: #d65946;">FullyConnectedD</span> <span style="color: #6aaf50;">{</span>
-        <span style="color: #baba36;">dims</span>: <span style="color: #d65946;">LayerDims</span>,
-        <span style="color: #baba36;">params</span>: <span style="color: #d65946;">FullyConnectedParamsD</span><span style="color: #df9522;">&lt;</span><span style="color: #d65946;">F</span>, <span style="color: #d65946;">C</span><span style="color: #df9522;">&gt;</span>,
-    <span style="color: #6aaf50;">}</span>,
-    <span style="color: #d65946;">AvgPool</span> <span style="color: #6aaf50;">{</span>
-        <span style="color: #baba36;">dims</span>: <span style="color: #d65946;">LayerDims</span>,
-        <span style="color: #baba36;">params</span>: <span style="color: #d65946;">AvgPoolParams</span><span style="color: #df9522;">&lt;</span><span style="color: #d65946;">F</span>, <span style="color: #d65946;">C</span><span style="color: #df9522;">&gt;</span>,
-    <span style="color: #6aaf50;">}</span>,
-    <span style="color: #d65946;">Identity</span> <span style="color: #6aaf50;">{</span>
-        <span style="color: #baba36;">dims</span>: <span style="color: #d65946;">LayerDims</span>,
-    <span style="color: #6aaf50;">}</span>,
-<span style="color: #ab75c3;">}</span>
+<pre class="src src-rust"><span style="color: #5180b3;">pub</span> <span style="color: #5180b3;">enum</span> <span style="color: #cd5542;">LinearLayer</span><span style="color: #81b0e3;">&lt;</span><span style="color: #cd5542;">F</span>, <span style="color: #cd5542;">C</span><span style="color: #81b0e3;">&gt;</span> <span style="color: #81b0e3;">{</span>
+    <span style="color: #cd5542;">Conv2d</span> <span style="color: #a5a5a5;">{</span>
+        <span style="color: #baba36;">dims</span>: <span style="color: #cd5542;">LayerDims</span>,
+        <span style="color: #baba36;">params</span>: <span style="color: #cd5542;">Conv2dParams</span><span style="color: #6190c3;">&lt;</span><span style="color: #cd5542;">F</span>, <span style="color: #cd5542;">C</span><span style="color: #6190c3;">&gt;</span>,
+    <span style="color: #a5a5a5;">}</span>,
+    <span style="color: #cd5542;">FullyConnected</span> <span style="color: #a5a5a5;">{</span>
+        <span style="color: #baba36;">dims</span>: <span style="color: #cd5542;">LayerDims</span>,
+        <span style="color: #baba36;">params</span>: <span style="color: #cd5542;">FullyConnectedParams</span><span style="color: #6190c3;">&lt;</span><span style="color: #cd5542;">F</span>, <span style="color: #cd5542;">C</span><span style="color: #6190c3;">&gt;</span>,
+    <span style="color: #a5a5a5;">}</span>,
+    <span style="color: #cd5542;">FullyConnectedD</span> <span style="color: #a5a5a5;">{</span>
+        <span style="color: #baba36;">dims</span>: <span style="color: #cd5542;">LayerDims</span>,
+        <span style="color: #baba36;">params</span>: <span style="color: #cd5542;">FullyConnectedParamsD</span><span style="color: #6190c3;">&lt;</span><span style="color: #cd5542;">F</span>, <span style="color: #cd5542;">C</span><span style="color: #6190c3;">&gt;</span>,
+    <span style="color: #a5a5a5;">}</span>,
+    <span style="color: #cd5542;">AvgPool</span> <span style="color: #a5a5a5;">{</span>
+        <span style="color: #baba36;">dims</span>: <span style="color: #cd5542;">LayerDims</span>,
+        <span style="color: #baba36;">params</span>: <span style="color: #cd5542;">AvgPoolParams</span><span style="color: #6190c3;">&lt;</span><span style="color: #cd5542;">F</span>, <span style="color: #cd5542;">C</span><span style="color: #6190c3;">&gt;</span>,
+    <span style="color: #a5a5a5;">}</span>,
+    <span style="color: #cd5542;">Identity</span> <span style="color: #a5a5a5;">{</span>
+        <span style="color: #baba36;">dims</span>: <span style="color: #cd5542;">LayerDims</span>,
+    <span style="color: #a5a5a5;">}</span>,
+<span style="color: #81b0e3;">}</span>
 </pre>
 </div>
 
@@ -360,23 +542,23 @@ linear layer info包含如下：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #598bc1;">pub</span> <span style="color: #598bc1;">enum</span> <span style="color: #d65946;">LinearLayerInfo</span><span style="color: #ab75c3;">&lt;</span><span style="color: #d65946;">F</span>, <span style="color: #d65946;">C</span><span style="color: #ab75c3;">&gt;</span> <span style="color: #ab75c3;">{</span>
-    <span style="color: #d65946;">Conv2d</span> <span style="color: #6aaf50;">{</span>
-        <span style="color: #baba36;">kernel</span>: <span style="color: #df9522;">(</span><span style="color: #d65946;">usize</span>, <span style="color: #d65946;">usize</span>, <span style="color: #d65946;">usize</span>, <span style="color: #d65946;">usize</span><span style="color: #df9522;">)</span>,
-        <span style="color: #baba36;">padding</span>: <span style="color: #d65946;">Padding</span>,
-        <span style="color: #baba36;">stride</span>: <span style="color: #d65946;">usize</span>,
-    <span style="color: #6aaf50;">}</span>,
-    <span style="color: #d65946;">FullyConnected</span>,
-    <span style="color: #d65946;">FullyConnectedD</span>,
-    <span style="color: #d65946;">AvgPool</span> <span style="color: #6aaf50;">{</span>
-        <span style="color: #baba36;">pool_h</span>: <span style="color: #d65946;">usize</span>,
-        <span style="color: #baba36;">pool_w</span>: <span style="color: #d65946;">usize</span>,
-        <span style="color: #baba36;">stride</span>: <span style="color: #d65946;">usize</span>,
-        <span style="color: #baba36;">normalizer</span>: <span style="color: #d65946;">C</span>,
-        <span style="color: #baba36;">_variable</span>: <span style="color: #d65946;">PhantomData</span><span style="color: #df9522;">&lt;</span><span style="color: #d65946;">F</span><span style="color: #df9522;">&gt;</span>,
-    <span style="color: #6aaf50;">}</span>,
-    <span style="color: #d65946;">Identity</span>,
-<span style="color: #ab75c3;">}</span>
+<pre class="src src-rust"><span style="color: #5180b3;">pub</span> <span style="color: #5180b3;">enum</span> <span style="color: #cd5542;">LinearLayerInfo</span><span style="color: #81b0e3;">&lt;</span><span style="color: #cd5542;">F</span>, <span style="color: #cd5542;">C</span><span style="color: #81b0e3;">&gt;</span> <span style="color: #81b0e3;">{</span>
+    <span style="color: #cd5542;">Conv2d</span> <span style="color: #a5a5a5;">{</span>
+        <span style="color: #baba36;">kernel</span>: <span style="color: #6190c3;">(</span><span style="color: #cd5542;">usize</span>, <span style="color: #cd5542;">usize</span>, <span style="color: #cd5542;">usize</span>, <span style="color: #cd5542;">usize</span><span style="color: #6190c3;">)</span>,
+        <span style="color: #baba36;">padding</span>: <span style="color: #cd5542;">Padding</span>,
+        <span style="color: #baba36;">stride</span>: <span style="color: #cd5542;">usize</span>,
+    <span style="color: #a5a5a5;">}</span>,
+    <span style="color: #cd5542;">FullyConnected</span>,
+    <span style="color: #cd5542;">FullyConnectedD</span>,
+    <span style="color: #cd5542;">AvgPool</span> <span style="color: #a5a5a5;">{</span>
+        <span style="color: #baba36;">pool_h</span>: <span style="color: #cd5542;">usize</span>,
+        <span style="color: #baba36;">pool_w</span>: <span style="color: #cd5542;">usize</span>,
+        <span style="color: #baba36;">stride</span>: <span style="color: #cd5542;">usize</span>,
+        <span style="color: #baba36;">normalizer</span>: <span style="color: #cd5542;">C</span>,
+        <span style="color: #baba36;">_variable</span>: <span style="color: #cd5542;">PhantomData</span><span style="color: #6190c3;">&lt;</span><span style="color: #cd5542;">F</span><span style="color: #6190c3;">&gt;</span>,
+    <span style="color: #a5a5a5;">}</span>,
+    <span style="color: #cd5542;">Identity</span>,
+<span style="color: #81b0e3;">}</span>
 </pre>
 </div>
 
@@ -399,8 +581,8 @@ T的实例化一般就是share和AdditiveShare。
 </p>
 </div>
 </div>
-<div id="outline-container-orgf3db6e7" class="outline-4">
-<h4 id="orgf3db6e7"><span class="section-number-4">2.3.3.</span> others</h4>
+<div id="outline-container-org350e2ca" class="outline-4">
+<h4 id="org350e2ca"><span class="section-number-4">2.3.3.</span> others</h4>
 <div class="outline-text-4" id="text-2-3-3">
 <ol class="org-ol">
 <li>enum
@@ -495,10 +677,10 @@ protocols-sys定义了完整的密钥交换协议系统。主要包括：
 KeyShare. KeyShare便是C++版里的SerialCT,其定义为：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust">    <span style="color: #598bc1;">pub</span> <span style="color: #598bc1;">struct</span> <span style="color: #d65946;">SerialCT</span> <span style="color: #ab75c3;">{</span>
-    <span style="color: #598bc1;">pub</span> <span style="color: #baba36;">inner</span>: *<span style="color: #598bc1;">mut</span> ::<span style="color: #ab75c3;">std</span>::<span style="color: #ab75c3;">os</span>::<span style="color: #ab75c3;">raw</span>::c_char,
-    <span style="color: #598bc1;">pub</span> <span style="color: #baba36;">size</span>: <span style="color: #d65946;">u64</span>,
-<span style="color: #ab75c3;">}</span>
+<pre class="src src-rust">    <span style="color: #5180b3;">pub</span> <span style="color: #5180b3;">struct</span> <span style="color: #cd5542;">SerialCT</span> <span style="color: #81b0e3;">{</span>
+    <span style="color: #5180b3;">pub</span> <span style="color: #baba36;">inner</span>: *<span style="color: #5180b3;">mut</span> ::<span style="color: #ab75c3;">std</span>::<span style="color: #ab75c3;">os</span>::<span style="color: #ab75c3;">raw</span>::c_char,
+    <span style="color: #5180b3;">pub</span> <span style="color: #baba36;">size</span>: <span style="color: #cd5542;">u64</span>,
+<span style="color: #81b0e3;">}</span>
 </pre>
 </div></li>
 </ol></li>
@@ -525,8 +707,8 @@ KeyShare. KeyShare便是C++版里的SerialCT,其定义为：
 </p>
 </div>
 </div>
-<div id="outline-container-org350e2ca" class="outline-4">
-<h4 id="org350e2ca"><span class="section-number-4">2.4.6.</span> others</h4>
+<div id="outline-container-org9ff502f" class="outline-4">
+<h4 id="org9ff502f"><span class="section-number-4">2.4.6.</span> others</h4>
 <div class="outline-text-4" id="text-2-4-6">
 <ol class="org-ol">
 <li>struct
@@ -535,10 +717,10 @@ KeyShare. KeyShare便是C++版里的SerialCT,其定义为：
 SealCT: SerialCT的rust封装，其格式类似于：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #598bc1;">pub</span> <span style="color: #598bc1;">struct</span> <span style="color: #d65946;">SerialCT</span> <span style="color: #ab75c3;">{</span>
-    <span style="color: #598bc1;">pub</span> <span style="color: #baba36;">inner</span>: *<span style="color: #598bc1;">mut</span> ::<span style="color: #ab75c3;">std</span>::<span style="color: #ab75c3;">os</span>::<span style="color: #ab75c3;">raw</span>::c_char,
-    <span style="color: #598bc1;">pub</span> <span style="color: #baba36;">size</span>: <span style="color: #d65946;">u64</span>,
-<span style="color: #ab75c3;">}</span>
+<pre class="src src-rust"><span style="color: #5180b3;">pub</span> <span style="color: #5180b3;">struct</span> <span style="color: #cd5542;">SerialCT</span> <span style="color: #81b0e3;">{</span>
+    <span style="color: #5180b3;">pub</span> <span style="color: #baba36;">inner</span>: *<span style="color: #5180b3;">mut</span> ::<span style="color: #ab75c3;">std</span>::<span style="color: #ab75c3;">os</span>::<span style="color: #ab75c3;">raw</span>::c_char,
+    <span style="color: #5180b3;">pub</span> <span style="color: #baba36;">size</span>: <span style="color: #cd5542;">u64</span>,
+<span style="color: #81b0e3;">}</span>
 </pre>
 </div></li>
 <li>包含如下函数： en(de)crypt_vec，顾名思义，加解密一个向量</li>
@@ -561,7 +743,7 @@ SealCT: SerialCT的rust封装，其格式类似于：
 <div id="postamble" class="status">
 <p class="date">Date: Fri Feb  3 14:59:27 2023</p>
 <p class="author">Author: Zi Liang</p>
-<p class="date">Created: 2023-02-22 周三 18:00</p>
+<p class="date">Created: 2023-02-28 周二 10:53</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

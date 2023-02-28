@@ -1,15 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<!-- 2023-01-05 四 16:37 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2023-02-28 周二 10:53 -->
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>对话系统中的安全性问题——一份不完整总结</title>
 <meta name="author" content="Zi Liang" />
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="./css/worg.css" />
+<link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/>
 <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
         displayAlign: "center",
@@ -39,36 +37,36 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org1e3992f">1. 对话系统中安全性问题之一瞥</a>
+<li><a href="#org2f01d92">1. 对话系统中安全性问题之一瞥</a>
 <ul>
-<li><a href="#org7286f39">1.1. offensive response</a></li>
-<li><a href="#orgdfcd23e">1.2. biased Responses</a></li>
-<li><a href="#orgf34b96d">1.3. sensitive response</a></li>
-<li><a href="#org0132eb2">1.4. 不正当的立场</a></li>
+<li><a href="#orgc4dccb0">1.1. offensive response</a></li>
+<li><a href="#orge948b5c">1.2. biased Responses</a></li>
+<li><a href="#orgf5a5b3d">1.3. sensitive response</a></li>
+<li><a href="#org9cc213f">1.4. 不正当的立场</a></li>
 </ul>
 </li>
-<li><a href="#org931bc30">2. 相关工作</a>
+<li><a href="#org3ff7aed">2. 相关工作</a>
 <ul>
-<li><a href="#org1092a5e">2.1. Build it Break it Fix it for Dialogue Safety: Robustness from Adversarial Human Attack</a></li>
-<li><a href="#org3d5a44b">2.2. Fighting Offensive Language on Social Media with Unsupervised Text Style Transfer</a></li>
-<li><a href="#org0a97919">2.3. Does Gender Matter? Towards Fairness in Dialogue Systems</a></li>
-<li><a href="#org4bdcb63">2.4. Mitigating Gender Bias for Neural Dialogue Generation with Adversarial Learning</a></li>
-<li><a href="#org90a3fc1">2.5. Just Say No: Analyzing the Stance of Neural Dialogue Generation in Offensive Contexts</a></li>
-<li><a href="#org515a70b">2.6. Revealing Personal Biases in Dialogue Systems</a></li>
-<li><a href="#orge811411">2.7. Recipes for Safety in Open-domain Chatbots</a>
+<li><a href="#org5f51c0b">2.1. Build it Break it Fix it for Dialogue Safety: Robustness from Adversarial Human Attack</a></li>
+<li><a href="#org0212f41">2.2. Fighting Offensive Language on Social Media with Unsupervised Text Style Transfer</a></li>
+<li><a href="#org25e3754">2.3. Does Gender Matter? Towards Fairness in Dialogue Systems</a></li>
+<li><a href="#org3dd300d">2.4. Mitigating Gender Bias for Neural Dialogue Generation with Adversarial Learning</a></li>
+<li><a href="#org4ff0a35">2.5. Just Say No: Analyzing the Stance of Neural Dialogue Generation in Offensive Contexts</a></li>
+<li><a href="#org1e6bda1">2.6. Revealing Personal Biases in Dialogue Systems</a></li>
+<li><a href="#orgf39ad41">2.7. Recipes for Safety in Open-domain Chatbots</a>
 <ul>
-<li><a href="#org5966c18">2.7.1. unsafe utterance detection</a></li>
-<li><a href="#orgabea75c">2.7.2. safe utterance generation</a></li>
-<li><a href="#orgffa91db">2.7.3. 敏感话题</a></li>
-<li><a href="#org9b6173b">2.7.4. 性别bias的平衡</a></li>
+<li><a href="#org5d0101b">2.7.1. unsafe utterance detection</a></li>
+<li><a href="#orgb61cab2">2.7.2. safe utterance generation</a></li>
+<li><a href="#org357f7cc">2.7.3. 敏感话题</a></li>
+<li><a href="#org3990f9e">2.7.4. 性别bias的平衡</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org5c5867b">3. summary</a>
+<li><a href="#org28fe55d">3. summary</a>
 <ul>
-<li><a href="#org0ae3963">3.1. dataset summary</a></li>
-<li><a href="#orgfcb39a4">3.2. solution summary</a></li>
+<li><a href="#orgdf00557">3.1. dataset summary</a></li>
+<li><a href="#orgddcbbde">3.2. solution summary</a></li>
 </ul>
 </li>
 </ul>
@@ -78,8 +76,8 @@
 本文整理了一些在对话系统中关注于敏感信息对话的工作。所谓的敏感信息，主要就是指脏话、歧视类信息、各种类型的敏感信息。
 </p>
 
-<div id="outline-container-org1e3992f" class="outline-2">
-<h2 id="org1e3992f"><span class="section-number-2">1.</span> 对话系统中安全性问题之一瞥</h2>
+<div id="outline-container-org2f01d92" class="outline-2">
+<h2 id="org2f01d92"><span class="section-number-2">1.</span> 对话系统中安全性问题之一瞥</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 对话系统中的安全性问题包含哪几个方面？笔者总结为以下四点：
@@ -98,8 +96,8 @@
 </ol>
 </div>
 
-<div id="outline-container-org7286f39" class="outline-3">
-<h3 id="org7286f39"><span class="section-number-3">1.1.</span> offensive response</h3>
+<div id="outline-container-orgc4dccb0" class="outline-3">
+<h3 id="orgc4dccb0"><span class="section-number-3">1.1.</span> offensive response</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 冒犯性回复其实是比较好理解的，未来展现出本文的专业性，本文把所有的冒犯性回复总结为以下六种情况：
@@ -119,8 +117,8 @@
 </p>
 
 
-<div id="org2d3db00" class="figure">
-<p><img src="./images/screenshot_20211220_171042.png" alt="screenshot_20211220_171042.png" />
+<div id="org28fc75e" class="figure">
+<p><img src="./images/screenshot_20211220_171042.png" alt="screenshot_20211220_171042.png">
 </p>
 </div>
 
@@ -146,8 +144,8 @@ Bot: Aren't you?
 </div>
 </div>
 
-<div id="outline-container-orgdfcd23e" class="outline-3">
-<h3 id="orgdfcd23e"><span class="section-number-3">1.2.</span> biased Responses</h3>
+<div id="outline-container-orge948b5c" class="outline-3">
+<h3 id="orge948b5c"><span class="section-number-3">1.2.</span> biased Responses</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 第二个值得探讨的问题就是关于对话回复里的偏置。这里的偏置是指，“偏向于夸耀或者损毁一方”。 当然，这个问题其实首先是一个社会问题——社会上存在着各种性别、种族、地域上的歧视，最终导致了data-driven的对话系统的问题。
@@ -166,19 +164,19 @@ Bot: Aren't you?
 
 <p>
  下面是四个例子，分别对应于这四种bias。
-<img src="./images/screenshot_20211220_171923.png" alt="screenshot_20211220_171923.png" /> 
+<img src="./images/screenshot_20211220_171923.png" alt="screenshot_20211220_171923.png"> 
 </p></li>
 </ul>
 
 
-<div id="org6475fd4" class="figure">
-<p><img src="./images/screenshot_20211220_171936.png" alt="screenshot_20211220_171936.png" />
+<div id="org888d59f" class="figure">
+<p><img src="./images/screenshot_20211220_171936.png" alt="screenshot_20211220_171936.png">
 </p>
 </div>
 
 
-<div id="org9db7530" class="figure">
-<p><img src="./images/screenshot_20211220_171951.png" alt="screenshot_20211220_171951.png" />
+<div id="org388cce7" class="figure">
+<p><img src="./images/screenshot_20211220_171951.png" alt="screenshot_20211220_171951.png">
 </p>
 </div>
 
@@ -192,8 +190,8 @@ Bot: Aren't you?
 </div>
 </div>
 
-<div id="outline-container-orgf34b96d" class="outline-3">
-<h3 id="orgf34b96d"><span class="section-number-3">1.3.</span> sensitive response</h3>
+<div id="outline-container-orgf5a5b3d" class="outline-3">
+<h3 id="orgf5a5b3d"><span class="section-number-3">1.3.</span> sensitive response</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 敏感回复问题主要来自于三个方面：
@@ -230,8 +228,8 @@ Bot: Yes. And it’s an immune reaction that may lead to death.
 </div>
 </div>
 
-<div id="outline-container-org0132eb2" class="outline-3">
-<h3 id="org0132eb2"><span class="section-number-3">1.4.</span> 不正当的立场</h3>
+<div id="outline-container-org9cc213f" class="outline-3">
+<h3 id="org9cc213f"><span class="section-number-3">1.4.</span> 不正当的立场</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 最后来看一下立场问题。对于一件事情，立场其实是很说明的。一般而言立场有三：肯定、否定、中立。
@@ -247,8 +245,8 @@ Bot: Yes. And it’s an immune reaction that may lead to death.
 </p>
 
 
-<div id="org7625a92" class="figure">
-<p><img src="./images/screenshot_20211220_173247.png" alt="screenshot_20211220_173247.png" /> 
+<div id="org4e4d407" class="figure">
+<p><img src="./images/screenshot_20211220_173247.png" alt="screenshot_20211220_173247.png"> 
 </p>
 </div>
 
@@ -257,8 +255,8 @@ Bot: Yes. And it’s an immune reaction that may lead to death.
 </p>
 
 
-<div id="org3139cad" class="figure">
-<p><img src="./images/screenshot_20211220_173354.png" alt="screenshot_20211220_173354.png" /> 
+<div id="orgd0efe51" class="figure">
+<p><img src="./images/screenshot_20211220_173354.png" alt="screenshot_20211220_173354.png"> 
 </p>
 </div>
 
@@ -274,8 +272,8 @@ Bot: Yes. And it’s an immune reaction that may lead to death.
 </div>
 
 
-<div id="outline-container-org931bc30" class="outline-2">
-<h2 id="org931bc30"><span class="section-number-2">2.</span> 相关工作</h2>
+<div id="outline-container-org3ff7aed" class="outline-2">
+<h2 id="org3ff7aed"><span class="section-number-2">2.</span> 相关工作</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 在介绍相关工作之前，不妨先做一个思考：假如我要解决以上问题，我会怎么做？很显然，我会通过以下几种策略进行：首先，我可以做一些detection，去检测机器人是否说了offensive的话，如果是的话，我就用一些别的话替换掉。或者通过这这种分类器去净化我的语聊。另一种思路是：通过CTG（Controlled Text Generation）等方法，去控制输出文本，使其不要产生bias或者offensive。
@@ -286,8 +284,8 @@ Bot: Yes. And it’s an immune reaction that may lead to death.
 </p>
 </div>
 
-<div id="outline-container-org1092a5e" class="outline-3">
-<h3 id="org1092a5e"><span class="section-number-3">2.1.</span> Build it Break it Fix it for Dialogue Safety: Robustness from Adversarial Human Attack</h3>
+<div id="outline-container-org5f51c0b" class="outline-3">
+<h3 id="org5f51c0b"><span class="section-number-3">2.1.</span> Build it Break it Fix it for Dialogue Safety: Robustness from Adversarial Human Attack</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 <a href="https://arxiv.org/abs/1908.06083">https://arxiv.org/abs/1908.06083</a>
@@ -319,8 +317,8 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 </p>
 
 
-<div id="orgffbe1bb" class="figure">
-<p><img src="./images/screenshot_20211208_110058.png" alt="screenshot_20211208_110058.png" /> 
+<div id="orgc775616" class="figure">
+<p><img src="./images/screenshot_20211208_110058.png" alt="screenshot_20211208_110058.png"> 
 </p>
 </div></li>
 </ol>
@@ -342,8 +340,8 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 </p>
 
 
-<div id="orgb9924b6" class="figure">
-<p><img src="./images/screenshot_20211208_110426.png" alt="screenshot_20211208_110426.png" />    
+<div id="org2821492" class="figure">
+<p><img src="./images/screenshot_20211208_110426.png" alt="screenshot_20211208_110426.png">    
 </p>
 </div>
 
@@ -356,8 +354,8 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 </p>
 
 
-<div id="org20841fe" class="figure">
-<p><img src="./images/screenshot_20211220_185252.png" alt="screenshot_20211220_185252.png" />
+<div id="org7a07f4e" class="figure">
+<p><img src="./images/screenshot_20211220_185252.png" alt="screenshot_20211220_185252.png">
 </p>
 </div>
 
@@ -375,13 +373,13 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 </ul>
 
 <p>
-注意到，Ai会在A<sub>i+1</sub>处获得0.0的结果。这是由于b-b-f训练方法的特点导致的。因为我们知道，第i+1轮的语料是通过break前i轮语料训练所得的分类器S<sub>i来获得的</sub>。所以Si在第i+1轮上将offensive回复预测正确的概率为0.0
+注意到，Ai会在A_{i+1}处获得0.0的结果。这是由于b-b-f训练方法的特点导致的。因为我们知道，第i+1轮的语料是通过break前i轮语料训练所得的分类器S_i来获得的。所以Si在第i+1轮上将offensive回复预测正确的概率为0.0
 </p>
 
 
 
-<div id="orga4daf1c" class="figure">
-<p><img src="./images/screenshot_20211208_110732.png" alt="screenshot_20211208_110732.png" />
+<div id="org851b4fc" class="figure">
+<p><img src="./images/screenshot_20211208_110732.png" alt="screenshot_20211208_110732.png">
 </p>
 </div>
 
@@ -395,8 +393,8 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 </div>
 </div>
 
-<div id="outline-container-org3d5a44b" class="outline-3">
-<h3 id="org3d5a44b"><span class="section-number-3">2.2.</span> Fighting Offensive Language on Social Media with Unsupervised Text Style Transfer</h3>
+<div id="outline-container-org0212f41" class="outline-3">
+<h3 id="org0212f41"><span class="section-number-3">2.2.</span> Fighting Offensive Language on Social Media with Unsupervised Text Style Transfer</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 <a href="https://arxiv.org/abs/1805.07685">https://arxiv.org/abs/1805.07685</a>
@@ -426,8 +424,8 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 </p>
 
 
-<div id="org20a27ee" class="figure">
-<p><img src="./images/screenshot_20211207_103219.png" alt="screenshot_20211207_103219.png" /> 
+<div id="org2470c87" class="figure">
+<p><img src="./images/screenshot_20211207_103219.png" alt="screenshot_20211207_103219.png"> 
 </p>
 </div>
 
@@ -457,42 +455,42 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 
 <ol class="org-ol">
 <li>恒等映射中的，分类器损失：
-<img src="./images/screenshot_20211207_105200.png" alt="screenshot_20211207_105200.png" /></li>
+<img src="./images/screenshot_20211207_105200.png" alt="screenshot_20211207_105200.png"></li>
 <li>恒等映射中的，autoencoder损失：
-<img src="./images/screenshot_20211207_105213.png" alt="screenshot_20211207_105213.png" /></li>
+<img src="./images/screenshot_20211207_105213.png" alt="screenshot_20211207_105213.png"></li>
 <li>原始句子输入的分类损失：</li>
 </ol>
 
-<div id="org468b15d" class="figure">
-<p><img src="./images/screenshot_20211207_105416.png" alt="screenshot_20211207_105416.png" />
+<div id="org3b08b4b" class="figure">
+<p><img src="./images/screenshot_20211207_105416.png" alt="screenshot_20211207_105416.png">
 </p>
 </div>
 <ol class="org-ol">
 <li>backward transfer中的第二个结果（即最终输出）的分类损失：</li>
 </ol>
 
-<div id="org345fc54" class="figure">
-<p><img src="./images/screenshot_20211207_105316.png" alt="screenshot_20211207_105316.png" />
+<div id="org2f75a39" class="figure">
+<p><img src="./images/screenshot_20211207_105316.png" alt="screenshot_20211207_105316.png">
 </p>
 </div>
 <ol class="org-ol">
 <li>backward transfer中的最终输出句子与输入句子之间的autoencoder损失：</li>
 </ol>
 
-<div id="org80f3ab2" class="figure">
-<p><img src="./images/screenshot_20211207_105257.png" alt="screenshot_20211207_105257.png" />
+<div id="org9605275" class="figure">
+<p><img src="./images/screenshot_20211207_105257.png" alt="screenshot_20211207_105257.png">
 </p>
 </div>
 
 
 <p>
-当然，阅读归阅读，我对这篇论文是否能够work，内心是充满质疑的，主要的质疑之处在于backward transfer是否可以起作用。在我看来，在 $x<sub>k</sub><sup>i&rarr; j&rarr; i</sup>$的变换中，j处的文本的监督信号，其实是特别弱的（仅仅有一个分类器信号）。我并不认为通过这种方式，在面对较为复杂的情况时，可以产生十分不错的回复。
+当然，阅读归阅读，我对这篇论文是否能够work，内心是充满质疑的，主要的质疑之处在于backward transfer是否可以起作用。在我看来，在 $x_{k}^{i&rarr; j&rarr; i}$的变换中，j处的文本的监督信号，其实是特别弱的（仅仅有一个分类器信号）。我并不认为通过这种方式，在面对较为复杂的情况时，可以产生十分不错的回复。
 </p>
 </div>
 </div>
 
-<div id="outline-container-org0a97919" class="outline-3">
-<h3 id="org0a97919"><span class="section-number-3">2.3.</span> Does Gender Matter? Towards Fairness in Dialogue Systems</h3>
+<div id="outline-container-org25e3754" class="outline-3">
+<h3 id="org25e3754"><span class="section-number-3">2.3.</span> Does Gender Matter? Towards Fairness in Dialogue Systems</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 下面来看两篇处理bias的论文。这两篇论文继承了前面的解决方案：即既包括分类器进行detection，又包括NLG环节进行改写。
@@ -507,8 +505,8 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 </p>
 
 
-<div id="org5c41b85" class="figure">
-<p><img src="./images/screenshot_20211220_202759.png" alt="screenshot_20211220_202759.png" />
+<div id="org2ac2fac" class="figure">
+<p><img src="./images/screenshot_20211220_202759.png" alt="screenshot_20211220_202759.png">
 </p>
 </div>
 
@@ -521,13 +519,13 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 </p>
 
 
-<div id="org90bc1f0" class="figure">
-<p><img src="./images/screenshot_20220113_092331.png" alt="screenshot_20220113_092331.png" /> 
+<div id="org0b5bd79" class="figure">
+<p><img src="./images/screenshot_20220113_092331.png" alt="screenshot_20220113_092331.png"> 
 </p>
 </div>
 
 <p>
-其中：假如我们有一个Group G（A，B），那么对于这两个种群我们都能得到他们的测试数据集T<sub>A</sub> 和T<sub>B</sub>，我们希望这数据集中的样本——也就是context C<sub>A和C</sub><sub>B</sub>，在送往对话模型D之后，在被M进行评估时，其“平均的”（即数学上的期望）相差不大。
+其中：假如我们有一个Group G（A，B），那么对于这两个种群我们都能得到他们的测试数据集T_A 和T_B，我们希望这数据集中的样本——也就是context C_A和C_B，在送往对话模型D之后，在被M进行评估时，其“平均的”（即数学上的期望）相差不大。
 </p>
 
 <p>
@@ -535,8 +533,8 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 </p>
 
 
-<div id="org0b4d016" class="figure">
-<p><img src="./images/screenshot_20220113_093000.png" alt="screenshot_20220113_093000.png" />
+<div id="orge3821c3" class="figure">
+<p><img src="./images/screenshot_20220113_093000.png" alt="screenshot_20220113_093000.png">
 </p>
 </div>
 
@@ -545,8 +543,8 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 </p>
 
 
-<div id="org29b1a10" class="figure">
-<p><img src="./images/screenshot_20220113_093050.png" alt="screenshot_20220113_093050.png" />
+<div id="org5022d40" class="figure">
+<p><img src="./images/screenshot_20220113_093050.png" alt="screenshot_20220113_093050.png">
 </p>
 </div>
 
@@ -555,8 +553,8 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 </p>
 
 
-<div id="orgd705237" class="figure">
-<p><img src="./images/screenshot_20220113_093150.png" alt="screenshot_20220113_093150.png" />
+<div id="org8b9eb8d" class="figure">
+<p><img src="./images/screenshot_20220113_093150.png" alt="screenshot_20220113_093150.png">
 </p>
 </div>
 
@@ -575,8 +573,8 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 </p>
 
 
-<div id="orgc611e4f" class="figure">
-<p><img src="./images/screenshot_20220113_094857.png" alt="screenshot_20220113_094857.png" />
+<div id="org122c586" class="figure">
+<p><img src="./images/screenshot_20220113_094857.png" alt="screenshot_20220113_094857.png">
 </p>
 </div>
 
@@ -607,14 +605,14 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 </p>
 
 
-<div id="orgf1aff0e" class="figure">
-<p><img src="./images/screenshot_20220113_095356.png" alt="screenshot_20220113_095356.png" />
+<div id="org5086d4d" class="figure">
+<p><img src="./images/screenshot_20220113_095356.png" alt="screenshot_20220113_095356.png">
 </p>
 </div>
 
 
-<div id="org0e69873" class="figure">
-<p><img src="./images/screenshot_20220113_095402.png" alt="screenshot_20220113_095402.png" />
+<div id="orgf5f4eab" class="figure">
+<p><img src="./images/screenshot_20220113_095402.png" alt="screenshot_20220113_095402.png">
 </p>
 </div>
 
@@ -627,8 +625,8 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 </p>
 
 
-<div id="orgbf98999" class="figure">
-<p><img src="./images/screenshot_20220113_100701.png" alt="screenshot_20220113_100701.png" />
+<div id="orgee1566e" class="figure">
+<p><img src="./images/screenshot_20220113_100701.png" alt="screenshot_20220113_100701.png">
 </p>
 </div>
 
@@ -641,15 +639,15 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 </p>
 
 
-<div id="org0edb563" class="figure">
-<p><img src="./images/screenshot_20220113_101109.png" alt="screenshot_20220113_101109.png" />
+<div id="orgd828944" class="figure">
+<p><img src="./images/screenshot_20220113_101109.png" alt="screenshot_20220113_101109.png">
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org4bdcb63" class="outline-3">
-<h3 id="org4bdcb63"><span class="section-number-3">2.4.</span> Mitigating Gender Bias for Neural Dialogue Generation with Adversarial Learning</h3>
+<div id="outline-container-org3dd300d" class="outline-3">
+<h3 id="org3dd300d"><span class="section-number-3">2.4.</span> Mitigating Gender Bias for Neural Dialogue Generation with Adversarial Learning</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 接续上文，密歇根州大学的那些人又接着对这个问题进行了更深入的探索，也就形成了这篇工作。和上一篇工作着重去探讨公平性这个问题不同，这篇论文把重心放在了如何去解决公平性问题上。
@@ -684,8 +682,8 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 </p>
 
 
-<div id="orgb39160c" class="figure">
-<p><img src="./images/screenshot_20220113_103044.png" alt="screenshot_20220113_103044.png" /> 
+<div id="org88b81ea" class="figure">
+<p><img src="./images/screenshot_20220113_103044.png" alt="screenshot_20220113_103044.png"> 
 </p>
 </div>
 
@@ -693,9 +691,9 @@ offensive数据占据总体数据的比例，总体上维持在10%左右。下�
 如上图所示，对于语料中的一个样本，上图旨在训练一个解耦的表示学习模型，这个解耦的目标将一句话得到两部分特征：
 </p>
 <ol class="org-ol">
-<li>F<sub>u</sub>, unbiased 部分，也就是那些没有害处的biase；</li>
+<li>F_u, unbiased 部分，也就是那些没有害处的biase；</li>
 <li><p>
-F<sub>s,semantic部分</sub>，也就是除去上一部分之外的部分；
+F_s,semantic部分，也就是除去上一部分之外的部分；
 </p>
 
 <p>
@@ -704,15 +702,15 @@ F<sub>s,semantic部分</sub>，也就是除去上一部分之外的部分；
 </p>
 
 
-<div id="orgf818059" class="figure">
-<p><img src="./images/screenshot_20220113_103615.png" alt="screenshot_20220113_103615.png" /> 
+<div id="org5ed1651" class="figure">
+<p><img src="./images/screenshot_20220113_103615.png" alt="screenshot_20220113_103615.png"> 
 </p>
 </div></li>
 </ol>
 
 
-<div id="org36bb6ac" class="figure">
-<p><img src="./images/screenshot_20220113_103626.png" alt="screenshot_20220113_103626.png" />
+<div id="org2ec00dc" class="figure">
+<p><img src="./images/screenshot_20220113_103626.png" alt="screenshot_20220113_103626.png">
 </p>
 </div>
 
@@ -721,22 +719,22 @@ F<sub>s,semantic部分</sub>，也就是除去上一部分之外的部分；
 </p>
 
 <p>
-同时，为了防止f<sub>s</sub> 无法代表剩余的语义信息（也就是变得平凡），论文还通过语义信息对D2进行训练，即：
+同时，为了防止f_s 无法代表剩余的语义信息（也就是变得平凡），论文还通过语义信息对D2进行训练，即：
 </p>
 
 
-<div id="org7d92bee" class="figure">
-<p><img src="./images/screenshot_20220113_103813.png" alt="screenshot_20220113_103813.png" />
+<div id="org3aaafbc" class="figure">
+<p><img src="./images/screenshot_20220113_103813.png" alt="screenshot_20220113_103813.png">
 </p>
 </div>
 
 <p>
-在上图中，显然D3是用在f<sub>u上的</sub>，并未受到什么约束；D4是用在f<sub>s上的</sub>，旨在获得语义信息。公式中的B是一个Bag of words向量，B<sub>i是该向量的V个分量之一</sub>，如下所示：
+在上图中，显然D3是用在f_u上的，并未受到什么约束；D4是用在f_s上的，旨在获得语义信息。公式中的B是一个Bag of words向量，B_i是该向量的V个分量之一，如下所示：
 </p>
 
 
-<div id="orgde3e102" class="figure">
-<p><img src="./images/screenshot_20220113_103954.png" alt="screenshot_20220113_103954.png" />
+<div id="org2181ea5" class="figure">
+<p><img src="./images/screenshot_20220113_103954.png" alt="screenshot_20220113_103954.png">
 </p>
 </div>
 
@@ -758,8 +756,8 @@ F<sub>s,semantic部分</sub>，也就是除去上一部分之外的部分；
 </p>
 
 
-<div id="org332537a" class="figure">
-<p><img src="./images/screenshot_20220113_105724.png" alt="screenshot_20220113_105724.png" />
+<div id="org23be914" class="figure">
+<p><img src="./images/screenshot_20220113_105724.png" alt="screenshot_20220113_105724.png">
 </p>
 </div>
 
@@ -768,8 +766,8 @@ F<sub>s,semantic部分</sub>，也就是除去上一部分之外的部分；
 </p>
 
 
-<div id="orgb33f5fa" class="figure">
-<p><img src="./images/screenshot_20220113_105815.png" alt="screenshot_20220113_105815.png" />
+<div id="org9065462" class="figure">
+<p><img src="./images/screenshot_20220113_105815.png" alt="screenshot_20220113_105815.png">
 </p>
 </div>
 
@@ -793,16 +791,16 @@ F<sub>s,semantic部分</sub>，也就是除去上一部分之外的部分；
 </p>
 
 
-<div id="orgba66dbf" class="figure">
-<p><img src="./images/screenshot_20220113_110640.png" alt="screenshot_20220113_110640.png" />
+<div id="orgc9528ad" class="figure">
+<p><img src="./images/screenshot_20220113_110640.png" alt="screenshot_20220113_110640.png">
 </p>
 </div>
 </div>
 </div>
 
 
-<div id="outline-container-org90a3fc1" class="outline-3">
-<h3 id="org90a3fc1"><span class="section-number-3">2.5.</span> Just Say No: Analyzing the Stance of Neural Dialogue Generation in Offensive Contexts</h3>
+<div id="outline-container-org4ff0a35" class="outline-3">
+<h3 id="org4ff0a35"><span class="section-number-3">2.5.</span> Just Say No: Analyzing the Stance of Neural Dialogue Generation in Offensive Contexts</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 以上介绍了通过设计分类器或者通过设计CTG模型来实现任务型对话系统构建的方式，从这篇开始，将介绍一些混合的方法，
@@ -821,8 +819,8 @@ F<sub>s,semantic部分</sub>，也就是除去上一部分之外的部分；
 </p>
 
 
-<div id="orgf192053" class="figure">
-<p><img src="./images/screenshot_20220115_095149.png" alt="screenshot_20220115_095149.png" /> 
+<div id="org8904fc8" class="figure">
+<p><img src="./images/screenshot_20220115_095149.png" alt="screenshot_20220115_095149.png"> 
 </p>
 </div>
 
@@ -831,8 +829,8 @@ F<sub>s,semantic部分</sub>，也就是除去上一部分之外的部分；
 </p>
 
 
-<div id="org8aea6cd" class="figure">
-<p><img src="./images/screenshot_20220115_095300.png" alt="screenshot_20220115_095300.png" /> 
+<div id="org9743180" class="figure">
+<p><img src="./images/screenshot_20220115_095300.png" alt="screenshot_20220115_095300.png"> 
 </p>
 </div>
 
@@ -846,7 +844,7 @@ F<sub>s,semantic部分</sub>，也就是除去上一部分之外的部分；
 <li>BERT-large（340M）
 <ul class="org-ul">
 <li>for offensive detection: [CLS]sentence[SEP]</li>
-<li>for stance detection: [CLS]u<sub>i</sub>[SEP]u<sub>j</sub>[SEP]</li>
+<li>for stance detection: [CLS]u_i[SEP]u_j[SEP]</li>
 </ul></li>
 <li><p>
 DGPT （345M）
@@ -870,8 +868,8 @@ DGPT （345M）
 </p>
 
 
-<div id="org6532f27" class="figure">
-<p><img src="./images/screenshot_20220115_102912.png" alt="screenshot_20220115_102912.png" /> 
+<div id="orgedfed97" class="figure">
+<p><img src="./images/screenshot_20220115_102912.png" alt="screenshot_20220115_102912.png"> 
 </p>
 </div>
 
@@ -881,20 +879,20 @@ DGPT （345M）
 </ul>
 
 
-<div id="orgd15d906" class="figure">
-<p><img src="./images/screenshot_20220115_102930.png" alt="screenshot_20220115_102930.png" /> 
+<div id="orgb83b754" class="figure">
+<p><img src="./images/screenshot_20220115_102930.png" alt="screenshot_20220115_102930.png"> 
 </p>
 </div>
 
 
-<div id="orge9446d7" class="figure">
-<p><img src="./images/screenshot_20220115_102938.png" alt="screenshot_20220115_102938.png" /> 
+<div id="orgaf36a6e" class="figure">
+<p><img src="./images/screenshot_20220115_102938.png" alt="screenshot_20220115_102938.png"> 
 </p>
 </div>
 
 
-<div id="orgea91649" class="figure">
-<p><img src="./images/screenshot_20220115_102947.png" alt="screenshot_20220115_102947.png" /> 
+<div id="orgf2b1516" class="figure">
+<p><img src="./images/screenshot_20220115_102947.png" alt="screenshot_20220115_102947.png"> 
 </p>
 </div>
 
@@ -907,8 +905,8 @@ DGPT （345M）
 </p>
 
 
-<div id="org271de22" class="figure">
-<p><img src="./images/screenshot_20220115_103221.png" alt="screenshot_20220115_103221.png" />
+<div id="org505f40e" class="figure">
+<p><img src="./images/screenshot_20220115_103221.png" alt="screenshot_20220115_103221.png">
 </p>
 </div>
 
@@ -921,8 +919,8 @@ stance detection,效果如下：
 </p>
 
 
-<div id="org6e684f2" class="figure">
-<p><img src="./images/screenshot_20220115_103241.png" alt="screenshot_20220115_103241.png" />
+<div id="orgcbd6941" class="figure">
+<p><img src="./images/screenshot_20220115_103241.png" alt="screenshot_20220115_103241.png">
 </p>
 </div>
 
@@ -931,8 +929,8 @@ stance detection,效果如下：
 </p>
 
 
-<div id="org6928ef1" class="figure">
-<p><img src="./images/screenshot_20220115_103337.png" alt="screenshot_20220115_103337.png" />
+<div id="org0ecc2e9" class="figure">
+<p><img src="./images/screenshot_20220115_103337.png" alt="screenshot_20220115_103337.png">
 </p>
 </div>
 
@@ -945,15 +943,15 @@ stance detection,效果如下：
 </p>
 
 
-<div id="org9be87be" class="figure">
-<p><img src="./images/screenshot_20220115_103342.png" alt="screenshot_20220115_103342.png" />
+<div id="orgf6da5b4" class="figure">
+<p><img src="./images/screenshot_20220115_103342.png" alt="screenshot_20220115_103342.png">
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org515a70b" class="outline-3">
-<h3 id="org515a70b"><span class="section-number-3">2.6.</span> Revealing Personal Biases in Dialogue Systems</h3>
+<div id="outline-container-org1e6bda1" class="outline-3">
+<h3 id="org1e6bda1"><span class="section-number-3">2.6.</span> Revealing Personal Biases in Dialogue Systems</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 时间又过得更近了！这次介绍的是一篇关于人设（persona）可能会导致对话系统安全性问题的研究。个性化虽然一直都是闲聊的一个有趣的拓展方向，但这篇工作试图揭露：个性化会导致安全性问题。很显然，这篇工作也是USC UC-Davis UC-LA Columbia University等一系列大学一起做的。
@@ -964,8 +962,8 @@ stance detection,效果如下：
 </p>
 
 
-<div id="orgb43ba6b" class="figure">
-<p><img src="./images/screenshot_20220115_104704.png" alt="screenshot_20220115_104704.png" /> 
+<div id="orgb8cdd47" class="figure">
+<p><img src="./images/screenshot_20220115_104704.png" alt="screenshot_20220115_104704.png"> 
 </p>
 </div>
 
@@ -1018,15 +1016,15 @@ stance detection,效果如下：
 </p>
 
 
-<div id="orgd128572" class="figure">
-<p><img src="./images/screenshot_20220115_105603.png" alt="screenshot_20220115_105603.png" />
+<div id="orgacf440d" class="figure">
+<p><img src="./images/screenshot_20220115_105603.png" alt="screenshot_20220115_105603.png">
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orge811411" class="outline-3">
-<h3 id="orge811411"><span class="section-number-3">2.7.</span> Recipes for Safety in Open-domain Chatbots</h3>
+<div id="outline-container-orgf39ad41" class="outline-3">
+<h3 id="orgf39ad41"><span class="section-number-3">2.7.</span> Recipes for Safety in Open-domain Chatbots</h3>
 <div class="outline-text-3" id="text-2-7">
 <p>
 下面继续再介绍一篇facebook的工作，这篇工作我印象之中是偏旧的了，到那时却因为一些原因经历过更新。这篇工作论文里就有recipes，所以可以看作是一个大杂烩。我总结了一下，主要面向以下四个问题：
@@ -1046,16 +1044,16 @@ Gender Bias Mitigation; &#x2013;&gt; cls+ctg
 </div>
 
 
-<div id="outline-container-org5966c18" class="outline-4">
-<h4 id="org5966c18"><span class="section-number-4">2.7.1.</span> unsafe utterance detection</h4>
+<div id="outline-container-org5d0101b" class="outline-4">
+<h4 id="org5d0101b"><span class="section-number-4">2.7.1.</span> unsafe utterance detection</h4>
 <div class="outline-text-4" id="text-2-7-1">
 <p>
 我们开头之前介绍过该组的一篇工作，如下图所示：
 </p>
 
 
-<div id="org6bf4acd" class="figure">
-<p><img src="./images/screenshot_20220115_110244.png" alt="screenshot_20220115_110244.png" /> 
+<div id="org33d882f" class="figure">
+<p><img src="./images/screenshot_20220115_110244.png" alt="screenshot_20220115_110244.png"> 
 </p>
 </div>
 
@@ -1064,8 +1062,8 @@ Gender Bias Mitigation; &#x2013;&gt; cls+ctg
 </p>
 
 
-<div id="orgb2e0c54" class="figure">
-<p><img src="./images/screenshot_20220115_110354.png" alt="screenshot_20220115_110354.png" /> 
+<div id="org32f03d0" class="figure">
+<p><img src="./images/screenshot_20220115_110354.png" alt="screenshot_20220115_110354.png"> 
 </p>
 </div>
 
@@ -1078,8 +1076,8 @@ Gender Bias Mitigation; &#x2013;&gt; cls+ctg
 </p>
 
 
-<div id="org9fb7f81" class="figure">
-<p><img src="./images/screenshot_20220115_110535.png" alt="screenshot_20220115_110535.png" />
+<div id="org432b946" class="figure">
+<p><img src="./images/screenshot_20220115_110535.png" alt="screenshot_20220115_110535.png">
 </p>
 </div>
 
@@ -1089,8 +1087,8 @@ Gender Bias Mitigation; &#x2013;&gt; cls+ctg
 </div>
 </div>
 
-<div id="outline-container-orgabea75c" class="outline-4">
-<h4 id="orgabea75c"><span class="section-number-4">2.7.2.</span> safe utterance generation</h4>
+<div id="outline-container-orgb61cab2" class="outline-4">
+<h4 id="orgb61cab2"><span class="section-number-4">2.7.2.</span> safe utterance generation</h4>
 <div class="outline-text-4" id="text-2-7-2">
 <p>
 这个太杂了，论文主要采用了如下的做法：
@@ -1114,8 +1112,8 @@ Gender Bias Mitigation; &#x2013;&gt; cls+ctg
 </p>
 
 
-<div id="orgd29f1ed" class="figure">
-<p><img src="./images/screenshot_20220115_111332.png" alt="screenshot_20220115_111332.png" />
+<div id="orgcbd260f" class="figure">
+<p><img src="./images/screenshot_20220115_111332.png" alt="screenshot_20220115_111332.png">
 </p>
 </div></li>
 </ul></li>
@@ -1125,16 +1123,16 @@ Gender Bias Mitigation; &#x2013;&gt; cls+ctg
 
 
 
-<div id="outline-container-orgffa91db" class="outline-4">
-<h4 id="orgffa91db"><span class="section-number-4">2.7.3.</span> 敏感话题</h4>
+<div id="outline-container-org357f7cc" class="outline-4">
+<h4 id="org357f7cc"><span class="section-number-4">2.7.3.</span> 敏感话题</h4>
 <div class="outline-text-4" id="text-2-7-3">
 <p>
 略。数据集如下：
 </p>
 
 
-<div id="org557ff77" class="figure">
-<p><img src="./images/screenshot_20220115_111412.png" alt="screenshot_20220115_111412.png" /> 
+<div id="orgb6f4601" class="figure">
+<p><img src="./images/screenshot_20220115_111412.png" alt="screenshot_20220115_111412.png"> 
 </p>
 </div>
 </div>
@@ -1142,16 +1140,16 @@ Gender Bias Mitigation; &#x2013;&gt; cls+ctg
 
 
 
-<div id="outline-container-org9b6173b" class="outline-4">
-<h4 id="org9b6173b"><span class="section-number-4">2.7.4.</span> 性别bias的平衡</h4>
+<div id="outline-container-org3990f9e" class="outline-4">
+<h4 id="org3990f9e"><span class="section-number-4">2.7.4.</span> 性别bias的平衡</h4>
 <div class="outline-text-4" id="text-2-7-4">
 <p>
 作者直接使用的CTG，如下所示：
 </p>
 
 
-<div id="orgbb3499c" class="figure">
-<p><img src="./images/screenshot_20220115_111447.png" alt="screenshot_20220115_111447.png" /> 
+<div id="org0813bb8" class="figure">
+<p><img src="./images/screenshot_20220115_111447.png" alt="screenshot_20220115_111447.png"> 
 </p>
 </div>
 </div>
@@ -1160,22 +1158,22 @@ Gender Bias Mitigation; &#x2013;&gt; cls+ctg
 </div>
 
 
-<div id="outline-container-org5c5867b" class="outline-2">
-<h2 id="org5c5867b"><span class="section-number-2">3.</span> summary</h2>
+<div id="outline-container-org28fe55d" class="outline-2">
+<h2 id="org28fe55d"><span class="section-number-2">3.</span> summary</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org0ae3963" class="outline-3">
-<h3 id="org0ae3963"><span class="section-number-3">3.1.</span> dataset summary</h3>
+<div id="outline-container-orgdf00557" class="outline-3">
+<h3 id="orgdf00557"><span class="section-number-3">3.1.</span> dataset summary</h3>
 <div class="outline-text-3" id="text-3-1">
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table>
 
 
 <colgroup>
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 </colgroup>
 <thead>
 <tr>
@@ -1231,16 +1229,16 @@ Gender Bias Mitigation; &#x2013;&gt; cls+ctg
 </div>
 </div>
 
-<div id="outline-container-orgfcb39a4" class="outline-3">
-<h3 id="orgfcb39a4"><span class="section-number-3">3.2.</span> solution summary</h3>
+<div id="outline-container-orgddcbbde" class="outline-3">
+<h3 id="orgddcbbde"><span class="section-number-3">3.2.</span> solution summary</h3>
 <div class="outline-text-3" id="text-3-2">
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table>
 
 
 <colgroup>
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 </colgroup>
 <thead>
 <tr>
@@ -1280,7 +1278,7 @@ Marty J Wolf, K Miller, and Frances S Grodzinsky. 2017. Why we should have seen 
 <div id="postamble" class="status">
 <p class="date">Date: Mon Dec  6 20:45:53 2021</p>
 <p class="author">Author: Zi Liang</p>
-<p class="date">Created: 2023-01-05 四 16:37</p>
+<p class="date">Created: 2023-02-28 周二 10:53</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
