@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<!-- 2023-01-05 四 16:37 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2023-05-19 五 09:02 -->
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>web前端作业——基于React组件化思路开发的山寨版创新港图书馆大数据可视化平台</title>
 <meta name="author" content="梁子，软件学院，S0083，3120305385" />
@@ -191,8 +189,9 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
+  .org-svg { }
 </style>
+<link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/>
 </head>
 <body>
 <div id="content" class="content">
@@ -201,32 +200,32 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org2d0754a">1. 场景及功能介绍</a></li>
-<li><a href="#orgd0091ef">2. 界面功能实现</a>
+<li><a href="#org7380e04">1. 场景及功能介绍</a></li>
+<li><a href="#org5328db9">2. 界面功能实现</a>
 <ul>
-<li><a href="#org0d3c4f2">2.1. 总体架构</a></li>
-<li><a href="#org18d3543">2.2. 各组块实现</a></li>
+<li><a href="#orgf1f6b63">2.1. 总体架构</a></li>
+<li><a href="#orgd8ed633">2.2. 各组块实现</a></li>
 </ul>
 </li>
-<li><a href="#org4085f24">3. 安装与运行</a>
+<li><a href="#org09a00f3">3. 安装与运行</a>
 <ul>
-<li><a href="#org83eda2d">3.1. 安装</a></li>
-<li><a href="#orgb7ea2b3">3.2. 运行</a></li>
+<li><a href="#org4db57d7">3.1. 安装</a></li>
+<li><a href="#org3bf04f4">3.2. 运行</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org2d0754a" class="outline-2">
-<h2 id="org2d0754a"><span class="section-number-2">1.</span> 场景及功能介绍</h2>
+<div id="outline-container-org7380e04" class="outline-2">
+<h2 id="org7380e04"><span class="section-number-2">1.</span> 场景及功能介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 本作业拟实现的功能是：一个被目前广泛使用的可视化界面。观察到创新港的图书馆中便有屏幕投放这种前端界面，因此打算仿照之实现一个山寨版本。整体结果图示如下图所示：
 </p>
 
 
-<div id="org05fae30" class="figure">
-<p><img src="file:///home/liangzi/图片/interface.png" alt="interface.png" />
+<div id="orgfb73ee3" class="figure">
+<p><img src="file:///home/liangzi/图片/interface.png" alt="interface.png">
 </p>
 </div>
 
@@ -249,12 +248,12 @@
 </p>
 </div>
 </div>
-<div id="outline-container-orgd0091ef" class="outline-2">
-<h2 id="orgd0091ef"><span class="section-number-2">2.</span> 界面功能实现</h2>
+<div id="outline-container-org5328db9" class="outline-2">
+<h2 id="org5328db9"><span class="section-number-2">2.</span> 界面功能实现</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org0d3c4f2" class="outline-3">
-<h3 id="org0d3c4f2"><span class="section-number-3">2.1.</span> 总体架构</h3>
+<div id="outline-container-orgf1f6b63" class="outline-3">
+<h3 id="orgf1f6b63"><span class="section-number-3">2.1.</span> 总体架构</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 本作业所描述平台整体上包含了两部分：前端实现和后端实现。当然，由于后端实现较为简单（即基于简单数据库的对数据的整合和处理），因此本章重点介绍前端部分。整体上而言，本文使用阿里巴巴的前端框架dva进行套装，整体上可分为三大模块：
@@ -270,13 +269,13 @@
 
 <p>
 下图展示了整体上的模型结构实现。下面介绍各个组块的实现原则。
-<img src="./images/react.png" alt="react.png" />
+<img src="./images/react.png" alt="react.png">
 </p>
 </div>
 </div>
 
-<div id="outline-container-org18d3543" class="outline-3">
-<h3 id="org18d3543"><span class="section-number-3">2.2.</span> 各组块实现</h3>
+<div id="outline-container-orgd8ed633" class="outline-3">
+<h3 id="orgd8ed633"><span class="section-number-3">2.2.</span> 各组块实现</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 各个组块的实现均基于react进行，主要包括以下8个原子级别的组块：
@@ -315,54 +314,54 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js"> render() {
-    const { userSitua, trafficSitua, accessFrequency, peakFlow } = this.props;
-    return (
-      // 风格
+<pre class="src src-js"> render<span style="color: #a9b1d6;">()</span> <span style="color: #a9b1d6;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #7aa2f7;">{</span> userSitua, trafficSitua, accessFrequency, peakFlow <span style="color: #7aa2f7;">}</span> = <span style="color: #ff9e64;">this</span>.props;
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #7aa2f7;">(</span>
+      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#39118;&#26684;</span>
       &lt;LeftPage&gt;
-	{/* 顶部图表 */}
-	&lt;LeftTopBox&gt;
-	  &lt;BorderBox12 className='left-top-borderBox12'&gt;
-	    &lt;div className='left-top'&gt;
-	      &lt;ModuleTitle&gt;
-		&lt;i className='iconfont'&gt;&amp;#xe78f;&lt;/i&gt;
-		&lt;span&gt;今日图书馆进出情况&lt;/span&gt;
-	      &lt;/ModuleTitle&gt;
+        <span style="color: #ff9e64;">{</span><span style="color: #51587a; font-style: italic;">/* </span><span style="color: #51587a; font-style: italic;">&#39030;&#37096;&#22270;&#34920;</span><span style="color: #51587a; font-style: italic;"> */</span><span style="color: #ff9e64;">}</span>
+        &lt;LeftTopBox&gt;
+          &lt;BorderBox12 className=<span style="color: #9ece6a; font-style: italic;">'left-top-borderBox12'</span>&gt;
+            &lt;div className=<span style="color: #9ece6a; font-style: italic;">'left-top'</span>&gt;
+              &lt;ModuleTitle&gt;
+                &lt;i className=<span style="color: #9ece6a; font-style: italic;">'iconfont'</span>&gt;&amp;#xe78f;&lt;/i&gt;
+                &lt;span&gt;&#20170;&#26085;&#22270;&#20070;&#39302;&#36827;&#20986;&#24773;&#20917;&lt;/span&gt;
+              &lt;/ModuleTitle&gt;
 
-	      &lt;div className='title-dis'&gt;
-		&lt;span&gt;
-		  当前参观人数(小时):
-		  &lt;span className='title-dis-keyword'&gt;{accessFrequency}人&lt;/span&gt;
-		&lt;/span&gt;
+              &lt;div className=<span style="color: #9ece6a; font-style: italic;">'title-dis'</span>&gt;
+                &lt;span&gt;
+                  &#24403;&#21069;&#21442;&#35266;&#20154;&#25968;<span style="color: #ff9e64;">(</span>&#23567;&#26102;<span style="color: #ff9e64;">)</span>:
+                  &lt;span className=<span style="color: #9ece6a; font-style: italic;">'title-dis-keyword'</span>&gt;<span style="color: #ff9e64;">{</span>accessFrequency<span style="color: #ff9e64;">}</span>&#20154;&lt;/span&gt;
+                &lt;/span&gt;
 
-		&lt;span&gt;
-		  今日总人数:
-		  &lt;span className='title-dis-keyword'&gt;{peakFlow}人&lt;/span&gt;
-		&lt;/span&gt;
-	      &lt;/div&gt;
-	      {/* 图表 */}
-	      &lt;TrafficSituation trafficSitua={trafficSitua}&gt;&lt;/TrafficSituation&gt;
-	    &lt;/div&gt;
-	  &lt;/BorderBox12&gt;
-	&lt;/LeftTopBox&gt;
+                &lt;span&gt;
+                  &#20170;&#26085;&#24635;&#20154;&#25968;:
+                  &lt;span className=<span style="color: #9ece6a; font-style: italic;">'title-dis-keyword'</span>&gt;<span style="color: #ff9e64;">{</span>peakFlow<span style="color: #ff9e64;">}</span>&#20154;&lt;/span&gt;
+                &lt;/span&gt;
+              &lt;/div&gt;
+              <span style="color: #ff9e64;">{</span><span style="color: #51587a; font-style: italic;">/* </span><span style="color: #51587a; font-style: italic;">&#22270;&#34920;</span><span style="color: #51587a; font-style: italic;"> */</span><span style="color: #ff9e64;">}</span>
+              &lt;TrafficSituation trafficSitua=<span style="color: #ff9e64;">{</span>trafficSitua<span style="color: #ff9e64;">}</span>&gt;&lt;/TrafficSituation&gt;
+            &lt;/div&gt;
+          &lt;/BorderBox12&gt;
+        &lt;/LeftTopBox&gt;
 
-	{/* 底部图表 */}
-	&lt;LeftBottomBox&gt;
-	  &lt;BorderBox13 className='left-bottom-borderBox13'&gt;
-	    &lt;div className='left-bottom'&gt;
-	      &lt;ModuleTitle&gt;
-		&lt;i className='iconfont'&gt;&amp;#xe88e;&lt;/i&gt;
-		&lt;span&gt;本周图书借阅榜&lt;/span&gt;
-	      &lt;/ModuleTitle&gt;
-	      {/* 图表 */}
-	      &lt;UserSituation userSitua={userSitua}&gt;&lt;/UserSituation&gt;
-	    &lt;/div&gt;
-	  &lt;/BorderBox13&gt;
-	&lt;/LeftBottomBox&gt;
+        <span style="color: #ff9e64;">{</span><span style="color: #51587a; font-style: italic;">/* </span><span style="color: #51587a; font-style: italic;">&#24213;&#37096;&#22270;&#34920;</span><span style="color: #51587a; font-style: italic;"> */</span><span style="color: #ff9e64;">}</span>
+        &lt;LeftBottomBox&gt;
+          &lt;BorderBox13 className=<span style="color: #9ece6a; font-style: italic;">'left-bottom-borderBox13'</span>&gt;
+            &lt;div className=<span style="color: #9ece6a; font-style: italic;">'left-bottom'</span>&gt;
+              &lt;ModuleTitle&gt;
+                &lt;i className=<span style="color: #9ece6a; font-style: italic;">'iconfont'</span>&gt;&amp;#xe88e;&lt;/i&gt;
+                &lt;span&gt;&#26412;&#21608;&#22270;&#20070;&#20511;&#38405;&#27036;&lt;/span&gt;
+              &lt;/ModuleTitle&gt;
+              <span style="color: #ff9e64;">{</span><span style="color: #51587a; font-style: italic;">/* </span><span style="color: #51587a; font-style: italic;">&#22270;&#34920;</span><span style="color: #51587a; font-style: italic;"> */</span><span style="color: #ff9e64;">}</span>
+              &lt;UserSituation userSitua=<span style="color: #ff9e64;">{</span>userSitua<span style="color: #ff9e64;">}</span>&gt;&lt;/UserSituation&gt;
+            &lt;/div&gt;
+          &lt;/BorderBox13&gt;
+        &lt;/LeftBottomBox&gt;
       &lt;/LeftPage&gt;
-    );
-  }
-}
+    <span style="color: #7aa2f7;">)</span>;
+  <span style="color: #a9b1d6;">}</span>
+<span style="color: #f7768e; font-weight: bold;">}</span>
 </pre>
 </div>
 
@@ -375,34 +374,34 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js">export const LeftTopBox = styled.div`
-  position: relative;
-  height: 4.375rem;
-  width: 100%;
-  .left-top-borderBox12 {
-    width: inherit;
-    height: inherit;
-    padding: 0.1875rem;
-    .left-top {
-      width: 100%;
-      height: 100%;
-      border-radius: 10px;
-      background-color: rgba(19, 25, 47, 0.6);
-      .title-dis {
-	margin-top: 0.1875rem;
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
-	font-size: 0.2rem;
-	color: #c0c9d2;
-	&amp;-keyword {
-	  padding-left: 0.125rem;
-	  color: #47dae8;
-	}
-      }
-    }
-  }
-`;
+<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">LeftTopBox</span> = styled.div<span style="color: #9ece6a; font-style: italic;">`</span>
+<span style="color: #9ece6a; font-style: italic;">  position: relative;</span>
+<span style="color: #9ece6a; font-style: italic;">  height: 4.375rem;</span>
+<span style="color: #9ece6a; font-style: italic;">  width: 100%;</span>
+<span style="color: #9ece6a; font-style: italic;">  .left-top-borderBox12 {</span>
+<span style="color: #9ece6a; font-style: italic;">    width: inherit;</span>
+<span style="color: #9ece6a; font-style: italic;">    height: inherit;</span>
+<span style="color: #9ece6a; font-style: italic;">    padding: 0.1875rem;</span>
+<span style="color: #9ece6a; font-style: italic;">    .left-top {</span>
+<span style="color: #9ece6a; font-style: italic;">      width: 100%;</span>
+<span style="color: #9ece6a; font-style: italic;">      height: 100%;</span>
+<span style="color: #9ece6a; font-style: italic;">      border-radius: 10px;</span>
+<span style="color: #9ece6a; font-style: italic;">      background-color: rgba(19, 25, 47, 0.6);</span>
+<span style="color: #9ece6a; font-style: italic;">      .title-dis {</span>
+<span style="color: #9ece6a; font-style: italic;">        margin-top: 0.1875rem;</span>
+<span style="color: #9ece6a; font-style: italic;">        display: flex;</span>
+<span style="color: #9ece6a; font-style: italic;">        justify-content: space-around;</span>
+<span style="color: #9ece6a; font-style: italic;">        align-items: center;</span>
+<span style="color: #9ece6a; font-style: italic;">        font-size: 0.2rem;</span>
+<span style="color: #9ece6a; font-style: italic;">        color: #c0c9d2;</span>
+<span style="color: #9ece6a; font-style: italic;">        &amp;-keyword {</span>
+<span style="color: #9ece6a; font-style: italic;">          padding-left: 0.125rem;</span>
+<span style="color: #9ece6a; font-style: italic;">          color: #47dae8;</span>
+<span style="color: #9ece6a; font-style: italic;">        }</span>
+<span style="color: #9ece6a; font-style: italic;">      }</span>
+<span style="color: #9ece6a; font-style: italic;">    }</span>
+<span style="color: #9ece6a; font-style: italic;">  }</span>
+<span style="color: #9ece6a; font-style: italic;">`</span>;
 </pre>
 </div>
 
@@ -412,34 +411,34 @@
 
 
 <div class="org-src-container">
-<pre class="src src-js">class TrafficSituation extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      renderer: 'canvas',
-    };
-  }
+<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">class</span> TrafficSituation <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">extends</span> PureComponent <span style="color: #a9b1d6;">{</span>
+  constructor<span style="color: #7aa2f7;">(</span>props<span style="color: #7aa2f7;">)</span> <span style="color: #7aa2f7;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">super</span><span style="color: #ff9e64;">(</span>props<span style="color: #ff9e64;">)</span>;
+    <span style="color: #ff9e64;">this</span>.state = <span style="color: #ff9e64;">{</span>
+      renderer: <span style="color: #9ece6a; font-style: italic;">'canvas'</span>,
+    <span style="color: #ff9e64;">}</span>;
+  <span style="color: #7aa2f7;">}</span>
 
-  render() {
-    const { renderer } = this.state;
-    const { trafficSitua } = this.props;
-    return (
+  render<span style="color: #7aa2f7;">()</span> <span style="color: #7aa2f7;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #ff9e64;">{</span> renderer <span style="color: #ff9e64;">}</span> = <span style="color: #ff9e64;">this</span>.state;
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #ff9e64;">{</span> trafficSitua <span style="color: #ff9e64;">}</span> = <span style="color: #ff9e64;">this</span>.props;
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #ff9e64;">(</span>
       &lt;div
-	style={{
-	  width: '5.375rem',
-	  height: '3.125rem',
-	}}&gt;
-	{trafficSitua ? (
-	  &lt;Chart renderer={renderer} option={trafficOptions(trafficSitua)} /&gt;
-	) : (
-	  ''
-	)}
+        style=<span style="color: #73daca;">{</span><span style="color: #b4f9f8;">{</span>
+          width: <span style="color: #9ece6a; font-style: italic;">'5.375rem'</span>,
+          height: <span style="color: #9ece6a; font-style: italic;">'3.125rem'</span>,
+        <span style="color: #b4f9f8;">}</span><span style="color: #73daca;">}</span>&gt;
+        <span style="color: #73daca;">{</span>trafficSitua ? <span style="color: #b4f9f8;">(</span>
+          &lt;Chart renderer=<span style="color: #e0af68;">{</span>renderer<span style="color: #e0af68;">}</span> option=<span style="color: #e0af68;">{</span>trafficOptions<span style="color: #2ac3de;">(</span>trafficSitua<span style="color: #2ac3de;">)</span><span style="color: #e0af68;">}</span> /&gt;
+        <span style="color: #b4f9f8;">)</span> : <span style="color: #b4f9f8;">(</span>
+          <span style="color: #9ece6a; font-style: italic;">''</span>
+        <span style="color: #b4f9f8;">)</span><span style="color: #73daca;">}</span>
       &lt;/div&gt;
-    );
-  } //endrender
-}
+    <span style="color: #ff9e64;">)</span>;
+  <span style="color: #7aa2f7;">}</span> <span style="color: #51587a; font-style: italic;">//</span><span style="color: #51587a; font-style: italic;">endrender</span>
+<span style="color: #a9b1d6;">}</span>
 
-export default TrafficSituation;
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">default</span> TrafficSituation;
 
 </pre>
 </div>
@@ -450,89 +449,89 @@ export default TrafficSituation;
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js">export default class Chart extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      width: '100%',
-      height: '100%',
-    };
-    this.chart = null;
-  }
-  // 异步函数
-  async componentDidMount() {
-    // 初始化图表
-    await this.initChart(this.el);
-    // 将传入的配置(包含数据)注入
-    this.setOption(this.props.option);
-    // 监听屏幕缩放，重新绘制 echart 图表
-    window.addEventListener('resize', debounce(this.resize, 100));
-  }
+<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">default</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">class</span> Chart <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">extends</span> PureComponent <span style="color: #a9b1d6;">{</span>
+  constructor<span style="color: #7aa2f7;">(</span>props<span style="color: #7aa2f7;">)</span> <span style="color: #7aa2f7;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">super</span><span style="color: #ff9e64;">(</span>props<span style="color: #ff9e64;">)</span>;
+    <span style="color: #ff9e64;">this</span>.state = <span style="color: #ff9e64;">{</span>
+      width: <span style="color: #9ece6a; font-style: italic;">'100%'</span>,
+      height: <span style="color: #9ece6a; font-style: italic;">'100%'</span>,
+    <span style="color: #ff9e64;">}</span>;
+    <span style="color: #ff9e64;">this</span>.chart = <span style="color: #ff9e64;">null</span>;
+  <span style="color: #7aa2f7;">}</span>
+  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#24322;&#27493;&#20989;&#25968;</span>
+  <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">async</span> componentDidMount<span style="color: #7aa2f7;">()</span> <span style="color: #7aa2f7;">{</span>
+    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21021;&#22987;&#21270;&#22270;&#34920;</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">await</span> <span style="color: #ff9e64;">this</span>.initChart<span style="color: #ff9e64;">(</span><span style="color: #ff9e64;">this</span>.el<span style="color: #ff9e64;">)</span>;
+    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#23558;&#20256;&#20837;&#30340;&#37197;&#32622;(&#21253;&#21547;&#25968;&#25454;)&#27880;&#20837;</span>
+    <span style="color: #ff9e64;">this</span>.setOption<span style="color: #ff9e64;">(</span><span style="color: #ff9e64;">this</span>.props.option<span style="color: #ff9e64;">)</span>;
+    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#30417;&#21548;&#23631;&#24149;&#32553;&#25918;&#65292;&#37325;&#26032;&#32472;&#21046; echart &#22270;&#34920;</span>
+    window.addEventListener<span style="color: #ff9e64;">(</span><span style="color: #9ece6a; font-style: italic;">'resize'</span>, debounce<span style="color: #73daca;">(</span><span style="color: #ff9e64;">this</span>.resize, 100<span style="color: #73daca;">)</span><span style="color: #ff9e64;">)</span>;
+  <span style="color: #7aa2f7;">}</span>
 
-  componentDidUpdate() {
-    // 每次更新组件都重置
-    this.setOption(this.props.option);
-  }
+  componentDidUpdate<span style="color: #7aa2f7;">()</span> <span style="color: #7aa2f7;">{</span>
+    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#27599;&#27425;&#26356;&#26032;&#32452;&#20214;&#37117;&#37325;&#32622;</span>
+    <span style="color: #ff9e64;">this</span>.setOption<span style="color: #ff9e64;">(</span><span style="color: #ff9e64;">this</span>.props.option<span style="color: #ff9e64;">)</span>;
+  <span style="color: #7aa2f7;">}</span>
 
-  componentWillUnmount() {
-    // 组件卸载前卸载图表
-    this.dispose();
-  }
+  componentWillUnmount<span style="color: #7aa2f7;">()</span> <span style="color: #7aa2f7;">{</span>
+    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#32452;&#20214;&#21368;&#36733;&#21069;&#21368;&#36733;&#22270;&#34920;</span>
+    <span style="color: #ff9e64;">this</span>.dispose<span style="color: #ff9e64;">()</span>;
+  <span style="color: #7aa2f7;">}</span>
 
-  render() {
-    const { width, height } = this.state;
+  render<span style="color: #7aa2f7;">()</span> <span style="color: #7aa2f7;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #ff9e64;">{</span> width, height <span style="color: #ff9e64;">}</span> = <span style="color: #ff9e64;">this</span>.state;
 
-    return (
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #ff9e64;">(</span>
       &lt;div
-	className='default-chart'
-	ref={el =&gt; (this.el = el)}
-	style={{ width, height }}
+        className=<span style="color: #9ece6a; font-style: italic;">'default-chart'</span>
+        ref=<span style="color: #73daca;">{</span>el =&gt; <span style="color: #b4f9f8;">(</span><span style="color: #ff9e64;">this</span>.el = el<span style="color: #b4f9f8;">)</span><span style="color: #73daca;">}</span>
+        style=<span style="color: #73daca;">{</span><span style="color: #b4f9f8;">{</span> width, height <span style="color: #b4f9f8;">}</span><span style="color: #73daca;">}</span>
       /&gt;
-    );
-  }
+    <span style="color: #ff9e64;">)</span>;
+  <span style="color: #7aa2f7;">}</span>
 
 
-  initChart = el =&gt; {
-    // renderer 用于配置渲染方式 可以是 svg 或者 canvas
-    const renderer = this.props.renderer || 'canvas';
+  initChart = el =&gt; <span style="color: #7aa2f7;">{</span>
+    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">renderer &#29992;&#20110;&#37197;&#32622;&#28210;&#26579;&#26041;&#24335; &#21487;&#20197;&#26159; svg &#25110;&#32773; canvas</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">renderer</span> = <span style="color: #ff9e64;">this</span>.props.renderer || <span style="color: #9ece6a; font-style: italic;">'canvas'</span>;
 
-    return new Promise(resolve =&gt; {
-      setTimeout(() =&gt; {
-	this.chart = echarts.init(el, null, {
-	  renderer,
-	  width: 'auto',
-	  height: 'auto',
-	});
-	resolve();
-      }, 0);
-    });
-  };
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">new</span> <span style="color: #c0caf5;">Promise</span><span style="color: #ff9e64;">(</span>resolve =&gt; <span style="color: #73daca;">{</span>
+      setTimeout<span style="color: #b4f9f8;">(</span><span style="color: #e0af68;">()</span> =&gt; <span style="color: #e0af68;">{</span>
+        <span style="color: #ff9e64;">this</span>.chart = echarts.init<span style="color: #2ac3de;">(</span>el, <span style="color: #ff9e64;">null</span>, <span style="color: #73daca;">{</span>
+          renderer,
+          width: <span style="color: #9ece6a; font-style: italic;">'auto'</span>,
+          height: <span style="color: #9ece6a; font-style: italic;">'auto'</span>,
+        <span style="color: #73daca;">}</span><span style="color: #2ac3de;">)</span>;
+        resolve<span style="color: #2ac3de;">()</span>;
+      <span style="color: #e0af68;">}</span>, 0<span style="color: #b4f9f8;">)</span>;
+    <span style="color: #73daca;">}</span><span style="color: #ff9e64;">)</span>;
+  <span style="color: #7aa2f7;">}</span>;
 
-  setOption = option =&gt; {
-    if (!this.chart) {
-      return;
-    }
+  setOption = option =&gt; <span style="color: #7aa2f7;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> <span style="color: #ff9e64;">(</span>!<span style="color: #ff9e64;">this</span>.chart<span style="color: #ff9e64;">)</span> <span style="color: #ff9e64;">{</span>
+      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span>;
+    <span style="color: #ff9e64;">}</span>
 
-    const notMerge = this.props.notMerge;
-    const lazyUpdate = this.props.lazyUpdate;
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">notMerge</span> = <span style="color: #ff9e64;">this</span>.props.notMerge;
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">lazyUpdate</span> = <span style="color: #ff9e64;">this</span>.props.lazyUpdate;
 
-    this.chart.setOption(option, notMerge, lazyUpdate);
-  };
-  dispose = () =&gt; {
-    if (!this.chart) {
-      return;
-    }
+    <span style="color: #ff9e64;">this</span>.chart.setOption<span style="color: #ff9e64;">(</span>option, notMerge, lazyUpdate<span style="color: #ff9e64;">)</span>;
+  <span style="color: #7aa2f7;">}</span>;
+  dispose = <span style="color: #7aa2f7;">()</span> =&gt; <span style="color: #7aa2f7;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> <span style="color: #ff9e64;">(</span>!<span style="color: #ff9e64;">this</span>.chart<span style="color: #ff9e64;">)</span> <span style="color: #ff9e64;">{</span>
+      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span>;
+    <span style="color: #ff9e64;">}</span>
 
-    this.chart.dispose();
-    this.chart = null;
-  };
-  resize = () =&gt; {
-    this.chart &amp;&amp; this.chart.resize();
-  };
-  getInstance = () =&gt; {
-    return this.chart;
-  };
-}
+    <span style="color: #ff9e64;">this</span>.chart.dispose<span style="color: #ff9e64;">()</span>;
+    <span style="color: #ff9e64;">this</span>.chart = <span style="color: #ff9e64;">null</span>;
+  <span style="color: #7aa2f7;">}</span>;
+  resize = <span style="color: #7aa2f7;">()</span> =&gt; <span style="color: #7aa2f7;">{</span>
+    <span style="color: #ff9e64;">this</span>.chart &amp;&amp; <span style="color: #ff9e64;">this</span>.chart.resize<span style="color: #ff9e64;">()</span>;
+  <span style="color: #7aa2f7;">}</span>;
+  getInstance = <span style="color: #7aa2f7;">()</span> =&gt; <span style="color: #7aa2f7;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #ff9e64;">this</span>.chart;
+  <span style="color: #7aa2f7;">}</span>;
+<span style="color: #a9b1d6;">}</span>
 </pre>
 </div>
 
@@ -545,203 +544,203 @@ export default TrafficSituation;
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js">export const trafficOptions = (params) =&gt; ({
-  title: {
-    show: false,
-  },
-  legend: {
-    show: true,
-    top: '5%',
-    textStyle: {
-      color: '#c0c9d2',
-    },
-  },
-  tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      lineStyle: {
-	color: {
-	  type: 'linear',
-	  x: 0,
-	  y: 0,
-	  x2: 0,
-	  y2: 1,
-	  colorStops: [
-	    {
-	      offset: 0,
-	      color: 'rgba(0, 255, 233,0)',
-	    },
-	    {
-	      offset: 0.5,
-	      color: 'rgba(255, 255, 255,1)',
-	    },
-	    {
-	      offset: 1,
-	      color: 'rgba(0, 255, 233,0)',
-	    },
-	  ],
-	  global: false,
-	},
-      },
-    },
-  },
-  grid: {
-    top: '15%',
-    left: '10%',
-    right: '5%',
-    bottom: '10%',
-  },
-  xAxis: {
-    type: 'category',
-    axisLine: {
-      show: true,
-    },
-    splitArea: {
-      color: '#f00',
-      lineStyle: {
-	color: '#f00',
-      },
-    },
-    axisLabel: {
-      color: '#BCDCF0',
-    },
-    splitLine: {
-      show: false,
-    },
-    boundaryGap: false,
+<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">trafficOptions</span> = <span style="color: #a9b1d6;">(</span>params<span style="color: #a9b1d6;">)</span> =&gt; <span style="color: #a9b1d6;">(</span><span style="color: #7aa2f7;">{</span>
+  title: <span style="color: #ff9e64;">{</span>
+    show: <span style="color: #ff9e64;">false</span>,
+  <span style="color: #ff9e64;">}</span>,
+  legend: <span style="color: #ff9e64;">{</span>
+    show: <span style="color: #ff9e64;">true</span>,
+    top: <span style="color: #9ece6a; font-style: italic;">'5%'</span>,
+    textStyle: <span style="color: #73daca;">{</span>
+      color: <span style="color: #9ece6a; font-style: italic;">'#c0c9d2'</span>,
+    <span style="color: #73daca;">}</span>,
+  <span style="color: #ff9e64;">}</span>,
+  tooltip: <span style="color: #ff9e64;">{</span>
+    trigger: <span style="color: #9ece6a; font-style: italic;">'axis'</span>,
+    axisPointer: <span style="color: #73daca;">{</span>
+      lineStyle: <span style="color: #b4f9f8;">{</span>
+        color: <span style="color: #e0af68;">{</span>
+          type: <span style="color: #9ece6a; font-style: italic;">'linear'</span>,
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: <span style="color: #2ac3de;">[</span>
+            <span style="color: #73daca;">{</span>
+              offset: 0,
+              color: <span style="color: #9ece6a; font-style: italic;">'rgba(0, 255, 233,0)'</span>,
+            <span style="color: #73daca;">}</span>,
+            <span style="color: #73daca;">{</span>
+              offset: 0.5,
+              color: <span style="color: #9ece6a; font-style: italic;">'rgba(255, 255, 255,1)'</span>,
+            <span style="color: #73daca;">}</span>,
+            <span style="color: #73daca;">{</span>
+              offset: 1,
+              color: <span style="color: #9ece6a; font-style: italic;">'rgba(0, 255, 233,0)'</span>,
+            <span style="color: #73daca;">}</span>,
+          <span style="color: #2ac3de;">]</span>,
+          global: <span style="color: #ff9e64;">false</span>,
+        <span style="color: #e0af68;">}</span>,
+      <span style="color: #b4f9f8;">}</span>,
+    <span style="color: #73daca;">}</span>,
+  <span style="color: #ff9e64;">}</span>,
+  grid: <span style="color: #ff9e64;">{</span>
+    top: <span style="color: #9ece6a; font-style: italic;">'15%'</span>,
+    left: <span style="color: #9ece6a; font-style: italic;">'10%'</span>,
+    right: <span style="color: #9ece6a; font-style: italic;">'5%'</span>,
+    bottom: <span style="color: #9ece6a; font-style: italic;">'10%'</span>,
+  <span style="color: #ff9e64;">}</span>,
+  xAxis: <span style="color: #ff9e64;">{</span>
+    type: <span style="color: #9ece6a; font-style: italic;">'category'</span>,
+    axisLine: <span style="color: #73daca;">{</span>
+      show: <span style="color: #ff9e64;">true</span>,
+    <span style="color: #73daca;">}</span>,
+    splitArea: <span style="color: #73daca;">{</span>
+      color: <span style="color: #9ece6a; font-style: italic;">'#f00'</span>,
+      lineStyle: <span style="color: #b4f9f8;">{</span>
+        color: <span style="color: #9ece6a; font-style: italic;">'#f00'</span>,
+      <span style="color: #b4f9f8;">}</span>,
+    <span style="color: #73daca;">}</span>,
+    axisLabel: <span style="color: #73daca;">{</span>
+      color: <span style="color: #9ece6a; font-style: italic;">'#BCDCF0'</span>,
+    <span style="color: #73daca;">}</span>,
+    splitLine: <span style="color: #73daca;">{</span>
+      show: <span style="color: #ff9e64;">false</span>,
+    <span style="color: #73daca;">}</span>,
+    boundaryGap: <span style="color: #ff9e64;">false</span>,
     data: params.timeList,
-  },
+  <span style="color: #ff9e64;">}</span>,
 
-  yAxis: {
-    type: 'value',
+  yAxis: <span style="color: #ff9e64;">{</span>
+    type: <span style="color: #9ece6a; font-style: italic;">'value'</span>,
     min: 0,
-    splitLine: {
-      show: true,
-      lineStyle: {
-	color: 'rgba(255,255,255,0.1)',
-      },
-    },
-    axisLine: {
-      show: true,
-    },
-    axisLabel: {
-      show: true,
+    splitLine: <span style="color: #73daca;">{</span>
+      show: <span style="color: #ff9e64;">true</span>,
+      lineStyle: <span style="color: #b4f9f8;">{</span>
+        color: <span style="color: #9ece6a; font-style: italic;">'rgba(255,255,255,0.1)'</span>,
+      <span style="color: #b4f9f8;">}</span>,
+    <span style="color: #73daca;">}</span>,
+    axisLine: <span style="color: #73daca;">{</span>
+      show: <span style="color: #ff9e64;">true</span>,
+    <span style="color: #73daca;">}</span>,
+    axisLabel: <span style="color: #73daca;">{</span>
+      show: <span style="color: #ff9e64;">true</span>,
       margin: 10,
-      textStyle: {
-	color: '#d1e6eb',
-      },
-    },
-    axisTick: {
-      show: false,
-    },
-  },
-  series: [
-    {
-      name: '进入人数',
-      type: 'line',
-      smooth: true, //是否平滑
-      lineStyle: {
-	normal: {
-	  color: '#00b3f4',
-	  shadowColor: 'rgba(0, 0, 0, .3)',
-	  shadowBlur: 0,
-	  shadowOffsetY: 5,
-	  shadowOffsetX: 5,
-	},
-      },
-      label: {
-	show: false,
-	position: 'top',
-	textStyle: {
-	  color: '#00b3f4',
-	},
-      },
-      // 去除点标记
+      textStyle: <span style="color: #b4f9f8;">{</span>
+        color: <span style="color: #9ece6a; font-style: italic;">'#d1e6eb'</span>,
+      <span style="color: #b4f9f8;">}</span>,
+    <span style="color: #73daca;">}</span>,
+    axisTick: <span style="color: #73daca;">{</span>
+      show: <span style="color: #ff9e64;">false</span>,
+    <span style="color: #73daca;">}</span>,
+  <span style="color: #ff9e64;">}</span>,
+  series: <span style="color: #ff9e64;">[</span>
+    <span style="color: #73daca;">{</span>
+      name: <span style="color: #9ece6a; font-style: italic;">'&#36827;&#20837;&#20154;&#25968;'</span>,
+      type: <span style="color: #9ece6a; font-style: italic;">'line'</span>,
+      smooth: <span style="color: #ff9e64;">true</span>, <span style="color: #51587a; font-style: italic;">//</span><span style="color: #51587a; font-style: italic;">&#26159;&#21542;&#24179;&#28369;</span>
+      lineStyle: <span style="color: #b4f9f8;">{</span>
+        normal: <span style="color: #e0af68;">{</span>
+          color: <span style="color: #9ece6a; font-style: italic;">'#00b3f4'</span>,
+          shadowColor: <span style="color: #9ece6a; font-style: italic;">'rgba(0, 0, 0, .3)'</span>,
+          shadowBlur: 0,
+          shadowOffsetY: 5,
+          shadowOffsetX: 5,
+        <span style="color: #e0af68;">}</span>,
+      <span style="color: #b4f9f8;">}</span>,
+      label: <span style="color: #b4f9f8;">{</span>
+        show: <span style="color: #ff9e64;">false</span>,
+        position: <span style="color: #9ece6a; font-style: italic;">'top'</span>,
+        textStyle: <span style="color: #e0af68;">{</span>
+          color: <span style="color: #9ece6a; font-style: italic;">'#00b3f4'</span>,
+        <span style="color: #e0af68;">}</span>,
+      <span style="color: #b4f9f8;">}</span>,
+      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21435;&#38500;&#28857;&#26631;&#35760;</span>
       symbolSize: 0,
-      // 鼠标放上去还是要有颜色的
-      itemStyle: {
-	color: '#00b3f4',
-      },
-      // 设置渐变色
-      areaStyle: {
-	normal: {
-	  color: new echarts.graphic.LinearGradient(
-	    0,
-	    0,
-	    0,
-	    1,
-	    [
-	      {
-		offset: 0,
-		color: 'rgba(0,179,244,0.3)',
-	      },
-	      {
-		offset: 1,
-		color: 'rgba(0,179,244,0)',
-	      },
-	    ],
-	    false
-	  ),
-	  shadowColor: 'rgba(0,179,244, 0.9)',
-	  shadowBlur: 20,
-	},
-      },
+      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#40736;&#26631;&#25918;&#19978;&#21435;&#36824;&#26159;&#35201;&#26377;&#39068;&#33394;&#30340;</span>
+      itemStyle: <span style="color: #b4f9f8;">{</span>
+        color: <span style="color: #9ece6a; font-style: italic;">'#00b3f4'</span>,
+      <span style="color: #b4f9f8;">}</span>,
+      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#35774;&#32622;&#28176;&#21464;&#33394;</span>
+      areaStyle: <span style="color: #b4f9f8;">{</span>
+        normal: <span style="color: #e0af68;">{</span>
+          color: <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">new</span> <span style="color: #c0caf5;">echarts.graphic.LinearGradient</span><span style="color: #2ac3de;">(</span>
+            0,
+            0,
+            0,
+            1,
+            <span style="color: #73daca;">[</span>
+              <span style="color: #9aa5ce;">{</span>
+                offset: 0,
+                color: <span style="color: #9ece6a; font-style: italic;">'rgba(0,179,244,0.3)'</span>,
+              <span style="color: #9aa5ce;">}</span>,
+              <span style="color: #9aa5ce;">{</span>
+                offset: 1,
+                color: <span style="color: #9ece6a; font-style: italic;">'rgba(0,179,244,0)'</span>,
+              <span style="color: #9aa5ce;">}</span>,
+            <span style="color: #73daca;">]</span>,
+            <span style="color: #ff9e64;">false</span>
+          <span style="color: #2ac3de;">)</span>,
+          shadowColor: <span style="color: #9ece6a; font-style: italic;">'rgba(0,179,244, 0.9)'</span>,
+          shadowBlur: 20,
+        <span style="color: #e0af68;">}</span>,
+      <span style="color: #b4f9f8;">}</span>,
       data: params.outData,
-    },
-    {
-      name: '走出人数',
-      type: 'line',
-      smooth: true, //是否平滑
-      // 阴影
-      lineStyle: {
-	normal: {
-	  color: '#00ca95',
-	  shadowColor: 'rgba(0, 0, 0, .3)',
-	  shadowBlur: 0,
-	  shadowOffsetY: 5,
-	  shadowOffsetX: 5,
-	},
-      },
-      label: {
-	show: false,
-	position: 'top',
-	textStyle: {
-	  color: '#00ca95',
-	},
-      },
-      // 去除点标记
+    <span style="color: #73daca;">}</span>,
+    <span style="color: #73daca;">{</span>
+      name: <span style="color: #9ece6a; font-style: italic;">'&#36208;&#20986;&#20154;&#25968;'</span>,
+      type: <span style="color: #9ece6a; font-style: italic;">'line'</span>,
+      smooth: <span style="color: #ff9e64;">true</span>, <span style="color: #51587a; font-style: italic;">//</span><span style="color: #51587a; font-style: italic;">&#26159;&#21542;&#24179;&#28369;</span>
+      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#38452;&#24433;</span>
+      lineStyle: <span style="color: #b4f9f8;">{</span>
+        normal: <span style="color: #e0af68;">{</span>
+          color: <span style="color: #9ece6a; font-style: italic;">'#00ca95'</span>,
+          shadowColor: <span style="color: #9ece6a; font-style: italic;">'rgba(0, 0, 0, .3)'</span>,
+          shadowBlur: 0,
+          shadowOffsetY: 5,
+          shadowOffsetX: 5,
+        <span style="color: #e0af68;">}</span>,
+      <span style="color: #b4f9f8;">}</span>,
+      label: <span style="color: #b4f9f8;">{</span>
+        show: <span style="color: #ff9e64;">false</span>,
+        position: <span style="color: #9ece6a; font-style: italic;">'top'</span>,
+        textStyle: <span style="color: #e0af68;">{</span>
+          color: <span style="color: #9ece6a; font-style: italic;">'#00ca95'</span>,
+        <span style="color: #e0af68;">}</span>,
+      <span style="color: #b4f9f8;">}</span>,
+      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21435;&#38500;&#28857;&#26631;&#35760;</span>
       symbolSize: 0,
-      itemStyle: {
-	color: '#00ca95',
-      },
-      // 设置渐变色
-      areaStyle: {
-	normal: {
-	  color: new echarts.graphic.LinearGradient(
-	    0,
-	    0,
-	    0,
-	    1,
-	    [
-	      {
-		offset: 0,
-		color: 'rgba(0,202,149,0.3)',
-	      },
-	      {
-		offset: 1,
-		color: 'rgba(0,202,149,0)',
-	      },
-	    ],
-	    false
-	  ),
-	  shadowColor: 'rgba(0,202,149, 0.9)',
-	  shadowBlur: 20,
-	},
-      },
+      itemStyle: <span style="color: #b4f9f8;">{</span>
+        color: <span style="color: #9ece6a; font-style: italic;">'#00ca95'</span>,
+      <span style="color: #b4f9f8;">}</span>,
+      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#35774;&#32622;&#28176;&#21464;&#33394;</span>
+      areaStyle: <span style="color: #b4f9f8;">{</span>
+        normal: <span style="color: #e0af68;">{</span>
+          color: <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">new</span> <span style="color: #c0caf5;">echarts.graphic.LinearGradient</span><span style="color: #2ac3de;">(</span>
+            0,
+            0,
+            0,
+            1,
+            <span style="color: #73daca;">[</span>
+              <span style="color: #9aa5ce;">{</span>
+                offset: 0,
+                color: <span style="color: #9ece6a; font-style: italic;">'rgba(0,202,149,0.3)'</span>,
+              <span style="color: #9aa5ce;">}</span>,
+              <span style="color: #9aa5ce;">{</span>
+                offset: 1,
+                color: <span style="color: #9ece6a; font-style: italic;">'rgba(0,202,149,0)'</span>,
+              <span style="color: #9aa5ce;">}</span>,
+            <span style="color: #73daca;">]</span>,
+            <span style="color: #ff9e64;">false</span>
+          <span style="color: #2ac3de;">)</span>,
+          shadowColor: <span style="color: #9ece6a; font-style: italic;">'rgba(0,202,149, 0.9)'</span>,
+          shadowBlur: 20,
+        <span style="color: #e0af68;">}</span>,
+      <span style="color: #b4f9f8;">}</span>,
       data: params.inData,
-    },
-  ],
-});
+    <span style="color: #73daca;">}</span>,
+  <span style="color: #ff9e64;">]</span>,
+<span style="color: #7aa2f7;">}</span><span style="color: #a9b1d6;">)</span>;
 </pre>
 </div>
 
@@ -767,19 +766,19 @@ export default TrafficSituation;
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js">export default function request(url, options) {
-  return fetch(url, options)
-    .then(checkStatus)
-    .then(parseJSON)
-    .then(data =&gt; ({ data }))
-    .catch(err =&gt; ({ err }));
-}
+<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">default</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">function</span> request<span style="color: #a9b1d6;">(</span><span style="color: #c0caf5; background-color: #372E40;">url</span>, <span style="color: #c0caf5; background-color: #372E40;">options</span><span style="color: #a9b1d6;">)</span> <span style="color: #a9b1d6;">{</span>
+  <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> fetch<span style="color: #7aa2f7;">(</span>url, options<span style="color: #7aa2f7;">)</span>
+    .then<span style="color: #7aa2f7;">(</span>checkStatus<span style="color: #7aa2f7;">)</span>
+    .then<span style="color: #7aa2f7;">(</span>parseJSON<span style="color: #7aa2f7;">)</span>
+    .then<span style="color: #7aa2f7;">(</span>data =&gt; <span style="color: #ff9e64;">(</span><span style="color: #73daca;">{</span> data <span style="color: #73daca;">}</span><span style="color: #ff9e64;">)</span><span style="color: #7aa2f7;">)</span>
+    .<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">catch</span><span style="color: #7aa2f7;">(</span>err =&gt; <span style="color: #ff9e64;">(</span><span style="color: #73daca;">{</span> err <span style="color: #73daca;">}</span><span style="color: #ff9e64;">)</span><span style="color: #7aa2f7;">)</span>;
+<span style="color: #a9b1d6;">}</span>
 
-export const getLeftPageData = async () =&gt; {
-  return request('/api/leftPageData').then(response =&gt; {
-    return response.data;
-  });
-};
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">getLeftPageData</span> = <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">async</span> <span style="color: #a9b1d6;">()</span> =&gt; <span style="color: #a9b1d6;">{</span>
+  <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> request<span style="color: #7aa2f7;">(</span><span style="color: #9ece6a; font-style: italic;">'/api/leftPageData'</span><span style="color: #7aa2f7;">)</span>.then<span style="color: #7aa2f7;">(</span>response =&gt; <span style="color: #ff9e64;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> response.data;
+  <span style="color: #ff9e64;">}</span><span style="color: #7aa2f7;">)</span>;
+<span style="color: #a9b1d6;">}</span>;
 
 </pre>
 </div>
@@ -789,47 +788,47 @@ export const getLeftPageData = async () =&gt; {
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js">export default {
-  // 命名空间 (必填)
-  namespace: 'leftPage',
+<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">default</span> <span style="color: #a9b1d6;">{</span>
+  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21629;&#21517;&#31354;&#38388; (&#24517;&#22635;)</span>
+  namespace: <span style="color: #9ece6a; font-style: italic;">'leftPage'</span>,
 
-  // 数据
-  state: {},
+  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#25968;&#25454;</span>
+  state: <span style="color: #7aa2f7;">{}</span>,
 
-  // 路由监听
-  subscriptions: {
-    setup({ dispatch, history }) {
-      return history.listen((location, action) =&gt; {
-	// 参数可以直接简写成{pathname}
-	if (location.pathname === '/') { //当进入当前页面就执行获取数据这一action
-	  dispatch({ type: 'getLeftPageData' });
-	}
-      });
-    },
-  },
+  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#36335;&#30001;&#30417;&#21548;</span>
+  subscriptions: <span style="color: #7aa2f7;">{</span>
+    setup<span style="color: #ff9e64;">(</span><span style="color: #73daca;">{</span> dispatch, history <span style="color: #73daca;">}</span><span style="color: #ff9e64;">)</span> <span style="color: #ff9e64;">{</span>
+      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> history.listen<span style="color: #73daca;">(</span><span style="color: #b4f9f8;">(</span>location, action<span style="color: #b4f9f8;">)</span> =&gt; <span style="color: #b4f9f8;">{</span>
+        <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21442;&#25968;&#21487;&#20197;&#30452;&#25509;&#31616;&#20889;&#25104;{pathname}</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> <span style="color: #e0af68;">(</span>location.pathname === <span style="color: #9ece6a; font-style: italic;">'/'</span><span style="color: #e0af68;">)</span> <span style="color: #e0af68;">{</span> <span style="color: #51587a; font-style: italic;">//</span><span style="color: #51587a; font-style: italic;">&#24403;&#36827;&#20837;&#24403;&#21069;&#39029;&#38754;&#23601;&#25191;&#34892;&#33719;&#21462;&#25968;&#25454;&#36825;&#19968;action</span>
+          dispatch<span style="color: #2ac3de;">(</span><span style="color: #73daca;">{</span> type: <span style="color: #9ece6a; font-style: italic;">'getLeftPageData'</span> <span style="color: #73daca;">}</span><span style="color: #2ac3de;">)</span>;
+        <span style="color: #e0af68;">}</span>
+      <span style="color: #b4f9f8;">}</span><span style="color: #73daca;">)</span>;
+    <span style="color: #ff9e64;">}</span>,
+  <span style="color: #7aa2f7;">}</span>,
 
-  // 异步请求    action处理器，用以对异步动作进行处理
-  effects: {
-    *getLeftPageData({ payload }, { call, put }) {
-      const data = yield call(getLeftPageData); 
-      if (data) {
-	yield put({
-	  type: 'setData',
-	  payload: data,
-	});
-      } else {
-	console.log(`获取左侧数据数据失败`);
-      }
-    },
-  },
+  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#24322;&#27493;&#35831;&#27714;    action&#22788;&#29702;&#22120;&#65292;&#29992;&#20197;&#23545;&#24322;&#27493;&#21160;&#20316;&#36827;&#34892;&#22788;&#29702;</span>
+  effects: <span style="color: #7aa2f7;">{</span>
+    *getLeftPageData<span style="color: #ff9e64;">(</span><span style="color: #73daca;">{</span> payload <span style="color: #73daca;">}</span>, <span style="color: #73daca;">{</span> call, put <span style="color: #73daca;">}</span><span style="color: #ff9e64;">)</span> <span style="color: #ff9e64;">{</span>
+      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">data</span> = <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">yield</span> call<span style="color: #73daca;">(</span>getLeftPageData<span style="color: #73daca;">)</span>; 
+      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> <span style="color: #73daca;">(</span>data<span style="color: #73daca;">)</span> <span style="color: #73daca;">{</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">yield</span> put<span style="color: #b4f9f8;">(</span><span style="color: #e0af68;">{</span>
+          type: <span style="color: #9ece6a; font-style: italic;">'setData'</span>,
+          payload: data,
+        <span style="color: #e0af68;">}</span><span style="color: #b4f9f8;">)</span>;
+      <span style="color: #73daca;">}</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">else</span> <span style="color: #73daca;">{</span>
+        console.log<span style="color: #b4f9f8;">(</span><span style="color: #9ece6a; font-style: italic;">`&#33719;&#21462;&#24038;&#20391;&#25968;&#25454;&#25968;&#25454;&#22833;&#36133;`</span><span style="color: #b4f9f8;">)</span>;
+      <span style="color: #73daca;">}</span>
+    <span style="color: #ff9e64;">}</span>,
+  <span style="color: #7aa2f7;">}</span>,
 
-  // 同步操作
-  reducers: {
-    setData(state, action) {
-      return { ...state, ...action.payload };
-    },
-  },
-};
+  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21516;&#27493;&#25805;&#20316;</span>
+  reducers: <span style="color: #7aa2f7;">{</span>
+    setData<span style="color: #ff9e64;">(</span>state, action<span style="color: #ff9e64;">)</span> <span style="color: #ff9e64;">{</span>
+      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #73daca;">{</span> ...state, ...action.payload <span style="color: #73daca;">}</span>;
+    <span style="color: #ff9e64;">}</span>,
+  <span style="color: #7aa2f7;">}</span>,
+<span style="color: #a9b1d6;">}</span>;
 
 </pre>
 </div>
@@ -851,12 +850,12 @@ export const getLeftPageData = async () =&gt; {
 </div>
 
 
-<div id="outline-container-org4085f24" class="outline-2">
-<h2 id="org4085f24"><span class="section-number-2">3.</span> 安装与运行</h2>
+<div id="outline-container-org09a00f3" class="outline-2">
+<h2 id="org09a00f3"><span class="section-number-2">3.</span> 安装与运行</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org83eda2d" class="outline-3">
-<h3 id="org83eda2d"><span class="section-number-3">3.1.</span> 安装</h3>
+<div id="outline-container-org4db57d7" class="outline-3">
+<h3 id="org4db57d7"><span class="section-number-3">3.1.</span> 安装</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 基于npm进行依赖安装
@@ -869,15 +868,15 @@ export const getLeftPageData = async () =&gt; {
 主要包括以下依赖：
 </p>
 <div class="org-src-container">
-<pre class="src src-js">"dependencies": {
-   "@jiaminghi/data-view-react": "^1.2.4",
-   "dva": "^2.4.1",
-   "echarts": "^4.9.0",
-   "react": "^16.2.0",
-   "react-dom": "^16.2.0",
-   "sass-loader": "8.0.2",
-   "styled-components": "^5.2.0"
- },
+<pre class="src src-js"><span style="color: #9ece6a; font-style: italic;">"dependencies"</span>: <span style="color: #a9b1d6;">{</span>
+   <span style="color: #9ece6a; font-style: italic;">"@jiaminghi/data-view-react"</span>: <span style="color: #9ece6a; font-style: italic;">"^1.2.4"</span>,
+   <span style="color: #9ece6a; font-style: italic;">"dva"</span>: <span style="color: #9ece6a; font-style: italic;">"^2.4.1"</span>,
+   <span style="color: #9ece6a; font-style: italic;">"echarts"</span>: <span style="color: #9ece6a; font-style: italic;">"^4.9.0"</span>,
+   <span style="color: #9ece6a; font-style: italic;">"react"</span>: <span style="color: #9ece6a; font-style: italic;">"^16.2.0"</span>,
+   <span style="color: #9ece6a; font-style: italic;">"react-dom"</span>: <span style="color: #9ece6a; font-style: italic;">"^16.2.0"</span>,
+   <span style="color: #9ece6a; font-style: italic;">"sass-loader"</span>: <span style="color: #9ece6a; font-style: italic;">"8.0.2"</span>,
+   <span style="color: #9ece6a; font-style: italic;">"styled-components"</span>: <span style="color: #9ece6a; font-style: italic;">"^5.2.0"</span>
+ <span style="color: #a9b1d6;">}</span>,
 </pre>
 </div>
 <p>
@@ -885,8 +884,8 @@ export const getLeftPageData = async () =&gt; {
 </p>
 </div>
 </div>
-<div id="outline-container-orgb7ea2b3" class="outline-3">
-<h3 id="orgb7ea2b3"><span class="section-number-3">3.2.</span> 运行</h3>
+<div id="outline-container-org3bf04f4" class="outline-3">
+<h3 id="org3bf04f4"><span class="section-number-3">3.2.</span> 运行</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 运行下列命令，即可在浏览器打开相关页面，F11进入全屏中即可使用。
@@ -902,7 +901,7 @@ export const getLeftPageData = async () =&gt; {
 <div id="postamble" class="status">
 <p class="date">Date: Sun Jul 11 17:08:49 2021</p>
 <p class="author">Author: 梁子，软件学院，S0083，3120305385</p>
-<p class="date">Created: 2023-01-05 四 16:37</p>
+<p class="date">Created: 2023-05-19 五 09:02</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

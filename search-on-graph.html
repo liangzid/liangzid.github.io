@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2023-02-28 周二 10:54 -->
+<!-- 2023-05-19 五 09:02 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>search on graph系列算法笔记</title>
@@ -16,24 +16,24 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge1adfa5">1. search on graph问题的两个步骤</a>
+<li><a href="#orgb1ef22a">1. search on graph问题的两个步骤</a>
 <ul>
-<li><a href="#org9b9efec">1.1. Delaunay graph 与 voronoi Diagram</a></li>
-<li><a href="#org242ca8b">1.2. 图的贪婪搜索与度量函数的凸特性</a></li>
+<li><a href="#orge0b95d0">1.1. Delaunay graph 与 voronoi Diagram</a></li>
+<li><a href="#org1434fe0">1.2. 图的贪婪搜索与度量函数的凸特性</a></li>
 </ul>
 </li>
-<li><a href="#orgbabb90b">2. NSW Navigation Small World</a></li>
-<li><a href="#orgeb7db2b">3. HNSW Hierarchical NSW</a></li>
-<li><a href="#orga0b0ae8">4. BFSG Binary Function Search on Graph</a></li>
-<li><a href="#orgbba9341">5. our method NISG: Neural interface metric search on Graph</a></li>
+<li><a href="#orgde319a8">2. NSW Navigation Small World</a></li>
+<li><a href="#org9510ecf">3. HNSW Hierarchical NSW</a></li>
+<li><a href="#org7963170">4. BFSG Binary Function Search on Graph</a></li>
+<li><a href="#org23cdd08">5. our method NISG: Neural interface metric search on Graph</a></li>
 </ul>
 </div>
 </div>
 <p>
 今天阅读一篇需要复现的论文,发现自己对"search on graph"一直没有足够的了解.因此专门抽出一天时间学习这一类解决ANNS问题的方法,算是为以后的工作铺平道路吧.
 </p>
-<div id="outline-container-orge1adfa5" class="outline-2">
-<h2 id="orge1adfa5"><span class="section-number-2">1.</span> search on graph问题的两个步骤</h2>
+<div id="outline-container-orgb1ef22a" class="outline-2">
+<h2 id="orgb1ef22a"><span class="section-number-2">1.</span> search on graph问题的两个步骤</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 一般而言,所有的search on graph算法都包含两个基本的环节:graph construction 与 graph search.正如LSH等算法需要建设一个向量点的sketch一样,search on graph的算法侧重于捕捉节点与节点之间的连接关系,即通过一张"图"去存储点集的预信息,而非存储哈希表.因此,这两个环节的基本功能是:
@@ -47,8 +47,8 @@
 为了澄清上述描述中的一些问题,需要对Delaunay graph进行一个简单的说明.
 </p>
 </div>
-<div id="outline-container-org9b9efec" class="outline-3">
-<h3 id="org9b9efec"><span class="section-number-3">1.1.</span> Delaunay graph 与 voronoi Diagram</h3>
+<div id="outline-container-orge0b95d0" class="outline-3">
+<h3 id="orge0b95d0"><span class="section-number-3">1.1.</span> Delaunay graph 与 voronoi Diagram</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 你可以在<a href="https://www.bilibili.com/video/BV1Ck4y1z7VT?from=search&amp;seid=11009589865241430903">bilibili-delaunay三角</a>找到对delaunay划分的一些直观理解.
@@ -101,7 +101,7 @@
 </p>
 
 
-<div id="orga27bfc7" class="figure">
+<div id="org6932339" class="figure">
 <p><img src="./images/20200622160517.png" alt="20200622160517.png">
 </p>
 </div>
@@ -115,14 +115,14 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org242ca8b" class="outline-3">
-<h3 id="org242ca8b"><span class="section-number-3">1.2.</span> 图的贪婪搜索与度量函数的凸特性</h3>
+<div id="outline-container-org1434fe0" class="outline-3">
+<h3 id="org1434fe0"><span class="section-number-3">1.2.</span> 图的贪婪搜索与度量函数的凸特性</h3>
 </div>
 </div>
 
 
-<div id="outline-container-orgbabb90b" class="outline-2">
-<h2 id="orgbabb90b"><span class="section-number-2">2.</span> NSW Navigation Small World</h2>
+<div id="outline-container-orgde319a8" class="outline-2">
+<h2 id="orgde319a8"><span class="section-number-2">2.</span> NSW Navigation Small World</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 那么,怎么去做这件事呢?!常见的一个思路是,NSW.在这一章,将从直观上先说一说NSW的基本思路,而后再给出该算法详细的伪代码.
@@ -164,28 +164,28 @@ NSW算法自然语言描述:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++">K-NNSearch<span style="color: #81b0e3;">(</span><span style="color: #cd5542;">object</span> <span style="color: #baba36;">q</span>, integer: m, k<span style="color: #81b0e3;">)</span>
-TreeSet <span style="color: #81b0e3;">[</span>object<span style="color: #81b0e3;">]</span> tempRes, candidates, visitedSet, result 
-<span style="color: #656565;">// </span><span style="color: #757575;">&#36827;&#34892;m&#27425;&#24490;&#29615;&#65292;&#36991;&#20813;&#38543;&#26426;&#24615;</span>
-<span style="color: #5180b3;">for</span> <span style="color: #81b0e3;">(</span>i&#8592;0; i &lt; m; i++<span style="color: #81b0e3;">)</span> <span style="color: #5180b3;">do</span>:
+<pre class="src src-C++">K-NNSearch<span style="color: #a9b1d6;">(</span><span style="color: #c0caf5;">object</span> <span style="color: #c0caf5; background-color: #372E40;">q</span>, integer: m, k<span style="color: #a9b1d6;">)</span>
+TreeSet <span style="color: #a9b1d6;">[</span>object<span style="color: #a9b1d6;">]</span> tempRes, candidates, visitedSet, result 
+<span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#36827;&#34892;m&#27425;&#24490;&#29615;&#65292;&#36991;&#20813;&#38543;&#26426;&#24615;</span>
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">for</span> <span style="color: #a9b1d6;">(</span>i&#8592;0; i &lt; m; i++<span style="color: #a9b1d6;">)</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">do</span>:
     put random entry point in candidates
     tempRes&#8592;null
     repeat:
-        <span style="color: #656565;">// </span><span style="color: #757575;">&#21033;&#29992;&#19978;&#36848;&#25552;&#21040;&#30340;&#36138;&#23146;&#25628;&#32034;&#31639;&#27861;&#25214;&#21040;&#36317;&#31163;q&#26368;&#36817;&#30340;&#28857;c</span>
+        <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21033;&#29992;&#19978;&#36848;&#25552;&#21040;&#30340;&#36138;&#23146;&#25628;&#32034;&#31639;&#27861;&#25214;&#21040;&#36317;&#31163;q&#26368;&#36817;&#30340;&#28857;c</span>
         get element c closest from candidates to q
         remove c from candidates
-        <span style="color: #656565;">// </span><span style="color: #757575;">&#21028;&#26029;&#32467;&#26463;&#26465;&#20214;</span>
-        <span style="color: #5180b3;">if</span> c is further than k-th element from result then
-            <span style="color: #5180b3;">break</span> repeat
-        <span style="color: #656565;">// </span><span style="color: #757575;">&#26356;&#26032;&#21518;&#36873;&#25321;&#21015;&#34920;</span>
-        <span style="color: #5180b3;">for</span> every element e from friends of c <span style="color: #5180b3;">do</span>:
-            <span style="color: #5180b3;">if</span> e is <span style="color: #5180b3;">not</span> in visitedSet then
+        <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21028;&#26029;&#32467;&#26463;&#26465;&#20214;</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> c is further than k-th element from result then
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">break</span> repeat
+        <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#26356;&#26032;&#21518;&#36873;&#25321;&#21015;&#34920;</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">for</span> every element e from friends of c <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">do</span>:
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> e is <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">not</span> in visitedSet then
                 add e to visitedSet, candidates, tempRes
     end repeat
-    <span style="color: #656565;">// </span><span style="color: #757575;">&#27719;&#24635;&#32467;&#26524;</span>
-    add objects from tempRes to <span style="color: #cd5542;">result</span> 
-<span style="color: #baba36;">end</span> <span style="color: #5180b3;">for</span> 
-<span style="color: #5180b3;">return</span> best k elements from result
+    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#27719;&#24635;&#32467;&#26524;</span>
+    add objects from tempRes to <span style="color: #c0caf5;">result</span> 
+<span style="color: #c0caf5; background-color: #372E40;">end</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">for</span> 
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> best k elements from result
 
 </pre>
 </div>
@@ -195,8 +195,8 @@ TreeSet <span style="color: #81b0e3;">[</span>object<span style="color: #81b0e3;
 </div>
 </div>
 
-<div id="outline-container-orgeb7db2b" class="outline-2">
-<h2 id="orgeb7db2b"><span class="section-number-2">3.</span> HNSW Hierarchical NSW</h2>
+<div id="outline-container-org9510ecf" class="outline-2">
+<h2 id="org9510ecf"><span class="section-number-2">3.</span> HNSW Hierarchical NSW</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 学长就让我看到HNSW.或许这就是目前比较好的算法了吧!其实,HNSW本质上就是对NSW的增量研究,因而解释起来应该比较简单.
@@ -215,7 +215,7 @@ TreeSet <span style="color: #81b0e3;">[</span>object<span style="color: #81b0e3;
 </p>
 
 
-<div id="orgf761573" class="figure">
+<div id="org280d964" class="figure">
 <p><img src="images/20200622165904.png" alt="20200622165904.png">
 </p>
 </div>
@@ -240,7 +240,7 @@ TreeSet <span style="color: #81b0e3;">[</span>object<span style="color: #81b0e3;
 </p>
 
 
-<div id="org908a01d" class="figure">
+<div id="org99fdfb2" class="figure">
 <p><img src="images/20200622172455.png" alt="20200622172455.png">
 </p>
 </div>
@@ -251,7 +251,7 @@ TreeSet <span style="color: #81b0e3;">[</span>object<span style="color: #81b0e3;
 </p>
 
 
-<div id="org11446bc" class="figure">
+<div id="org609365a" class="figure">
 <p><img src="images/20200622172615.png" alt="20200622172615.png">
 </p>
 </div>
@@ -261,13 +261,13 @@ TreeSet <span style="color: #81b0e3;">[</span>object<span style="color: #81b0e3;
 </p>
 
 
-<div id="org0dfe08e" class="figure">
+<div id="org354fbd6" class="figure">
 <p><img src="images/20200622172709.png" alt="20200622172709.png">
 </p>
 </div>
 
 
-<div id="org38085a3" class="figure">
+<div id="org5a767ac" class="figure">
 <p><img src="images/20200622172743.png" alt="20200622172743.png">
 </p>
 </div>
@@ -277,7 +277,7 @@ TreeSet <span style="color: #81b0e3;">[</span>object<span style="color: #81b0e3;
 </p>
 
 
-<div id="org864024e" class="figure">
+<div id="org26b7ba8" class="figure">
 <p><img src="images/20200622173018.png" alt="20200622173018.png">
 </p>
 </div>
@@ -285,8 +285,8 @@ TreeSet <span style="color: #81b0e3;">[</span>object<span style="color: #81b0e3;
 </div>
 
 
-<div id="outline-container-orga0b0ae8" class="outline-2">
-<h2 id="orga0b0ae8"><span class="section-number-2">4.</span> BFSG Binary Function Search on Graph</h2>
+<div id="outline-container-org7963170" class="outline-2">
+<h2 id="org7963170"><span class="section-number-2">4.</span> BFSG Binary Function Search on Graph</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Binary function是指以两个输入为自变量的神经网络函数.从某意义上讲,这种函数也可以被认为是一种勉强而特殊的距离度量.当然,与L2,consine等不同的是,这种距离度量是非凸的,因此直接的search on graph 方法或许无法使用.
@@ -317,7 +317,7 @@ WSDM2020中的Fast item ranking一文中给出了一种基于search on graph的�
 </ol>
 
 
-<div id="org1b1f5af" class="figure">
+<div id="orgae9a365" class="figure">
 <p><img src="images/20200623095623.png" alt="20200623095623.png">
 </p>
 </div>
@@ -327,7 +327,7 @@ WSDM2020中的Fast item ranking一文中给出了一种基于search on graph的�
 </ol>
 
 
-<div id="orgeda706b" class="figure">
+<div id="org687b2c2" class="figure">
 <p><img src="images/20200623095658.png" alt="20200623095658.png">
 </p>
 </div>
@@ -336,8 +336,8 @@ WSDM2020中的Fast item ranking一文中给出了一种基于search on graph的�
 
 
 
-<div id="outline-container-orgbba9341" class="outline-2">
-<h2 id="orgbba9341"><span class="section-number-2">5.</span> our method NISG: Neural interface metric search on Graph</h2>
+<div id="outline-container-org23cdd08" class="outline-2">
+<h2 id="org23cdd08"><span class="section-number-2">5.</span> our method NISG: Neural interface metric search on Graph</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 在进行graph construction的过程中,单纯使用L2距离并不是一个美妙的决定,同时,使用神经网络作为search函数又难以满足众多非凸的性质.为了解决这个问题,我们采用了一种新的方法, blablabla&#x2026;
@@ -347,7 +347,7 @@ WSDM2020中的Fast item ranking一文中给出了一种基于search on graph的�
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: LiangZi</p>
-<p class="date">Created: 2023-02-28 周二 10:54</p>
+<p class="date">Created: 2023-05-19 五 09:02</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

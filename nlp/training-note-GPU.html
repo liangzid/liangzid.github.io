@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<!-- 2023-01-02 一 17:32 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2023-05-19 五 09:02 -->
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>在GPU上进行训练的一些指南</title>
 <meta name="author" content="LiangZi" />
@@ -191,8 +189,9 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
+  .org-svg { }
 </style>
+<link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/>
 </head>
 <body>
 <div id="content" class="content">
@@ -201,22 +200,22 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org75bfc9c">1. GPU数目决策及主GPU设置</a>
+<li><a href="#org18534bf">1. GPU数目决策及主GPU设置</a>
 <ul>
-<li><a href="#org68ebf02">1.1. 优势劣势比较</a></li>
-<li><a href="#orgd13cacc">1.2. 单GPU模式指定主GPU</a></li>
-<li><a href="#org091d196">1.3. 多GPU模式使用与指定主GPU</a></li>
+<li><a href="#org307bc1a">1.1. 优势劣势比较</a></li>
+<li><a href="#org674e1f8">1.2. 单GPU模式指定主GPU</a></li>
+<li><a href="#orgd056849">1.3. 多GPU模式使用与指定主GPU</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org75bfc9c" class="outline-2">
-<h2 id="org75bfc9c"><span class="section-number-2">1.</span> GPU数目决策及主GPU设置</h2>
+<div id="outline-container-org18534bf" class="outline-2">
+<h2 id="org18534bf"><span class="section-number-2">1.</span> GPU数目决策及主GPU设置</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org68ebf02" class="outline-3">
-<h3 id="org68ebf02"><span class="section-number-3">1.1.</span> 优势劣势比较</h3>
+<div id="outline-container-org307bc1a" class="outline-3">
+<h3 id="org307bc1a"><span class="section-number-3">1.1.</span> 优势劣势比较</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 单GPU模式常常可以训练在多GPU上出现out of memory现象的代码。这可能是因为：无论是单GPU还是多GPU，
@@ -225,8 +224,8 @@
 </p>
 </div>
 </div>
-<div id="outline-container-orgd13cacc" class="outline-3">
-<h3 id="orgd13cacc"><span class="section-number-3">1.2.</span> 单GPU模式指定主GPU</h3>
+<div id="outline-container-org674e1f8" class="outline-3">
+<h3 id="org674e1f8"><span class="section-number-3">1.2.</span> 单GPU模式指定主GPU</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 说出来可能不信，单GPU也要指定主GPU！不然就会加载到0号GPU上去。
@@ -234,37 +233,37 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #635C4A;"># </span><span style="color: #635C4A;">set device</span>
-<span style="color: #ef6787;">device</span> = <span style="color: #cea2ca;">'cuda:2'</span> <span style="color: #49bdb0;">if</span> args.cuda <span style="color: #49bdb0;">else</span> <span style="color: #cea2ca;">'cpu'</span>
-<span style="color: #635C4A;"># </span><span style="color: #635C4A;">set environment</span>
-os.environ<span style="color: #4d9391;">[</span><span style="color: #cea2ca;">"CUDA_VISIBLE_DEVICES"</span><span style="color: #4d9391;">]</span> = <span style="color: #cea2ca;">"2,3,4"</span>
-model.to<span style="color: #4d9391;">(</span>device<span style="color: #4d9391;">)</span>
-data.to<span style="color: #4d9391;">(</span>device<span style="color: #4d9391;">)</span>
+<pre class="src src-python"><span style="color: #51587a; font-style: italic;"># </span><span style="color: #51587a; font-style: italic;">set device</span>
+<span style="color: #c0caf5; background-color: #372E40;">device</span> = <span style="color: #9ece6a; font-style: italic;">'cuda:2'</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> args.cuda <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">else</span> <span style="color: #9ece6a; font-style: italic;">'cpu'</span>
+<span style="color: #51587a; font-style: italic;"># </span><span style="color: #51587a; font-style: italic;">set environment</span>
+os.environ<span style="color: #a9b1d6;">[</span><span style="color: #9ece6a; font-style: italic;">"CUDA_VISIBLE_DEVICES"</span><span style="color: #a9b1d6;">]</span> = <span style="color: #9ece6a; font-style: italic;">"2,3,4"</span>
+model.to<span style="color: #a9b1d6;">(</span>device<span style="color: #a9b1d6;">)</span>
+data.to<span style="color: #a9b1d6;">(</span>device<span style="color: #a9b1d6;">)</span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org091d196" class="outline-3">
-<h3 id="org091d196"><span class="section-number-3">1.3.</span> 多GPU模式使用与指定主GPU</h3>
+<div id="outline-container-orgd056849" class="outline-3">
+<h3 id="orgd056849"><span class="section-number-3">1.3.</span> 多GPU模式使用与指定主GPU</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 多GPU主要是使用到了Parallel方法，此处展示一个示例：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #635C4A;"># </span><span style="color: #635C4A;">set device</span>
-<span style="color: #ef6787;">device</span> = <span style="color: #cea2ca;">'cuda:2'</span> <span style="color: #49bdb0;">if</span> args.cuda <span style="color: #49bdb0;">else</span> <span style="color: #cea2ca;">'cpu'</span>
+<pre class="src src-python"><span style="color: #51587a; font-style: italic;"># </span><span style="color: #51587a; font-style: italic;">set device</span>
+<span style="color: #c0caf5; background-color: #372E40;">device</span> = <span style="color: #9ece6a; font-style: italic;">'cuda:2'</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> args.cuda <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">else</span> <span style="color: #9ece6a; font-style: italic;">'cpu'</span>
 
-<span style="color: #635C4A;"># </span><span style="color: #635C4A;">args.device="2,3,4"</span>
+<span style="color: #51587a; font-style: italic;"># </span><span style="color: #51587a; font-style: italic;">args.device="2,3,4"</span>
 
-<span style="color: #635C4A;"># </span><span style="color: #635C4A;">set environment</span>
-os.<span style="color: #ef6787;">environ</span><span style="color: #4d9391;">[</span><span style="color: #cea2ca;">"CUDA_VISIBLE_DEVICES"</span><span style="color: #4d9391;">]</span> =args.device
-<span style="color: #49bdb0;">if</span> args.cuda <span style="color: #49bdb0;">and</span> torch.cuda.device_count<span style="color: #4d9391;">()</span> &gt; 1:
-        LOGGER.info<span style="color: #4d9391;">(</span><span style="color: #cea2ca;">"Let's use GPUs to train"</span><span style="color: #4d9391;">)</span>
-        <span style="color: #ef6787;">model</span> = DataParallel<span style="color: #4d9391;">(</span>model, device_ids=<span style="color: #47ba99;">[</span><span style="color: #53E6B5;">int</span><span style="color: #9d81ba;">(</span>i<span style="color: #9d81ba;">)</span> <span style="color: #49bdb0;">for</span> i <span style="color: #49bdb0;">in</span> args.device.split<span style="color: #9d81ba;">(</span><span style="color: #cea2ca;">','</span><span style="color: #9d81ba;">)</span><span style="color: #47ba99;">]</span><span style="color: #4d9391;">)</span>
-        multi_gpu = <span style="color: #ef6787;">True</span>
-model.to<span style="color: #4d9391;">(</span>device<span style="color: #4d9391;">)</span>
-data.to<span style="color: #4d9391;">(</span>device<span style="color: #4d9391;">)</span>
+<span style="color: #51587a; font-style: italic;"># </span><span style="color: #51587a; font-style: italic;">set environment</span>
+os.<span style="color: #c0caf5; background-color: #372E40;">environ</span><span style="color: #a9b1d6;">[</span><span style="color: #9ece6a; font-style: italic;">"CUDA_VISIBLE_DEVICES"</span><span style="color: #a9b1d6;">]</span> =args.device
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> args.cuda <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">and</span> torch.cuda.device_count<span style="color: #a9b1d6;">()</span> &gt; 1:
+        LOGGER.info<span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"Let's use GPUs to train"</span><span style="color: #a9b1d6;">)</span>
+        <span style="color: #c0caf5; background-color: #372E40;">model</span> = DataParallel<span style="color: #a9b1d6;">(</span>model, device_ids=<span style="color: #7aa2f7;">[</span><span style="color: #f7768e;">int</span><span style="color: #ff9e64;">(</span>i<span style="color: #ff9e64;">)</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">for</span> i <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">in</span> args.device.split<span style="color: #ff9e64;">(</span><span style="color: #9ece6a; font-style: italic;">','</span><span style="color: #ff9e64;">)</span><span style="color: #7aa2f7;">]</span><span style="color: #a9b1d6;">)</span>
+        multi_gpu = <span style="color: #ff9e64;">True</span>
+model.to<span style="color: #a9b1d6;">(</span>device<span style="color: #a9b1d6;">)</span>
+data.to<span style="color: #a9b1d6;">(</span>device<span style="color: #a9b1d6;">)</span>
 </pre>
 </div>
 </div>
@@ -273,7 +272,7 @@ data.to<span style="color: #4d9391;">(</span>device<span style="color: #4d9391;"
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: LiangZi</p>
-<p class="date">Created: 2023-01-02 一 17:32</p>
+<p class="date">Created: 2023-05-19 五 09:02</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

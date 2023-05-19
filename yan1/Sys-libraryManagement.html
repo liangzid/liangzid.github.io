@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<!-- 2023-01-05 四 16:37 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2023-05-19 五 09:02 -->
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>企业架构与软件系统分析设计结课作业——一个山寨版创新港图书馆管理系统的设计</title>
 <meta name="author" content="梁子，3120305385，S0083，软件学院" />
@@ -191,8 +189,9 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
+  .org-svg { }
 </style>
+<link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/>
 </head>
 <body>
 <div id="content" class="content">
@@ -201,91 +200,91 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgca10434">1. 基于ARIS HOUSE MODEL的需求分析、角色定位和方案设计</a>
+<li><a href="#orgc2fdf95">1. 基于ARIS HOUSE MODEL的需求分析、角色定位和方案设计</a>
 <ul>
-<li><a href="#org0abdf54">1.1. 组织视图：用户及用户间关系的确认与分析</a></li>
-<li><a href="#org01d47d7">1.2. 服务视图：业务需求的确认</a></li>
-<li><a href="#org86e0a1f">1.3. 流程试图：从用户到服务的整体流程</a></li>
-<li><a href="#orgdc70c8d">1.4. 数据视图：数据库的设计</a></li>
-<li><a href="#org5df9a82">1.5. 功能视图：功能模块的定义及其相关逐渐调用关系的确认</a></li>
+<li><a href="#orgc8a52f0">1.1. 组织视图：用户及用户间关系的确认与分析</a></li>
+<li><a href="#orga02bd56">1.2. 服务视图：业务需求的确认</a></li>
+<li><a href="#org338f92a">1.3. 流程试图：从用户到服务的整体流程</a></li>
+<li><a href="#org6a6c6c5">1.4. 数据视图：数据库的设计</a></li>
+<li><a href="#org6b4e011">1.5. 功能视图：功能模块的定义及其相关逐渐调用关系的确认</a></li>
 </ul>
 </li>
-<li><a href="#org07a7d9a">2. 对上述系统设计的补充——Zachman Framework下的增补</a>
+<li><a href="#orgca2aa6d">2. 对上述系统设计的补充——Zachman Framework下的增补</a>
 <ul>
-<li><a href="#orgeeacbd2">2.1. What，How，Who，When，Why? 不同视角下的已有模块的分析</a></li>
-<li><a href="#orgc3cf4ec">2.2. Where？</a></li>
+<li><a href="#org11d1f61">2.1. What，How，Who，When，Why? 不同视角下的已有模块的分析</a></li>
+<li><a href="#org50d3d58">2.2. Where？</a></li>
 </ul>
 </li>
-<li><a href="#org785c7f9">3. 系统设计方案的格式化表达——UML视角图</a>
+<li><a href="#org3aedd8e">3. 系统设计方案的格式化表达——UML视角图</a>
 <ul>
-<li><a href="#orgb88f783">3.1. Zachman-where模型下的UML硬件部署图设计</a></li>
-<li><a href="#org5910590">3.2. ARIS模型组织-服务视图下的UML用例图设计</a>
+<li><a href="#org66c968d">3.1. Zachman-where模型下的UML硬件部署图设计</a></li>
+<li><a href="#org5640b3e">3.2. ARIS模型组织-服务视图下的UML用例图设计</a>
 <ul>
-<li><a href="#orga913706">3.2.1. 图书馆使用者用例图</a></li>
-<li><a href="#orgce8f070">3.2.2. 图书馆管理者用例图</a></li>
-<li><a href="#org7627a0b">3.2.3. 管理员用例图</a></li>
+<li><a href="#org2273b5c">3.2.1. 图书馆使用者用例图</a></li>
+<li><a href="#org98bea79">3.2.2. 图书馆管理者用例图</a></li>
+<li><a href="#org85ef2b8">3.2.3. 管理员用例图</a></li>
 </ul>
 </li>
-<li><a href="#orgc34ffcc">3.3. ARIS模型功能-流程视图下的UML活动图设计</a></li>
-<li><a href="#orgb72bf36">3.4. ARIS模型数据-功能视图下的UML类图设计</a></li>
+<li><a href="#orge43d453">3.3. ARIS模型功能-流程视图下的UML活动图设计</a></li>
+<li><a href="#orgcc9a36b">3.4. ARIS模型数据-功能视图下的UML类图设计</a></li>
 </ul>
 </li>
-<li><a href="#orgab6b1f8">4. 一个山寨版交大图书馆管理系统的实现</a>
+<li><a href="#orgbb227e4">4. 一个山寨版交大图书馆管理系统的实现</a>
 <ul>
-<li><a href="#org9a09269">4.1. 整体架构</a>
+<li><a href="#orgf9482fb">4.1. 整体架构</a>
 <ul>
-<li><a href="#orgeb2b87c">4.1.1. 门禁子系统</a></li>
-<li><a href="#org11b4393">4.1.2. 书籍借还子系统</a></li>
-<li><a href="#orgc2acb90">4.1.3. 查询检索子系统</a></li>
-<li><a href="#orgc8740b1">4.1.4. 数据和操作权限管理子系统</a></li>
-<li><a href="#orga822128">4.1.5. 数据可视化子系统</a></li>
+<li><a href="#orge9ca18b">4.1.1. 门禁子系统</a></li>
+<li><a href="#org682aff2">4.1.2. 书籍借还子系统</a></li>
+<li><a href="#org19b4c83">4.1.3. 查询检索子系统</a></li>
+<li><a href="#org4ce8a84">4.1.4. 数据和操作权限管理子系统</a></li>
+<li><a href="#org4ca9510">4.1.5. 数据可视化子系统</a></li>
 </ul>
 </li>
-<li><a href="#org67c3f4d">4.2. RBAC：用户-角色-动作 控制体系的实现及对该体系的管理</a>
+<li><a href="#org7edba32">4.2. RBAC：用户-角色-动作 控制体系的实现及对该体系的管理</a>
 <ul>
-<li><a href="#org75a90de">4.2.1. RBAC的实现</a>
+<li><a href="#orgb1f2244">4.2.1. RBAC的实现</a>
 <ul>
-<li><a href="#orga002b31">4.2.1.1. user，role，action</a></li>
-<li><a href="#orgd660c97">4.2.1.2. 对用户、角色、权限极其之间关系的管理：增、删、改、查</a></li>
-<li><a href="#orgf5d19df">4.2.1.3. 形成配置结果：存储与加载</a></li>
+<li><a href="#org8029517">4.2.1.1. user，role，action</a></li>
+<li><a href="#orgcb2cbe8">4.2.1.2. 对用户、角色、权限极其之间关系的管理：增、删、改、查</a></li>
+<li><a href="#org21267dd">4.2.1.3. 形成配置结果：存储与加载</a></li>
 </ul>
 </li>
-<li><a href="#orge599145">4.2.2. 同目前RBAC库的对比分析</a></li>
+<li><a href="#orgee1f9e8">4.2.2. 同目前RBAC库的对比分析</a></li>
 </ul>
 </li>
-<li><a href="#org9bd97e9">4.3. 数据可视化平台</a>
+<li><a href="#orgdcf2d64">4.3. 数据可视化平台</a>
 <ul>
-<li><a href="#org53d7748">4.3.1. 基于dva和react的组件化数据可视化方案</a>
+<li><a href="#orgb7f9ded">4.3.1. 基于dva和react的组件化数据可视化方案</a>
 <ul>
-<li><a href="#orgfd6b1a1">4.3.1.1. 安装与运行</a></li>
+<li><a href="#org04ec859">4.3.1.1. 安装与运行</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orga8c86f5">5. 结论及未来工作</a></li>
-<li><a href="#org14f7c16">6. 参考文献</a></li>
+<li><a href="#org756fde3">5. 结论及未来工作</a></li>
+<li><a href="#orgab32e25">6. 参考文献</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgca10434" class="outline-2">
-<h2 id="orgca10434"><span class="section-number-2">1.</span> 基于ARIS HOUSE MODEL的需求分析、角色定位和方案设计</h2>
+<div id="outline-container-orgc2fdf95" class="outline-2">
+<h2 id="orgc2fdf95"><span class="section-number-2">1.</span> 基于ARIS HOUSE MODEL的需求分析、角色定位和方案设计</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 首先尝试使用ARIS HOUSE模型进行该图书馆管理系统的设计。如下图所示，ARIS房子模型是以组织角色为主导的系统架构设计方案，该方案首先确定系统的组织，以形成组织视图，在系统使用者和系统需求（即所提供服务）得到确认之后，通过细化系统中涉及到的数据、功能、流程来完成对整个系统结构的设计。本章节将依循该过程，依照上一章提供的用户组织及业务需求进行初步的系统设计。
 </p>
 
 
-<div id="orgd4d35cc" class="figure">
-<p><img src="./images/20210713032627.png" alt="20210713032627.png" />
+<div id="org7476a49" class="figure">
+<p><img src="./images/20210713032627.png" alt="20210713032627.png">
 </p>
 </div>
 </div>
 
-<div id="outline-container-org0abdf54" class="outline-3">
-<h3 id="org0abdf54"><span class="section-number-3">1.1.</span> 组织视图：用户及用户间关系的确认与分析</h3>
+<div id="outline-container-orgc8a52f0" class="outline-3">
+<h3 id="orgc8a52f0"><span class="section-number-3">1.1.</span> 组织视图：用户及用户间关系的确认与分析</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 组织视图是ARIS模型的核心，只有确认了系统的使用者，才能对数据、功能、流程、服务进行合理的划分和定义。本图书馆管理系统中所涉及的目标用户主要包括：
@@ -317,8 +316,8 @@
 </div>
 </div>
 
-<div id="outline-container-org01d47d7" class="outline-3">
-<h3 id="org01d47d7"><span class="section-number-3">1.2.</span> 服务视图：业务需求的确认</h3>
+<div id="outline-container-orga02bd56" class="outline-3">
+<h3 id="orga02bd56"><span class="section-number-3">1.2.</span> 服务视图：业务需求的确认</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 当确认了目标用户之后，就可以着手进行服务视图的建立。下面是具体的角色-服务对应关系。
@@ -356,8 +355,8 @@
 </ul>
 </div>
 </div>
-<div id="outline-container-org86e0a1f" class="outline-3">
-<h3 id="org86e0a1f"><span class="section-number-3">1.3.</span> 流程试图：从用户到服务的整体流程</h3>
+<div id="outline-container-org338f92a" class="outline-3">
+<h3 id="org338f92a"><span class="section-number-3">1.3.</span> 流程试图：从用户到服务的整体流程</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 在确认了用户及用户的业务需求之后，便可进行系统流程的设计，并基于用例图设计生成UML活动图。首先对涉及到的系统流程进行分析：
@@ -407,16 +406,16 @@
 </ol>
 </div>
 </div>
-<div id="outline-container-orgdc70c8d" class="outline-3">
-<h3 id="orgdc70c8d"><span class="section-number-3">1.4.</span> 数据视图：数据库的设计</h3>
+<div id="outline-container-org6a6c6c5" class="outline-3">
+<h3 id="org6a6c6c5"><span class="section-number-3">1.4.</span> 数据视图：数据库的设计</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 现以数据模型下的UML视图为示例进行数据库的设计。核心数据库的设计较为简单，主要关系的对象有三个：用户、书籍、用户与书籍关联的事例。下图是一个简单的UML数据库设计表：
 </p>
 
 
-<div id="orgf7f34a0" class="figure">
-<p><img src="./images/20210714082035.png" alt="20210714082035.png" />
+<div id="org8269b81" class="figure">
+<p><img src="./images/20210714082035.png" alt="20210714082035.png">
 </p>
 </div>
 
@@ -426,8 +425,8 @@
 </div>
 </div>
 
-<div id="outline-container-org5df9a82" class="outline-3">
-<h3 id="org5df9a82"><span class="section-number-3">1.5.</span> 功能视图：功能模块的定义及其相关逐渐调用关系的确认</h3>
+<div id="outline-container-org6b4e011" class="outline-3">
+<h3 id="org6b4e011"><span class="section-number-3">1.5.</span> 功能视图：功能模块的定义及其相关逐渐调用关系的确认</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 除去以上诸节所述的组织、业务、流程、数据之外，另外一个需要详细考虑的视图是功能模块。功能是将业务和流程静态化之后的结果，也是对业务和流程进行拆分所产生的更细粒度的表达。功能模板重点强调定义和实现需要执行的各个功能单元，并在此基础上明确这些功能单元之间的调用关系。本系统中所涉及到的主要功能单元模块如下：
@@ -538,8 +537,8 @@
 </div>
 </div>
 
-<div id="outline-container-org07a7d9a" class="outline-2">
-<h2 id="org07a7d9a"><span class="section-number-2">2.</span> 对上述系统设计的补充——Zachman Framework下的增补</h2>
+<div id="outline-container-orgca2aa6d" class="outline-2">
+<h2 id="orgca2aa6d"><span class="section-number-2">2.</span> 对上述系统设计的补充——Zachman Framework下的增补</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 针对实际的图书馆场景，ARIS模型的设计方式并非完美无缺，因此，本章节尝试在之前图书馆管理系统设计方案的基础上基于zachman框架进行补充。Zachman框架是由约翰 扎科曼（John Zachman ）在1987年创立的全球第一个企业架构理论，也是所有企业架构理论的源泉。 一般认为，Zachman框架（Zachman framework）是一种逻辑结构，它旨为信息技术企业提供一种可以理解的信息表述。它可以对企业信息按照要求分类和从不同角度进行表示。Zachman框架的创始人John Zachman早在1987年就提出了这种思想，它全称为企业架构和企业信息系统结构架构(Zachman Framework for Enterprise Architecture and Information Systems Architecture)。Zachman框架提炼和吸收了传统方法中的一些精髓，它是一款独立于信息企业所使用的工具的平台。它可以根据抽象规则定义企业信息的一个方面。
@@ -550,8 +549,8 @@
 </p>
 
 
-<div id="org7ecdef1" class="figure">
-<p><img src="./images/20210713065200.png" alt="20210713065200.png" />
+<div id="org90e648f" class="figure">
+<p><img src="./images/20210713065200.png" alt="20210713065200.png">
 </p>
 </div>
 
@@ -560,16 +559,16 @@
 </p>
 </div>
 
-<div id="outline-container-orgeeacbd2" class="outline-3">
-<h3 id="orgeeacbd2"><span class="section-number-3">2.1.</span> What，How，Who，When，Why? 不同视角下的已有模块的分析</h3>
+<div id="outline-container-org11d1f61" class="outline-3">
+<h3 id="org11d1f61"><span class="section-number-3">2.1.</span> What，How，Who，When，Why? 不同视角下的已有模块的分析</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 按照每列的形式来看，数据、功能、角色、时间序列（流程）都被考虑在内了，唯有动机和地点不够明确。考虑到动机无法作为图书馆管理系统的有效建模工具，所以有关动机层面的辅助信息难以被考虑在内。然而，地点却是本系统不得不需要考虑的一环，下面对其进行简单介绍。
 </p>
 </div>
 </div>
-<div id="outline-container-orgc3cf4ec" class="outline-3">
-<h3 id="orgc3cf4ec"><span class="section-number-3">2.2.</span> Where？</h3>
+<div id="outline-container-org50d3d58" class="outline-3">
+<h3 id="org50d3d58"><span class="section-number-3">2.2.</span> Where？</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 图书馆管理系统在地点上涉及到多个终端，并存在与服务器的交互问题，主要地点汇总如下：
@@ -593,49 +592,49 @@
 </div>
 </div>
 
-<div id="outline-container-org785c7f9" class="outline-2">
-<h2 id="org785c7f9"><span class="section-number-2">3.</span> 系统设计方案的格式化表达——UML视角图</h2>
+<div id="outline-container-org3aedd8e" class="outline-2">
+<h2 id="org3aedd8e"><span class="section-number-2">3.</span> 系统设计方案的格式化表达——UML视角图</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgb88f783" class="outline-3">
-<h3 id="orgb88f783"><span class="section-number-3">3.1.</span> Zachman-where模型下的UML硬件部署图设计</h3>
+<div id="outline-container-org66c968d" class="outline-3">
+<h3 id="org66c968d"><span class="section-number-3">3.1.</span> Zachman-where模型下的UML硬件部署图设计</h3>
 <div class="outline-text-3" id="text-3-1">
 
-<div id="org2f82879" class="figure">
-<p><img src="./images/20210713131137.png" alt="20210713131137.png" />
+<div id="orgfed1a9e" class="figure">
+<p><img src="./images/20210713131137.png" alt="20210713131137.png">
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org5910590" class="outline-3">
-<h3 id="org5910590"><span class="section-number-3">3.2.</span> ARIS模型组织-服务视图下的UML用例图设计</h3>
+<div id="outline-container-org5640b3e" class="outline-3">
+<h3 id="org5640b3e"><span class="section-number-3">3.2.</span> ARIS模型组织-服务视图下的UML用例图设计</h3>
 <div class="outline-text-3" id="text-3-2">
 </div>
-<div id="outline-container-orga913706" class="outline-4">
-<h4 id="orga913706"><span class="section-number-4">3.2.1.</span> 图书馆使用者用例图</h4>
+<div id="outline-container-org2273b5c" class="outline-4">
+<h4 id="org2273b5c"><span class="section-number-4">3.2.1.</span> 图书馆使用者用例图</h4>
 <div class="outline-text-4" id="text-3-2-1">
 
-<div id="org1d8fc4b" class="figure">
-<p><img src="./images/20210713131316.png" alt="20210713131316.png" />
+<div id="orgbe617f1" class="figure">
+<p><img src="./images/20210713131316.png" alt="20210713131316.png">
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgce8f070" class="outline-4">
-<h4 id="orgce8f070"><span class="section-number-4">3.2.2.</span> 图书馆管理者用例图</h4>
+<div id="outline-container-org98bea79" class="outline-4">
+<h4 id="org98bea79"><span class="section-number-4">3.2.2.</span> 图书馆管理者用例图</h4>
 <div class="outline-text-4" id="text-3-2-2">
 
-<div id="org6b3d361" class="figure">
-<p><img src="./images/20210713131427.png" alt="20210713131427.png" />
+<div id="orgaea6bf9" class="figure">
+<p><img src="./images/20210713131427.png" alt="20210713131427.png">
 </p>
 </div>
 
 
 
-<div id="org1b3c194" class="figure">
-<p><img src="./images/20210713131548.png" alt="20210713131548.png" />
+<div id="org4de754e" class="figure">
+<p><img src="./images/20210713131548.png" alt="20210713131548.png">
 </p>
 </div>
 </div>
@@ -643,32 +642,32 @@
 
 
 
-<div id="outline-container-org7627a0b" class="outline-4">
-<h4 id="org7627a0b"><span class="section-number-4">3.2.3.</span> 管理员用例图</h4>
+<div id="outline-container-org85ef2b8" class="outline-4">
+<h4 id="org85ef2b8"><span class="section-number-4">3.2.3.</span> 管理员用例图</h4>
 <div class="outline-text-4" id="text-3-2-3">
 
-<div id="org5a55c12" class="figure">
-<p><img src="./images/20210713131644.png" alt="20210713131644.png" />
+<div id="org71271fb" class="figure">
+<p><img src="./images/20210713131644.png" alt="20210713131644.png">
 </p>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgc34ffcc" class="outline-3">
-<h3 id="orgc34ffcc"><span class="section-number-3">3.3.</span> ARIS模型功能-流程视图下的UML活动图设计</h3>
+<div id="outline-container-orge43d453" class="outline-3">
+<h3 id="orge43d453"><span class="section-number-3">3.3.</span> ARIS模型功能-流程视图下的UML活动图设计</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 由于本系统的活动流程较为简单，因此活动图的设计略去。 
 </p>
 </div>
 </div>
-<div id="outline-container-orgb72bf36" class="outline-3">
-<h3 id="orgb72bf36"><span class="section-number-3">3.4.</span> ARIS模型数据-功能视图下的UML类图设计</h3>
+<div id="outline-container-orgcc9a36b" class="outline-3">
+<h3 id="orgcc9a36b"><span class="section-number-3">3.4.</span> ARIS模型数据-功能视图下的UML类图设计</h3>
 <div class="outline-text-3" id="text-3-4">
 
-<div id="orga01ad3e" class="figure">
-<p><img src="./images/20210714220827.png" alt="20210714220827.png" />
+<div id="org2254c93" class="figure">
+<p><img src="./images/20210714220827.png" alt="20210714220827.png">
 </p>
 </div>
 
@@ -684,43 +683,43 @@
 </div>
 
 
-<div id="outline-container-orgab6b1f8" class="outline-2">
-<h2 id="orgab6b1f8"><span class="section-number-2">4.</span> 一个山寨版交大图书馆管理系统的实现</h2>
+<div id="outline-container-orgbb227e4" class="outline-2">
+<h2 id="orgbb227e4"><span class="section-number-2">4.</span> 一个山寨版交大图书馆管理系统的实现</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 本章节将介绍关于本图书馆管理系统的实现过程，并选取两个侧面进行重点分析。首先是对整个系统的介绍。
 </p>
 </div>
-<div id="outline-container-org9a09269" class="outline-3">
-<h3 id="org9a09269"><span class="section-number-3">4.1.</span> 整体架构</h3>
+<div id="outline-container-orgf9482fb" class="outline-3">
+<h3 id="orgf9482fb"><span class="section-number-3">4.1.</span> 整体架构</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 整体系统主要包含下列五个子系统：门禁子系统，书籍借还查询子系统，查询检索子系统，数据和操作权限管理子系统，数据分析与可视化子系统。下面依次对之进行介绍。
 </p>
 </div>
 
-<div id="outline-container-orgeb2b87c" class="outline-4">
-<h4 id="orgeb2b87c"><span class="section-number-4">4.1.1.</span> 门禁子系统</h4>
+<div id="outline-container-orge9ca18b" class="outline-4">
+<h4 id="orge9ca18b"><span class="section-number-4">4.1.1.</span> 门禁子系统</h4>
 <div class="outline-text-4" id="text-4-1-1">
 <p>
 门禁子系统主要涉及到身份认证和书籍是否归还检测两个问题。针对于身份认证，其实现代码为：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">from servies.Book import Book
-from servies.User import User
-from servies.userlist import userlist
+<pre class="src src-python"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> servies.Book <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> Book
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> servies.User <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> User
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> servies.userlist <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> userlist
 
-class auentication:
-    def __init__(self,ulist):
-	self.ulist=ulist
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">class</span> <span style="color: #c0caf5;">auentication</span>:
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">__init__</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,ulist<span style="color: #a9b1d6;">)</span>:
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.ulist=ulist
 
-    def authentication(self,uid):
-	for ele in self.ulist:
-	    if ele.getId()==uid:
-		return 0
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">authentication</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,uid<span style="color: #a9b1d6;">)</span>:
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">for</span> ele <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">in</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.ulist:
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> ele.getId<span style="color: #a9b1d6;">()</span>==uid:
+                <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> 0
 
-	return 1
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> 1
 </pre>
 </div>
 
@@ -731,125 +730,125 @@ class auentication:
 
 
 <div class="org-src-container">
-<pre class="src src-python">from servies.Book import Book
-from servies.User import User
-from servies.userlist import userlist
-from servies.userbooklist import userbooklist
-from servies.booklist import booklist
+<pre class="src src-python"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> servies.Book <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> Book
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> servies.User <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> User
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> servies.userlist <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> userlist
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> servies.userbooklist <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> userbooklist
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> servies.booklist <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> booklist
 
 
-class OutAuentication:
-    def __init__(self,ulist,booklist,userbooklist):
-	self.ulist=ulist
-	self.booklist=booklist
-	self.ublist=userbooklist
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">class</span> <span style="color: #c0caf5;">OutAuentication</span>:
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">__init__</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,ulist,booklist,userbooklist<span style="color: #a9b1d6;">)</span>:
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.ulist=ulist
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.<span style="color: #c0caf5; background-color: #372E40;">booklist</span>=booklist
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.<span style="color: #c0caf5; background-color: #372E40;">ublist</span>=userbooklist
 
-    def authentication(self,uid,bkid):
-	for ele in self.ulist:
-	    if ele.getId()==uid:
-		print("user authentication Success.")
-		booklist=self.ublist.generateBooklistForAUser(uid)
-		for book in booklist:
-		    if book.getId()==bkid:
-			print("Case OK.")
-			return 0
-		else:
-		    ring()
-		    print("WARNING: no such cases for user id: {} book id: {}".format(uid,bkid))
-		    return 1
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">authentication</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,uid,bkid<span style="color: #a9b1d6;">)</span>:
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">for</span> ele <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">in</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.ulist:
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> ele.getId<span style="color: #a9b1d6;">()</span>==uid:
+                <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"user authentication Success."</span><span style="color: #a9b1d6;">)</span>
+                booklist=<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.ublist.generateBooklistForAUser<span style="color: #a9b1d6;">(</span>uid<span style="color: #a9b1d6;">)</span>
+                <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">for</span> book <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">in</span> booklist:
+                    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> book.getId<span style="color: #a9b1d6;">()</span>==bkid:
+                        <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"Case OK."</span><span style="color: #a9b1d6;">)</span>
+                        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> 0
+                <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">else</span>:
+                    ring<span style="color: #a9b1d6;">()</span>
+                    <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"WARNING: no such cases for user id: {} book id: {}"</span>.<span style="color: #f7768e;">format</span><span style="color: #7aa2f7;">(</span>uid,bkid<span style="color: #7aa2f7;">)</span><span style="color: #a9b1d6;">)</span>
+                    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> 1
 
-	print("NO FOUND")
-	return 2
+        <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"NO FOUND"</span><span style="color: #a9b1d6;">)</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> 2
 
-def ring():
-    #该函数驱动警报
-    pass
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">ring</span><span style="color: #a9b1d6;">()</span>:
+    <span style="color: #51587a; font-style: italic;">#</span><span style="color: #51587a; font-style: italic;">&#35813;&#20989;&#25968;&#39537;&#21160;&#35686;&#25253;</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">pass</span>
 
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org11b4393" class="outline-4">
-<h4 id="org11b4393"><span class="section-number-4">4.1.2.</span> 书籍借还子系统</h4>
+<div id="outline-container-org682aff2" class="outline-4">
+<h4 id="org682aff2"><span class="section-number-4">4.1.2.</span> 书籍借还子系统</h4>
 <div class="outline-text-4" id="text-4-1-2">
 <p>
 书籍借还及查询子系统是图书馆信息管理接口中的重要部分，也是实际暴露给图书馆使用用户和图书馆管理员的重要参与部分，该部分的核心处理代码为：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">from servies.Book import Book
-from servies.User import User
-from servies.userlist import userlist
-from servies.userbooklist import userbooklist
-from servies.userbookhistorylist import userbookhistorylist
-from servies.booklist import booklist
-from servies.Case import Case
-from IDAuentication.auentication import auentication
-from IDAuentication.bookRelevant import OutAuentication
-import time
+<pre class="src src-python"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> servies.Book <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> Book
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> servies.User <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> User
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> servies.userlist <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> userlist
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> servies.userbooklist <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> userbooklist
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> servies.userbookhistorylist <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> userbookhistorylist
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> servies.booklist <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> booklist
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> servies.Case <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> Case
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> IDAuentication.auentication <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> auentication
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> IDAuentication.bookRelevant <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> OutAuentication
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> time
 
-class ManagerMachine:
-    def __init__(self,ubl,ul,bl,ubhl):
-	self.ubl=ubl
-	self.ubhl=ubhl
-	self.ul=ul
-	self.bl=bl
-	self.auentication=auentication(ul)
-	self.outau=OutAuentication(ul,bl,ubl)
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">class</span> <span style="color: #c0caf5;">ManagerMachine</span>:
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">__init__</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,ubl,ul,bl,ubhl<span style="color: #a9b1d6;">)</span>:
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.ubl=ubl
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.<span style="color: #c0caf5; background-color: #372E40;">ubhl</span>=ubhl
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.<span style="color: #c0caf5; background-color: #372E40;">ul</span>=ul
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.<span style="color: #c0caf5; background-color: #372E40;">bl</span>=bl
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.<span style="color: #c0caf5; background-color: #372E40;">auentication</span>=auentication<span style="color: #a9b1d6;">(</span>ul<span style="color: #a9b1d6;">)</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.<span style="color: #c0caf5; background-color: #372E40;">outau</span>=OutAuentication<span style="color: #a9b1d6;">(</span>ul,bl,ubl<span style="color: #a9b1d6;">)</span>
 
-    def borrow(self,uid,bid):
-	if 1==self.auentication.authentication(uid):
-	    print("auentication FAIDED...")
-	else:
-	    print("auentication SC!")
-	    self.ubl.append(Case(str(time.time()),uid,bid,str(time.time())))
-	    pastb=self.bl.query(bid)
-	    self.bl.change(bid,pastb.setIsInLib(0))
-	    self.refreshAll()
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">borrow</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,uid,bid<span style="color: #a9b1d6;">)</span>:
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> 1==<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.auentication.authentication<span style="color: #a9b1d6;">(</span>uid<span style="color: #a9b1d6;">)</span>:
+            <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"auentication FAIDED..."</span><span style="color: #a9b1d6;">)</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">else</span>:
+            <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"auentication SC!"</span><span style="color: #a9b1d6;">)</span>
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.ubl.append<span style="color: #a9b1d6;">(</span>Case<span style="color: #7aa2f7;">(</span><span style="color: #f7768e;">str</span><span style="color: #ff9e64;">(</span>time.time<span style="color: #73daca;">()</span><span style="color: #ff9e64;">)</span>,uid,bid,<span style="color: #f7768e;">str</span><span style="color: #ff9e64;">(</span>time.time<span style="color: #73daca;">()</span><span style="color: #ff9e64;">)</span><span style="color: #7aa2f7;">)</span><span style="color: #a9b1d6;">)</span>
+            pastb=<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.bl.query<span style="color: #a9b1d6;">(</span>bid<span style="color: #a9b1d6;">)</span>
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.bl.change<span style="color: #a9b1d6;">(</span>bid,pastb.setIsInLib<span style="color: #7aa2f7;">(</span>0<span style="color: #7aa2f7;">)</span><span style="color: #a9b1d6;">)</span>
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.refreshAll<span style="color: #a9b1d6;">()</span>
 
-    def returnBack(self,uid,bid):
-	if 0==self.outau.authentication(uid,bid):
-	    print("Auenticatin Success.")
-	    self.ubhl.append(Case(str(time.time()),uid,bid,str(time.time())))
-	    for ele in self.ubl:
-		if ele.getUserID==uid and ele.getBookID==bid:
-		    self.ubl.remove(ele)
-	    pastb=self.bl.query(bid)
-	    self.bl.change(bid,pastb.setIsInLib(1))
-	    self.refreshAll()
-	else:
-	    print("ERROR!. please Contact the Manager for HELP.")
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">returnBack</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,uid,bid<span style="color: #a9b1d6;">)</span>:
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> 0==<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.outau.authentication<span style="color: #a9b1d6;">(</span>uid,bid<span style="color: #a9b1d6;">)</span>:
+            <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"Auenticatin Success."</span><span style="color: #a9b1d6;">)</span>
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.ubhl.append<span style="color: #a9b1d6;">(</span>Case<span style="color: #7aa2f7;">(</span><span style="color: #f7768e;">str</span><span style="color: #ff9e64;">(</span>time.time<span style="color: #73daca;">()</span><span style="color: #ff9e64;">)</span>,uid,bid,<span style="color: #f7768e;">str</span><span style="color: #ff9e64;">(</span>time.time<span style="color: #73daca;">()</span><span style="color: #ff9e64;">)</span><span style="color: #7aa2f7;">)</span><span style="color: #a9b1d6;">)</span>
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">for</span> ele <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">in</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.ubl:
+                <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> ele.getUserID==uid <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">and</span> ele.getBookID==bid:
+                    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.ubl.remove<span style="color: #a9b1d6;">(</span>ele<span style="color: #a9b1d6;">)</span>
+            pastb=<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.bl.query<span style="color: #a9b1d6;">(</span>bid<span style="color: #a9b1d6;">)</span>
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.bl.change<span style="color: #a9b1d6;">(</span>bid,pastb.setIsInLib<span style="color: #7aa2f7;">(</span>1<span style="color: #7aa2f7;">)</span><span style="color: #a9b1d6;">)</span>
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.refreshAll<span style="color: #a9b1d6;">()</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">else</span>:
+            <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"ERROR!. please Contact the Manager for HELP."</span><span style="color: #a9b1d6;">)</span>
 
-    def queryInfo(self,uid):
-	if 1==self.auentication.authentication(uid):
-	    print("Authentication FAIDED.")
-	    return None,None
-	else:
-	    print("LOGIN Success.")
-	    borrowlist=self.ubl.generateBookListForAUser(uid)
-	    borrowhistorylist=self.ubhl.generateBookHistoryListForAUser(uid)
-	    print("The borrow list is: {}".format(borrowlist))
-	    print("The borrow history is: {}".format(borrowhistorylist))
-	    return borrowlist,borrowhistorylist
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">queryInfo</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,uid<span style="color: #a9b1d6;">)</span>:
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> 1==<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.auentication.authentication<span style="color: #a9b1d6;">(</span>uid<span style="color: #a9b1d6;">)</span>:
+            <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"Authentication FAIDED."</span><span style="color: #a9b1d6;">)</span>
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #ff9e64;">None</span>,<span style="color: #ff9e64;">None</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">else</span>:
+            <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"LOGIN Success."</span><span style="color: #a9b1d6;">)</span>
+            borrowlist=<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.ubl.generateBookListForAUser<span style="color: #a9b1d6;">(</span>uid<span style="color: #a9b1d6;">)</span>
+            borrowhistorylist=<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.ubhl.generateBookHistoryListForAUser<span style="color: #a9b1d6;">(</span>uid<span style="color: #a9b1d6;">)</span>
+            <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"The borrow list is: {}"</span>.<span style="color: #f7768e;">format</span><span style="color: #7aa2f7;">(</span>borrowlist<span style="color: #7aa2f7;">)</span><span style="color: #a9b1d6;">)</span>
+            <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"The borrow history is: {}"</span>.<span style="color: #f7768e;">format</span><span style="color: #7aa2f7;">(</span>borrowhistorylist<span style="color: #7aa2f7;">)</span><span style="color: #a9b1d6;">)</span>
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> borrowlist,borrowhistorylist
 
-    def editABookIsInState(self,bid,state):
-	pastb=self.bl.query(bid)
-	self.bl.change(bid,pastb.setIsInLib(state))
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">editABookIsInState</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,bid,state<span style="color: #a9b1d6;">)</span>:
+        pastb=<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.bl.query<span style="color: #a9b1d6;">(</span>bid<span style="color: #a9b1d6;">)</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.bl.change<span style="color: #a9b1d6;">(</span>bid,pastb.setIsInLib<span style="color: #7aa2f7;">(</span>state<span style="color: #7aa2f7;">)</span><span style="color: #a9b1d6;">)</span>
 
-    def editAUserBookState(self,uid,bid,newCase):
-	if 0==self.outau.authentication(uid,bid):
-	    print("Auenticatin Success.")
-	    for i,c in enumerate(self.ubl):
-		if c.getUserID==uid and c.getBookID==bid:
-		    self.ubl[i]=newCase
-		    break
-	    self.refreshAll()
-	else:
-	    print("ERROR!. please Contact the Manager for HELP.")
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">editAUserBookState</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,uid,bid,newCase<span style="color: #a9b1d6;">)</span>:
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> 0==<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.outau.authentication<span style="color: #a9b1d6;">(</span>uid,bid<span style="color: #a9b1d6;">)</span>:
+            <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"Auenticatin Success."</span><span style="color: #a9b1d6;">)</span>
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">for</span> i,c <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">in</span> <span style="color: #f7768e;">enumerate</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.ubl<span style="color: #a9b1d6;">)</span>:
+                <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> c.getUserID==uid <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">and</span> c.getBookID==bid:
+                    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.ubl<span style="color: #a9b1d6;">[</span><span style="color: #c0caf5; background-color: #372E40;">i</span><span style="color: #a9b1d6;">]</span>=newCase
+                    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">break</span>
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.refreshAll<span style="color: #a9b1d6;">()</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">else</span>:
+            <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"ERROR!. please Contact the Manager for HELP."</span><span style="color: #a9b1d6;">)</span>
 
-    def helpReturnBack(self,uid,bid):
-	self.returnBack(uid,bid)
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">helpReturnBack</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,uid,bid<span style="color: #a9b1d6;">)</span>:
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.returnBack<span style="color: #a9b1d6;">(</span>uid,bid<span style="color: #a9b1d6;">)</span>
 </pre>
 </div>
 
@@ -859,16 +858,16 @@ class ManagerMachine:
 </div>
 </div>
 
-<div id="outline-container-orgc2acb90" class="outline-4">
-<h4 id="orgc2acb90"><span class="section-number-4">4.1.3.</span> 查询检索子系统</h4>
+<div id="outline-container-org19b4c83" class="outline-4">
+<h4 id="org19b4c83"><span class="section-number-4">4.1.3.</span> 查询检索子系统</h4>
 <div class="outline-text-4" id="text-4-1-3">
 <p>
 略。目前的检索系统比较简单，主要还是对结构化数据库的检索，检索关键词也是人工设置的，同信息检索领域基于TF-IDF粗筛+CO-BERT精细检索的模式还有很大的区别，因此从略。
 </p>
 </div>
 </div>
-<div id="outline-container-orgc8740b1" class="outline-4">
-<h4 id="orgc8740b1"><span class="section-number-4">4.1.4.</span> 数据和操作权限管理子系统</h4>
+<div id="outline-container-org4ce8a84" class="outline-4">
+<h4 id="org4ce8a84"><span class="section-number-4">4.1.4.</span> 数据和操作权限管理子系统</h4>
 <div class="outline-text-4" id="text-4-1-4">
 <p>
 数据和操作权限管理子系统是在用户-角色-动作控制模型之上根据实际系统需求而封装的管理系统，该系统用以规定何种用户具有何种角色，何种角色拥有执行哪些动作的权限等问题，针对于权限的考虑，主要包括可以访问哪些数据、对哪些数据执行何种类型的操作、以及其他一些操作的执行权限。在本管理系统中，主要针对RBAC管理、书籍管理、门禁管理、数据访问管理等四个侧面进行了权限控制，具体如下：
@@ -913,91 +912,91 @@ class ManagerMachine:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">from pyRBAC.rbac import RBAC
-from BookManager.Machine.ManagerMachine import ManagerMachine
-from IDAuentication.auentication import auentication
-from IDAuentication.bookRelevant import OutAuentication
-from servies.Mylist import Mylist
+<pre class="src src-python"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> pyRBAC.rbac <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> RBAC
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> BookManager.Machine.ManagerMachine <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> ManagerMachine
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> IDAuentication.auentication <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> auentication
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> IDAuentication.bookRelevant <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> OutAuentication
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">from</span> servies.Mylist <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">import</span> Mylist
 
-class myRBACManager(RBAC):
-    def __init__(self,userlist,roleslist,actionlist,nactionlist,urm,ram):
-	super(myRBACManager, self).__init__(userlist,roleslist,actionlist,nactionlist,urm,ram)
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">class</span> <span style="color: #c0caf5;">myRBACManager</span><span style="color: #a9b1d6;">(</span>RBAC<span style="color: #a9b1d6;">)</span>:
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">__init__</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,userlist,roleslist,actionlist,nactionlist,urm,ram<span style="color: #a9b1d6;">)</span>:
+        <span style="color: #f7768e;">super</span><span style="color: #a9b1d6;">(</span>myRBACManager, <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span><span style="color: #a9b1d6;">)</span>.__init__<span style="color: #a9b1d6;">(</span>userlist,roleslist,actionlist,nactionlist,urm,ram<span style="color: #a9b1d6;">)</span>
 
-    # 新增两个所需要的方法
-    def changeUserRoleMatrix(self,urm):
-	# user_list=self.user_list
-	# rl=self.role_list
-	# al=self.action_list
-	# nal=self.cannot_action_list
+    <span style="color: #51587a; font-style: italic;"># </span><span style="color: #51587a; font-style: italic;">&#26032;&#22686;&#20004;&#20010;&#25152;&#38656;&#35201;&#30340;&#26041;&#27861;</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">changeUserRoleMatrix</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,urm<span style="color: #a9b1d6;">)</span>:
+        <span style="color: #51587a; font-style: italic;"># </span><span style="color: #51587a; font-style: italic;">user_list=self.user_list</span>
+        <span style="color: #51587a; font-style: italic;"># </span><span style="color: #51587a; font-style: italic;">rl=self.role_list</span>
+        <span style="color: #51587a; font-style: italic;"># </span><span style="color: #51587a; font-style: italic;">al=self.action_list</span>
+        <span style="color: #51587a; font-style: italic;"># </span><span style="color: #51587a; font-style: italic;">nal=self.cannot_action_list</span>
 
-	# urm=self.user_role_matrix
-	# ram=self.role_action_matrix
+        <span style="color: #51587a; font-style: italic;"># </span><span style="color: #51587a; font-style: italic;">urm=self.user_role_matrix</span>
+        <span style="color: #51587a; font-style: italic;"># </span><span style="color: #51587a; font-style: italic;">ram=self.role_action_matrix</span>
 
-	self.user_role_matrix=urm
-	self.reloadForMap()
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.<span style="color: #c0caf5; background-color: #372E40;">user_role_matrix</span>=urm
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.reloadForMap<span style="color: #a9b1d6;">()</span>
 
-    def changeRoleUserMatrix(self,ram):
-	self.role_action_matrix=ram
-	self.reloadForMap()
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">changeRoleUserMatrix</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,ram<span style="color: #a9b1d6;">)</span>:
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.<span style="color: #c0caf5; background-color: #372E40;">role_action_matrix</span>=ram
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.reloadForMap<span style="color: #a9b1d6;">()</span>
 
-    def say_cannot(self):
-	print("ERROR! YOU CANNOT DO THIS!!!")
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">say_cannot</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span><span style="color: #a9b1d6;">)</span>:
+        <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"ERROR! YOU CANNOT DO THIS!!!"</span><span style="color: #a9b1d6;">)</span>
 
-if __name__=="__main__":
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> <span style="color: #f7768e;">__name__</span>==<span style="color: #9ece6a; font-style: italic;">"__main__"</span>:
 
 
 
-    users=["yan1", "yan2", "yan3","bo1","bo2","bo3","d1","d2","d3","teacher","others","manager","admin"]
-    roles=["lib-user","lib-manager","sys-manager"]
-    actions=[myRBACManager.addUser,myRBACManager.addAction,myRBACManager.addRole,
-	     myRBACManager.removeUser,myRBACManager.removeAction,myRBACManager.removeRole,
-	     myRBACManager.changeRoleUserMatrix,myRBACManager.changeUserRoleMatrix,
-	     ManagerMachine.borrow, ManagerMachine.returnBack,ManagerMachine.queryInfo,
-	     ManagerMachine.editAUserBookState,ManagerMachine.editABookIsInState,ManagerMachine.helpReturnBack,
-	     auentication.authentication,OutAuentication.authentication,
-	     Mylist.add,Mylist.delete,Mylist.Change,Mylist.queryId,
-	     ]
+    users=<span style="color: #a9b1d6;">[</span><span style="color: #9ece6a; font-style: italic;">"yan1"</span>, <span style="color: #9ece6a; font-style: italic;">"yan2"</span>, <span style="color: #9ece6a; font-style: italic;">"yan3"</span>,<span style="color: #9ece6a; font-style: italic;">"bo1"</span>,<span style="color: #9ece6a; font-style: italic;">"bo2"</span>,<span style="color: #9ece6a; font-style: italic;">"bo3"</span>,<span style="color: #9ece6a; font-style: italic;">"d1"</span>,<span style="color: #9ece6a; font-style: italic;">"d2"</span>,<span style="color: #9ece6a; font-style: italic;">"d3"</span>,<span style="color: #9ece6a; font-style: italic;">"teacher"</span>,<span style="color: #9ece6a; font-style: italic;">"others"</span>,<span style="color: #9ece6a; font-style: italic;">"manager"</span>,<span style="color: #9ece6a; font-style: italic;">"admin"</span><span style="color: #a9b1d6;">]</span>
+    roles=<span style="color: #a9b1d6;">[</span><span style="color: #9ece6a; font-style: italic;">"lib-user"</span>,<span style="color: #9ece6a; font-style: italic;">"lib-manager"</span>,<span style="color: #9ece6a; font-style: italic;">"sys-manager"</span><span style="color: #a9b1d6;">]</span>
+    actions=<span style="color: #a9b1d6;">[</span>myRBACManager.addUser,myRBACManager.addAction,myRBACManager.addRole,
+             myRBACManager.removeUser,myRBACManager.removeAction,myRBACManager.removeRole,
+             myRBACManager.changeRoleUserMatrix,myRBACManager.changeUserRoleMatrix,
+             ManagerMachine.borrow, ManagerMachine.returnBack,ManagerMachine.queryInfo,
+             ManagerMachine.editAUserBookState,ManagerMachine.editABookIsInState,ManagerMachine.helpReturnBack,
+             auentication.authentication,OutAuentication.authentication,
+             Mylist.add,Mylist.delete,Mylist.Change,Mylist.queryId,
+             <span style="color: #a9b1d6;">]</span>
 
-    cannot_actions=[myRBACManager.say_cannot]*len(actions)
+    cannot_actions=<span style="color: #a9b1d6;">[</span>myRBACManager.say_cannot<span style="color: #a9b1d6;">]</span>*<span style="color: #f7768e;">len</span><span style="color: #a9b1d6;">(</span>actions<span style="color: #a9b1d6;">)</span>
 
-    user_role_matrix=[]
-    for u in users:
-	if u=="manager":
-	    user_role_matrix.append([1,1,0])
-	elif u=="admin":
-	    user_role_matrix.append([1,1,1])
-	else:
-	    user_role_matrix.append([1,0,0])
+    user_role_matrix=<span style="color: #a9b1d6;">[]</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">for</span> u <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">in</span> users:
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> u==<span style="color: #9ece6a; font-style: italic;">"manager"</span>:
+            user_role_matrix.append<span style="color: #a9b1d6;">(</span><span style="color: #7aa2f7;">[</span>1,1,0<span style="color: #7aa2f7;">]</span><span style="color: #a9b1d6;">)</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">elif</span> u==<span style="color: #9ece6a; font-style: italic;">"admin"</span>:
+            user_role_matrix.append<span style="color: #a9b1d6;">(</span><span style="color: #7aa2f7;">[</span>1,1,1<span style="color: #7aa2f7;">]</span><span style="color: #a9b1d6;">)</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">else</span>:
+            user_role_matrix.append<span style="color: #a9b1d6;">(</span><span style="color: #7aa2f7;">[</span>1,0,0<span style="color: #7aa2f7;">]</span><span style="color: #a9b1d6;">)</span>
 
-    role_action_matrix=[
-			[0,0,0,
-			 0,0,0,
-			 0,0,
-			 1,1,1,
-			 0,0,0,
-			 1,1,
-			 0,0,0,0],
-			[0,0,0,
-			 0,0,0,
-			 0,0,
-			 1,1,1,
-			 1,1,1,
-			 1,1,
-			 0,0,0,0],
-			[1,1,1,
-			 1,1,1,
-			 1,1,
-			 1,1,1,
-			 1,1,1,
-			 1,1,
-			 1,1,1,1]
+    role_action_matrix=<span style="color: #a9b1d6;">[</span>
+                        <span style="color: #7aa2f7;">[</span>0,0,0,
+                         0,0,0,
+                         0,0,
+                         1,1,1,
+                         0,0,0,
+                         1,1,
+                         0,0,0,0<span style="color: #7aa2f7;">]</span>,
+                        <span style="color: #7aa2f7;">[</span>0,0,0,
+                         0,0,0,
+                         0,0,
+                         1,1,1,
+                         1,1,1,
+                         1,1,
+                         0,0,0,0<span style="color: #7aa2f7;">]</span>,
+                        <span style="color: #7aa2f7;">[</span>1,1,1,
+                         1,1,1,
+                         1,1,
+                         1,1,1,
+                         1,1,1,
+                         1,1,
+                         1,1,1,1<span style="color: #7aa2f7;">]</span>
 
-    ]
+    <span style="color: #a9b1d6;">]</span>
 
-    my_RBAC=myRBACManager(users,roles,actions,cannot_actions,user_role_matrix,role_action_matrix)
-    print(my_RBAC.return_actions("yan1",myRBACManager.addAction))
-    result=my_RBAC.return_actions("yan1",myRBACManager.addAction)
-    result(my_RBAC)
+    my_RBAC=myRBACManager<span style="color: #a9b1d6;">(</span>users,roles,actions,cannot_actions,user_role_matrix,role_action_matrix<span style="color: #a9b1d6;">)</span>
+    <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span>my_RBAC.return_actions<span style="color: #7aa2f7;">(</span><span style="color: #9ece6a; font-style: italic;">"yan1"</span>,myRBACManager.addAction<span style="color: #7aa2f7;">)</span><span style="color: #a9b1d6;">)</span>
+    result=my_RBAC.return_actions<span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"yan1"</span>,myRBACManager.addAction<span style="color: #a9b1d6;">)</span>
+    result<span style="color: #a9b1d6;">(</span>my_RBAC<span style="color: #a9b1d6;">)</span>
 </pre>
 </div>
 
@@ -1007,8 +1006,8 @@ if __name__=="__main__":
 </div>
 </div>
 
-<div id="outline-container-orga822128" class="outline-4">
-<h4 id="orga822128"><span class="section-number-4">4.1.5.</span> 数据可视化子系统</h4>
+<div id="outline-container-org4ca9510" class="outline-4">
+<h4 id="org4ca9510"><span class="section-number-4">4.1.5.</span> 数据可视化子系统</h4>
 <div class="outline-text-4" id="text-4-1-5">
 <p>
 数据可视化旨在将数据库结果通过可视化的结果展现出来，同样也是老师课上所讲的重要一环。由于图书馆业务更偏向传统的、结构化的数据，因而数据的可视化更多体现在一些关键统计值的展现和传统图标的生成上，此处重点介绍该子系统的可视化过程。请在本章最后一小节查看实现细节。
@@ -1017,19 +1016,19 @@ if __name__=="__main__":
 </div>
 </div>
 
-<div id="outline-container-org67c3f4d" class="outline-3">
-<h3 id="org67c3f4d"><span class="section-number-3">4.2.</span> RBAC：用户-角色-动作 控制体系的实现及对该体系的管理</h3>
+<div id="outline-container-org7edba32" class="outline-3">
+<h3 id="org7edba32"><span class="section-number-3">4.2.</span> RBAC：用户-角色-动作 控制体系的实现及对该体系的管理</h3>
 <div class="outline-text-3" id="text-4-2">
 </div>
-<div id="outline-container-org75a90de" class="outline-4">
-<h4 id="org75a90de"><span class="section-number-4">4.2.1.</span> RBAC的实现</h4>
+<div id="outline-container-orgb1f2244" class="outline-4">
+<h4 id="orgb1f2244"><span class="section-number-4">4.2.1.</span> RBAC的实现</h4>
 <div class="outline-text-4" id="text-4-2-1">
 <p>
 RBAC源于对系统中不同角色进行体系化管理的实践，因而，RBAC的重点在于角色。角色充当了用户请求端和响应端的桥梁，因而可以使得权限控制、对象化重载成为可能。一个完善的RBAC，本身就是一个系统。下面对其进行详细介绍。
 </p>
 </div>
-<div id="outline-container-orga002b31" class="outline-5">
-<h5 id="orga002b31"><span class="section-number-5">4.2.1.1.</span> user，role，action</h5>
+<div id="outline-container-org8029517" class="outline-5">
+<h5 id="org8029517"><span class="section-number-5">4.2.1.1.</span> user，role，action</h5>
 <div class="outline-text-5" id="text-4-2-1-1">
 <p>
 经典RBAC中，主要包含三个层面的对象，分别是用户、角色和动作。其中用户和角色可以理解为数据对象，而动作可以理解为规则对象。在本库中，前二者基于字符串进行定义，动作则是一个指向对象用户的特定方法的指针。
@@ -1040,27 +1039,27 @@ RBAC源于对系统中不同角色进行体系化管理的实践，因而，RBAC
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">self.user_roles_dict={}
-	for index, user in enumerate(self.user_list):
-	    self.user_roles_dict[user]=[]
-	    index_role_list=self.user_role_matrix[index]
-	    for jndex, ele in enumerate(index_role_list):
-		if ele-0==0.:
-		    continue
-		else:
-		    self.user_roles_dict[user].append(self.role_list[jndex])
+<pre class="src src-python"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.<span style="color: #c0caf5; background-color: #372E40;">user_roles_dict</span>=<span style="color: #a9b1d6;">{}</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">for</span> index, user <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">in</span> <span style="color: #f7768e;">enumerate</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.user_list<span style="color: #a9b1d6;">)</span>:
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.<span style="color: #c0caf5; background-color: #372E40;">user_roles_dict</span><span style="color: #a9b1d6;">[</span><span style="color: #c0caf5; background-color: #372E40;">user</span><span style="color: #a9b1d6;">]</span>=<span style="color: #a9b1d6;">[]</span>
+            <span style="color: #c0caf5; background-color: #372E40;">index_role_list</span>=<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.user_role_matrix<span style="color: #a9b1d6;">[</span>index<span style="color: #a9b1d6;">]</span>
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">for</span> jndex, ele <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">in</span> <span style="color: #f7768e;">enumerate</span><span style="color: #a9b1d6;">(</span>index_role_list<span style="color: #a9b1d6;">)</span>:
+                <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> ele-0==0.:
+                    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">continue</span>
+                <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">else</span>:
+                    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.user_roles_dict<span style="color: #a9b1d6;">[</span>user<span style="color: #a9b1d6;">]</span>.append<span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.role_list<span style="color: #7aa2f7;">[</span>jndex<span style="color: #7aa2f7;">]</span><span style="color: #a9b1d6;">)</span>
 
-	print("&gt;&gt;&gt;Begin to construct map from role to actions.")
-	self.action_roles_dict={}
-	for index, action in enumerate(self.action_list):
-	    self.action_roles_dict[action]=[]
+        <span style="color: #f7768e;">print</span><span style="color: #a9b1d6;">(</span><span style="color: #9ece6a; font-style: italic;">"&gt;&gt;&gt;Begin to construct map from role to actions."</span><span style="color: #a9b1d6;">)</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.<span style="color: #c0caf5; background-color: #372E40;">action_roles_dict</span>=<span style="color: #a9b1d6;">{}</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">for</span> index, action <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">in</span> <span style="color: #f7768e;">enumerate</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.action_list<span style="color: #a9b1d6;">)</span>:
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.<span style="color: #c0caf5; background-color: #372E40;">action_roles_dict</span><span style="color: #a9b1d6;">[</span><span style="color: #c0caf5; background-color: #372E40;">action</span><span style="color: #a9b1d6;">]</span>=<span style="color: #a9b1d6;">[]</span>
 
-	    index_roles_list=(self.role_action_matrix.T)[index]
-	    for jndex,ele in enumerate(index_roles_list):
-		if ele-0==0.:
-		    continue
-		else:
-		    self.action_roles_dict[action].append((self.role_list[jndex]))
+            <span style="color: #c0caf5; background-color: #372E40;">index_roles_list</span>=<span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.role_action_matrix.T<span style="color: #a9b1d6;">)[</span>index<span style="color: #a9b1d6;">]</span>
+            <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">for</span> jndex,ele <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">in</span> <span style="color: #f7768e;">enumerate</span><span style="color: #a9b1d6;">(</span>index_roles_list<span style="color: #a9b1d6;">)</span>:
+                <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> ele-0==0.:
+                    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">continue</span>
+                <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">else</span>:
+                    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.action_roles_dict<span style="color: #a9b1d6;">[</span>action<span style="color: #a9b1d6;">]</span>.append<span style="color: #a9b1d6;">(</span><span style="color: #7aa2f7;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.role_list<span style="color: #ff9e64;">[</span>jndex<span style="color: #ff9e64;">]</span><span style="color: #7aa2f7;">)</span><span style="color: #a9b1d6;">)</span>
 </pre>
 </div>
 
@@ -1078,93 +1077,93 @@ RBAC源于对系统中不同角色进行体系化管理的实践，因而，RBAC
 </div>
 </div>
 
-<div id="outline-container-orgd660c97" class="outline-5">
-<h5 id="orgd660c97"><span class="section-number-5">4.2.1.2.</span> 对用户、角色、权限极其之间关系的管理：增、删、改、查</h5>
+<div id="outline-container-orgcb2cbe8" class="outline-5">
+<h5 id="orgcb2cbe8"><span class="section-number-5">4.2.1.2.</span> 对用户、角色、权限极其之间关系的管理：增、删、改、查</h5>
 <div class="outline-text-5" id="text-4-2-1-2">
 <p>
 此处的增删改查都是面向RBAC数据而言的。当然，关于这些操作本身的权限问题，将在对RBAC的管理中进行介绍。增删改查的操作，本质上是改变了RBAC所维护的三大对象的列表，同时将两个稀疏矩阵进行修改，最终在此基础上重新加载映射hash表，以等待查询。此处将部分代码作为示例展示：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">def addUser(self,user,user_roles_list=None, user_roles_dict=None):
-    """add `user` to RBAC system, with user-role-list, if not, use user-roles-dict"""
+<pre class="src src-python"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">addUser</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,user,user_roles_list=<span style="color: #ff9e64;">None</span>, user_roles_dict=<span style="color: #ff9e64;">None</span><span style="color: #a9b1d6;">)</span>:
+    <span style="color: #7c819b; font-style: italic;">"""add `user` to RBAC system, with user-role-list, if not, use user-roles-dict"""</span>
 
-    self.user_list.append(user)
-    user_role_lss=self.array2lists(self.user_role_matrix)
-    if user_roles_list is not None:
-	user_role_lss.append(user_role_lss)
-    else:
-	user_role_lss.append(user_roles_dict[user])
-    self.user_role_matrix=np.array(user_role_lss)
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.user_list.append<span style="color: #a9b1d6;">(</span>user<span style="color: #a9b1d6;">)</span>
+    user_role_lss=<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.array2lists<span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.user_role_matrix<span style="color: #a9b1d6;">)</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> user_roles_list <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">is</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">not</span> <span style="color: #ff9e64;">None</span>:
+        user_role_lss.append<span style="color: #a9b1d6;">(</span>user_role_lss<span style="color: #a9b1d6;">)</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">else</span>:
+        user_role_lss.append<span style="color: #a9b1d6;">(</span>user_roles_dict<span style="color: #7aa2f7;">[</span>user<span style="color: #7aa2f7;">]</span><span style="color: #a9b1d6;">)</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.user_role_matrix=np.array<span style="color: #a9b1d6;">(</span>user_role_lss<span style="color: #a9b1d6;">)</span>
 
-    self.reloadForMap()
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.reloadForMap<span style="color: #a9b1d6;">()</span>
 
-def addAction(self, action,cannot_action_list, action_roles_list=None, action_roles_dict=None):
-    """add `action` to RBAC system, with action-roles-list, if not, use action-roles-dict"""
-
-
-    self.action_list.append(action)
-    self.cannot_action_list.append(cannot_action)
-
-    action_role_lss=self.array2lists(self.role_action_matrix.T)
-    if action_roles_list is not None:
-	action_role_lss.append(action_role_lss)
-    else:
-	action_role_lss.append(action_roles_dict[action])
-    self.role_action_matrix=np.array(action_role_lss).T
-    self.reloadForMap()
-
-def addRole(self, role, role_users_list, role_action_list):
-    """add `role` to RBAC system, with role-users-list, if not, use role-action-dict"""
-
-    ## add role
-    self.role_list.append(role)
-
-    ## update user role matrix
-    user_role_lss=self.array2lists(self.user_role_matrix)
-    user_role_lss.append(role_users_list)
-    self.user_role_matrix=np.array(user_role_lss)
-
-    # updat role action matrix
-    self.role_action_matrix=np.array(self.array2lists(self.role_action_matrix).append(role_action_list))
-
-    self.reloadForMap()
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">addAction</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>, action,cannot_action_list, action_roles_list=<span style="color: #ff9e64;">None</span>, action_roles_dict=<span style="color: #ff9e64;">None</span><span style="color: #a9b1d6;">)</span>:
+    <span style="color: #7c819b; font-style: italic;">"""add `action` to RBAC system, with action-roles-list, if not, use action-roles-dict"""</span>
 
 
-def removeUser(self,user):
-    """remove `user` from RBAC system"""
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.action_list.append<span style="color: #a9b1d6;">(</span>action<span style="color: #a9b1d6;">)</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.cannot_action_list.append<span style="color: #a9b1d6;">(</span>cannot_action<span style="color: #a9b1d6;">)</span>
 
-    index=self.user_list.index(user)
+    action_role_lss=<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.array2lists<span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.role_action_matrix.T<span style="color: #a9b1d6;">)</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> action_roles_list <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">is</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">not</span> <span style="color: #ff9e64;">None</span>:
+        action_role_lss.append<span style="color: #a9b1d6;">(</span>action_role_lss<span style="color: #a9b1d6;">)</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">else</span>:
+        action_role_lss.append<span style="color: #a9b1d6;">(</span>action_roles_dict<span style="color: #7aa2f7;">[</span>action<span style="color: #7aa2f7;">]</span><span style="color: #a9b1d6;">)</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.role_action_matrix=np.array<span style="color: #a9b1d6;">(</span>action_role_lss<span style="color: #a9b1d6;">)</span>.T
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.reloadForMap<span style="color: #a9b1d6;">()</span>
 
-    self.user_list.remove(user)
-    self.user_role_matrix=np.delete(self.user_role_matrix,index,axis=0)
-    self.reloadForMap()
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">addRole</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>, role, role_users_list, role_action_list<span style="color: #a9b1d6;">)</span>:
+    <span style="color: #7c819b; font-style: italic;">"""add `role` to RBAC system, with role-users-list, if not, use role-action-dict"""</span>
 
-def removeAction(self,action):
-    """remove `action` from RBAC system"""
+    <span style="color: #51587a; font-style: italic;">## </span><span style="color: #51587a; font-style: italic;">add role</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.role_list.append<span style="color: #a9b1d6;">(</span>role<span style="color: #a9b1d6;">)</span>
 
-    index=self.action_list.index(user)
+    <span style="color: #51587a; font-style: italic;">## </span><span style="color: #51587a; font-style: italic;">update user role matrix</span>
+    user_role_lss=<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.array2lists<span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.user_role_matrix<span style="color: #a9b1d6;">)</span>
+    user_role_lss.append<span style="color: #a9b1d6;">(</span>role_users_list<span style="color: #a9b1d6;">)</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.user_role_matrix=np.array<span style="color: #a9b1d6;">(</span>user_role_lss<span style="color: #a9b1d6;">)</span>
 
-    self.action_list.remove(user)
-    self.role_action_matrix=np.delete(self.role_action_matrix,index,axis=1)
-    self.reloadForMap()
+    <span style="color: #51587a; font-style: italic;"># </span><span style="color: #51587a; font-style: italic;">updat role action matrix</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.role_action_matrix=np.array<span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.array2lists<span style="color: #7aa2f7;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.role_action_matrix<span style="color: #7aa2f7;">)</span>.append<span style="color: #7aa2f7;">(</span>role_action_list<span style="color: #7aa2f7;">)</span><span style="color: #a9b1d6;">)</span>
 
-def removeRole(self, role):
-    """remove `role` from RBAC system"""
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.reloadForMap<span style="color: #a9b1d6;">()</span>
 
-    index=self.role_list.index(role)
 
-    self.role_list.remove(role)
-    self.user_role_matrix=np.delete(self.user_role_matrix,index,axis=1)
-    self.role_action_matrix=np.delete(self.role_action_matrix,index,axis=0)
-    self.reloadForMap()
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">removeUser</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,user<span style="color: #a9b1d6;">)</span>:
+    <span style="color: #7c819b; font-style: italic;">"""remove `user` from RBAC system"""</span>
+
+    index=<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.user_list.index<span style="color: #a9b1d6;">(</span>user<span style="color: #a9b1d6;">)</span>
+
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.user_list.remove<span style="color: #a9b1d6;">(</span>user<span style="color: #a9b1d6;">)</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.user_role_matrix=np.delete<span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.user_role_matrix,index,axis=0<span style="color: #a9b1d6;">)</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.reloadForMap<span style="color: #a9b1d6;">()</span>
+
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">removeAction</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>,action<span style="color: #a9b1d6;">)</span>:
+    <span style="color: #7c819b; font-style: italic;">"""remove `action` from RBAC system"""</span>
+
+    index=<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.action_list.index<span style="color: #a9b1d6;">(</span>user<span style="color: #a9b1d6;">)</span>
+
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.action_list.remove<span style="color: #a9b1d6;">(</span>user<span style="color: #a9b1d6;">)</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.role_action_matrix=np.delete<span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.role_action_matrix,index,axis=1<span style="color: #a9b1d6;">)</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.reloadForMap<span style="color: #a9b1d6;">()</span>
+
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">def</span> <span style="color: #7aa2f7;">removeRole</span><span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>, role<span style="color: #a9b1d6;">)</span>:
+    <span style="color: #7c819b; font-style: italic;">"""remove `role` from RBAC system"""</span>
+
+    index=<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.role_list.index<span style="color: #a9b1d6;">(</span>role<span style="color: #a9b1d6;">)</span>
+
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.role_list.remove<span style="color: #a9b1d6;">(</span>role<span style="color: #a9b1d6;">)</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.user_role_matrix=np.delete<span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.user_role_matrix,index,axis=1<span style="color: #a9b1d6;">)</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.role_action_matrix=np.delete<span style="color: #a9b1d6;">(</span><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.role_action_matrix,index,axis=0<span style="color: #a9b1d6;">)</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">self</span>.reloadForMap<span style="color: #a9b1d6;">()</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgf5d19df" class="outline-5">
-<h5 id="orgf5d19df"><span class="section-number-5">4.2.1.3.</span> 形成配置结果：存储与加载</h5>
+<div id="outline-container-org21267dd" class="outline-5">
+<h5 id="org21267dd"><span class="section-number-5">4.2.1.3.</span> 形成配置结果：存储与加载</h5>
 <div class="outline-text-5" id="text-4-2-1-3">
 <p>
 当系统比较简单时，直接将配置信息写入代码中即可解决问题。当系统变得复杂后，将配置信息保存下来，并且下次使用时可以自动加载，就变得十分重要了。当系统变得更加复杂，三大对象的数量级使得单个文件都变得臃肿之后，数据的实现才有必要。本文面对的是中间复杂度的情形。在这种情形下，作者认为，* 如果user、role、action的数量非得要经由数据库进行管理，那么说明这里没有进行足够的抽象。 * 这是因为：
@@ -1211,36 +1210,36 @@ def removeRole(self, role):
 </div>
 
 
-<div id="outline-container-orge599145" class="outline-4">
-<h4 id="orge599145"><span class="section-number-4">4.2.2.</span> 同目前RBAC库的对比分析</h4>
+<div id="outline-container-orgee1f9e8" class="outline-4">
+<h4 id="orgee1f9e8"><span class="section-number-4">4.2.2.</span> 同目前RBAC库的对比分析</h4>
 <div class="outline-text-4" id="text-4-2-2">
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table>
 
 
 <colgroup>
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 </colgroup>
 <thead>
 <tr>
@@ -1290,7 +1289,7 @@ def removeRole(self, role):
 </tr>
 
 <tr>
-<td class="org-left">rbac<sub>permission</sub></td>
+<td class="org-left">rbac_permission</td>
 <td class="org-left">?</td>
 <td class="org-left">?</td>
 <td class="org-left">?</td>
@@ -1367,7 +1366,7 @@ def removeRole(self, role):
 </tr>
 
 <tr>
-<td class="org-left">rbac<sub>permission</sub></td>
+<td class="org-left">rbac_permission</td>
 <td class="org-left">?</td>
 <td class="org-left">?</td>
 <td class="org-left">没有文档，没有人关注的项目</td>
@@ -1402,8 +1401,8 @@ def removeRole(self, role):
 </div>
 
 
-<div id="outline-container-org9bd97e9" class="outline-3">
-<h3 id="org9bd97e9"><span class="section-number-3">4.3.</span> 数据可视化平台</h3>
+<div id="outline-container-orgdcf2d64" class="outline-3">
+<h3 id="orgdcf2d64"><span class="section-number-3">4.3.</span> 数据可视化平台</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 本部分拟实现的功能是：一个被目前广泛使用的可视化界面。
@@ -1429,8 +1428,8 @@ def removeRole(self, role):
 </p></li>
 </ol>
 </div>
-<div id="outline-container-org53d7748" class="outline-4">
-<h4 id="org53d7748"><span class="section-number-4">4.3.1.</span> 基于dva和react的组件化数据可视化方案</h4>
+<div id="outline-container-orgb7f9ded" class="outline-4">
+<h4 id="orgb7f9ded"><span class="section-number-4">4.3.1.</span> 基于dva和react的组件化数据可视化方案</h4>
 <div class="outline-text-4" id="text-4-3-1">
 <p>
 整体上而言，本部分使用阿里巴巴的前端框架dva进行套装，整体上可分为三大模块：
@@ -1445,7 +1444,7 @@ def removeRole(self, role):
 
 <p>
 下图展示了整体上的模型结构实现。下面介绍各个组块的实现原则。
-<img src="./images/react.png" alt="react.png" />
+<img src="./images/react.png" alt="react.png">
 </p>
 
 <p>
@@ -1485,54 +1484,54 @@ def removeRole(self, role):
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js"> render() {
-    const { userSitua, trafficSitua, accessFrequency, peakFlow } = this.props;
-    return (
-      // 风格
+<pre class="src src-js"> render<span style="color: #a9b1d6;">()</span> <span style="color: #a9b1d6;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #7aa2f7;">{</span> userSitua, trafficSitua, accessFrequency, peakFlow <span style="color: #7aa2f7;">}</span> = <span style="color: #ff9e64;">this</span>.props;
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #7aa2f7;">(</span>
+      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#39118;&#26684;</span>
       &lt;LeftPage&gt;
-	{/* 顶部图表 */}
-	&lt;LeftTopBox&gt;
-	  &lt;BorderBox12 className='left-top-borderBox12'&gt;
-	    &lt;div className='left-top'&gt;
-	      &lt;ModuleTitle&gt;
-		&lt;i className='iconfont'&gt;&amp;#xe78f;&lt;/i&gt;
-		&lt;span&gt;今日图书馆进出情况&lt;/span&gt;
-	      &lt;/ModuleTitle&gt;
+        <span style="color: #ff9e64;">{</span><span style="color: #51587a; font-style: italic;">/* </span><span style="color: #51587a; font-style: italic;">&#39030;&#37096;&#22270;&#34920;</span><span style="color: #51587a; font-style: italic;"> */</span><span style="color: #ff9e64;">}</span>
+        &lt;LeftTopBox&gt;
+          &lt;BorderBox12 className=<span style="color: #9ece6a; font-style: italic;">'left-top-borderBox12'</span>&gt;
+            &lt;div className=<span style="color: #9ece6a; font-style: italic;">'left-top'</span>&gt;
+              &lt;ModuleTitle&gt;
+                &lt;i className=<span style="color: #9ece6a; font-style: italic;">'iconfont'</span>&gt;&amp;#xe78f;&lt;/i&gt;
+                &lt;span&gt;&#20170;&#26085;&#22270;&#20070;&#39302;&#36827;&#20986;&#24773;&#20917;&lt;/span&gt;
+              &lt;/ModuleTitle&gt;
 
-	      &lt;div className='title-dis'&gt;
-		&lt;span&gt;
-		  当前参观人数(小时):
-		  &lt;span className='title-dis-keyword'&gt;{accessFrequency}人&lt;/span&gt;
-		&lt;/span&gt;
+              &lt;div className=<span style="color: #9ece6a; font-style: italic;">'title-dis'</span>&gt;
+                &lt;span&gt;
+                  &#24403;&#21069;&#21442;&#35266;&#20154;&#25968;<span style="color: #ff9e64;">(</span>&#23567;&#26102;<span style="color: #ff9e64;">)</span>:
+                  &lt;span className=<span style="color: #9ece6a; font-style: italic;">'title-dis-keyword'</span>&gt;<span style="color: #ff9e64;">{</span>accessFrequency<span style="color: #ff9e64;">}</span>&#20154;&lt;/span&gt;
+                &lt;/span&gt;
 
-		&lt;span&gt;
-		  今日总人数:
-		  &lt;span className='title-dis-keyword'&gt;{peakFlow}人&lt;/span&gt;
-		&lt;/span&gt;
-	      &lt;/div&gt;
-	      {/* 图表 */}
-	      &lt;TrafficSituation trafficSitua={trafficSitua}&gt;&lt;/TrafficSituation&gt;
-	    &lt;/div&gt;
-	  &lt;/BorderBox12&gt;
-	&lt;/LeftTopBox&gt;
+                &lt;span&gt;
+                  &#20170;&#26085;&#24635;&#20154;&#25968;:
+                  &lt;span className=<span style="color: #9ece6a; font-style: italic;">'title-dis-keyword'</span>&gt;<span style="color: #ff9e64;">{</span>peakFlow<span style="color: #ff9e64;">}</span>&#20154;&lt;/span&gt;
+                &lt;/span&gt;
+              &lt;/div&gt;
+              <span style="color: #ff9e64;">{</span><span style="color: #51587a; font-style: italic;">/* </span><span style="color: #51587a; font-style: italic;">&#22270;&#34920;</span><span style="color: #51587a; font-style: italic;"> */</span><span style="color: #ff9e64;">}</span>
+              &lt;TrafficSituation trafficSitua=<span style="color: #ff9e64;">{</span>trafficSitua<span style="color: #ff9e64;">}</span>&gt;&lt;/TrafficSituation&gt;
+            &lt;/div&gt;
+          &lt;/BorderBox12&gt;
+        &lt;/LeftTopBox&gt;
 
-	{/* 底部图表 */}
-	&lt;LeftBottomBox&gt;
-	  &lt;BorderBox13 className='left-bottom-borderBox13'&gt;
-	    &lt;div className='left-bottom'&gt;
-	      &lt;ModuleTitle&gt;
-		&lt;i className='iconfont'&gt;&amp;#xe88e;&lt;/i&gt;
-		&lt;span&gt;本周图书借阅榜&lt;/span&gt;
-	      &lt;/ModuleTitle&gt;
-	      {/* 图表 */}
-	      &lt;UserSituation userSitua={userSitua}&gt;&lt;/UserSituation&gt;
-	    &lt;/div&gt;
-	  &lt;/BorderBox13&gt;
-	&lt;/LeftBottomBox&gt;
+        <span style="color: #ff9e64;">{</span><span style="color: #51587a; font-style: italic;">/* </span><span style="color: #51587a; font-style: italic;">&#24213;&#37096;&#22270;&#34920;</span><span style="color: #51587a; font-style: italic;"> */</span><span style="color: #ff9e64;">}</span>
+        &lt;LeftBottomBox&gt;
+          &lt;BorderBox13 className=<span style="color: #9ece6a; font-style: italic;">'left-bottom-borderBox13'</span>&gt;
+            &lt;div className=<span style="color: #9ece6a; font-style: italic;">'left-bottom'</span>&gt;
+              &lt;ModuleTitle&gt;
+                &lt;i className=<span style="color: #9ece6a; font-style: italic;">'iconfont'</span>&gt;&amp;#xe88e;&lt;/i&gt;
+                &lt;span&gt;&#26412;&#21608;&#22270;&#20070;&#20511;&#38405;&#27036;&lt;/span&gt;
+              &lt;/ModuleTitle&gt;
+              <span style="color: #ff9e64;">{</span><span style="color: #51587a; font-style: italic;">/* </span><span style="color: #51587a; font-style: italic;">&#22270;&#34920;</span><span style="color: #51587a; font-style: italic;"> */</span><span style="color: #ff9e64;">}</span>
+              &lt;UserSituation userSitua=<span style="color: #ff9e64;">{</span>userSitua<span style="color: #ff9e64;">}</span>&gt;&lt;/UserSituation&gt;
+            &lt;/div&gt;
+          &lt;/BorderBox13&gt;
+        &lt;/LeftBottomBox&gt;
       &lt;/LeftPage&gt;
-    );
-  }
-}
+    <span style="color: #7aa2f7;">)</span>;
+  <span style="color: #a9b1d6;">}</span>
+<span style="color: #f7768e; font-weight: bold;">}</span>
 </pre>
 </div>
 
@@ -1545,34 +1544,34 @@ def removeRole(self, role):
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js">export const LeftTopBox = styled.div`
-  position: relative;
-  height: 4.375rem;
-  width: 100%;
-  .left-top-borderBox12 {
-    width: inherit;
-    height: inherit;
-    padding: 0.1875rem;
-    .left-top {
-      width: 100%;
-      height: 100%;
-      border-radius: 10px;
-      background-color: rgba(19, 25, 47, 0.6);
-      .title-dis {
-	margin-top: 0.1875rem;
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
-	font-size: 0.2rem;
-	color: #c0c9d2;
-	&amp;-keyword {
-	  padding-left: 0.125rem;
-	  color: #47dae8;
-	}
-      }
-    }
-  }
-`;
+<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">LeftTopBox</span> = styled.div<span style="color: #9ece6a; font-style: italic;">`</span>
+<span style="color: #9ece6a; font-style: italic;">  position: relative;</span>
+<span style="color: #9ece6a; font-style: italic;">  height: 4.375rem;</span>
+<span style="color: #9ece6a; font-style: italic;">  width: 100%;</span>
+<span style="color: #9ece6a; font-style: italic;">  .left-top-borderBox12 {</span>
+<span style="color: #9ece6a; font-style: italic;">    width: inherit;</span>
+<span style="color: #9ece6a; font-style: italic;">    height: inherit;</span>
+<span style="color: #9ece6a; font-style: italic;">    padding: 0.1875rem;</span>
+<span style="color: #9ece6a; font-style: italic;">    .left-top {</span>
+<span style="color: #9ece6a; font-style: italic;">      width: 100%;</span>
+<span style="color: #9ece6a; font-style: italic;">      height: 100%;</span>
+<span style="color: #9ece6a; font-style: italic;">      border-radius: 10px;</span>
+<span style="color: #9ece6a; font-style: italic;">      background-color: rgba(19, 25, 47, 0.6);</span>
+<span style="color: #9ece6a; font-style: italic;">      .title-dis {</span>
+<span style="color: #9ece6a; font-style: italic;">        margin-top: 0.1875rem;</span>
+<span style="color: #9ece6a; font-style: italic;">        display: flex;</span>
+<span style="color: #9ece6a; font-style: italic;">        justify-content: space-around;</span>
+<span style="color: #9ece6a; font-style: italic;">        align-items: center;</span>
+<span style="color: #9ece6a; font-style: italic;">        font-size: 0.2rem;</span>
+<span style="color: #9ece6a; font-style: italic;">        color: #c0c9d2;</span>
+<span style="color: #9ece6a; font-style: italic;">        &amp;-keyword {</span>
+<span style="color: #9ece6a; font-style: italic;">          padding-left: 0.125rem;</span>
+<span style="color: #9ece6a; font-style: italic;">          color: #47dae8;</span>
+<span style="color: #9ece6a; font-style: italic;">        }</span>
+<span style="color: #9ece6a; font-style: italic;">      }</span>
+<span style="color: #9ece6a; font-style: italic;">    }</span>
+<span style="color: #9ece6a; font-style: italic;">  }</span>
+<span style="color: #9ece6a; font-style: italic;">`</span>;
 </pre>
 </div>
 
@@ -1582,34 +1581,34 @@ def removeRole(self, role):
 
 
 <div class="org-src-container">
-<pre class="src src-js">class TrafficSituation extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      renderer: 'canvas',
-    };
-  }
+<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">class</span> TrafficSituation <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">extends</span> PureComponent <span style="color: #a9b1d6;">{</span>
+  constructor<span style="color: #7aa2f7;">(</span>props<span style="color: #7aa2f7;">)</span> <span style="color: #7aa2f7;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">super</span><span style="color: #ff9e64;">(</span>props<span style="color: #ff9e64;">)</span>;
+    <span style="color: #ff9e64;">this</span>.state = <span style="color: #ff9e64;">{</span>
+      renderer: <span style="color: #9ece6a; font-style: italic;">'canvas'</span>,
+    <span style="color: #ff9e64;">}</span>;
+  <span style="color: #7aa2f7;">}</span>
 
-  render() {
-    const { renderer } = this.state;
-    const { trafficSitua } = this.props;
-    return (
+  render<span style="color: #7aa2f7;">()</span> <span style="color: #7aa2f7;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #ff9e64;">{</span> renderer <span style="color: #ff9e64;">}</span> = <span style="color: #ff9e64;">this</span>.state;
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #ff9e64;">{</span> trafficSitua <span style="color: #ff9e64;">}</span> = <span style="color: #ff9e64;">this</span>.props;
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #ff9e64;">(</span>
       &lt;div
-	style={{
-	  width: '5.375rem',
-	  height: '3.125rem',
-	}}&gt;
-	{trafficSitua ? (
-	  &lt;Chart renderer={renderer} option={trafficOptions(trafficSitua)} /&gt;
-	) : (
-	  ''
-	)}
+        style=<span style="color: #73daca;">{</span><span style="color: #b4f9f8;">{</span>
+          width: <span style="color: #9ece6a; font-style: italic;">'5.375rem'</span>,
+          height: <span style="color: #9ece6a; font-style: italic;">'3.125rem'</span>,
+        <span style="color: #b4f9f8;">}</span><span style="color: #73daca;">}</span>&gt;
+        <span style="color: #73daca;">{</span>trafficSitua ? <span style="color: #b4f9f8;">(</span>
+          &lt;Chart renderer=<span style="color: #e0af68;">{</span>renderer<span style="color: #e0af68;">}</span> option=<span style="color: #e0af68;">{</span>trafficOptions<span style="color: #2ac3de;">(</span>trafficSitua<span style="color: #2ac3de;">)</span><span style="color: #e0af68;">}</span> /&gt;
+        <span style="color: #b4f9f8;">)</span> : <span style="color: #b4f9f8;">(</span>
+          <span style="color: #9ece6a; font-style: italic;">''</span>
+        <span style="color: #b4f9f8;">)</span><span style="color: #73daca;">}</span>
       &lt;/div&gt;
-    );
-  } //endrender
-}
+    <span style="color: #ff9e64;">)</span>;
+  <span style="color: #7aa2f7;">}</span> <span style="color: #51587a; font-style: italic;">//</span><span style="color: #51587a; font-style: italic;">endrender</span>
+<span style="color: #a9b1d6;">}</span>
 
-export default TrafficSituation;
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">default</span> TrafficSituation;
 
 </pre>
 </div>
@@ -1620,89 +1619,89 @@ export default TrafficSituation;
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js">export default class Chart extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      width: '100%',
-      height: '100%',
-    };
-    this.chart = null;
-  }
-  // 异步函数
-  async componentDidMount() {
-    // 初始化图表
-    await this.initChart(this.el);
-    // 将传入的配置(包含数据)注入
-    this.setOption(this.props.option);
-    // 监听屏幕缩放，重新绘制 echart 图表
-    window.addEventListener('resize', debounce(this.resize, 100));
-  }
+<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">default</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">class</span> Chart <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">extends</span> PureComponent <span style="color: #a9b1d6;">{</span>
+  constructor<span style="color: #7aa2f7;">(</span>props<span style="color: #7aa2f7;">)</span> <span style="color: #7aa2f7;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">super</span><span style="color: #ff9e64;">(</span>props<span style="color: #ff9e64;">)</span>;
+    <span style="color: #ff9e64;">this</span>.state = <span style="color: #ff9e64;">{</span>
+      width: <span style="color: #9ece6a; font-style: italic;">'100%'</span>,
+      height: <span style="color: #9ece6a; font-style: italic;">'100%'</span>,
+    <span style="color: #ff9e64;">}</span>;
+    <span style="color: #ff9e64;">this</span>.chart = <span style="color: #ff9e64;">null</span>;
+  <span style="color: #7aa2f7;">}</span>
+  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#24322;&#27493;&#20989;&#25968;</span>
+  <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">async</span> componentDidMount<span style="color: #7aa2f7;">()</span> <span style="color: #7aa2f7;">{</span>
+    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21021;&#22987;&#21270;&#22270;&#34920;</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">await</span> <span style="color: #ff9e64;">this</span>.initChart<span style="color: #ff9e64;">(</span><span style="color: #ff9e64;">this</span>.el<span style="color: #ff9e64;">)</span>;
+    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#23558;&#20256;&#20837;&#30340;&#37197;&#32622;(&#21253;&#21547;&#25968;&#25454;)&#27880;&#20837;</span>
+    <span style="color: #ff9e64;">this</span>.setOption<span style="color: #ff9e64;">(</span><span style="color: #ff9e64;">this</span>.props.option<span style="color: #ff9e64;">)</span>;
+    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#30417;&#21548;&#23631;&#24149;&#32553;&#25918;&#65292;&#37325;&#26032;&#32472;&#21046; echart &#22270;&#34920;</span>
+    window.addEventListener<span style="color: #ff9e64;">(</span><span style="color: #9ece6a; font-style: italic;">'resize'</span>, debounce<span style="color: #73daca;">(</span><span style="color: #ff9e64;">this</span>.resize, 100<span style="color: #73daca;">)</span><span style="color: #ff9e64;">)</span>;
+  <span style="color: #7aa2f7;">}</span>
 
-  componentDidUpdate() {
-    // 每次更新组件都重置
-    this.setOption(this.props.option);
-  }
+  componentDidUpdate<span style="color: #7aa2f7;">()</span> <span style="color: #7aa2f7;">{</span>
+    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#27599;&#27425;&#26356;&#26032;&#32452;&#20214;&#37117;&#37325;&#32622;</span>
+    <span style="color: #ff9e64;">this</span>.setOption<span style="color: #ff9e64;">(</span><span style="color: #ff9e64;">this</span>.props.option<span style="color: #ff9e64;">)</span>;
+  <span style="color: #7aa2f7;">}</span>
 
-  componentWillUnmount() {
-    // 组件卸载前卸载图表
-    this.dispose();
-  }
+  componentWillUnmount<span style="color: #7aa2f7;">()</span> <span style="color: #7aa2f7;">{</span>
+    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#32452;&#20214;&#21368;&#36733;&#21069;&#21368;&#36733;&#22270;&#34920;</span>
+    <span style="color: #ff9e64;">this</span>.dispose<span style="color: #ff9e64;">()</span>;
+  <span style="color: #7aa2f7;">}</span>
 
-  render() {
-    const { width, height } = this.state;
+  render<span style="color: #7aa2f7;">()</span> <span style="color: #7aa2f7;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #ff9e64;">{</span> width, height <span style="color: #ff9e64;">}</span> = <span style="color: #ff9e64;">this</span>.state;
 
-    return (
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #ff9e64;">(</span>
       &lt;div
-	className='default-chart'
-	ref={el =&gt; (this.el = el)}
-	style={{ width, height }}
+        className=<span style="color: #9ece6a; font-style: italic;">'default-chart'</span>
+        ref=<span style="color: #73daca;">{</span>el =&gt; <span style="color: #b4f9f8;">(</span><span style="color: #ff9e64;">this</span>.el = el<span style="color: #b4f9f8;">)</span><span style="color: #73daca;">}</span>
+        style=<span style="color: #73daca;">{</span><span style="color: #b4f9f8;">{</span> width, height <span style="color: #b4f9f8;">}</span><span style="color: #73daca;">}</span>
       /&gt;
-    );
-  }
+    <span style="color: #ff9e64;">)</span>;
+  <span style="color: #7aa2f7;">}</span>
 
 
-  initChart = el =&gt; {
-    // renderer 用于配置渲染方式 可以是 svg 或者 canvas
-    const renderer = this.props.renderer || 'canvas';
+  initChart = el =&gt; <span style="color: #7aa2f7;">{</span>
+    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">renderer &#29992;&#20110;&#37197;&#32622;&#28210;&#26579;&#26041;&#24335; &#21487;&#20197;&#26159; svg &#25110;&#32773; canvas</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">renderer</span> = <span style="color: #ff9e64;">this</span>.props.renderer || <span style="color: #9ece6a; font-style: italic;">'canvas'</span>;
 
-    return new Promise(resolve =&gt; {
-      setTimeout(() =&gt; {
-	this.chart = echarts.init(el, null, {
-	  renderer,
-	  width: 'auto',
-	  height: 'auto',
-	});
-	resolve();
-      }, 0);
-    });
-  };
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">new</span> <span style="color: #c0caf5;">Promise</span><span style="color: #ff9e64;">(</span>resolve =&gt; <span style="color: #73daca;">{</span>
+      setTimeout<span style="color: #b4f9f8;">(</span><span style="color: #e0af68;">()</span> =&gt; <span style="color: #e0af68;">{</span>
+        <span style="color: #ff9e64;">this</span>.chart = echarts.init<span style="color: #2ac3de;">(</span>el, <span style="color: #ff9e64;">null</span>, <span style="color: #73daca;">{</span>
+          renderer,
+          width: <span style="color: #9ece6a; font-style: italic;">'auto'</span>,
+          height: <span style="color: #9ece6a; font-style: italic;">'auto'</span>,
+        <span style="color: #73daca;">}</span><span style="color: #2ac3de;">)</span>;
+        resolve<span style="color: #2ac3de;">()</span>;
+      <span style="color: #e0af68;">}</span>, 0<span style="color: #b4f9f8;">)</span>;
+    <span style="color: #73daca;">}</span><span style="color: #ff9e64;">)</span>;
+  <span style="color: #7aa2f7;">}</span>;
 
-  setOption = option =&gt; {
-    if (!this.chart) {
-      return;
-    }
+  setOption = option =&gt; <span style="color: #7aa2f7;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> <span style="color: #ff9e64;">(</span>!<span style="color: #ff9e64;">this</span>.chart<span style="color: #ff9e64;">)</span> <span style="color: #ff9e64;">{</span>
+      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span>;
+    <span style="color: #ff9e64;">}</span>
 
-    const notMerge = this.props.notMerge;
-    const lazyUpdate = this.props.lazyUpdate;
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">notMerge</span> = <span style="color: #ff9e64;">this</span>.props.notMerge;
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">lazyUpdate</span> = <span style="color: #ff9e64;">this</span>.props.lazyUpdate;
 
-    this.chart.setOption(option, notMerge, lazyUpdate);
-  };
-  dispose = () =&gt; {
-    if (!this.chart) {
-      return;
-    }
+    <span style="color: #ff9e64;">this</span>.chart.setOption<span style="color: #ff9e64;">(</span>option, notMerge, lazyUpdate<span style="color: #ff9e64;">)</span>;
+  <span style="color: #7aa2f7;">}</span>;
+  dispose = <span style="color: #7aa2f7;">()</span> =&gt; <span style="color: #7aa2f7;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> <span style="color: #ff9e64;">(</span>!<span style="color: #ff9e64;">this</span>.chart<span style="color: #ff9e64;">)</span> <span style="color: #ff9e64;">{</span>
+      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span>;
+    <span style="color: #ff9e64;">}</span>
 
-    this.chart.dispose();
-    this.chart = null;
-  };
-  resize = () =&gt; {
-    this.chart &amp;&amp; this.chart.resize();
-  };
-  getInstance = () =&gt; {
-    return this.chart;
-  };
-}
+    <span style="color: #ff9e64;">this</span>.chart.dispose<span style="color: #ff9e64;">()</span>;
+    <span style="color: #ff9e64;">this</span>.chart = <span style="color: #ff9e64;">null</span>;
+  <span style="color: #7aa2f7;">}</span>;
+  resize = <span style="color: #7aa2f7;">()</span> =&gt; <span style="color: #7aa2f7;">{</span>
+    <span style="color: #ff9e64;">this</span>.chart &amp;&amp; <span style="color: #ff9e64;">this</span>.chart.resize<span style="color: #ff9e64;">()</span>;
+  <span style="color: #7aa2f7;">}</span>;
+  getInstance = <span style="color: #7aa2f7;">()</span> =&gt; <span style="color: #7aa2f7;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #ff9e64;">this</span>.chart;
+  <span style="color: #7aa2f7;">}</span>;
+<span style="color: #a9b1d6;">}</span>
 </pre>
 </div>
 
@@ -1715,203 +1714,203 @@ export default TrafficSituation;
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js">export const trafficOptions = (params) =&gt; ({
-  title: {
-    show: false,
-  },
-  legend: {
-    show: true,
-    top: '5%',
-    textStyle: {
-      color: '#c0c9d2',
-    },
-  },
-  tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      lineStyle: {
-	color: {
-	  type: 'linear',
-	  x: 0,
-	  y: 0,
-	  x2: 0,
-	  y2: 1,
-	  colorStops: [
-	    {
-	      offset: 0,
-	      color: 'rgba(0, 255, 233,0)',
-	    },
-	    {
-	      offset: 0.5,
-	      color: 'rgba(255, 255, 255,1)',
-	    },
-	    {
-	      offset: 1,
-	      color: 'rgba(0, 255, 233,0)',
-	    },
-	  ],
-	  global: false,
-	},
-      },
-    },
-  },
-  grid: {
-    top: '15%',
-    left: '10%',
-    right: '5%',
-    bottom: '10%',
-  },
-  xAxis: {
-    type: 'category',
-    axisLine: {
-      show: true,
-    },
-    splitArea: {
-      color: '#f00',
-      lineStyle: {
-	color: '#f00',
-      },
-    },
-    axisLabel: {
-      color: '#BCDCF0',
-    },
-    splitLine: {
-      show: false,
-    },
-    boundaryGap: false,
+<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">trafficOptions</span> = <span style="color: #a9b1d6;">(</span>params<span style="color: #a9b1d6;">)</span> =&gt; <span style="color: #a9b1d6;">(</span><span style="color: #7aa2f7;">{</span>
+  title: <span style="color: #ff9e64;">{</span>
+    show: <span style="color: #ff9e64;">false</span>,
+  <span style="color: #ff9e64;">}</span>,
+  legend: <span style="color: #ff9e64;">{</span>
+    show: <span style="color: #ff9e64;">true</span>,
+    top: <span style="color: #9ece6a; font-style: italic;">'5%'</span>,
+    textStyle: <span style="color: #73daca;">{</span>
+      color: <span style="color: #9ece6a; font-style: italic;">'#c0c9d2'</span>,
+    <span style="color: #73daca;">}</span>,
+  <span style="color: #ff9e64;">}</span>,
+  tooltip: <span style="color: #ff9e64;">{</span>
+    trigger: <span style="color: #9ece6a; font-style: italic;">'axis'</span>,
+    axisPointer: <span style="color: #73daca;">{</span>
+      lineStyle: <span style="color: #b4f9f8;">{</span>
+        color: <span style="color: #e0af68;">{</span>
+          type: <span style="color: #9ece6a; font-style: italic;">'linear'</span>,
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: <span style="color: #2ac3de;">[</span>
+            <span style="color: #73daca;">{</span>
+              offset: 0,
+              color: <span style="color: #9ece6a; font-style: italic;">'rgba(0, 255, 233,0)'</span>,
+            <span style="color: #73daca;">}</span>,
+            <span style="color: #73daca;">{</span>
+              offset: 0.5,
+              color: <span style="color: #9ece6a; font-style: italic;">'rgba(255, 255, 255,1)'</span>,
+            <span style="color: #73daca;">}</span>,
+            <span style="color: #73daca;">{</span>
+              offset: 1,
+              color: <span style="color: #9ece6a; font-style: italic;">'rgba(0, 255, 233,0)'</span>,
+            <span style="color: #73daca;">}</span>,
+          <span style="color: #2ac3de;">]</span>,
+          global: <span style="color: #ff9e64;">false</span>,
+        <span style="color: #e0af68;">}</span>,
+      <span style="color: #b4f9f8;">}</span>,
+    <span style="color: #73daca;">}</span>,
+  <span style="color: #ff9e64;">}</span>,
+  grid: <span style="color: #ff9e64;">{</span>
+    top: <span style="color: #9ece6a; font-style: italic;">'15%'</span>,
+    left: <span style="color: #9ece6a; font-style: italic;">'10%'</span>,
+    right: <span style="color: #9ece6a; font-style: italic;">'5%'</span>,
+    bottom: <span style="color: #9ece6a; font-style: italic;">'10%'</span>,
+  <span style="color: #ff9e64;">}</span>,
+  xAxis: <span style="color: #ff9e64;">{</span>
+    type: <span style="color: #9ece6a; font-style: italic;">'category'</span>,
+    axisLine: <span style="color: #73daca;">{</span>
+      show: <span style="color: #ff9e64;">true</span>,
+    <span style="color: #73daca;">}</span>,
+    splitArea: <span style="color: #73daca;">{</span>
+      color: <span style="color: #9ece6a; font-style: italic;">'#f00'</span>,
+      lineStyle: <span style="color: #b4f9f8;">{</span>
+        color: <span style="color: #9ece6a; font-style: italic;">'#f00'</span>,
+      <span style="color: #b4f9f8;">}</span>,
+    <span style="color: #73daca;">}</span>,
+    axisLabel: <span style="color: #73daca;">{</span>
+      color: <span style="color: #9ece6a; font-style: italic;">'#BCDCF0'</span>,
+    <span style="color: #73daca;">}</span>,
+    splitLine: <span style="color: #73daca;">{</span>
+      show: <span style="color: #ff9e64;">false</span>,
+    <span style="color: #73daca;">}</span>,
+    boundaryGap: <span style="color: #ff9e64;">false</span>,
     data: params.timeList,
-  },
+  <span style="color: #ff9e64;">}</span>,
 
-  yAxis: {
-    type: 'value',
+  yAxis: <span style="color: #ff9e64;">{</span>
+    type: <span style="color: #9ece6a; font-style: italic;">'value'</span>,
     min: 0,
-    splitLine: {
-      show: true,
-      lineStyle: {
-	color: 'rgba(255,255,255,0.1)',
-      },
-    },
-    axisLine: {
-      show: true,
-    },
-    axisLabel: {
-      show: true,
+    splitLine: <span style="color: #73daca;">{</span>
+      show: <span style="color: #ff9e64;">true</span>,
+      lineStyle: <span style="color: #b4f9f8;">{</span>
+        color: <span style="color: #9ece6a; font-style: italic;">'rgba(255,255,255,0.1)'</span>,
+      <span style="color: #b4f9f8;">}</span>,
+    <span style="color: #73daca;">}</span>,
+    axisLine: <span style="color: #73daca;">{</span>
+      show: <span style="color: #ff9e64;">true</span>,
+    <span style="color: #73daca;">}</span>,
+    axisLabel: <span style="color: #73daca;">{</span>
+      show: <span style="color: #ff9e64;">true</span>,
       margin: 10,
-      textStyle: {
-	color: '#d1e6eb',
-      },
-    },
-    axisTick: {
-      show: false,
-    },
-  },
-  series: [
-    {
-      name: '进入人数',
-      type: 'line',
-      smooth: true, //是否平滑
-      lineStyle: {
-	normal: {
-	  color: '#00b3f4',
-	  shadowColor: 'rgba(0, 0, 0, .3)',
-	  shadowBlur: 0,
-	  shadowOffsetY: 5,
-	  shadowOffsetX: 5,
-	},
-      },
-      label: {
-	show: false,
-	position: 'top',
-	textStyle: {
-	  color: '#00b3f4',
-	},
-      },
-      // 去除点标记
+      textStyle: <span style="color: #b4f9f8;">{</span>
+        color: <span style="color: #9ece6a; font-style: italic;">'#d1e6eb'</span>,
+      <span style="color: #b4f9f8;">}</span>,
+    <span style="color: #73daca;">}</span>,
+    axisTick: <span style="color: #73daca;">{</span>
+      show: <span style="color: #ff9e64;">false</span>,
+    <span style="color: #73daca;">}</span>,
+  <span style="color: #ff9e64;">}</span>,
+  series: <span style="color: #ff9e64;">[</span>
+    <span style="color: #73daca;">{</span>
+      name: <span style="color: #9ece6a; font-style: italic;">'&#36827;&#20837;&#20154;&#25968;'</span>,
+      type: <span style="color: #9ece6a; font-style: italic;">'line'</span>,
+      smooth: <span style="color: #ff9e64;">true</span>, <span style="color: #51587a; font-style: italic;">//</span><span style="color: #51587a; font-style: italic;">&#26159;&#21542;&#24179;&#28369;</span>
+      lineStyle: <span style="color: #b4f9f8;">{</span>
+        normal: <span style="color: #e0af68;">{</span>
+          color: <span style="color: #9ece6a; font-style: italic;">'#00b3f4'</span>,
+          shadowColor: <span style="color: #9ece6a; font-style: italic;">'rgba(0, 0, 0, .3)'</span>,
+          shadowBlur: 0,
+          shadowOffsetY: 5,
+          shadowOffsetX: 5,
+        <span style="color: #e0af68;">}</span>,
+      <span style="color: #b4f9f8;">}</span>,
+      label: <span style="color: #b4f9f8;">{</span>
+        show: <span style="color: #ff9e64;">false</span>,
+        position: <span style="color: #9ece6a; font-style: italic;">'top'</span>,
+        textStyle: <span style="color: #e0af68;">{</span>
+          color: <span style="color: #9ece6a; font-style: italic;">'#00b3f4'</span>,
+        <span style="color: #e0af68;">}</span>,
+      <span style="color: #b4f9f8;">}</span>,
+      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21435;&#38500;&#28857;&#26631;&#35760;</span>
       symbolSize: 0,
-      // 鼠标放上去还是要有颜色的
-      itemStyle: {
-	color: '#00b3f4',
-      },
-      // 设置渐变色
-      areaStyle: {
-	normal: {
-	  color: new echarts.graphic.LinearGradient(
-	    0,
-	    0,
-	    0,
-	    1,
-	    [
-	      {
-		offset: 0,
-		color: 'rgba(0,179,244,0.3)',
-	      },
-	      {
-		offset: 1,
-		color: 'rgba(0,179,244,0)',
-	      },
-	    ],
-	    false
-	  ),
-	  shadowColor: 'rgba(0,179,244, 0.9)',
-	  shadowBlur: 20,
-	},
-      },
+      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#40736;&#26631;&#25918;&#19978;&#21435;&#36824;&#26159;&#35201;&#26377;&#39068;&#33394;&#30340;</span>
+      itemStyle: <span style="color: #b4f9f8;">{</span>
+        color: <span style="color: #9ece6a; font-style: italic;">'#00b3f4'</span>,
+      <span style="color: #b4f9f8;">}</span>,
+      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#35774;&#32622;&#28176;&#21464;&#33394;</span>
+      areaStyle: <span style="color: #b4f9f8;">{</span>
+        normal: <span style="color: #e0af68;">{</span>
+          color: <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">new</span> <span style="color: #c0caf5;">echarts.graphic.LinearGradient</span><span style="color: #2ac3de;">(</span>
+            0,
+            0,
+            0,
+            1,
+            <span style="color: #73daca;">[</span>
+              <span style="color: #9aa5ce;">{</span>
+                offset: 0,
+                color: <span style="color: #9ece6a; font-style: italic;">'rgba(0,179,244,0.3)'</span>,
+              <span style="color: #9aa5ce;">}</span>,
+              <span style="color: #9aa5ce;">{</span>
+                offset: 1,
+                color: <span style="color: #9ece6a; font-style: italic;">'rgba(0,179,244,0)'</span>,
+              <span style="color: #9aa5ce;">}</span>,
+            <span style="color: #73daca;">]</span>,
+            <span style="color: #ff9e64;">false</span>
+          <span style="color: #2ac3de;">)</span>,
+          shadowColor: <span style="color: #9ece6a; font-style: italic;">'rgba(0,179,244, 0.9)'</span>,
+          shadowBlur: 20,
+        <span style="color: #e0af68;">}</span>,
+      <span style="color: #b4f9f8;">}</span>,
       data: params.outData,
-    },
-    {
-      name: '走出人数',
-      type: 'line',
-      smooth: true, //是否平滑
-      // 阴影
-      lineStyle: {
-	normal: {
-	  color: '#00ca95',
-	  shadowColor: 'rgba(0, 0, 0, .3)',
-	  shadowBlur: 0,
-	  shadowOffsetY: 5,
-	  shadowOffsetX: 5,
-	},
-      },
-      label: {
-	show: false,
-	position: 'top',
-	textStyle: {
-	  color: '#00ca95',
-	},
-      },
-      // 去除点标记
+    <span style="color: #73daca;">}</span>,
+    <span style="color: #73daca;">{</span>
+      name: <span style="color: #9ece6a; font-style: italic;">'&#36208;&#20986;&#20154;&#25968;'</span>,
+      type: <span style="color: #9ece6a; font-style: italic;">'line'</span>,
+      smooth: <span style="color: #ff9e64;">true</span>, <span style="color: #51587a; font-style: italic;">//</span><span style="color: #51587a; font-style: italic;">&#26159;&#21542;&#24179;&#28369;</span>
+      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#38452;&#24433;</span>
+      lineStyle: <span style="color: #b4f9f8;">{</span>
+        normal: <span style="color: #e0af68;">{</span>
+          color: <span style="color: #9ece6a; font-style: italic;">'#00ca95'</span>,
+          shadowColor: <span style="color: #9ece6a; font-style: italic;">'rgba(0, 0, 0, .3)'</span>,
+          shadowBlur: 0,
+          shadowOffsetY: 5,
+          shadowOffsetX: 5,
+        <span style="color: #e0af68;">}</span>,
+      <span style="color: #b4f9f8;">}</span>,
+      label: <span style="color: #b4f9f8;">{</span>
+        show: <span style="color: #ff9e64;">false</span>,
+        position: <span style="color: #9ece6a; font-style: italic;">'top'</span>,
+        textStyle: <span style="color: #e0af68;">{</span>
+          color: <span style="color: #9ece6a; font-style: italic;">'#00ca95'</span>,
+        <span style="color: #e0af68;">}</span>,
+      <span style="color: #b4f9f8;">}</span>,
+      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21435;&#38500;&#28857;&#26631;&#35760;</span>
       symbolSize: 0,
-      itemStyle: {
-	color: '#00ca95',
-      },
-      // 设置渐变色
-      areaStyle: {
-	normal: {
-	  color: new echarts.graphic.LinearGradient(
-	    0,
-	    0,
-	    0,
-	    1,
-	    [
-	      {
-		offset: 0,
-		color: 'rgba(0,202,149,0.3)',
-	      },
-	      {
-		offset: 1,
-		color: 'rgba(0,202,149,0)',
-	      },
-	    ],
-	    false
-	  ),
-	  shadowColor: 'rgba(0,202,149, 0.9)',
-	  shadowBlur: 20,
-	},
-      },
+      itemStyle: <span style="color: #b4f9f8;">{</span>
+        color: <span style="color: #9ece6a; font-style: italic;">'#00ca95'</span>,
+      <span style="color: #b4f9f8;">}</span>,
+      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#35774;&#32622;&#28176;&#21464;&#33394;</span>
+      areaStyle: <span style="color: #b4f9f8;">{</span>
+        normal: <span style="color: #e0af68;">{</span>
+          color: <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">new</span> <span style="color: #c0caf5;">echarts.graphic.LinearGradient</span><span style="color: #2ac3de;">(</span>
+            0,
+            0,
+            0,
+            1,
+            <span style="color: #73daca;">[</span>
+              <span style="color: #9aa5ce;">{</span>
+                offset: 0,
+                color: <span style="color: #9ece6a; font-style: italic;">'rgba(0,202,149,0.3)'</span>,
+              <span style="color: #9aa5ce;">}</span>,
+              <span style="color: #9aa5ce;">{</span>
+                offset: 1,
+                color: <span style="color: #9ece6a; font-style: italic;">'rgba(0,202,149,0)'</span>,
+              <span style="color: #9aa5ce;">}</span>,
+            <span style="color: #73daca;">]</span>,
+            <span style="color: #ff9e64;">false</span>
+          <span style="color: #2ac3de;">)</span>,
+          shadowColor: <span style="color: #9ece6a; font-style: italic;">'rgba(0,202,149, 0.9)'</span>,
+          shadowBlur: 20,
+        <span style="color: #e0af68;">}</span>,
+      <span style="color: #b4f9f8;">}</span>,
       data: params.inData,
-    },
-  ],
-});
+    <span style="color: #73daca;">}</span>,
+  <span style="color: #ff9e64;">]</span>,
+<span style="color: #7aa2f7;">}</span><span style="color: #a9b1d6;">)</span>;
 </pre>
 </div>
 
@@ -1937,19 +1936,19 @@ export default TrafficSituation;
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js">export default function request(url, options) {
-  return fetch(url, options)
-    .then(checkStatus)
-    .then(parseJSON)
-    .then(data =&gt; ({ data }))
-    .catch(err =&gt; ({ err }));
-}
+<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">default</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">function</span> request<span style="color: #a9b1d6;">(</span><span style="color: #c0caf5; background-color: #372E40;">url</span>, <span style="color: #c0caf5; background-color: #372E40;">options</span><span style="color: #a9b1d6;">)</span> <span style="color: #a9b1d6;">{</span>
+  <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> fetch<span style="color: #7aa2f7;">(</span>url, options<span style="color: #7aa2f7;">)</span>
+    .then<span style="color: #7aa2f7;">(</span>checkStatus<span style="color: #7aa2f7;">)</span>
+    .then<span style="color: #7aa2f7;">(</span>parseJSON<span style="color: #7aa2f7;">)</span>
+    .then<span style="color: #7aa2f7;">(</span>data =&gt; <span style="color: #ff9e64;">(</span><span style="color: #73daca;">{</span> data <span style="color: #73daca;">}</span><span style="color: #ff9e64;">)</span><span style="color: #7aa2f7;">)</span>
+    .<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">catch</span><span style="color: #7aa2f7;">(</span>err =&gt; <span style="color: #ff9e64;">(</span><span style="color: #73daca;">{</span> err <span style="color: #73daca;">}</span><span style="color: #ff9e64;">)</span><span style="color: #7aa2f7;">)</span>;
+<span style="color: #a9b1d6;">}</span>
 
-export const getLeftPageData = async () =&gt; {
-  return request('/api/leftPageData').then(response =&gt; {
-    return response.data;
-  });
-};
+<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">getLeftPageData</span> = <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">async</span> <span style="color: #a9b1d6;">()</span> =&gt; <span style="color: #a9b1d6;">{</span>
+  <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> request<span style="color: #7aa2f7;">(</span><span style="color: #9ece6a; font-style: italic;">'/api/leftPageData'</span><span style="color: #7aa2f7;">)</span>.then<span style="color: #7aa2f7;">(</span>response =&gt; <span style="color: #ff9e64;">{</span>
+    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> response.data;
+  <span style="color: #ff9e64;">}</span><span style="color: #7aa2f7;">)</span>;
+<span style="color: #a9b1d6;">}</span>;
 
 </pre>
 </div>
@@ -1959,47 +1958,47 @@ export const getLeftPageData = async () =&gt; {
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js">export default {
-  // 命名空间 (必填)
-  namespace: 'leftPage',
+<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">default</span> <span style="color: #a9b1d6;">{</span>
+  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21629;&#21517;&#31354;&#38388; (&#24517;&#22635;)</span>
+  namespace: <span style="color: #9ece6a; font-style: italic;">'leftPage'</span>,
 
-  // 数据
-  state: {},
+  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#25968;&#25454;</span>
+  state: <span style="color: #7aa2f7;">{}</span>,
 
-  // 路由监听
-  subscriptions: {
-    setup({ dispatch, history }) {
-      return history.listen((location, action) =&gt; {
-	// 参数可以直接简写成{pathname}
-	if (location.pathname === '/') { //当进入当前页面就执行获取数据这一action
-	  dispatch({ type: 'getLeftPageData' });
-	}
-      });
-    },
-  },
+  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#36335;&#30001;&#30417;&#21548;</span>
+  subscriptions: <span style="color: #7aa2f7;">{</span>
+    setup<span style="color: #ff9e64;">(</span><span style="color: #73daca;">{</span> dispatch, history <span style="color: #73daca;">}</span><span style="color: #ff9e64;">)</span> <span style="color: #ff9e64;">{</span>
+      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> history.listen<span style="color: #73daca;">(</span><span style="color: #b4f9f8;">(</span>location, action<span style="color: #b4f9f8;">)</span> =&gt; <span style="color: #b4f9f8;">{</span>
+        <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21442;&#25968;&#21487;&#20197;&#30452;&#25509;&#31616;&#20889;&#25104;{pathname}</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> <span style="color: #e0af68;">(</span>location.pathname === <span style="color: #9ece6a; font-style: italic;">'/'</span><span style="color: #e0af68;">)</span> <span style="color: #e0af68;">{</span> <span style="color: #51587a; font-style: italic;">//</span><span style="color: #51587a; font-style: italic;">&#24403;&#36827;&#20837;&#24403;&#21069;&#39029;&#38754;&#23601;&#25191;&#34892;&#33719;&#21462;&#25968;&#25454;&#36825;&#19968;action</span>
+          dispatch<span style="color: #2ac3de;">(</span><span style="color: #73daca;">{</span> type: <span style="color: #9ece6a; font-style: italic;">'getLeftPageData'</span> <span style="color: #73daca;">}</span><span style="color: #2ac3de;">)</span>;
+        <span style="color: #e0af68;">}</span>
+      <span style="color: #b4f9f8;">}</span><span style="color: #73daca;">)</span>;
+    <span style="color: #ff9e64;">}</span>,
+  <span style="color: #7aa2f7;">}</span>,
 
-  // 异步请求    action处理器，用以对异步动作进行处理
-  effects: {
-    *getLeftPageData({ payload }, { call, put }) {
-      const data = yield call(getLeftPageData); 
-      if (data) {
-	yield put({
-	  type: 'setData',
-	  payload: data,
-	});
-      } else {
-	console.log(`获取左侧数据数据失败`);
-      }
-    },
-  },
+  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#24322;&#27493;&#35831;&#27714;    action&#22788;&#29702;&#22120;&#65292;&#29992;&#20197;&#23545;&#24322;&#27493;&#21160;&#20316;&#36827;&#34892;&#22788;&#29702;</span>
+  effects: <span style="color: #7aa2f7;">{</span>
+    *getLeftPageData<span style="color: #ff9e64;">(</span><span style="color: #73daca;">{</span> payload <span style="color: #73daca;">}</span>, <span style="color: #73daca;">{</span> call, put <span style="color: #73daca;">}</span><span style="color: #ff9e64;">)</span> <span style="color: #ff9e64;">{</span>
+      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">data</span> = <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">yield</span> call<span style="color: #73daca;">(</span>getLeftPageData<span style="color: #73daca;">)</span>; 
+      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> <span style="color: #73daca;">(</span>data<span style="color: #73daca;">)</span> <span style="color: #73daca;">{</span>
+        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">yield</span> put<span style="color: #b4f9f8;">(</span><span style="color: #e0af68;">{</span>
+          type: <span style="color: #9ece6a; font-style: italic;">'setData'</span>,
+          payload: data,
+        <span style="color: #e0af68;">}</span><span style="color: #b4f9f8;">)</span>;
+      <span style="color: #73daca;">}</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">else</span> <span style="color: #73daca;">{</span>
+        console.log<span style="color: #b4f9f8;">(</span><span style="color: #9ece6a; font-style: italic;">`&#33719;&#21462;&#24038;&#20391;&#25968;&#25454;&#25968;&#25454;&#22833;&#36133;`</span><span style="color: #b4f9f8;">)</span>;
+      <span style="color: #73daca;">}</span>
+    <span style="color: #ff9e64;">}</span>,
+  <span style="color: #7aa2f7;">}</span>,
 
-  // 同步操作
-  reducers: {
-    setData(state, action) {
-      return { ...state, ...action.payload };
-    },
-  },
-};
+  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21516;&#27493;&#25805;&#20316;</span>
+  reducers: <span style="color: #7aa2f7;">{</span>
+    setData<span style="color: #ff9e64;">(</span>state, action<span style="color: #ff9e64;">)</span> <span style="color: #ff9e64;">{</span>
+      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #73daca;">{</span> ...state, ...action.payload <span style="color: #73daca;">}</span>;
+    <span style="color: #ff9e64;">}</span>,
+  <span style="color: #7aa2f7;">}</span>,
+<span style="color: #a9b1d6;">}</span>;
 
 </pre>
 </div>
@@ -2019,8 +2018,8 @@ export const getLeftPageData = async () =&gt; {
 </div>
 
 
-<div id="outline-container-orgfd6b1a1" class="outline-5">
-<h5 id="orgfd6b1a1"><span class="section-number-5">4.3.1.1.</span> 安装与运行</h5>
+<div id="outline-container-org04ec859" class="outline-5">
+<h5 id="org04ec859"><span class="section-number-5">4.3.1.1.</span> 安装与运行</h5>
 <div class="outline-text-5" id="text-4-3-1-1">
 <p>
 基于npm进行依赖安装
@@ -2033,15 +2032,15 @@ export const getLeftPageData = async () =&gt; {
 主要包括以下依赖：
 </p>
 <div class="org-src-container">
-<pre class="src src-js">"dependencies": {
-   "@jiaminghi/data-view-react": "^1.2.4",
-   "dva": "^2.4.1",
-   "echarts": "^4.9.0",
-   "react": "^16.2.0",
-   "react-dom": "^16.2.0",
-   "sass-loader": "8.0.2",
-   "styled-components": "^5.2.0"
- },
+<pre class="src src-js"><span style="color: #9ece6a; font-style: italic;">"dependencies"</span>: <span style="color: #a9b1d6;">{</span>
+   <span style="color: #9ece6a; font-style: italic;">"@jiaminghi/data-view-react"</span>: <span style="color: #9ece6a; font-style: italic;">"^1.2.4"</span>,
+   <span style="color: #9ece6a; font-style: italic;">"dva"</span>: <span style="color: #9ece6a; font-style: italic;">"^2.4.1"</span>,
+   <span style="color: #9ece6a; font-style: italic;">"echarts"</span>: <span style="color: #9ece6a; font-style: italic;">"^4.9.0"</span>,
+   <span style="color: #9ece6a; font-style: italic;">"react"</span>: <span style="color: #9ece6a; font-style: italic;">"^16.2.0"</span>,
+   <span style="color: #9ece6a; font-style: italic;">"react-dom"</span>: <span style="color: #9ece6a; font-style: italic;">"^16.2.0"</span>,
+   <span style="color: #9ece6a; font-style: italic;">"sass-loader"</span>: <span style="color: #9ece6a; font-style: italic;">"8.0.2"</span>,
+   <span style="color: #9ece6a; font-style: italic;">"styled-components"</span>: <span style="color: #9ece6a; font-style: italic;">"^5.2.0"</span>
+ <span style="color: #a9b1d6;">}</span>,
 </pre>
 </div>
 <p>
@@ -2062,8 +2061,8 @@ export const getLeftPageData = async () =&gt; {
 </div>
 
 
-<div id="outline-container-orga8c86f5" class="outline-2">
-<h2 id="orga8c86f5"><span class="section-number-2">5.</span> 结论及未来工作</h2>
+<div id="outline-container-org756fde3" class="outline-2">
+<h2 id="org756fde3"><span class="section-number-2">5.</span> 结论及未来工作</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 本文面向西安交通大学创新港图书馆的实际使用场景，基于ARIS房子模型设计了一套图书馆管理系统，并基于Zachman模型进行了分析和增补。在此基础上，完成了对不同视角下该视图的UML设计，并基于UML图生成实现了图书馆管理系统，主要包括门禁子系统、书籍处理子系统、查询子系统、数据与操作权限管理子系统、数据可视化子系统五个部分。作为重点，本文封装实现了一个RBAC库，并进行了同过去已有RBAC库的功能比较；本文还基于前端框架react开发了一个数据可视化平台。
@@ -2075,8 +2074,8 @@ export const getLeftPageData = async () =&gt; {
 </div>
 </div>
 
-<div id="outline-container-org14f7c16" class="outline-2">
-<h2 id="org14f7c16"><span class="section-number-2">6.</span> 参考文献</h2>
+<div id="outline-container-orgab32e25" class="outline-2">
+<h2 id="orgab32e25"><span class="section-number-2">6.</span> 参考文献</h2>
 <div class="outline-text-2" id="text-6">
 <ol class="org-ol">
 <li><a href="https://baike.baidu.com/item/Zachman%E6%A1%86%E6%9E%B6/5553896">https://baike.baidu.com/item/Zachman%E6%A1%86%E6%9E%B6/5553896</a></li>
@@ -2094,7 +2093,7 @@ export const getLeftPageData = async () =&gt; {
 <div id="postamble" class="status">
 <p class="date">Date: Tue Jul 13 02:52:31 2021</p>
 <p class="author">Author: 梁子，3120305385，S0083，软件学院</p>
-<p class="date">Created: 2023-01-05 四 16:37</p>
+<p class="date">Created: 2023-05-19 五 09:02</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

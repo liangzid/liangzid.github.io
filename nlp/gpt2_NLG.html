@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<!-- 2023-01-02 一 17:32 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2023-05-19 五 09:02 -->
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>关于huggingface transformers NLG模块实现的基本思路</title>
 <meta name="author" content="liangzid" />
@@ -191,8 +189,9 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
+  .org-svg { }
 </style>
+<link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/>
 </head>
 <body>
 <div id="content" class="content">
@@ -201,24 +200,24 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org60d8a4f">1. 标题1</a></li>
-<li><a href="#orga118c84">2. 关于huggingface transformers NLG 模块实现的基本思路</a>
+<li><a href="#org08bb183">1. 标题1</a></li>
+<li><a href="#org09bdbda">2. 关于huggingface transformers NLG 模块实现的基本思路</a>
 <ul>
-<li><a href="#org4a4e90b">2.1. 语言模型的训练与测试的不同之处</a></li>
-<li><a href="#orgb8b0c9a">2.2. 训练环节</a>
+<li><a href="#org8e17d5a">2.1. 语言模型的训练与测试的不同之处</a></li>
+<li><a href="#orgb911958">2.2. 训练环节</a>
 <ul>
-<li><a href="#org454f0cb">2.2.1. 数据集封装形式</a></li>
-<li><a href="#org4f6ba2f">2.2.2. 微不足道的模型训练细节</a></li>
+<li><a href="#org0e7b554">2.2.1. 数据集封装形式</a></li>
+<li><a href="#org5f5a05d">2.2.2. 微不足道的模型训练细节</a></li>
 </ul>
 </li>
-<li><a href="#org114b4ae">2.3. 测试环节</a>
+<li><a href="#org34aca0e">2.3. 测试环节</a>
 <ul>
-<li><a href="#org39cc783">2.3.1. 数据集封装形式</a></li>
-<li><a href="#org44c6dc5">2.3.2. NLG生成细节</a>
+<li><a href="#orga4931db">2.3.1. 数据集封装形式</a></li>
+<li><a href="#org83d0401">2.3.2. NLG生成细节</a>
 <ul>
-<li><a href="#org4ae35a9">2.3.2.1. 贪婪生成方案</a></li>
-<li><a href="#org7602933">2.3.2.2. beam search 方案</a></li>
-<li><a href="#org2141ddb">2.3.2.3. 其他方案</a></li>
+<li><a href="#orgaf045d4">2.3.2.1. 贪婪生成方案</a></li>
+<li><a href="#orgd5bbca9">2.3.2.2. beam search 方案</a></li>
+<li><a href="#org33908ec">2.3.2.3. 其他方案</a></li>
 </ul>
 </li>
 </ul>
@@ -228,15 +227,15 @@
 </ul>
 </div>
 </div>
-<div id="outline-container-org60d8a4f" class="outline-2">
-<h2 id="org60d8a4f"><span class="section-number-2">1.</span> 标题1</h2>
+<div id="outline-container-org08bb183" class="outline-2">
+<h2 id="org08bb183"><span class="section-number-2">1.</span> 标题1</h2>
 </div>
-<div id="outline-container-orga118c84" class="outline-2">
-<h2 id="orga118c84"><span class="section-number-2">2.</span> 关于huggingface transformers NLG 模块实现的基本思路</h2>
+<div id="outline-container-org09bdbda" class="outline-2">
+<h2 id="org09bdbda"><span class="section-number-2">2.</span> 关于huggingface transformers NLG 模块实现的基本思路</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org4a4e90b" class="outline-3">
-<h3 id="org4a4e90b"><span class="section-number-3">2.1.</span> 语言模型的训练与测试的不同之处</h3>
+<div id="outline-container-org8e17d5a" class="outline-3">
+<h3 id="org8e17d5a"><span class="section-number-3">2.1.</span> 语言模型的训练与测试的不同之处</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预测下一个token时，基于的是前面的token全都正确的似然假设；
@@ -250,30 +249,30 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </div>
 </div>
 
-<div id="outline-container-orgb8b0c9a" class="outline-3">
-<h3 id="orgb8b0c9a"><span class="section-number-3">2.2.</span> 训练环节</h3>
+<div id="outline-container-orgb911958" class="outline-3">
+<h3 id="orgb911958"><span class="section-number-3">2.2.</span> 训练环节</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-org454f0cb" class="outline-4">
-<h4 id="org454f0cb"><span class="section-number-4">2.2.1.</span> 数据集封装形式</h4>
+<div id="outline-container-org0e7b554" class="outline-4">
+<h4 id="org0e7b554"><span class="section-number-4">2.2.1.</span> 数据集封装形式</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 一般而言，是数据等于标签的格式。以对话为例，可能就是"Q+[SEP]+A"这种。
 </p>
 </div>
 </div>
-<div id="outline-container-org4f6ba2f" class="outline-4">
-<h4 id="org4f6ba2f"><span class="section-number-4">2.2.2.</span> 微不足道的模型训练细节</h4>
+<div id="outline-container-org5f5a05d" class="outline-4">
+<h4 id="org5f5a05d"><span class="section-number-4">2.2.2.</span> 微不足道的模型训练细节</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <p>
 由于是token预测问题，所以本质上属于一个分类问题，一般而言，会使用交叉熵，除了使用transformers库之外，还可以自己用以下的方式进行损失的定义和传播：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ef6787;">loss_func_cls</span> = CrossEntropyLoss<span style="color: #4d9391;">(</span>ignore_index=PAD_ID, reduction=<span style="color: #cea2ca;">'sum'</span><span style="color: #4d9391;">)</span>
-output_distributions=Decoder<span style="color: #4d9391;">(</span>utterance_input<span style="color: #4d9391;">)[</span>0<span style="color: #4d9391;">]</span>
-output_prediction=output_distributions.permute<span style="color: #4d9391;">(</span><span style="color: #47ba99;">[</span>0,2,1<span style="color: #47ba99;">]</span><span style="color: #4d9391;">)</span>
-loss_autoencoder=loss_func_cls<span style="color: #4d9391;">(</span>output_prediction,utterance_input<span style="color: #4d9391;">)</span>
+<pre class="src src-python"><span style="color: #c0caf5; background-color: #372E40;">loss_func_cls</span> = CrossEntropyLoss<span style="color: #a9b1d6;">(</span>ignore_index=PAD_ID, reduction=<span style="color: #9ece6a; font-style: italic;">'sum'</span><span style="color: #a9b1d6;">)</span>
+output_distributions=Decoder<span style="color: #a9b1d6;">(</span>utterance_input<span style="color: #a9b1d6;">)[</span>0<span style="color: #a9b1d6;">]</span>
+output_prediction=output_distributions.permute<span style="color: #a9b1d6;">(</span><span style="color: #7aa2f7;">[</span>0,2,1<span style="color: #7aa2f7;">]</span><span style="color: #a9b1d6;">)</span>
+loss_autoencoder=loss_func_cls<span style="color: #a9b1d6;">(</span>output_prediction,utterance_input<span style="color: #a9b1d6;">)</span>
 </pre>
 </div>
 <p>
@@ -282,12 +281,12 @@ loss_autoencoder=loss_func_cls<span style="color: #4d9391;">(</span>output_predi
 </div>
 </div>
 </div>
-<div id="outline-container-org114b4ae" class="outline-3">
-<h3 id="org114b4ae"><span class="section-number-3">2.3.</span> 测试环节</h3>
+<div id="outline-container-org34aca0e" class="outline-3">
+<h3 id="org34aca0e"><span class="section-number-3">2.3.</span> 测试环节</h3>
 <div class="outline-text-3" id="text-2-3">
 </div>
-<div id="outline-container-org39cc783" class="outline-4">
-<h4 id="org39cc783"><span class="section-number-4">2.3.1.</span> 数据集封装形式</h4>
+<div id="outline-container-orga4931db" class="outline-4">
+<h4 id="orga4931db"><span class="section-number-4">2.3.1.</span> 数据集封装形式</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <p>
 测试环节的数据集同训练环节有所不同，因为在测试环节，相当于是基于一个prefix去生成后面的话。
@@ -295,18 +294,18 @@ loss_autoencoder=loss_func_cls<span style="color: #4d9391;">(</span>output_predi
 </p>
 </div>
 </div>
-<div id="outline-container-org44c6dc5" class="outline-4">
-<h4 id="org44c6dc5"><span class="section-number-4">2.3.2.</span> NLG生成细节</h4>
+<div id="outline-container-org83d0401" class="outline-4">
+<h4 id="org83d0401"><span class="section-number-4">2.3.2.</span> NLG生成细节</h4>
 <div class="outline-text-4" id="text-2-3-2">
 <p>
 下面给出几种较为常见的NLG的具体实现，方便日后炼丹之用。
 </p>
 </div>
-<div id="outline-container-org4ae35a9" class="outline-5">
-<h5 id="org4ae35a9"><span class="section-number-5">2.3.2.1.</span> 贪婪生成方案</h5>
+<div id="outline-container-orgaf045d4" class="outline-5">
+<h5 id="orgaf045d4"><span class="section-number-5">2.3.2.1.</span> 贪婪生成方案</h5>
 <div class="outline-text-5" id="text-2-3-2-1">
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ef6787;">beam_outputs</span>=Decoder.generate<span style="color: #4d9391;">(</span>input_ids=utterance_input, max_length=64<span style="color: #4d9391;">)</span>
+<pre class="src src-python"><span style="color: #c0caf5; background-color: #372E40;">beam_outputs</span>=Decoder.generate<span style="color: #a9b1d6;">(</span>input_ids=utterance_input, max_length=64<span style="color: #a9b1d6;">)</span>
 </pre>
 </div>
 <p>
@@ -315,20 +314,20 @@ loss_autoencoder=loss_func_cls<span style="color: #4d9391;">(</span>output_predi
 </div>
 </div>
 
-<div id="outline-container-org7602933" class="outline-5">
-<h5 id="org7602933"><span class="section-number-5">2.3.2.2.</span> beam search 方案</h5>
+<div id="outline-container-orgd5bbca9" class="outline-5">
+<h5 id="orgd5bbca9"><span class="section-number-5">2.3.2.2.</span> beam search 方案</h5>
 <div class="outline-text-5" id="text-2-3-2-2">
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ef6787;">outputs</span>=Decoder.generate<span style="color: #4d9391;">(</span>input_ids=utterance_input, max_length=64,
+<pre class="src src-python"><span style="color: #c0caf5; background-color: #372E40;">outputs</span>=Decoder.generate<span style="color: #a9b1d6;">(</span>input_ids=utterance_input, max_length=64,
                                                 num_beams=5,
-                                                num_return_sequences=5, early_stopping=<span style="color: #ef6787;">True</span><span style="color: #4d9391;">)</span>
+                                                num_return_sequences=5, early_stopping=<span style="color: #ff9e64;">True</span><span style="color: #a9b1d6;">)</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2141ddb" class="outline-5">
-<h5 id="org2141ddb"><span class="section-number-5">2.3.2.3.</span> 其他方案</h5>
+<div id="outline-container-org33908ec" class="outline-5">
+<h5 id="org33908ec"><span class="section-number-5">2.3.2.3.</span> 其他方案</h5>
 <div class="outline-text-5" id="text-2-3-2-3">
 <p>
 参考这里： <a href="https://huggingface.co/blog/how-to-generate">https://huggingface.co/blog/how-to-generate</a>
@@ -342,7 +341,7 @@ loss_autoencoder=loss_func_cls<span style="color: #4d9391;">(</span>output_predi
 <div id="postamble" class="status">
 <p class="date">Date: Wed Nov 17 19:40:30 2021</p>
 <p class="author">Author: liangzid</p>
-<p class="date">Created: 2023-01-02 一 17:32</p>
+<p class="date">Created: 2023-05-19 五 09:02</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
