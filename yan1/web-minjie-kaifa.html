@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2023-05-19 五 09:02 -->
+<!-- 2023-08-21 一 15:03 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>web前端作业——基于React组件化思路开发的山寨版创新港图书馆大数据可视化平台</title>
@@ -189,7 +189,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { }
+  .org-svg { width: 90%; }
 </style>
 <link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/>
 </head>
@@ -200,31 +200,31 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org7380e04">1. 场景及功能介绍</a></li>
-<li><a href="#org5328db9">2. 界面功能实现</a>
+<li><a href="#org5b59b4d">1. 场景及功能介绍</a></li>
+<li><a href="#org6cbcb13">2. 界面功能实现</a>
 <ul>
-<li><a href="#orgf1f6b63">2.1. 总体架构</a></li>
-<li><a href="#orgd8ed633">2.2. 各组块实现</a></li>
+<li><a href="#org52a9365">2.1. 总体架构</a></li>
+<li><a href="#org1590282">2.2. 各组块实现</a></li>
 </ul>
 </li>
-<li><a href="#org09a00f3">3. 安装与运行</a>
+<li><a href="#orge26b57e">3. 安装与运行</a>
 <ul>
-<li><a href="#org4db57d7">3.1. 安装</a></li>
-<li><a href="#org3bf04f4">3.2. 运行</a></li>
+<li><a href="#org8f69bf1">3.1. 安装</a></li>
+<li><a href="#orge28faf8">3.2. 运行</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org7380e04" class="outline-2">
-<h2 id="org7380e04"><span class="section-number-2">1.</span> 场景及功能介绍</h2>
+<div id="outline-container-org5b59b4d" class="outline-2">
+<h2 id="org5b59b4d"><span class="section-number-2">1.</span> 场景及功能介绍</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 本作业拟实现的功能是：一个被目前广泛使用的可视化界面。观察到创新港的图书馆中便有屏幕投放这种前端界面，因此打算仿照之实现一个山寨版本。整体结果图示如下图所示：
 </p>
 
 
-<div id="orgfb73ee3" class="figure">
+<div id="orgd651c9a" class="figure">
 <p><img src="file:///home/liangzi/图片/interface.png" alt="interface.png">
 </p>
 </div>
@@ -248,12 +248,12 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org5328db9" class="outline-2">
-<h2 id="org5328db9"><span class="section-number-2">2.</span> 界面功能实现</h2>
+<div id="outline-container-org6cbcb13" class="outline-2">
+<h2 id="org6cbcb13"><span class="section-number-2">2.</span> 界面功能实现</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgf1f6b63" class="outline-3">
-<h3 id="orgf1f6b63"><span class="section-number-3">2.1.</span> 总体架构</h3>
+<div id="outline-container-org52a9365" class="outline-3">
+<h3 id="org52a9365"><span class="section-number-3">2.1.</span> 总体架构</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 本作业所描述平台整体上包含了两部分：前端实现和后端实现。当然，由于后端实现较为简单（即基于简单数据库的对数据的整合和处理），因此本章重点介绍前端部分。整体上而言，本文使用阿里巴巴的前端框架dva进行套装，整体上可分为三大模块：
@@ -274,8 +274,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgd8ed633" class="outline-3">
-<h3 id="orgd8ed633"><span class="section-number-3">2.2.</span> 各组块实现</h3>
+<div id="outline-container-org1590282" class="outline-3">
+<h3 id="org1590282"><span class="section-number-3">2.2.</span> 各组块实现</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 各个组块的实现均基于react进行，主要包括以下8个原子级别的组块：
@@ -314,54 +314,54 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js"> render<span style="color: #a9b1d6;">()</span> <span style="color: #a9b1d6;">{</span>
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #7aa2f7;">{</span> userSitua, trafficSitua, accessFrequency, peakFlow <span style="color: #7aa2f7;">}</span> = <span style="color: #ff9e64;">this</span>.props;
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #7aa2f7;">(</span>
-      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#39118;&#26684;</span>
+<pre class="src src-js"> render<span style="color: #0D9C94;">()</span> <span style="color: #0D9C94;">{</span>
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">const</span> <span style="color: #47ba99;">{</span> userSitua, trafficSitua, accessFrequency, peakFlow <span style="color: #47ba99;">}</span> = <span style="color: #41b0f3;">this</span>.props;
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> <span style="color: #47ba99;">(</span>
+      <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#39118;&#26684;</span>
       &lt;LeftPage&gt;
-        <span style="color: #ff9e64;">{</span><span style="color: #51587a; font-style: italic;">/* </span><span style="color: #51587a; font-style: italic;">&#39030;&#37096;&#22270;&#34920;</span><span style="color: #51587a; font-style: italic;"> */</span><span style="color: #ff9e64;">}</span>
+        <span style="color: #62D2DB;">{</span><span style="color: #454459;">/* </span><span style="color: #454459; font-style: italic;">&#39030;&#37096;&#22270;&#34920;</span><span style="color: #454459;"> */</span><span style="color: #62D2DB;">}</span>
         &lt;LeftTopBox&gt;
-          &lt;BorderBox12 className=<span style="color: #9ece6a; font-style: italic;">'left-top-borderBox12'</span>&gt;
-            &lt;div className=<span style="color: #9ece6a; font-style: italic;">'left-top'</span>&gt;
+          &lt;BorderBox12 className=<span style="color: #62D2DB; font-style: italic;">'left-top-borderBox12'</span>&gt;
+            &lt;div className=<span style="color: #62D2DB; font-style: italic;">'left-top'</span>&gt;
               &lt;ModuleTitle&gt;
-                &lt;i className=<span style="color: #9ece6a; font-style: italic;">'iconfont'</span>&gt;&amp;#xe78f;&lt;/i&gt;
+                &lt;i className=<span style="color: #62D2DB; font-style: italic;">'iconfont'</span>&gt;&amp;#xe78f;&lt;/i&gt;
                 &lt;span&gt;&#20170;&#26085;&#22270;&#20070;&#39302;&#36827;&#20986;&#24773;&#20917;&lt;/span&gt;
               &lt;/ModuleTitle&gt;
 
-              &lt;div className=<span style="color: #9ece6a; font-style: italic;">'title-dis'</span>&gt;
+              &lt;div className=<span style="color: #62D2DB; font-style: italic;">'title-dis'</span>&gt;
                 &lt;span&gt;
-                  &#24403;&#21069;&#21442;&#35266;&#20154;&#25968;<span style="color: #ff9e64;">(</span>&#23567;&#26102;<span style="color: #ff9e64;">)</span>:
-                  &lt;span className=<span style="color: #9ece6a; font-style: italic;">'title-dis-keyword'</span>&gt;<span style="color: #ff9e64;">{</span>accessFrequency<span style="color: #ff9e64;">}</span>&#20154;&lt;/span&gt;
+                  &#24403;&#21069;&#21442;&#35266;&#20154;&#25968;<span style="color: #62D2DB;">(</span>&#23567;&#26102;<span style="color: #62D2DB;">)</span>:
+                  &lt;span className=<span style="color: #62D2DB; font-style: italic;">'title-dis-keyword'</span>&gt;<span style="color: #62D2DB;">{</span>accessFrequency<span style="color: #62D2DB;">}</span>&#20154;&lt;/span&gt;
                 &lt;/span&gt;
 
                 &lt;span&gt;
                   &#20170;&#26085;&#24635;&#20154;&#25968;:
-                  &lt;span className=<span style="color: #9ece6a; font-style: italic;">'title-dis-keyword'</span>&gt;<span style="color: #ff9e64;">{</span>peakFlow<span style="color: #ff9e64;">}</span>&#20154;&lt;/span&gt;
+                  &lt;span className=<span style="color: #62D2DB; font-style: italic;">'title-dis-keyword'</span>&gt;<span style="color: #62D2DB;">{</span>peakFlow<span style="color: #62D2DB;">}</span>&#20154;&lt;/span&gt;
                 &lt;/span&gt;
               &lt;/div&gt;
-              <span style="color: #ff9e64;">{</span><span style="color: #51587a; font-style: italic;">/* </span><span style="color: #51587a; font-style: italic;">&#22270;&#34920;</span><span style="color: #51587a; font-style: italic;"> */</span><span style="color: #ff9e64;">}</span>
-              &lt;TrafficSituation trafficSitua=<span style="color: #ff9e64;">{</span>trafficSitua<span style="color: #ff9e64;">}</span>&gt;&lt;/TrafficSituation&gt;
+              <span style="color: #62D2DB;">{</span><span style="color: #454459;">/* </span><span style="color: #454459; font-style: italic;">&#22270;&#34920;</span><span style="color: #454459;"> */</span><span style="color: #62D2DB;">}</span>
+              &lt;TrafficSituation trafficSitua=<span style="color: #62D2DB;">{</span>trafficSitua<span style="color: #62D2DB;">}</span>&gt;&lt;/TrafficSituation&gt;
             &lt;/div&gt;
           &lt;/BorderBox12&gt;
         &lt;/LeftTopBox&gt;
 
-        <span style="color: #ff9e64;">{</span><span style="color: #51587a; font-style: italic;">/* </span><span style="color: #51587a; font-style: italic;">&#24213;&#37096;&#22270;&#34920;</span><span style="color: #51587a; font-style: italic;"> */</span><span style="color: #ff9e64;">}</span>
+        <span style="color: #62D2DB;">{</span><span style="color: #454459;">/* </span><span style="color: #454459; font-style: italic;">&#24213;&#37096;&#22270;&#34920;</span><span style="color: #454459;"> */</span><span style="color: #62D2DB;">}</span>
         &lt;LeftBottomBox&gt;
-          &lt;BorderBox13 className=<span style="color: #9ece6a; font-style: italic;">'left-bottom-borderBox13'</span>&gt;
-            &lt;div className=<span style="color: #9ece6a; font-style: italic;">'left-bottom'</span>&gt;
+          &lt;BorderBox13 className=<span style="color: #62D2DB; font-style: italic;">'left-bottom-borderBox13'</span>&gt;
+            &lt;div className=<span style="color: #62D2DB; font-style: italic;">'left-bottom'</span>&gt;
               &lt;ModuleTitle&gt;
-                &lt;i className=<span style="color: #9ece6a; font-style: italic;">'iconfont'</span>&gt;&amp;#xe88e;&lt;/i&gt;
+                &lt;i className=<span style="color: #62D2DB; font-style: italic;">'iconfont'</span>&gt;&amp;#xe88e;&lt;/i&gt;
                 &lt;span&gt;&#26412;&#21608;&#22270;&#20070;&#20511;&#38405;&#27036;&lt;/span&gt;
               &lt;/ModuleTitle&gt;
-              <span style="color: #ff9e64;">{</span><span style="color: #51587a; font-style: italic;">/* </span><span style="color: #51587a; font-style: italic;">&#22270;&#34920;</span><span style="color: #51587a; font-style: italic;"> */</span><span style="color: #ff9e64;">}</span>
-              &lt;UserSituation userSitua=<span style="color: #ff9e64;">{</span>userSitua<span style="color: #ff9e64;">}</span>&gt;&lt;/UserSituation&gt;
+              <span style="color: #62D2DB;">{</span><span style="color: #454459;">/* </span><span style="color: #454459; font-style: italic;">&#22270;&#34920;</span><span style="color: #454459;"> */</span><span style="color: #62D2DB;">}</span>
+              &lt;UserSituation userSitua=<span style="color: #62D2DB;">{</span>userSitua<span style="color: #62D2DB;">}</span>&gt;&lt;/UserSituation&gt;
             &lt;/div&gt;
           &lt;/BorderBox13&gt;
         &lt;/LeftBottomBox&gt;
       &lt;/LeftPage&gt;
-    <span style="color: #7aa2f7;">)</span>;
-  <span style="color: #a9b1d6;">}</span>
-<span style="color: #f7768e; font-weight: bold;">}</span>
+    <span style="color: #47ba99;">)</span>;
+  <span style="color: #0D9C94;">}</span>
+<span style="color: #e55c7a; background-color: #832729;">}</span>
 </pre>
 </div>
 
@@ -374,34 +374,34 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">LeftTopBox</span> = styled.div<span style="color: #9ece6a; font-style: italic;">`</span>
-<span style="color: #9ece6a; font-style: italic;">  position: relative;</span>
-<span style="color: #9ece6a; font-style: italic;">  height: 4.375rem;</span>
-<span style="color: #9ece6a; font-style: italic;">  width: 100%;</span>
-<span style="color: #9ece6a; font-style: italic;">  .left-top-borderBox12 {</span>
-<span style="color: #9ece6a; font-style: italic;">    width: inherit;</span>
-<span style="color: #9ece6a; font-style: italic;">    height: inherit;</span>
-<span style="color: #9ece6a; font-style: italic;">    padding: 0.1875rem;</span>
-<span style="color: #9ece6a; font-style: italic;">    .left-top {</span>
-<span style="color: #9ece6a; font-style: italic;">      width: 100%;</span>
-<span style="color: #9ece6a; font-style: italic;">      height: 100%;</span>
-<span style="color: #9ece6a; font-style: italic;">      border-radius: 10px;</span>
-<span style="color: #9ece6a; font-style: italic;">      background-color: rgba(19, 25, 47, 0.6);</span>
-<span style="color: #9ece6a; font-style: italic;">      .title-dis {</span>
-<span style="color: #9ece6a; font-style: italic;">        margin-top: 0.1875rem;</span>
-<span style="color: #9ece6a; font-style: italic;">        display: flex;</span>
-<span style="color: #9ece6a; font-style: italic;">        justify-content: space-around;</span>
-<span style="color: #9ece6a; font-style: italic;">        align-items: center;</span>
-<span style="color: #9ece6a; font-style: italic;">        font-size: 0.2rem;</span>
-<span style="color: #9ece6a; font-style: italic;">        color: #c0c9d2;</span>
-<span style="color: #9ece6a; font-style: italic;">        &amp;-keyword {</span>
-<span style="color: #9ece6a; font-style: italic;">          padding-left: 0.125rem;</span>
-<span style="color: #9ece6a; font-style: italic;">          color: #47dae8;</span>
-<span style="color: #9ece6a; font-style: italic;">        }</span>
-<span style="color: #9ece6a; font-style: italic;">      }</span>
-<span style="color: #9ece6a; font-style: italic;">    }</span>
-<span style="color: #9ece6a; font-style: italic;">  }</span>
-<span style="color: #9ece6a; font-style: italic;">`</span>;
+<pre class="src src-js"><span style="color: #9587DD; font-style: italic; text-decoration: underline;">export</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">const</span> <span style="color: #41b0f3; background-color: #372E40;">LeftTopBox</span> = styled.div<span style="color: #62D2DB; font-style: italic;">`</span>
+<span style="color: #62D2DB; font-style: italic;">  position: relative;</span>
+<span style="color: #62D2DB; font-style: italic;">  height: 4.375rem;</span>
+<span style="color: #62D2DB; font-style: italic;">  width: 100%;</span>
+<span style="color: #62D2DB; font-style: italic;">  .left-top-borderBox12 {</span>
+<span style="color: #62D2DB; font-style: italic;">    width: inherit;</span>
+<span style="color: #62D2DB; font-style: italic;">    height: inherit;</span>
+<span style="color: #62D2DB; font-style: italic;">    padding: 0.1875rem;</span>
+<span style="color: #62D2DB; font-style: italic;">    .left-top {</span>
+<span style="color: #62D2DB; font-style: italic;">      width: 100%;</span>
+<span style="color: #62D2DB; font-style: italic;">      height: 100%;</span>
+<span style="color: #62D2DB; font-style: italic;">      border-radius: 10px;</span>
+<span style="color: #62D2DB; font-style: italic;">      background-color: rgba(19, 25, 47, 0.6);</span>
+<span style="color: #62D2DB; font-style: italic;">      .title-dis {</span>
+<span style="color: #62D2DB; font-style: italic;">        margin-top: 0.1875rem;</span>
+<span style="color: #62D2DB; font-style: italic;">        display: flex;</span>
+<span style="color: #62D2DB; font-style: italic;">        justify-content: space-around;</span>
+<span style="color: #62D2DB; font-style: italic;">        align-items: center;</span>
+<span style="color: #62D2DB; font-style: italic;">        font-size: 0.2rem;</span>
+<span style="color: #62D2DB; font-style: italic;">        color: #c0c9d2;</span>
+<span style="color: #62D2DB; font-style: italic;">        &amp;-keyword {</span>
+<span style="color: #62D2DB; font-style: italic;">          padding-left: 0.125rem;</span>
+<span style="color: #62D2DB; font-style: italic;">          color: #47dae8;</span>
+<span style="color: #62D2DB; font-style: italic;">        }</span>
+<span style="color: #62D2DB; font-style: italic;">      }</span>
+<span style="color: #62D2DB; font-style: italic;">    }</span>
+<span style="color: #62D2DB; font-style: italic;">  }</span>
+<span style="color: #62D2DB; font-style: italic;">`</span>;
 </pre>
 </div>
 
@@ -411,34 +411,34 @@
 
 
 <div class="org-src-container">
-<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">class</span> TrafficSituation <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">extends</span> PureComponent <span style="color: #a9b1d6;">{</span>
-  constructor<span style="color: #7aa2f7;">(</span>props<span style="color: #7aa2f7;">)</span> <span style="color: #7aa2f7;">{</span>
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">super</span><span style="color: #ff9e64;">(</span>props<span style="color: #ff9e64;">)</span>;
-    <span style="color: #ff9e64;">this</span>.state = <span style="color: #ff9e64;">{</span>
-      renderer: <span style="color: #9ece6a; font-style: italic;">'canvas'</span>,
-    <span style="color: #ff9e64;">}</span>;
-  <span style="color: #7aa2f7;">}</span>
+<pre class="src src-js"><span style="color: #9587DD; font-style: italic; text-decoration: underline;">class</span> TrafficSituation <span style="color: #9587DD; font-style: italic; text-decoration: underline;">extends</span> PureComponent <span style="color: #0D9C94;">{</span>
+  constructor<span style="color: #47ba99;">(</span>props<span style="color: #47ba99;">)</span> <span style="color: #47ba99;">{</span>
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">super</span><span style="color: #62D2DB;">(</span>props<span style="color: #62D2DB;">)</span>;
+    <span style="color: #41b0f3;">this</span>.state = <span style="color: #62D2DB;">{</span>
+      renderer: <span style="color: #62D2DB; font-style: italic;">'canvas'</span>,
+    <span style="color: #62D2DB;">}</span>;
+  <span style="color: #47ba99;">}</span>
 
-  render<span style="color: #7aa2f7;">()</span> <span style="color: #7aa2f7;">{</span>
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #ff9e64;">{</span> renderer <span style="color: #ff9e64;">}</span> = <span style="color: #ff9e64;">this</span>.state;
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #ff9e64;">{</span> trafficSitua <span style="color: #ff9e64;">}</span> = <span style="color: #ff9e64;">this</span>.props;
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #ff9e64;">(</span>
+  render<span style="color: #47ba99;">()</span> <span style="color: #47ba99;">{</span>
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">const</span> <span style="color: #62D2DB;">{</span> renderer <span style="color: #62D2DB;">}</span> = <span style="color: #41b0f3;">this</span>.state;
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">const</span> <span style="color: #62D2DB;">{</span> trafficSitua <span style="color: #62D2DB;">}</span> = <span style="color: #41b0f3;">this</span>.props;
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> <span style="color: #62D2DB;">(</span>
       &lt;div
-        style=<span style="color: #73daca;">{</span><span style="color: #b4f9f8;">{</span>
-          width: <span style="color: #9ece6a; font-style: italic;">'5.375rem'</span>,
-          height: <span style="color: #9ece6a; font-style: italic;">'3.125rem'</span>,
-        <span style="color: #b4f9f8;">}</span><span style="color: #73daca;">}</span>&gt;
-        <span style="color: #73daca;">{</span>trafficSitua ? <span style="color: #b4f9f8;">(</span>
-          &lt;Chart renderer=<span style="color: #e0af68;">{</span>renderer<span style="color: #e0af68;">}</span> option=<span style="color: #e0af68;">{</span>trafficOptions<span style="color: #2ac3de;">(</span>trafficSitua<span style="color: #2ac3de;">)</span><span style="color: #e0af68;">}</span> /&gt;
-        <span style="color: #b4f9f8;">)</span> : <span style="color: #b4f9f8;">(</span>
-          <span style="color: #9ece6a; font-style: italic;">''</span>
-        <span style="color: #b4f9f8;">)</span><span style="color: #73daca;">}</span>
+        style=<span style="color: #9d81ba;">{</span><span style="color: #35BF88;">{</span>
+          width: <span style="color: #62D2DB; font-style: italic;">'5.375rem'</span>,
+          height: <span style="color: #62D2DB; font-style: italic;">'3.125rem'</span>,
+        <span style="color: #35BF88;">}</span><span style="color: #9d81ba;">}</span>&gt;
+        <span style="color: #9d81ba;">{</span>trafficSitua ? <span style="color: #35BF88;">(</span>
+          &lt;Chart renderer=<span style="color: #687184;">{</span>renderer<span style="color: #687184;">}</span> option=<span style="color: #687184;">{</span>trafficOptions<span style="color: #cd9575;">(</span>trafficSitua<span style="color: #cd9575;">)</span><span style="color: #687184;">}</span> /&gt;
+        <span style="color: #35BF88;">)</span> : <span style="color: #35BF88;">(</span>
+          <span style="color: #62D2DB; font-style: italic;">''</span>
+        <span style="color: #35BF88;">)</span><span style="color: #9d81ba;">}</span>
       &lt;/div&gt;
-    <span style="color: #ff9e64;">)</span>;
-  <span style="color: #7aa2f7;">}</span> <span style="color: #51587a; font-style: italic;">//</span><span style="color: #51587a; font-style: italic;">endrender</span>
-<span style="color: #a9b1d6;">}</span>
+    <span style="color: #62D2DB;">)</span>;
+  <span style="color: #47ba99;">}</span> <span style="color: #454459;">//</span><span style="color: #454459; font-style: italic;">endrender</span>
+<span style="color: #0D9C94;">}</span>
 
-<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">default</span> TrafficSituation;
+<span style="color: #9587DD; font-style: italic; text-decoration: underline;">export</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">default</span> TrafficSituation;
 
 </pre>
 </div>
@@ -449,89 +449,89 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">default</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">class</span> Chart <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">extends</span> PureComponent <span style="color: #a9b1d6;">{</span>
-  constructor<span style="color: #7aa2f7;">(</span>props<span style="color: #7aa2f7;">)</span> <span style="color: #7aa2f7;">{</span>
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">super</span><span style="color: #ff9e64;">(</span>props<span style="color: #ff9e64;">)</span>;
-    <span style="color: #ff9e64;">this</span>.state = <span style="color: #ff9e64;">{</span>
-      width: <span style="color: #9ece6a; font-style: italic;">'100%'</span>,
-      height: <span style="color: #9ece6a; font-style: italic;">'100%'</span>,
-    <span style="color: #ff9e64;">}</span>;
-    <span style="color: #ff9e64;">this</span>.chart = <span style="color: #ff9e64;">null</span>;
-  <span style="color: #7aa2f7;">}</span>
-  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#24322;&#27493;&#20989;&#25968;</span>
-  <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">async</span> componentDidMount<span style="color: #7aa2f7;">()</span> <span style="color: #7aa2f7;">{</span>
-    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21021;&#22987;&#21270;&#22270;&#34920;</span>
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">await</span> <span style="color: #ff9e64;">this</span>.initChart<span style="color: #ff9e64;">(</span><span style="color: #ff9e64;">this</span>.el<span style="color: #ff9e64;">)</span>;
-    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#23558;&#20256;&#20837;&#30340;&#37197;&#32622;(&#21253;&#21547;&#25968;&#25454;)&#27880;&#20837;</span>
-    <span style="color: #ff9e64;">this</span>.setOption<span style="color: #ff9e64;">(</span><span style="color: #ff9e64;">this</span>.props.option<span style="color: #ff9e64;">)</span>;
-    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#30417;&#21548;&#23631;&#24149;&#32553;&#25918;&#65292;&#37325;&#26032;&#32472;&#21046; echart &#22270;&#34920;</span>
-    window.addEventListener<span style="color: #ff9e64;">(</span><span style="color: #9ece6a; font-style: italic;">'resize'</span>, debounce<span style="color: #73daca;">(</span><span style="color: #ff9e64;">this</span>.resize, 100<span style="color: #73daca;">)</span><span style="color: #ff9e64;">)</span>;
-  <span style="color: #7aa2f7;">}</span>
+<pre class="src src-js"><span style="color: #9587DD; font-style: italic; text-decoration: underline;">export</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">default</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">class</span> Chart <span style="color: #9587DD; font-style: italic; text-decoration: underline;">extends</span> PureComponent <span style="color: #0D9C94;">{</span>
+  constructor<span style="color: #47ba99;">(</span>props<span style="color: #47ba99;">)</span> <span style="color: #47ba99;">{</span>
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">super</span><span style="color: #62D2DB;">(</span>props<span style="color: #62D2DB;">)</span>;
+    <span style="color: #41b0f3;">this</span>.state = <span style="color: #62D2DB;">{</span>
+      width: <span style="color: #62D2DB; font-style: italic;">'100%'</span>,
+      height: <span style="color: #62D2DB; font-style: italic;">'100%'</span>,
+    <span style="color: #62D2DB;">}</span>;
+    <span style="color: #41b0f3;">this</span>.chart = <span style="color: #41b0f3;">null</span>;
+  <span style="color: #47ba99;">}</span>
+  <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#24322;&#27493;&#20989;&#25968;</span>
+  <span style="color: #9587DD; font-style: italic; text-decoration: underline;">async</span> componentDidMount<span style="color: #47ba99;">()</span> <span style="color: #47ba99;">{</span>
+    <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#21021;&#22987;&#21270;&#22270;&#34920;</span>
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">await</span> <span style="color: #41b0f3;">this</span>.initChart<span style="color: #62D2DB;">(</span><span style="color: #41b0f3;">this</span>.el<span style="color: #62D2DB;">)</span>;
+    <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#23558;&#20256;&#20837;&#30340;&#37197;&#32622;(&#21253;&#21547;&#25968;&#25454;)&#27880;&#20837;</span>
+    <span style="color: #41b0f3;">this</span>.setOption<span style="color: #62D2DB;">(</span><span style="color: #41b0f3;">this</span>.props.option<span style="color: #62D2DB;">)</span>;
+    <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#30417;&#21548;&#23631;&#24149;&#32553;&#25918;&#65292;&#37325;&#26032;&#32472;&#21046; echart &#22270;&#34920;</span>
+    window.addEventListener<span style="color: #62D2DB;">(</span><span style="color: #62D2DB; font-style: italic;">'resize'</span>, debounce<span style="color: #9d81ba;">(</span><span style="color: #41b0f3;">this</span>.resize, 100<span style="color: #9d81ba;">)</span><span style="color: #62D2DB;">)</span>;
+  <span style="color: #47ba99;">}</span>
 
-  componentDidUpdate<span style="color: #7aa2f7;">()</span> <span style="color: #7aa2f7;">{</span>
-    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#27599;&#27425;&#26356;&#26032;&#32452;&#20214;&#37117;&#37325;&#32622;</span>
-    <span style="color: #ff9e64;">this</span>.setOption<span style="color: #ff9e64;">(</span><span style="color: #ff9e64;">this</span>.props.option<span style="color: #ff9e64;">)</span>;
-  <span style="color: #7aa2f7;">}</span>
+  componentDidUpdate<span style="color: #47ba99;">()</span> <span style="color: #47ba99;">{</span>
+    <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#27599;&#27425;&#26356;&#26032;&#32452;&#20214;&#37117;&#37325;&#32622;</span>
+    <span style="color: #41b0f3;">this</span>.setOption<span style="color: #62D2DB;">(</span><span style="color: #41b0f3;">this</span>.props.option<span style="color: #62D2DB;">)</span>;
+  <span style="color: #47ba99;">}</span>
 
-  componentWillUnmount<span style="color: #7aa2f7;">()</span> <span style="color: #7aa2f7;">{</span>
-    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#32452;&#20214;&#21368;&#36733;&#21069;&#21368;&#36733;&#22270;&#34920;</span>
-    <span style="color: #ff9e64;">this</span>.dispose<span style="color: #ff9e64;">()</span>;
-  <span style="color: #7aa2f7;">}</span>
+  componentWillUnmount<span style="color: #47ba99;">()</span> <span style="color: #47ba99;">{</span>
+    <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#32452;&#20214;&#21368;&#36733;&#21069;&#21368;&#36733;&#22270;&#34920;</span>
+    <span style="color: #41b0f3;">this</span>.dispose<span style="color: #62D2DB;">()</span>;
+  <span style="color: #47ba99;">}</span>
 
-  render<span style="color: #7aa2f7;">()</span> <span style="color: #7aa2f7;">{</span>
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #ff9e64;">{</span> width, height <span style="color: #ff9e64;">}</span> = <span style="color: #ff9e64;">this</span>.state;
+  render<span style="color: #47ba99;">()</span> <span style="color: #47ba99;">{</span>
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">const</span> <span style="color: #62D2DB;">{</span> width, height <span style="color: #62D2DB;">}</span> = <span style="color: #41b0f3;">this</span>.state;
 
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #ff9e64;">(</span>
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> <span style="color: #62D2DB;">(</span>
       &lt;div
-        className=<span style="color: #9ece6a; font-style: italic;">'default-chart'</span>
-        ref=<span style="color: #73daca;">{</span>el =&gt; <span style="color: #b4f9f8;">(</span><span style="color: #ff9e64;">this</span>.el = el<span style="color: #b4f9f8;">)</span><span style="color: #73daca;">}</span>
-        style=<span style="color: #73daca;">{</span><span style="color: #b4f9f8;">{</span> width, height <span style="color: #b4f9f8;">}</span><span style="color: #73daca;">}</span>
+        className=<span style="color: #62D2DB; font-style: italic;">'default-chart'</span>
+        ref=<span style="color: #9d81ba;">{</span>el =&gt; <span style="color: #35BF88;">(</span><span style="color: #41b0f3;">this</span>.el = el<span style="color: #35BF88;">)</span><span style="color: #9d81ba;">}</span>
+        style=<span style="color: #9d81ba;">{</span><span style="color: #35BF88;">{</span> width, height <span style="color: #35BF88;">}</span><span style="color: #9d81ba;">}</span>
       /&gt;
-    <span style="color: #ff9e64;">)</span>;
-  <span style="color: #7aa2f7;">}</span>
+    <span style="color: #62D2DB;">)</span>;
+  <span style="color: #47ba99;">}</span>
 
 
-  initChart = el =&gt; <span style="color: #7aa2f7;">{</span>
-    <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">renderer &#29992;&#20110;&#37197;&#32622;&#28210;&#26579;&#26041;&#24335; &#21487;&#20197;&#26159; svg &#25110;&#32773; canvas</span>
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">renderer</span> = <span style="color: #ff9e64;">this</span>.props.renderer || <span style="color: #9ece6a; font-style: italic;">'canvas'</span>;
+  initChart = el =&gt; <span style="color: #47ba99;">{</span>
+    <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">renderer &#29992;&#20110;&#37197;&#32622;&#28210;&#26579;&#26041;&#24335; &#21487;&#20197;&#26159; svg &#25110;&#32773; canvas</span>
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">const</span> <span style="color: #41b0f3; background-color: #372E40;">renderer</span> = <span style="color: #41b0f3;">this</span>.props.renderer || <span style="color: #62D2DB; font-style: italic;">'canvas'</span>;
 
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">new</span> <span style="color: #c0caf5;">Promise</span><span style="color: #ff9e64;">(</span>resolve =&gt; <span style="color: #73daca;">{</span>
-      setTimeout<span style="color: #b4f9f8;">(</span><span style="color: #e0af68;">()</span> =&gt; <span style="color: #e0af68;">{</span>
-        <span style="color: #ff9e64;">this</span>.chart = echarts.init<span style="color: #2ac3de;">(</span>el, <span style="color: #ff9e64;">null</span>, <span style="color: #73daca;">{</span>
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">new</span> <span style="color: #0D9C94;">Promise</span><span style="color: #62D2DB;">(</span>resolve =&gt; <span style="color: #9d81ba;">{</span>
+      setTimeout<span style="color: #35BF88;">(</span><span style="color: #687184;">()</span> =&gt; <span style="color: #687184;">{</span>
+        <span style="color: #41b0f3;">this</span>.chart = echarts.init<span style="color: #cd9575;">(</span>el, <span style="color: #41b0f3;">null</span>, <span style="color: #845A84;">{</span>
           renderer,
-          width: <span style="color: #9ece6a; font-style: italic;">'auto'</span>,
-          height: <span style="color: #9ece6a; font-style: italic;">'auto'</span>,
-        <span style="color: #73daca;">}</span><span style="color: #2ac3de;">)</span>;
-        resolve<span style="color: #2ac3de;">()</span>;
-      <span style="color: #e0af68;">}</span>, 0<span style="color: #b4f9f8;">)</span>;
-    <span style="color: #73daca;">}</span><span style="color: #ff9e64;">)</span>;
-  <span style="color: #7aa2f7;">}</span>;
+          width: <span style="color: #62D2DB; font-style: italic;">'auto'</span>,
+          height: <span style="color: #62D2DB; font-style: italic;">'auto'</span>,
+        <span style="color: #845A84;">}</span><span style="color: #cd9575;">)</span>;
+        resolve<span style="color: #cd9575;">()</span>;
+      <span style="color: #687184;">}</span>, 0<span style="color: #35BF88;">)</span>;
+    <span style="color: #9d81ba;">}</span><span style="color: #62D2DB;">)</span>;
+  <span style="color: #47ba99;">}</span>;
 
-  setOption = option =&gt; <span style="color: #7aa2f7;">{</span>
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> <span style="color: #ff9e64;">(</span>!<span style="color: #ff9e64;">this</span>.chart<span style="color: #ff9e64;">)</span> <span style="color: #ff9e64;">{</span>
-      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span>;
-    <span style="color: #ff9e64;">}</span>
+  setOption = option =&gt; <span style="color: #47ba99;">{</span>
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">if</span> <span style="color: #62D2DB;">(</span>!<span style="color: #41b0f3;">this</span>.chart<span style="color: #62D2DB;">)</span> <span style="color: #62D2DB;">{</span>
+      <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span>;
+    <span style="color: #62D2DB;">}</span>
 
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">notMerge</span> = <span style="color: #ff9e64;">this</span>.props.notMerge;
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">lazyUpdate</span> = <span style="color: #ff9e64;">this</span>.props.lazyUpdate;
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">const</span> <span style="color: #41b0f3; background-color: #372E40;">notMerge</span> = <span style="color: #41b0f3;">this</span>.props.notMerge;
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">const</span> <span style="color: #41b0f3; background-color: #372E40;">lazyUpdate</span> = <span style="color: #41b0f3;">this</span>.props.lazyUpdate;
 
-    <span style="color: #ff9e64;">this</span>.chart.setOption<span style="color: #ff9e64;">(</span>option, notMerge, lazyUpdate<span style="color: #ff9e64;">)</span>;
-  <span style="color: #7aa2f7;">}</span>;
-  dispose = <span style="color: #7aa2f7;">()</span> =&gt; <span style="color: #7aa2f7;">{</span>
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> <span style="color: #ff9e64;">(</span>!<span style="color: #ff9e64;">this</span>.chart<span style="color: #ff9e64;">)</span> <span style="color: #ff9e64;">{</span>
-      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span>;
-    <span style="color: #ff9e64;">}</span>
+    <span style="color: #41b0f3;">this</span>.chart.setOption<span style="color: #62D2DB;">(</span>option, notMerge, lazyUpdate<span style="color: #62D2DB;">)</span>;
+  <span style="color: #47ba99;">}</span>;
+  dispose = <span style="color: #47ba99;">()</span> =&gt; <span style="color: #47ba99;">{</span>
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">if</span> <span style="color: #62D2DB;">(</span>!<span style="color: #41b0f3;">this</span>.chart<span style="color: #62D2DB;">)</span> <span style="color: #62D2DB;">{</span>
+      <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span>;
+    <span style="color: #62D2DB;">}</span>
 
-    <span style="color: #ff9e64;">this</span>.chart.dispose<span style="color: #ff9e64;">()</span>;
-    <span style="color: #ff9e64;">this</span>.chart = <span style="color: #ff9e64;">null</span>;
-  <span style="color: #7aa2f7;">}</span>;
-  resize = <span style="color: #7aa2f7;">()</span> =&gt; <span style="color: #7aa2f7;">{</span>
-    <span style="color: #ff9e64;">this</span>.chart &amp;&amp; <span style="color: #ff9e64;">this</span>.chart.resize<span style="color: #ff9e64;">()</span>;
-  <span style="color: #7aa2f7;">}</span>;
-  getInstance = <span style="color: #7aa2f7;">()</span> =&gt; <span style="color: #7aa2f7;">{</span>
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #ff9e64;">this</span>.chart;
-  <span style="color: #7aa2f7;">}</span>;
-<span style="color: #a9b1d6;">}</span>
+    <span style="color: #41b0f3;">this</span>.chart.dispose<span style="color: #62D2DB;">()</span>;
+    <span style="color: #41b0f3;">this</span>.chart = <span style="color: #41b0f3;">null</span>;
+  <span style="color: #47ba99;">}</span>;
+  resize = <span style="color: #47ba99;">()</span> =&gt; <span style="color: #47ba99;">{</span>
+    <span style="color: #41b0f3;">this</span>.chart &amp;&amp; <span style="color: #41b0f3;">this</span>.chart.resize<span style="color: #62D2DB;">()</span>;
+  <span style="color: #47ba99;">}</span>;
+  getInstance = <span style="color: #47ba99;">()</span> =&gt; <span style="color: #47ba99;">{</span>
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> <span style="color: #41b0f3;">this</span>.chart;
+  <span style="color: #47ba99;">}</span>;
+<span style="color: #0D9C94;">}</span>
 </pre>
 </div>
 
@@ -544,203 +544,203 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">trafficOptions</span> = <span style="color: #a9b1d6;">(</span>params<span style="color: #a9b1d6;">)</span> =&gt; <span style="color: #a9b1d6;">(</span><span style="color: #7aa2f7;">{</span>
-  title: <span style="color: #ff9e64;">{</span>
-    show: <span style="color: #ff9e64;">false</span>,
-  <span style="color: #ff9e64;">}</span>,
-  legend: <span style="color: #ff9e64;">{</span>
-    show: <span style="color: #ff9e64;">true</span>,
-    top: <span style="color: #9ece6a; font-style: italic;">'5%'</span>,
-    textStyle: <span style="color: #73daca;">{</span>
-      color: <span style="color: #9ece6a; font-style: italic;">'#c0c9d2'</span>,
-    <span style="color: #73daca;">}</span>,
-  <span style="color: #ff9e64;">}</span>,
-  tooltip: <span style="color: #ff9e64;">{</span>
-    trigger: <span style="color: #9ece6a; font-style: italic;">'axis'</span>,
-    axisPointer: <span style="color: #73daca;">{</span>
-      lineStyle: <span style="color: #b4f9f8;">{</span>
-        color: <span style="color: #e0af68;">{</span>
-          type: <span style="color: #9ece6a; font-style: italic;">'linear'</span>,
+<pre class="src src-js"><span style="color: #9587DD; font-style: italic; text-decoration: underline;">export</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">const</span> <span style="color: #41b0f3; background-color: #372E40;">trafficOptions</span> = <span style="color: #0D9C94;">(</span>params<span style="color: #0D9C94;">)</span> =&gt; <span style="color: #0D9C94;">(</span><span style="color: #47ba99;">{</span>
+  title: <span style="color: #62D2DB;">{</span>
+    show: <span style="color: #41b0f3;">false</span>,
+  <span style="color: #62D2DB;">}</span>,
+  legend: <span style="color: #62D2DB;">{</span>
+    show: <span style="color: #41b0f3;">true</span>,
+    top: <span style="color: #62D2DB; font-style: italic;">'5%'</span>,
+    textStyle: <span style="color: #9d81ba;">{</span>
+      color: <span style="color: #62D2DB; font-style: italic;">'#c0c9d2'</span>,
+    <span style="color: #9d81ba;">}</span>,
+  <span style="color: #62D2DB;">}</span>,
+  tooltip: <span style="color: #62D2DB;">{</span>
+    trigger: <span style="color: #62D2DB; font-style: italic;">'axis'</span>,
+    axisPointer: <span style="color: #9d81ba;">{</span>
+      lineStyle: <span style="color: #35BF88;">{</span>
+        color: <span style="color: #687184;">{</span>
+          type: <span style="color: #62D2DB; font-style: italic;">'linear'</span>,
           x: 0,
           y: 0,
           x2: 0,
           y2: 1,
-          colorStops: <span style="color: #2ac3de;">[</span>
-            <span style="color: #73daca;">{</span>
+          colorStops: <span style="color: #cd9575;">[</span>
+            <span style="color: #845A84;">{</span>
               offset: 0,
-              color: <span style="color: #9ece6a; font-style: italic;">'rgba(0, 255, 233,0)'</span>,
-            <span style="color: #73daca;">}</span>,
-            <span style="color: #73daca;">{</span>
+              color: <span style="color: #62D2DB; font-style: italic;">'rgba(0, 255, 233,0)'</span>,
+            <span style="color: #845A84;">}</span>,
+            <span style="color: #845A84;">{</span>
               offset: 0.5,
-              color: <span style="color: #9ece6a; font-style: italic;">'rgba(255, 255, 255,1)'</span>,
-            <span style="color: #73daca;">}</span>,
-            <span style="color: #73daca;">{</span>
+              color: <span style="color: #62D2DB; font-style: italic;">'rgba(255, 255, 255,1)'</span>,
+            <span style="color: #845A84;">}</span>,
+            <span style="color: #845A84;">{</span>
               offset: 1,
-              color: <span style="color: #9ece6a; font-style: italic;">'rgba(0, 255, 233,0)'</span>,
-            <span style="color: #73daca;">}</span>,
-          <span style="color: #2ac3de;">]</span>,
-          global: <span style="color: #ff9e64;">false</span>,
-        <span style="color: #e0af68;">}</span>,
-      <span style="color: #b4f9f8;">}</span>,
-    <span style="color: #73daca;">}</span>,
-  <span style="color: #ff9e64;">}</span>,
-  grid: <span style="color: #ff9e64;">{</span>
-    top: <span style="color: #9ece6a; font-style: italic;">'15%'</span>,
-    left: <span style="color: #9ece6a; font-style: italic;">'10%'</span>,
-    right: <span style="color: #9ece6a; font-style: italic;">'5%'</span>,
-    bottom: <span style="color: #9ece6a; font-style: italic;">'10%'</span>,
-  <span style="color: #ff9e64;">}</span>,
-  xAxis: <span style="color: #ff9e64;">{</span>
-    type: <span style="color: #9ece6a; font-style: italic;">'category'</span>,
-    axisLine: <span style="color: #73daca;">{</span>
-      show: <span style="color: #ff9e64;">true</span>,
-    <span style="color: #73daca;">}</span>,
-    splitArea: <span style="color: #73daca;">{</span>
-      color: <span style="color: #9ece6a; font-style: italic;">'#f00'</span>,
-      lineStyle: <span style="color: #b4f9f8;">{</span>
-        color: <span style="color: #9ece6a; font-style: italic;">'#f00'</span>,
-      <span style="color: #b4f9f8;">}</span>,
-    <span style="color: #73daca;">}</span>,
-    axisLabel: <span style="color: #73daca;">{</span>
-      color: <span style="color: #9ece6a; font-style: italic;">'#BCDCF0'</span>,
-    <span style="color: #73daca;">}</span>,
-    splitLine: <span style="color: #73daca;">{</span>
-      show: <span style="color: #ff9e64;">false</span>,
-    <span style="color: #73daca;">}</span>,
-    boundaryGap: <span style="color: #ff9e64;">false</span>,
+              color: <span style="color: #62D2DB; font-style: italic;">'rgba(0, 255, 233,0)'</span>,
+            <span style="color: #845A84;">}</span>,
+          <span style="color: #cd9575;">]</span>,
+          global: <span style="color: #41b0f3;">false</span>,
+        <span style="color: #687184;">}</span>,
+      <span style="color: #35BF88;">}</span>,
+    <span style="color: #9d81ba;">}</span>,
+  <span style="color: #62D2DB;">}</span>,
+  grid: <span style="color: #62D2DB;">{</span>
+    top: <span style="color: #62D2DB; font-style: italic;">'15%'</span>,
+    left: <span style="color: #62D2DB; font-style: italic;">'10%'</span>,
+    right: <span style="color: #62D2DB; font-style: italic;">'5%'</span>,
+    bottom: <span style="color: #62D2DB; font-style: italic;">'10%'</span>,
+  <span style="color: #62D2DB;">}</span>,
+  xAxis: <span style="color: #62D2DB;">{</span>
+    type: <span style="color: #62D2DB; font-style: italic;">'category'</span>,
+    axisLine: <span style="color: #9d81ba;">{</span>
+      show: <span style="color: #41b0f3;">true</span>,
+    <span style="color: #9d81ba;">}</span>,
+    splitArea: <span style="color: #9d81ba;">{</span>
+      color: <span style="color: #62D2DB; font-style: italic;">'#f00'</span>,
+      lineStyle: <span style="color: #35BF88;">{</span>
+        color: <span style="color: #62D2DB; font-style: italic;">'#f00'</span>,
+      <span style="color: #35BF88;">}</span>,
+    <span style="color: #9d81ba;">}</span>,
+    axisLabel: <span style="color: #9d81ba;">{</span>
+      color: <span style="color: #62D2DB; font-style: italic;">'#BCDCF0'</span>,
+    <span style="color: #9d81ba;">}</span>,
+    splitLine: <span style="color: #9d81ba;">{</span>
+      show: <span style="color: #41b0f3;">false</span>,
+    <span style="color: #9d81ba;">}</span>,
+    boundaryGap: <span style="color: #41b0f3;">false</span>,
     data: params.timeList,
-  <span style="color: #ff9e64;">}</span>,
+  <span style="color: #62D2DB;">}</span>,
 
-  yAxis: <span style="color: #ff9e64;">{</span>
-    type: <span style="color: #9ece6a; font-style: italic;">'value'</span>,
+  yAxis: <span style="color: #62D2DB;">{</span>
+    type: <span style="color: #62D2DB; font-style: italic;">'value'</span>,
     min: 0,
-    splitLine: <span style="color: #73daca;">{</span>
-      show: <span style="color: #ff9e64;">true</span>,
-      lineStyle: <span style="color: #b4f9f8;">{</span>
-        color: <span style="color: #9ece6a; font-style: italic;">'rgba(255,255,255,0.1)'</span>,
-      <span style="color: #b4f9f8;">}</span>,
-    <span style="color: #73daca;">}</span>,
-    axisLine: <span style="color: #73daca;">{</span>
-      show: <span style="color: #ff9e64;">true</span>,
-    <span style="color: #73daca;">}</span>,
-    axisLabel: <span style="color: #73daca;">{</span>
-      show: <span style="color: #ff9e64;">true</span>,
+    splitLine: <span style="color: #9d81ba;">{</span>
+      show: <span style="color: #41b0f3;">true</span>,
+      lineStyle: <span style="color: #35BF88;">{</span>
+        color: <span style="color: #62D2DB; font-style: italic;">'rgba(255,255,255,0.1)'</span>,
+      <span style="color: #35BF88;">}</span>,
+    <span style="color: #9d81ba;">}</span>,
+    axisLine: <span style="color: #9d81ba;">{</span>
+      show: <span style="color: #41b0f3;">true</span>,
+    <span style="color: #9d81ba;">}</span>,
+    axisLabel: <span style="color: #9d81ba;">{</span>
+      show: <span style="color: #41b0f3;">true</span>,
       margin: 10,
-      textStyle: <span style="color: #b4f9f8;">{</span>
-        color: <span style="color: #9ece6a; font-style: italic;">'#d1e6eb'</span>,
-      <span style="color: #b4f9f8;">}</span>,
-    <span style="color: #73daca;">}</span>,
-    axisTick: <span style="color: #73daca;">{</span>
-      show: <span style="color: #ff9e64;">false</span>,
-    <span style="color: #73daca;">}</span>,
-  <span style="color: #ff9e64;">}</span>,
-  series: <span style="color: #ff9e64;">[</span>
-    <span style="color: #73daca;">{</span>
-      name: <span style="color: #9ece6a; font-style: italic;">'&#36827;&#20837;&#20154;&#25968;'</span>,
-      type: <span style="color: #9ece6a; font-style: italic;">'line'</span>,
-      smooth: <span style="color: #ff9e64;">true</span>, <span style="color: #51587a; font-style: italic;">//</span><span style="color: #51587a; font-style: italic;">&#26159;&#21542;&#24179;&#28369;</span>
-      lineStyle: <span style="color: #b4f9f8;">{</span>
-        normal: <span style="color: #e0af68;">{</span>
-          color: <span style="color: #9ece6a; font-style: italic;">'#00b3f4'</span>,
-          shadowColor: <span style="color: #9ece6a; font-style: italic;">'rgba(0, 0, 0, .3)'</span>,
+      textStyle: <span style="color: #35BF88;">{</span>
+        color: <span style="color: #62D2DB; font-style: italic;">'#d1e6eb'</span>,
+      <span style="color: #35BF88;">}</span>,
+    <span style="color: #9d81ba;">}</span>,
+    axisTick: <span style="color: #9d81ba;">{</span>
+      show: <span style="color: #41b0f3;">false</span>,
+    <span style="color: #9d81ba;">}</span>,
+  <span style="color: #62D2DB;">}</span>,
+  series: <span style="color: #62D2DB;">[</span>
+    <span style="color: #9d81ba;">{</span>
+      name: <span style="color: #62D2DB; font-style: italic;">'&#36827;&#20837;&#20154;&#25968;'</span>,
+      type: <span style="color: #62D2DB; font-style: italic;">'line'</span>,
+      smooth: <span style="color: #41b0f3;">true</span>, <span style="color: #454459;">//</span><span style="color: #454459; font-style: italic;">&#26159;&#21542;&#24179;&#28369;</span>
+      lineStyle: <span style="color: #35BF88;">{</span>
+        normal: <span style="color: #687184;">{</span>
+          color: <span style="color: #62D2DB; font-style: italic;">'#00b3f4'</span>,
+          shadowColor: <span style="color: #62D2DB; font-style: italic;">'rgba(0, 0, 0, .3)'</span>,
           shadowBlur: 0,
           shadowOffsetY: 5,
           shadowOffsetX: 5,
-        <span style="color: #e0af68;">}</span>,
-      <span style="color: #b4f9f8;">}</span>,
-      label: <span style="color: #b4f9f8;">{</span>
-        show: <span style="color: #ff9e64;">false</span>,
-        position: <span style="color: #9ece6a; font-style: italic;">'top'</span>,
-        textStyle: <span style="color: #e0af68;">{</span>
-          color: <span style="color: #9ece6a; font-style: italic;">'#00b3f4'</span>,
-        <span style="color: #e0af68;">}</span>,
-      <span style="color: #b4f9f8;">}</span>,
-      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21435;&#38500;&#28857;&#26631;&#35760;</span>
+        <span style="color: #687184;">}</span>,
+      <span style="color: #35BF88;">}</span>,
+      label: <span style="color: #35BF88;">{</span>
+        show: <span style="color: #41b0f3;">false</span>,
+        position: <span style="color: #62D2DB; font-style: italic;">'top'</span>,
+        textStyle: <span style="color: #687184;">{</span>
+          color: <span style="color: #62D2DB; font-style: italic;">'#00b3f4'</span>,
+        <span style="color: #687184;">}</span>,
+      <span style="color: #35BF88;">}</span>,
+      <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#21435;&#38500;&#28857;&#26631;&#35760;</span>
       symbolSize: 0,
-      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#40736;&#26631;&#25918;&#19978;&#21435;&#36824;&#26159;&#35201;&#26377;&#39068;&#33394;&#30340;</span>
-      itemStyle: <span style="color: #b4f9f8;">{</span>
-        color: <span style="color: #9ece6a; font-style: italic;">'#00b3f4'</span>,
-      <span style="color: #b4f9f8;">}</span>,
-      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#35774;&#32622;&#28176;&#21464;&#33394;</span>
-      areaStyle: <span style="color: #b4f9f8;">{</span>
-        normal: <span style="color: #e0af68;">{</span>
-          color: <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">new</span> <span style="color: #c0caf5;">echarts.graphic.LinearGradient</span><span style="color: #2ac3de;">(</span>
+      <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#40736;&#26631;&#25918;&#19978;&#21435;&#36824;&#26159;&#35201;&#26377;&#39068;&#33394;&#30340;</span>
+      itemStyle: <span style="color: #35BF88;">{</span>
+        color: <span style="color: #62D2DB; font-style: italic;">'#00b3f4'</span>,
+      <span style="color: #35BF88;">}</span>,
+      <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#35774;&#32622;&#28176;&#21464;&#33394;</span>
+      areaStyle: <span style="color: #35BF88;">{</span>
+        normal: <span style="color: #687184;">{</span>
+          color: <span style="color: #9587DD; font-style: italic; text-decoration: underline;">new</span> <span style="color: #0D9C94;">echarts.graphic.LinearGradient</span><span style="color: #cd9575;">(</span>
             0,
             0,
             0,
             1,
-            <span style="color: #73daca;">[</span>
-              <span style="color: #9aa5ce;">{</span>
+            <span style="color: #845A84;">[</span>
+              <span style="color: #47ba99;">{</span>
                 offset: 0,
-                color: <span style="color: #9ece6a; font-style: italic;">'rgba(0,179,244,0.3)'</span>,
-              <span style="color: #9aa5ce;">}</span>,
-              <span style="color: #9aa5ce;">{</span>
+                color: <span style="color: #62D2DB; font-style: italic;">'rgba(0,179,244,0.3)'</span>,
+              <span style="color: #47ba99;">}</span>,
+              <span style="color: #47ba99;">{</span>
                 offset: 1,
-                color: <span style="color: #9ece6a; font-style: italic;">'rgba(0,179,244,0)'</span>,
-              <span style="color: #9aa5ce;">}</span>,
-            <span style="color: #73daca;">]</span>,
-            <span style="color: #ff9e64;">false</span>
-          <span style="color: #2ac3de;">)</span>,
-          shadowColor: <span style="color: #9ece6a; font-style: italic;">'rgba(0,179,244, 0.9)'</span>,
+                color: <span style="color: #62D2DB; font-style: italic;">'rgba(0,179,244,0)'</span>,
+              <span style="color: #47ba99;">}</span>,
+            <span style="color: #845A84;">]</span>,
+            <span style="color: #41b0f3;">false</span>
+          <span style="color: #cd9575;">)</span>,
+          shadowColor: <span style="color: #62D2DB; font-style: italic;">'rgba(0,179,244, 0.9)'</span>,
           shadowBlur: 20,
-        <span style="color: #e0af68;">}</span>,
-      <span style="color: #b4f9f8;">}</span>,
+        <span style="color: #687184;">}</span>,
+      <span style="color: #35BF88;">}</span>,
       data: params.outData,
-    <span style="color: #73daca;">}</span>,
-    <span style="color: #73daca;">{</span>
-      name: <span style="color: #9ece6a; font-style: italic;">'&#36208;&#20986;&#20154;&#25968;'</span>,
-      type: <span style="color: #9ece6a; font-style: italic;">'line'</span>,
-      smooth: <span style="color: #ff9e64;">true</span>, <span style="color: #51587a; font-style: italic;">//</span><span style="color: #51587a; font-style: italic;">&#26159;&#21542;&#24179;&#28369;</span>
-      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#38452;&#24433;</span>
-      lineStyle: <span style="color: #b4f9f8;">{</span>
-        normal: <span style="color: #e0af68;">{</span>
-          color: <span style="color: #9ece6a; font-style: italic;">'#00ca95'</span>,
-          shadowColor: <span style="color: #9ece6a; font-style: italic;">'rgba(0, 0, 0, .3)'</span>,
+    <span style="color: #9d81ba;">}</span>,
+    <span style="color: #9d81ba;">{</span>
+      name: <span style="color: #62D2DB; font-style: italic;">'&#36208;&#20986;&#20154;&#25968;'</span>,
+      type: <span style="color: #62D2DB; font-style: italic;">'line'</span>,
+      smooth: <span style="color: #41b0f3;">true</span>, <span style="color: #454459;">//</span><span style="color: #454459; font-style: italic;">&#26159;&#21542;&#24179;&#28369;</span>
+      <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#38452;&#24433;</span>
+      lineStyle: <span style="color: #35BF88;">{</span>
+        normal: <span style="color: #687184;">{</span>
+          color: <span style="color: #62D2DB; font-style: italic;">'#00ca95'</span>,
+          shadowColor: <span style="color: #62D2DB; font-style: italic;">'rgba(0, 0, 0, .3)'</span>,
           shadowBlur: 0,
           shadowOffsetY: 5,
           shadowOffsetX: 5,
-        <span style="color: #e0af68;">}</span>,
-      <span style="color: #b4f9f8;">}</span>,
-      label: <span style="color: #b4f9f8;">{</span>
-        show: <span style="color: #ff9e64;">false</span>,
-        position: <span style="color: #9ece6a; font-style: italic;">'top'</span>,
-        textStyle: <span style="color: #e0af68;">{</span>
-          color: <span style="color: #9ece6a; font-style: italic;">'#00ca95'</span>,
-        <span style="color: #e0af68;">}</span>,
-      <span style="color: #b4f9f8;">}</span>,
-      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21435;&#38500;&#28857;&#26631;&#35760;</span>
+        <span style="color: #687184;">}</span>,
+      <span style="color: #35BF88;">}</span>,
+      label: <span style="color: #35BF88;">{</span>
+        show: <span style="color: #41b0f3;">false</span>,
+        position: <span style="color: #62D2DB; font-style: italic;">'top'</span>,
+        textStyle: <span style="color: #687184;">{</span>
+          color: <span style="color: #62D2DB; font-style: italic;">'#00ca95'</span>,
+        <span style="color: #687184;">}</span>,
+      <span style="color: #35BF88;">}</span>,
+      <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#21435;&#38500;&#28857;&#26631;&#35760;</span>
       symbolSize: 0,
-      itemStyle: <span style="color: #b4f9f8;">{</span>
-        color: <span style="color: #9ece6a; font-style: italic;">'#00ca95'</span>,
-      <span style="color: #b4f9f8;">}</span>,
-      <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#35774;&#32622;&#28176;&#21464;&#33394;</span>
-      areaStyle: <span style="color: #b4f9f8;">{</span>
-        normal: <span style="color: #e0af68;">{</span>
-          color: <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">new</span> <span style="color: #c0caf5;">echarts.graphic.LinearGradient</span><span style="color: #2ac3de;">(</span>
+      itemStyle: <span style="color: #35BF88;">{</span>
+        color: <span style="color: #62D2DB; font-style: italic;">'#00ca95'</span>,
+      <span style="color: #35BF88;">}</span>,
+      <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#35774;&#32622;&#28176;&#21464;&#33394;</span>
+      areaStyle: <span style="color: #35BF88;">{</span>
+        normal: <span style="color: #687184;">{</span>
+          color: <span style="color: #9587DD; font-style: italic; text-decoration: underline;">new</span> <span style="color: #0D9C94;">echarts.graphic.LinearGradient</span><span style="color: #cd9575;">(</span>
             0,
             0,
             0,
             1,
-            <span style="color: #73daca;">[</span>
-              <span style="color: #9aa5ce;">{</span>
+            <span style="color: #845A84;">[</span>
+              <span style="color: #47ba99;">{</span>
                 offset: 0,
-                color: <span style="color: #9ece6a; font-style: italic;">'rgba(0,202,149,0.3)'</span>,
-              <span style="color: #9aa5ce;">}</span>,
-              <span style="color: #9aa5ce;">{</span>
+                color: <span style="color: #62D2DB; font-style: italic;">'rgba(0,202,149,0.3)'</span>,
+              <span style="color: #47ba99;">}</span>,
+              <span style="color: #47ba99;">{</span>
                 offset: 1,
-                color: <span style="color: #9ece6a; font-style: italic;">'rgba(0,202,149,0)'</span>,
-              <span style="color: #9aa5ce;">}</span>,
-            <span style="color: #73daca;">]</span>,
-            <span style="color: #ff9e64;">false</span>
-          <span style="color: #2ac3de;">)</span>,
-          shadowColor: <span style="color: #9ece6a; font-style: italic;">'rgba(0,202,149, 0.9)'</span>,
+                color: <span style="color: #62D2DB; font-style: italic;">'rgba(0,202,149,0)'</span>,
+              <span style="color: #47ba99;">}</span>,
+            <span style="color: #845A84;">]</span>,
+            <span style="color: #41b0f3;">false</span>
+          <span style="color: #cd9575;">)</span>,
+          shadowColor: <span style="color: #62D2DB; font-style: italic;">'rgba(0,202,149, 0.9)'</span>,
           shadowBlur: 20,
-        <span style="color: #e0af68;">}</span>,
-      <span style="color: #b4f9f8;">}</span>,
+        <span style="color: #687184;">}</span>,
+      <span style="color: #35BF88;">}</span>,
       data: params.inData,
-    <span style="color: #73daca;">}</span>,
-  <span style="color: #ff9e64;">]</span>,
-<span style="color: #7aa2f7;">}</span><span style="color: #a9b1d6;">)</span>;
+    <span style="color: #9d81ba;">}</span>,
+  <span style="color: #62D2DB;">]</span>,
+<span style="color: #47ba99;">}</span><span style="color: #0D9C94;">)</span>;
 </pre>
 </div>
 
@@ -766,19 +766,19 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">default</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">function</span> request<span style="color: #a9b1d6;">(</span><span style="color: #c0caf5; background-color: #372E40;">url</span>, <span style="color: #c0caf5; background-color: #372E40;">options</span><span style="color: #a9b1d6;">)</span> <span style="color: #a9b1d6;">{</span>
-  <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> fetch<span style="color: #7aa2f7;">(</span>url, options<span style="color: #7aa2f7;">)</span>
-    .then<span style="color: #7aa2f7;">(</span>checkStatus<span style="color: #7aa2f7;">)</span>
-    .then<span style="color: #7aa2f7;">(</span>parseJSON<span style="color: #7aa2f7;">)</span>
-    .then<span style="color: #7aa2f7;">(</span>data =&gt; <span style="color: #ff9e64;">(</span><span style="color: #73daca;">{</span> data <span style="color: #73daca;">}</span><span style="color: #ff9e64;">)</span><span style="color: #7aa2f7;">)</span>
-    .<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">catch</span><span style="color: #7aa2f7;">(</span>err =&gt; <span style="color: #ff9e64;">(</span><span style="color: #73daca;">{</span> err <span style="color: #73daca;">}</span><span style="color: #ff9e64;">)</span><span style="color: #7aa2f7;">)</span>;
-<span style="color: #a9b1d6;">}</span>
+<pre class="src src-js"><span style="color: #9587DD; font-style: italic; text-decoration: underline;">export</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">default</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">function</span> request<span style="color: #0D9C94;">(</span><span style="color: #41b0f3; background-color: #372E40;">url</span>, <span style="color: #41b0f3; background-color: #372E40;">options</span><span style="color: #0D9C94;">)</span> <span style="color: #0D9C94;">{</span>
+  <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> fetch<span style="color: #47ba99;">(</span>url, options<span style="color: #47ba99;">)</span>
+    .then<span style="color: #47ba99;">(</span>checkStatus<span style="color: #47ba99;">)</span>
+    .then<span style="color: #47ba99;">(</span>parseJSON<span style="color: #47ba99;">)</span>
+    .then<span style="color: #47ba99;">(</span>data =&gt; <span style="color: #62D2DB;">(</span><span style="color: #9d81ba;">{</span> data <span style="color: #9d81ba;">}</span><span style="color: #62D2DB;">)</span><span style="color: #47ba99;">)</span>
+    .<span style="color: #9587DD; font-style: italic; text-decoration: underline;">catch</span><span style="color: #47ba99;">(</span>err =&gt; <span style="color: #62D2DB;">(</span><span style="color: #9d81ba;">{</span> err <span style="color: #9d81ba;">}</span><span style="color: #62D2DB;">)</span><span style="color: #47ba99;">)</span>;
+<span style="color: #0D9C94;">}</span>
 
-<span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">getLeftPageData</span> = <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">async</span> <span style="color: #a9b1d6;">()</span> =&gt; <span style="color: #a9b1d6;">{</span>
-  <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> request<span style="color: #7aa2f7;">(</span><span style="color: #9ece6a; font-style: italic;">'/api/leftPageData'</span><span style="color: #7aa2f7;">)</span>.then<span style="color: #7aa2f7;">(</span>response =&gt; <span style="color: #ff9e64;">{</span>
-    <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> response.data;
-  <span style="color: #ff9e64;">}</span><span style="color: #7aa2f7;">)</span>;
-<span style="color: #a9b1d6;">}</span>;
+<span style="color: #9587DD; font-style: italic; text-decoration: underline;">export</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">const</span> <span style="color: #41b0f3; background-color: #372E40;">getLeftPageData</span> = <span style="color: #9587DD; font-style: italic; text-decoration: underline;">async</span> <span style="color: #0D9C94;">()</span> =&gt; <span style="color: #0D9C94;">{</span>
+  <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> request<span style="color: #47ba99;">(</span><span style="color: #62D2DB; font-style: italic;">'/api/leftPageData'</span><span style="color: #47ba99;">)</span>.then<span style="color: #47ba99;">(</span>response =&gt; <span style="color: #62D2DB;">{</span>
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> response.data;
+  <span style="color: #62D2DB;">}</span><span style="color: #47ba99;">)</span>;
+<span style="color: #0D9C94;">}</span>;
 
 </pre>
 </div>
@@ -788,47 +788,47 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-js"><span style="color: #bb9af7; font-style: italic; text-decoration: underline;">export</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">default</span> <span style="color: #a9b1d6;">{</span>
-  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21629;&#21517;&#31354;&#38388; (&#24517;&#22635;)</span>
-  namespace: <span style="color: #9ece6a; font-style: italic;">'leftPage'</span>,
+<pre class="src src-js"><span style="color: #9587DD; font-style: italic; text-decoration: underline;">export</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">default</span> <span style="color: #0D9C94;">{</span>
+  <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#21629;&#21517;&#31354;&#38388; (&#24517;&#22635;)</span>
+  namespace: <span style="color: #62D2DB; font-style: italic;">'leftPage'</span>,
 
-  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#25968;&#25454;</span>
-  state: <span style="color: #7aa2f7;">{}</span>,
+  <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#25968;&#25454;</span>
+  state: <span style="color: #47ba99;">{}</span>,
 
-  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#36335;&#30001;&#30417;&#21548;</span>
-  subscriptions: <span style="color: #7aa2f7;">{</span>
-    setup<span style="color: #ff9e64;">(</span><span style="color: #73daca;">{</span> dispatch, history <span style="color: #73daca;">}</span><span style="color: #ff9e64;">)</span> <span style="color: #ff9e64;">{</span>
-      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> history.listen<span style="color: #73daca;">(</span><span style="color: #b4f9f8;">(</span>location, action<span style="color: #b4f9f8;">)</span> =&gt; <span style="color: #b4f9f8;">{</span>
-        <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21442;&#25968;&#21487;&#20197;&#30452;&#25509;&#31616;&#20889;&#25104;{pathname}</span>
-        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> <span style="color: #e0af68;">(</span>location.pathname === <span style="color: #9ece6a; font-style: italic;">'/'</span><span style="color: #e0af68;">)</span> <span style="color: #e0af68;">{</span> <span style="color: #51587a; font-style: italic;">//</span><span style="color: #51587a; font-style: italic;">&#24403;&#36827;&#20837;&#24403;&#21069;&#39029;&#38754;&#23601;&#25191;&#34892;&#33719;&#21462;&#25968;&#25454;&#36825;&#19968;action</span>
-          dispatch<span style="color: #2ac3de;">(</span><span style="color: #73daca;">{</span> type: <span style="color: #9ece6a; font-style: italic;">'getLeftPageData'</span> <span style="color: #73daca;">}</span><span style="color: #2ac3de;">)</span>;
-        <span style="color: #e0af68;">}</span>
-      <span style="color: #b4f9f8;">}</span><span style="color: #73daca;">)</span>;
-    <span style="color: #ff9e64;">}</span>,
-  <span style="color: #7aa2f7;">}</span>,
+  <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#36335;&#30001;&#30417;&#21548;</span>
+  subscriptions: <span style="color: #47ba99;">{</span>
+    setup<span style="color: #62D2DB;">(</span><span style="color: #9d81ba;">{</span> dispatch, history <span style="color: #9d81ba;">}</span><span style="color: #62D2DB;">)</span> <span style="color: #62D2DB;">{</span>
+      <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> history.listen<span style="color: #9d81ba;">(</span><span style="color: #35BF88;">(</span>location, action<span style="color: #35BF88;">)</span> =&gt; <span style="color: #35BF88;">{</span>
+        <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#21442;&#25968;&#21487;&#20197;&#30452;&#25509;&#31616;&#20889;&#25104;{pathname}</span>
+        <span style="color: #9587DD; font-style: italic; text-decoration: underline;">if</span> <span style="color: #687184;">(</span>location.pathname === <span style="color: #62D2DB; font-style: italic;">'/'</span><span style="color: #687184;">)</span> <span style="color: #687184;">{</span> <span style="color: #454459;">//</span><span style="color: #454459; font-style: italic;">&#24403;&#36827;&#20837;&#24403;&#21069;&#39029;&#38754;&#23601;&#25191;&#34892;&#33719;&#21462;&#25968;&#25454;&#36825;&#19968;action</span>
+          dispatch<span style="color: #cd9575;">(</span><span style="color: #845A84;">{</span> type: <span style="color: #62D2DB; font-style: italic;">'getLeftPageData'</span> <span style="color: #845A84;">}</span><span style="color: #cd9575;">)</span>;
+        <span style="color: #687184;">}</span>
+      <span style="color: #35BF88;">}</span><span style="color: #9d81ba;">)</span>;
+    <span style="color: #62D2DB;">}</span>,
+  <span style="color: #47ba99;">}</span>,
 
-  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#24322;&#27493;&#35831;&#27714;    action&#22788;&#29702;&#22120;&#65292;&#29992;&#20197;&#23545;&#24322;&#27493;&#21160;&#20316;&#36827;&#34892;&#22788;&#29702;</span>
-  effects: <span style="color: #7aa2f7;">{</span>
-    *getLeftPageData<span style="color: #ff9e64;">(</span><span style="color: #73daca;">{</span> payload <span style="color: #73daca;">}</span>, <span style="color: #73daca;">{</span> call, put <span style="color: #73daca;">}</span><span style="color: #ff9e64;">)</span> <span style="color: #ff9e64;">{</span>
-      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">const</span> <span style="color: #c0caf5; background-color: #372E40;">data</span> = <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">yield</span> call<span style="color: #73daca;">(</span>getLeftPageData<span style="color: #73daca;">)</span>; 
-      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">if</span> <span style="color: #73daca;">(</span>data<span style="color: #73daca;">)</span> <span style="color: #73daca;">{</span>
-        <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">yield</span> put<span style="color: #b4f9f8;">(</span><span style="color: #e0af68;">{</span>
-          type: <span style="color: #9ece6a; font-style: italic;">'setData'</span>,
+  <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#24322;&#27493;&#35831;&#27714;    action&#22788;&#29702;&#22120;&#65292;&#29992;&#20197;&#23545;&#24322;&#27493;&#21160;&#20316;&#36827;&#34892;&#22788;&#29702;</span>
+  effects: <span style="color: #47ba99;">{</span>
+    *getLeftPageData<span style="color: #62D2DB;">(</span><span style="color: #9d81ba;">{</span> payload <span style="color: #9d81ba;">}</span>, <span style="color: #9d81ba;">{</span> call, put <span style="color: #9d81ba;">}</span><span style="color: #62D2DB;">)</span> <span style="color: #62D2DB;">{</span>
+      <span style="color: #9587DD; font-style: italic; text-decoration: underline;">const</span> <span style="color: #41b0f3; background-color: #372E40;">data</span> = <span style="color: #9587DD; font-style: italic; text-decoration: underline;">yield</span> call<span style="color: #9d81ba;">(</span>getLeftPageData<span style="color: #9d81ba;">)</span>; 
+      <span style="color: #9587DD; font-style: italic; text-decoration: underline;">if</span> <span style="color: #9d81ba;">(</span>data<span style="color: #9d81ba;">)</span> <span style="color: #9d81ba;">{</span>
+        <span style="color: #9587DD; font-style: italic; text-decoration: underline;">yield</span> put<span style="color: #35BF88;">(</span><span style="color: #687184;">{</span>
+          type: <span style="color: #62D2DB; font-style: italic;">'setData'</span>,
           payload: data,
-        <span style="color: #e0af68;">}</span><span style="color: #b4f9f8;">)</span>;
-      <span style="color: #73daca;">}</span> <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">else</span> <span style="color: #73daca;">{</span>
-        console.log<span style="color: #b4f9f8;">(</span><span style="color: #9ece6a; font-style: italic;">`&#33719;&#21462;&#24038;&#20391;&#25968;&#25454;&#25968;&#25454;&#22833;&#36133;`</span><span style="color: #b4f9f8;">)</span>;
-      <span style="color: #73daca;">}</span>
-    <span style="color: #ff9e64;">}</span>,
-  <span style="color: #7aa2f7;">}</span>,
+        <span style="color: #687184;">}</span><span style="color: #35BF88;">)</span>;
+      <span style="color: #9d81ba;">}</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">else</span> <span style="color: #9d81ba;">{</span>
+        console.log<span style="color: #35BF88;">(</span><span style="color: #62D2DB; font-style: italic;">`&#33719;&#21462;&#24038;&#20391;&#25968;&#25454;&#25968;&#25454;&#22833;&#36133;`</span><span style="color: #35BF88;">)</span>;
+      <span style="color: #9d81ba;">}</span>
+    <span style="color: #62D2DB;">}</span>,
+  <span style="color: #47ba99;">}</span>,
 
-  <span style="color: #51587a; font-style: italic;">// </span><span style="color: #51587a; font-style: italic;">&#21516;&#27493;&#25805;&#20316;</span>
-  reducers: <span style="color: #7aa2f7;">{</span>
-    setData<span style="color: #ff9e64;">(</span>state, action<span style="color: #ff9e64;">)</span> <span style="color: #ff9e64;">{</span>
-      <span style="color: #bb9af7; font-style: italic; text-decoration: underline;">return</span> <span style="color: #73daca;">{</span> ...state, ...action.payload <span style="color: #73daca;">}</span>;
-    <span style="color: #ff9e64;">}</span>,
-  <span style="color: #7aa2f7;">}</span>,
-<span style="color: #a9b1d6;">}</span>;
+  <span style="color: #454459;">// </span><span style="color: #454459; font-style: italic;">&#21516;&#27493;&#25805;&#20316;</span>
+  reducers: <span style="color: #47ba99;">{</span>
+    setData<span style="color: #62D2DB;">(</span>state, action<span style="color: #62D2DB;">)</span> <span style="color: #62D2DB;">{</span>
+      <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> <span style="color: #9d81ba;">{</span> ...state, ...action.payload <span style="color: #9d81ba;">}</span>;
+    <span style="color: #62D2DB;">}</span>,
+  <span style="color: #47ba99;">}</span>,
+<span style="color: #0D9C94;">}</span>;
 
 </pre>
 </div>
@@ -850,12 +850,12 @@
 </div>
 
 
-<div id="outline-container-org09a00f3" class="outline-2">
-<h2 id="org09a00f3"><span class="section-number-2">3.</span> 安装与运行</h2>
+<div id="outline-container-orge26b57e" class="outline-2">
+<h2 id="orge26b57e"><span class="section-number-2">3.</span> 安装与运行</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org4db57d7" class="outline-3">
-<h3 id="org4db57d7"><span class="section-number-3">3.1.</span> 安装</h3>
+<div id="outline-container-org8f69bf1" class="outline-3">
+<h3 id="org8f69bf1"><span class="section-number-3">3.1.</span> 安装</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 基于npm进行依赖安装
@@ -868,15 +868,15 @@
 主要包括以下依赖：
 </p>
 <div class="org-src-container">
-<pre class="src src-js"><span style="color: #9ece6a; font-style: italic;">"dependencies"</span>: <span style="color: #a9b1d6;">{</span>
-   <span style="color: #9ece6a; font-style: italic;">"@jiaminghi/data-view-react"</span>: <span style="color: #9ece6a; font-style: italic;">"^1.2.4"</span>,
-   <span style="color: #9ece6a; font-style: italic;">"dva"</span>: <span style="color: #9ece6a; font-style: italic;">"^2.4.1"</span>,
-   <span style="color: #9ece6a; font-style: italic;">"echarts"</span>: <span style="color: #9ece6a; font-style: italic;">"^4.9.0"</span>,
-   <span style="color: #9ece6a; font-style: italic;">"react"</span>: <span style="color: #9ece6a; font-style: italic;">"^16.2.0"</span>,
-   <span style="color: #9ece6a; font-style: italic;">"react-dom"</span>: <span style="color: #9ece6a; font-style: italic;">"^16.2.0"</span>,
-   <span style="color: #9ece6a; font-style: italic;">"sass-loader"</span>: <span style="color: #9ece6a; font-style: italic;">"8.0.2"</span>,
-   <span style="color: #9ece6a; font-style: italic;">"styled-components"</span>: <span style="color: #9ece6a; font-style: italic;">"^5.2.0"</span>
- <span style="color: #a9b1d6;">}</span>,
+<pre class="src src-js"><span style="color: #62D2DB; font-style: italic;">"dependencies"</span>: <span style="color: #0D9C94;">{</span>
+   <span style="color: #62D2DB; font-style: italic;">"@jiaminghi/data-view-react"</span>: <span style="color: #62D2DB; font-style: italic;">"^1.2.4"</span>,
+   <span style="color: #62D2DB; font-style: italic;">"dva"</span>: <span style="color: #62D2DB; font-style: italic;">"^2.4.1"</span>,
+   <span style="color: #62D2DB; font-style: italic;">"echarts"</span>: <span style="color: #62D2DB; font-style: italic;">"^4.9.0"</span>,
+   <span style="color: #62D2DB; font-style: italic;">"react"</span>: <span style="color: #62D2DB; font-style: italic;">"^16.2.0"</span>,
+   <span style="color: #62D2DB; font-style: italic;">"react-dom"</span>: <span style="color: #62D2DB; font-style: italic;">"^16.2.0"</span>,
+   <span style="color: #62D2DB; font-style: italic;">"sass-loader"</span>: <span style="color: #62D2DB; font-style: italic;">"8.0.2"</span>,
+   <span style="color: #62D2DB; font-style: italic;">"styled-components"</span>: <span style="color: #62D2DB; font-style: italic;">"^5.2.0"</span>
+ <span style="color: #0D9C94;">}</span>,
 </pre>
 </div>
 <p>
@@ -884,8 +884,8 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org3bf04f4" class="outline-3">
-<h3 id="org3bf04f4"><span class="section-number-3">3.2.</span> 运行</h3>
+<div id="outline-container-orge28faf8" class="outline-3">
+<h3 id="orge28faf8"><span class="section-number-3">3.2.</span> 运行</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 运行下列命令，即可在浏览器打开相关页面，F11进入全屏中即可使用。
@@ -901,7 +901,7 @@
 <div id="postamble" class="status">
 <p class="date">Date: Sun Jul 11 17:08:49 2021</p>
 <p class="author">Author: 梁子，软件学院，S0083，3120305385</p>
-<p class="date">Created: 2023-05-19 五 09:02</p>
+<p class="date">Created: 2023-08-21 一 15:03</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

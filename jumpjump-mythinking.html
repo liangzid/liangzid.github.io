@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2023-06-16 周五 10:04 -->
+<!-- 2023-08-21 一 15:03 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>半自动手残拯救器：PC端微信跳一跳的解决方案</title>
@@ -16,20 +16,20 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org79faf0f">1. 1 需求分析</a></li>
-<li><a href="#org125d339">2. 2 具体实现</a>
+<li><a href="#orgb2085be">1. 1 需求分析</a></li>
+<li><a href="#org7ae827b">2. 2 具体实现</a>
 <ul>
-<li><a href="#org9651747">2.1. 2.1 操作鼠标</a></li>
-<li><a href="#org3b6a370">2.2. 2.2 简单的图像操作</a></li>
-<li><a href="#org2afc52d">2.3. 2.3 组合</a></li>
+<li><a href="#org1e64025">2.1. 2.1 操作鼠标</a></li>
+<li><a href="#orgc06692b">2.2. 2.2 简单的图像操作</a></li>
+<li><a href="#orgbb9ee31">2.3. 2.3 组合</a></li>
 </ul>
 </li>
-<li><a href="#orgd5693bf">3. 结束语</a></li>
+<li><a href="#orgc67ec36">3. 结束语</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org79faf0f" class="outline-2">
-<h2 id="org79faf0f"><span class="section-number-2">1.</span> 1 需求分析</h2>
+<div id="outline-container-orgb2085be" class="outline-2">
+<h2 id="orgb2085be"><span class="section-number-2">1.</span> 1 需求分析</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 近期，笔者被女朋友卷入了玩一个款名为“跳一跳”的小游戏中，由于笔者的判断能力较差，所以该游戏超不过二十分，大多数情况下仅能得到十分。为了显示出和女朋友之间的竞争性，便开始考虑能否写一个外挂。因为我记得很早之前好像出现过此类外挂。
@@ -44,7 +44,7 @@
 </p>
 
 
-<div id="orgde6cbc2" class="figure">
+<div id="org0b1d000" class="figure">
 <p><img src="./images/screenshot_20220107_200653.png" alt="screenshot_20220107_200653.png"> 
 </p>
 </div>
@@ -102,8 +102,8 @@
 </div>
 
 
-<div id="outline-container-org125d339" class="outline-2">
-<h2 id="org125d339"><span class="section-number-2">2.</span> 2 具体实现</h2>
+<div id="outline-container-org7ae827b" class="outline-2">
+<h2 id="org7ae827b"><span class="section-number-2">2.</span> 2 具体实现</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 通过需求分析可知，做成这个事情，最大的需求有二：
@@ -114,8 +114,8 @@
 </ol>
 </div>
 
-<div id="outline-container-org9651747" class="outline-3">
-<h3 id="org9651747"><span class="section-number-3">2.1.</span> 2.1 操作鼠标</h3>
+<div id="outline-container-org1e64025" class="outline-3">
+<h3 id="org1e64025"><span class="section-number-3">2.1.</span> 2.1 操作鼠标</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 操作鼠标的事情很简单，果然，一搜就找到了大把的API。基本上不管是什么语言都支持。我此处使用的是python，因为写起来快。
@@ -126,29 +126,29 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #9d81ba; font-style: italic; text-decoration: underline;">from</span> pymouse <span style="color: #9d81ba; font-style: italic; text-decoration: underline;">import</span> *
+<pre class="src src-python"><span style="color: #9587DD; font-style: italic; text-decoration: underline;">from</span> pymouse <span style="color: #9587DD; font-style: italic; text-decoration: underline;">import</span> *
 <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">import time</span>
-<span style="color: #9d81ba; font-style: italic; text-decoration: underline;">import</span> win32api
-<span style="color: #9d81ba; font-style: italic; text-decoration: underline;">import</span> pyautogui
+<span style="color: #9587DD; font-style: italic; text-decoration: underline;">import</span> win32api
+<span style="color: #9587DD; font-style: italic; text-decoration: underline;">import</span> pyautogui
 
-<span style="color: #9d81ba; font-style: italic; text-decoration: underline;">def</span> <span style="color: #0bc9cf;">press</span><span style="color: #0D9C94;">(</span>x, y, button=1<span style="color: #0D9C94;">)</span>:
-    <span style="color: #7CF083; background-color: #372E40;">buttonAction</span> = 2 ** <span style="color: #0D9C94;">(</span><span style="color: #47ba99;">(</span>2 * button<span style="color: #47ba99;">)</span> - 1<span style="color: #0D9C94;">)</span>
+<span style="color: #9587DD; font-style: italic; text-decoration: underline;">def</span> <span style="color: #CE8EC8;">press</span><span style="color: #0D9C94;">(</span>x, y, button=1<span style="color: #0D9C94;">)</span>:
+    buttonAction = 2 ** <span style="color: #0D9C94;">(</span><span style="color: #47ba99;">(</span>2 * button<span style="color: #47ba99;">)</span> - 1<span style="color: #0D9C94;">)</span>
     win32api.mouse_event<span style="color: #0D9C94;">(</span>buttonAction, x, y<span style="color: #0D9C94;">)</span>
 
 
-<span style="color: #9d81ba; font-style: italic; text-decoration: underline;">def</span> <span style="color: #0bc9cf;">release</span><span style="color: #0D9C94;">(</span>x, y, button=1<span style="color: #0D9C94;">)</span>:
-    <span style="color: #7CF083; background-color: #372E40;">buttonAction</span> = 2 ** <span style="color: #0D9C94;">(</span><span style="color: #47ba99;">(</span>2 * button<span style="color: #47ba99;">)</span><span style="color: #0D9C94;">)</span>
+<span style="color: #9587DD; font-style: italic; text-decoration: underline;">def</span> <span style="color: #CE8EC8;">release</span><span style="color: #0D9C94;">(</span>x, y, button=1<span style="color: #0D9C94;">)</span>:
+    buttonAction = 2 ** <span style="color: #0D9C94;">(</span><span style="color: #47ba99;">(</span>2 * button<span style="color: #47ba99;">)</span><span style="color: #0D9C94;">)</span>
     win32api.mouse_event<span style="color: #0D9C94;">(</span>buttonAction, x, y<span style="color: #0D9C94;">)</span>
 
 
-<span style="color: #9d81ba; font-style: italic; text-decoration: underline;">def</span> <span style="color: #0bc9cf;">click</span><span style="color: #0D9C94;">(</span>x, y, button=1<span style="color: #0D9C94;">)</span>:
+<span style="color: #9587DD; font-style: italic; text-decoration: underline;">def</span> <span style="color: #CE8EC8;">click</span><span style="color: #0D9C94;">(</span>x, y, button=1<span style="color: #0D9C94;">)</span>:
     press<span style="color: #0D9C94;">(</span>x, y, button<span style="color: #0D9C94;">)</span>
     release<span style="color: #0D9C94;">(</span>x, y, button<span style="color: #0D9C94;">)</span>
 
-<span style="color: #9d81ba; font-style: italic; text-decoration: underline;">def</span> <span style="color: #0bc9cf;">getPosition</span><span style="color: #0D9C94;">()</span>:
-    <span style="color: #7CF083; background-color: #372E40;">m</span>=PyMouse<span style="color: #0D9C94;">()</span>
-    <span style="color: #9d81ba;">print</span><span style="color: #0D9C94;">(</span>m.position<span style="color: #47ba99;">()</span><span style="color: #0D9C94;">)</span>
-    <span style="color: #9d81ba; font-style: italic; text-decoration: underline;">return</span> m.position<span style="color: #0D9C94;">()</span>
+<span style="color: #9587DD; font-style: italic; text-decoration: underline;">def</span> <span style="color: #CE8EC8;">getPosition</span><span style="color: #0D9C94;">()</span>:
+    m=PyMouse<span style="color: #0D9C94;">()</span>
+    <span style="color: #63E8C1;">print</span><span style="color: #0D9C94;">(</span>m.position<span style="color: #47ba99;">()</span><span style="color: #0D9C94;">)</span>
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> m.position<span style="color: #0D9C94;">()</span>
 
 </pre>
 </div>
@@ -164,23 +164,23 @@
 <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">(x,y) position mouse to hold</span>
 <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">t: seconds mouse to hold.</span>
 
-<span style="color: #9d81ba; font-style: italic; text-decoration: underline;">def</span> <span style="color: #0bc9cf;">autoguiHoldOn</span><span style="color: #0D9C94;">(</span>x,y,t<span style="color: #0D9C94;">)</span>:
+<span style="color: #9587DD; font-style: italic; text-decoration: underline;">def</span> <span style="color: #CE8EC8;">autoguiHoldOn</span><span style="color: #0D9C94;">(</span>x,y,t<span style="color: #0D9C94;">)</span>:
     pyautogui.moveTo<span style="color: #0D9C94;">(</span>x,y<span style="color: #0D9C94;">)</span>
     goOneStepWithTime<span style="color: #0D9C94;">(</span>x,y,t<span style="color: #0D9C94;">)</span>
 
-<span style="color: #9d81ba; font-style: italic; text-decoration: underline;">def</span> <span style="color: #0bc9cf;">goOneStepWithTime</span><span style="color: #0D9C94;">(</span>x,y,t<span style="color: #0D9C94;">)</span>:
+<span style="color: #9587DD; font-style: italic; text-decoration: underline;">def</span> <span style="color: #CE8EC8;">goOneStepWithTime</span><span style="color: #0D9C94;">(</span>x,y,t<span style="color: #0D9C94;">)</span>:
     press<span style="color: #0D9C94;">(</span>x,y<span style="color: #0D9C94;">)</span>
     time.sleep<span style="color: #0D9C94;">(</span>t<span style="color: #0D9C94;">)</span>
     release<span style="color: #0D9C94;">(</span>x,y<span style="color: #0D9C94;">)</span>
-    <span style="color: #9d81ba;">print</span><span style="color: #0D9C94;">(</span>f<span style="color: #f5c791; font-style: italic;">"running one step done. Position: (</span>{x}<span style="color: #f5c791; font-style: italic;">,</span>{y}<span style="color: #f5c791; font-style: italic;">); for </span>{t}<span style="color: #f5c791; font-style: italic;"> s."</span><span style="color: #0D9C94;">)</span>
+    <span style="color: #63E8C1;">print</span><span style="color: #0D9C94;">(</span>f<span style="color: #62D2DB; font-style: italic;">"running one step done. Position: (</span>{x}<span style="color: #62D2DB; font-style: italic;">,</span>{y}<span style="color: #62D2DB; font-style: italic;">); for </span>{t}<span style="color: #62D2DB; font-style: italic;"> s."</span><span style="color: #0D9C94;">)</span>
 
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org3b6a370" class="outline-3">
-<h3 id="org3b6a370"><span class="section-number-3">2.2.</span> 2.2 简单的图像操作</h3>
+<div id="outline-container-orgc06692b" class="outline-3">
+<h3 id="orgc06692b"><span class="section-number-3">2.2.</span> 2.2 简单的图像操作</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 本科接触过opencv，熟一点。不多说，直接上代码。唯一值得强调的是，此处有一个截屏的需求，我直接用的一个比较慢的library，因为我对时间没有需求……越慢反而越逼真。
@@ -189,35 +189,35 @@
 
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">screen capture</span>
-<span style="color: #9d81ba; font-style: italic; text-decoration: underline;">def</span> <span style="color: #0bc9cf;">getScreenArray</span><span style="color: #0D9C94;">()</span>:
-    <span style="color: #7CF083; background-color: #372E40;">img</span> = ImageGrab.grab<span style="color: #0D9C94;">(</span>bbox=<span style="color: #47ba99;">(</span>0, 0, 2048, 2048<span style="color: #47ba99;">)</span><span style="color: #0D9C94;">)</span>
-    <span style="color: #7CF083; background-color: #372E40;">img</span> = np.array<span style="color: #0D9C94;">(</span>img.getdata<span style="color: #47ba99;">()</span>, np.uint8<span style="color: #0D9C94;">)</span>.reshape<span style="color: #0D9C94;">(</span>img.size<span style="color: #47ba99;">[</span>1<span style="color: #47ba99;">]</span>, img.size<span style="color: #47ba99;">[</span>0<span style="color: #47ba99;">]</span>, 3<span style="color: #0D9C94;">)</span>
+<span style="color: #9587DD; font-style: italic; text-decoration: underline;">def</span> <span style="color: #CE8EC8;">getScreenArray</span><span style="color: #0D9C94;">()</span>:
+    <span style="color: #41b0f3; background-color: #372E40;">img</span> = ImageGrab.grab<span style="color: #0D9C94;">(</span>bbox=<span style="color: #47ba99;">(</span>0, 0, 2048, 2048<span style="color: #47ba99;">)</span><span style="color: #0D9C94;">)</span>
+    img = np.array<span style="color: #0D9C94;">(</span>img.getdata<span style="color: #47ba99;">()</span>, np.uint8<span style="color: #0D9C94;">)</span>.reshape<span style="color: #0D9C94;">(</span>img.size<span style="color: #47ba99;">[</span>1<span style="color: #47ba99;">]</span>, img.size<span style="color: #47ba99;">[</span>0<span style="color: #47ba99;">]</span>, 3<span style="color: #0D9C94;">)</span>
     <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">cv2.imshow("222",img)</span>
     cv2.waitKey<span style="color: #0D9C94;">(</span>0<span style="color: #0D9C94;">)</span>
-    <span style="color: #9d81ba; font-style: italic; text-decoration: underline;">return</span> img
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> img
 
 <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">match templates</span>
 <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">where all_array denotes the array matched, and window_array is the template.</span>
 <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">It will return two tuples, including the position of top-left point and bottom-right point.</span>
-<span style="color: #9d81ba; font-style: italic; text-decoration: underline;">def</span> <span style="color: #0bc9cf;">getWindowPosition</span><span style="color: #0D9C94;">(</span>all_array, window_array<span style="color: #0D9C94;">)</span>:
-    <span style="color: #9d81ba;">print</span><span style="color: #0D9C94;">(</span><span style="color: #f5c791; font-style: italic;">"shape of window array&#65306;"</span>, window_array.shape<span style="color: #0D9C94;">)</span>
-    <span style="color: #7CF083; background-color: #372E40;">h</span>,<span style="color: #7CF083; background-color: #372E40;">w</span>=window_array.shape
+<span style="color: #9587DD; font-style: italic; text-decoration: underline;">def</span> <span style="color: #CE8EC8;">getWindowPosition</span><span style="color: #0D9C94;">(</span>all_array, window_array<span style="color: #0D9C94;">)</span>:
+    <span style="color: #63E8C1;">print</span><span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"shape of window array&#65306;"</span>, window_array.shape<span style="color: #0D9C94;">)</span>
+    <span style="color: #41b0f3; background-color: #372E40;">h</span>,<span style="color: #41b0f3; background-color: #372E40;">w</span>=window_array.shape
 
-    <span style="color: #7CF083; background-color: #372E40;">meth</span>=<span style="color: #f5c791; font-style: italic;">"cv2.TM_CCOEFF"</span>
-    <span style="color: #7CF083; background-color: #372E40;">method</span>=<span style="color: #9d81ba;">eval</span><span style="color: #0D9C94;">(</span>meth<span style="color: #0D9C94;">)</span>
-    <span style="color: #7CF083; background-color: #372E40;">results</span>=cv2.matchTemplate<span style="color: #0D9C94;">(</span>all_array,window_array,method<span style="color: #0D9C94;">)</span>
-    <span style="color: #7CF083; background-color: #372E40;">min_val</span>,<span style="color: #7CF083; background-color: #372E40;">max_val</span>,<span style="color: #7CF083; background-color: #372E40;">min_loc</span>,<span style="color: #7CF083; background-color: #372E40;">top_left</span>=cv2.minMaxLoc<span style="color: #0D9C94;">(</span>results<span style="color: #0D9C94;">)</span>
-    <span style="color: #7CF083; background-color: #372E40;">bottom_right</span>=<span style="color: #0D9C94;">(</span>top_left<span style="color: #47ba99;">[</span>0<span style="color: #47ba99;">]</span> + w, top_left<span style="color: #47ba99;">[</span>1<span style="color: #47ba99;">]</span> + h<span style="color: #0D9C94;">)</span>
+    meth=<span style="color: #62D2DB; font-style: italic;">"cv2.TM_CCOEFF"</span>
+    method=<span style="color: #63E8C1;">eval</span><span style="color: #0D9C94;">(</span>meth<span style="color: #0D9C94;">)</span>
+    results=cv2.matchTemplate<span style="color: #0D9C94;">(</span>all_array,window_array,method<span style="color: #0D9C94;">)</span>
+    <span style="color: #41b0f3; background-color: #372E40;">min_val</span>,<span style="color: #41b0f3; background-color: #372E40;">max_val</span>,<span style="color: #41b0f3; background-color: #372E40;">min_loc</span>,<span style="color: #41b0f3; background-color: #372E40;">top_left</span>=cv2.minMaxLoc<span style="color: #0D9C94;">(</span>results<span style="color: #0D9C94;">)</span>
+    bottom_right=<span style="color: #0D9C94;">(</span>top_left<span style="color: #47ba99;">[</span>0<span style="color: #47ba99;">]</span> + w, top_left<span style="color: #47ba99;">[</span>1<span style="color: #47ba99;">]</span> + h<span style="color: #0D9C94;">)</span>
 
-    <span style="color: #9d81ba; font-style: italic; text-decoration: underline;">return</span> top_left, bottom_right
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> top_left, bottom_right
 
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2afc52d" class="outline-3">
-<h3 id="org2afc52d"><span class="section-number-3">2.3.</span> 2.3 组合</h3>
+<div id="outline-container-orgbb9ee31" class="outline-3">
+<h3 id="orgbb9ee31"><span class="section-number-3">2.3.</span> 2.3 组合</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 以上API就可以支持完成一整套操作了。如下所述：
@@ -227,43 +227,43 @@
 <div class="org-src-container">
 <pre class="src src-python">
 
-<span style="color: #9d81ba; font-style: italic; text-decoration: underline;">def</span> <span style="color: #0bc9cf;">handwork</span><span style="color: #0D9C94;">(</span>centerx,centery<span style="color: #0D9C94;">)</span>:
+<span style="color: #9587DD; font-style: italic; text-decoration: underline;">def</span> <span style="color: #CE8EC8;">handwork</span><span style="color: #0D9C94;">(</span>centerx,centery<span style="color: #0D9C94;">)</span>:
     <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">get all screen</span>
-    <span style="color: #7CF083; background-color: #372E40;">screen_array</span>=getScreenArray<span style="color: #0D9C94;">()</span>
-    <span style="color: #7CF083; background-color: #372E40;">screen_array</span> = cv2.cvtColor<span style="color: #0D9C94;">(</span>screen_array, cv2.COLOR_BGR2GRAY<span style="color: #0D9C94;">)</span>
+    <span style="color: #41b0f3; background-color: #372E40;">screen_array</span>=getScreenArray<span style="color: #0D9C94;">()</span>
+    <span style="color: #41b0f3; background-color: #372E40;">screen_array</span> = cv2.cvtColor<span style="color: #0D9C94;">(</span>screen_array, cv2.COLOR_BGR2GRAY<span style="color: #0D9C94;">)</span>
 
     <span style="color: #454459;">## </span><span style="color: #454459; font-style: italic;">get game position</span>
-    <span style="color: #7CF083; background-color: #372E40;">screen</span>=cv2.imread<span style="color: #0D9C94;">(</span><span style="color: #f5c791; font-style: italic;">"./screen.png"</span><span style="color: #0D9C94;">)</span>
-    <span style="color: #7CF083; background-color: #372E40;">screen</span>= cv2.cvtColor<span style="color: #0D9C94;">(</span>screen, cv2.COLOR_BGR2GRAY<span style="color: #0D9C94;">)</span>
-    <span style="color: #7CF083; background-color: #372E40;">screen_p_tl</span>,<span style="color: #7CF083; background-color: #372E40;">screen_p_br</span>=getWindowPosition<span style="color: #0D9C94;">(</span>screen_array,screen<span style="color: #0D9C94;">)</span>
+    <span style="color: #41b0f3; background-color: #372E40;">screen</span>=cv2.imread<span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"./screen.png"</span><span style="color: #0D9C94;">)</span>
+    <span style="color: #41b0f3; background-color: #372E40;">screen</span>= cv2.cvtColor<span style="color: #0D9C94;">(</span>screen, cv2.COLOR_BGR2GRAY<span style="color: #0D9C94;">)</span>
+    <span style="color: #41b0f3; background-color: #372E40;">screen_p_tl</span>,<span style="color: #41b0f3; background-color: #372E40;">screen_p_br</span>=getWindowPosition<span style="color: #0D9C94;">(</span>screen_array,screen<span style="color: #0D9C94;">)</span>
 
-    <span style="color: #9d81ba;">print</span><span style="color: #0D9C94;">(</span>f<span style="color: #f5c791; font-style: italic;">"Window top-left posotion: </span>{screen_p_tl}<span style="color: #f5c791; font-style: italic;">"</span><span style="color: #0D9C94;">)</span>
-    <span style="color: #9d81ba;">print</span><span style="color: #0D9C94;">(</span>f<span style="color: #f5c791; font-style: italic;">"Window bottom-right posotion: </span>{screen_p_br}<span style="color: #f5c791; font-style: italic;">"</span><span style="color: #0D9C94;">)</span>
-    <span style="color: #7CF083; background-color: #372E40;">screen_p_tl</span>=<span style="color: #0D9C94;">(</span>735,142<span style="color: #0D9C94;">)</span>
-    <span style="color: #7CF083; background-color: #372E40;">screen_p_br</span>=<span style="color: #0D9C94;">(</span>1185,941<span style="color: #0D9C94;">)</span>
+    <span style="color: #63E8C1;">print</span><span style="color: #0D9C94;">(</span>f<span style="color: #62D2DB; font-style: italic;">"Window top-left posotion: </span>{screen_p_tl}<span style="color: #62D2DB; font-style: italic;">"</span><span style="color: #0D9C94;">)</span>
+    <span style="color: #63E8C1;">print</span><span style="color: #0D9C94;">(</span>f<span style="color: #62D2DB; font-style: italic;">"Window bottom-right posotion: </span>{screen_p_br}<span style="color: #62D2DB; font-style: italic;">"</span><span style="color: #0D9C94;">)</span>
+    screen_p_tl=<span style="color: #0D9C94;">(</span>735,142<span style="color: #0D9C94;">)</span>
+    <span style="color: #41b0f3; background-color: #372E40;">screen_p_br</span>=<span style="color: #0D9C94;">(</span>1185,941<span style="color: #0D9C94;">)</span>
     <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">centerx=int((screen_p_tl[0]+screen_p_br[0])/2)</span>
     <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">centery=int((screen_p_tl[1]+screen_p_br[1])/2)</span>
     <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">centerx+=200</span>
     <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">centery+=100</span>
 
-    <span style="color: #7CF083; background-color: #372E40;">person</span>=cv2.imread<span style="color: #0D9C94;">(</span><span style="color: #f5c791; font-style: italic;">"./person.png"</span><span style="color: #0D9C94;">)</span>
-    <span style="color: #7CF083; background-color: #372E40;">person</span> = cv2.cvtColor<span style="color: #0D9C94;">(</span>person, cv2.COLOR_BGR2GRAY<span style="color: #0D9C94;">)</span>
-    <span style="color: #7CF083; background-color: #372E40;">per_p_tl</span>,<span style="color: #7CF083; background-color: #372E40;">per_p_br</span>=getWindowPosition<span style="color: #0D9C94;">(</span>screen_array,person<span style="color: #0D9C94;">)</span>
+    <span style="color: #41b0f3; background-color: #372E40;">person</span>=cv2.imread<span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"./person.png"</span><span style="color: #0D9C94;">)</span>
+    <span style="color: #41b0f3; background-color: #372E40;">person</span> = cv2.cvtColor<span style="color: #0D9C94;">(</span>person, cv2.COLOR_BGR2GRAY<span style="color: #0D9C94;">)</span>
+    <span style="color: #41b0f3; background-color: #372E40;">per_p_tl</span>,<span style="color: #41b0f3; background-color: #372E40;">per_p_br</span>=getWindowPosition<span style="color: #0D9C94;">(</span>screen_array,person<span style="color: #0D9C94;">)</span>
 
-    <span style="color: #9d81ba;">print</span><span style="color: #0D9C94;">(</span>f<span style="color: #f5c791; font-style: italic;">"person top-left posotion: </span>{per_p_tl}<span style="color: #f5c791; font-style: italic;">"</span><span style="color: #0D9C94;">)</span>
-    <span style="color: #9d81ba;">print</span><span style="color: #0D9C94;">(</span>f<span style="color: #f5c791; font-style: italic;">"person bottom-right posotion: </span>{per_p_br}<span style="color: #f5c791; font-style: italic;">"</span><span style="color: #0D9C94;">)</span>
+    <span style="color: #63E8C1;">print</span><span style="color: #0D9C94;">(</span>f<span style="color: #62D2DB; font-style: italic;">"person top-left posotion: </span>{per_p_tl}<span style="color: #62D2DB; font-style: italic;">"</span><span style="color: #0D9C94;">)</span>
+    <span style="color: #63E8C1;">print</span><span style="color: #0D9C94;">(</span>f<span style="color: #62D2DB; font-style: italic;">"person bottom-right posotion: </span>{per_p_br}<span style="color: #62D2DB; font-style: italic;">"</span><span style="color: #0D9C94;">)</span>
 
-    <span style="color: #7CF083; background-color: #372E40;">srcx</span>=per_p_tl<span style="color: #0D9C94;">[</span>0<span style="color: #0D9C94;">]</span>+16
-    <span style="color: #7CF083; background-color: #372E40;">srcy</span>=per_p_tl<span style="color: #0D9C94;">[</span>1<span style="color: #0D9C94;">]</span>+79
+    srcx=per_p_tl<span style="color: #0D9C94;">[</span>0<span style="color: #0D9C94;">]</span>+16
+    <span style="color: #41b0f3; background-color: #372E40;">srcy</span>=per_p_tl<span style="color: #0D9C94;">[</span>1<span style="color: #0D9C94;">]</span>+79
 
-    <span style="color: #9d81ba;">print</span><span style="color: #0D9C94;">(</span>f<span style="color: #f5c791; font-style: italic;">"person position: (</span>{srcx}<span style="color: #f5c791; font-style: italic;">,</span>{srcy}<span style="color: #f5c791; font-style: italic;">)"</span><span style="color: #0D9C94;">)</span>
+    <span style="color: #63E8C1;">print</span><span style="color: #0D9C94;">(</span>f<span style="color: #62D2DB; font-style: italic;">"person position: (</span>{srcx}<span style="color: #62D2DB; font-style: italic;">,</span>{srcy}<span style="color: #62D2DB; font-style: italic;">)"</span><span style="color: #0D9C94;">)</span>
 
-    <span style="color: #7CF083; background-color: #372E40;">point</span>=np.array<span style="color: #0D9C94;">(</span><span style="color: #47ba99;">[</span>srcx-centerx,srcy-centery<span style="color: #47ba99;">]</span><span style="color: #0D9C94;">)</span>
+    point=np.array<span style="color: #0D9C94;">(</span><span style="color: #47ba99;">[</span>srcx-centerx,srcy-centery<span style="color: #47ba99;">]</span><span style="color: #0D9C94;">)</span>
 
     <span style="color: #454459;">## </span><span style="color: #454459; font-style: italic;">calculate distance</span>
-    <span style="color: #7CF083; background-color: #372E40;">distance</span>=np.linalg.norm<span style="color: #0D9C94;">(</span>point<span style="color: #0D9C94;">)</span>
-    <span style="color: #7CF083; background-color: #372E40;">t</span>=getTimefromDistance<span style="color: #0D9C94;">(</span>distance<span style="color: #0D9C94;">)</span>/1000
-    <span style="color: #9d81ba;">print</span><span style="color: #0D9C94;">(</span>f<span style="color: #f5c791; font-style: italic;">"planning time: </span>{t}<span style="color: #f5c791; font-style: italic;">"</span><span style="color: #0D9C94;">)</span>
+    <span style="color: #41b0f3; background-color: #372E40;">distance</span>=np.linalg.norm<span style="color: #0D9C94;">(</span>point<span style="color: #0D9C94;">)</span>
+    <span style="color: #41b0f3; background-color: #372E40;">t</span>=getTimefromDistance<span style="color: #0D9C94;">(</span>distance<span style="color: #0D9C94;">)</span>/1000
+    <span style="color: #63E8C1;">print</span><span style="color: #0D9C94;">(</span>f<span style="color: #62D2DB; font-style: italic;">"planning time: </span>{t}<span style="color: #62D2DB; font-style: italic;">"</span><span style="color: #0D9C94;">)</span>
 
     <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">goOneStepWithTime(centerx,centery,t)</span>
     autoguiHoldOn<span style="color: #0D9C94;">(</span>srcx,srcy,t<span style="color: #0D9C94;">)</span>
@@ -276,21 +276,21 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #9d81ba; font-style: italic; text-decoration: underline;">def</span> <span style="color: #0bc9cf;">main1</span><span style="color: #0D9C94;">()</span>:
-    <span style="color: #7CF083; background-color: #372E40;">i</span>=0
-    <span style="color: #9d81ba; font-style: italic; text-decoration: underline;">while</span> <span style="color: #0D9C94;">True</span>:
-        <span style="color: #9d81ba;">print</span><span style="color: #0D9C94;">(</span><span style="color: #f5c791; font-style: italic;">"please set your persition"</span><span style="color: #0D9C94;">)</span>
-        <span style="color: #7CF083; background-color: #372E40;">y</span>=<span style="color: #9d81ba;">input</span><span style="color: #0D9C94;">(</span><span style="color: #f5c791; font-style: italic;">"enter &lt;RET&gt; to set done. and q to exit."</span><span style="color: #0D9C94;">)</span>
-        <span style="color: #9d81ba; font-style: italic; text-decoration: underline;">if</span> y==<span style="color: #f5c791; font-style: italic;">""</span>:
-            <span style="color: #7CF083; background-color: #372E40;">persition</span>=getPosition<span style="color: #0D9C94;">()</span>
+<pre class="src src-python"><span style="color: #9587DD; font-style: italic; text-decoration: underline;">def</span> <span style="color: #CE8EC8;">main1</span><span style="color: #0D9C94;">()</span>:
+    <span style="color: #41b0f3; background-color: #372E40;">i</span>=0
+    <span style="color: #9587DD; font-style: italic; text-decoration: underline;">while</span> <span style="color: #41b0f3;">True</span>:
+        <span style="color: #63E8C1;">print</span><span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"please set your persition"</span><span style="color: #0D9C94;">)</span>
+        y=<span style="color: #63E8C1;">input</span><span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"enter &lt;RET&gt; to set done. and q to exit."</span><span style="color: #0D9C94;">)</span>
+        <span style="color: #9587DD; font-style: italic; text-decoration: underline;">if</span> y==<span style="color: #62D2DB; font-style: italic;">""</span>:
+            persition=getPosition<span style="color: #0D9C94;">()</span>
             handwork<span style="color: #0D9C94;">(</span>persition<span style="color: #47ba99;">[</span>0<span style="color: #47ba99;">]</span>,persition<span style="color: #47ba99;">[</span>1<span style="color: #47ba99;">]</span><span style="color: #0D9C94;">)</span>
-        <span style="color: #9d81ba; font-style: italic; text-decoration: underline;">else</span>:
-            <span style="color: #9d81ba; font-style: italic; text-decoration: underline;">return</span> 0
+        <span style="color: #9587DD; font-style: italic; text-decoration: underline;">else</span>:
+            <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> 0
 
-        <span style="color: #9d81ba; font-style: italic; text-decoration: underline;">if</span> i&gt;5000000:
-            <span style="color: #9d81ba; font-style: italic; text-decoration: underline;">break</span>
+        <span style="color: #9587DD; font-style: italic; text-decoration: underline;">if</span> i&gt;5000000:
+            <span style="color: #9587DD; font-style: italic; text-decoration: underline;">break</span>
         <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">mymain()</span>
-        <span style="color: #7CF083; background-color: #372E40;">i</span>+=1
+        i+=1
 
 </pre>
 </div>
@@ -299,8 +299,8 @@
 </div>
 
 
-<div id="outline-container-orgd5693bf" class="outline-2">
-<h2 id="orgd5693bf"><span class="section-number-2">3.</span> 结束语</h2>
+<div id="outline-container-orgc67ec36" class="outline-2">
+<h2 id="orgc67ec36"><span class="section-number-2">3.</span> 结束语</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 我用这套东西刷到将近八百分，唯一值得注意的是，距离太长，关系就不是线性关系了，由于我的程序乘了一个系数，所以我会在距离太长时自己将目标点设置的近一点。和检测一样，如果我有数据，我也可以拟合这个函数关系（可惜我没有）。
@@ -315,7 +315,7 @@
 <div id="postamble" class="status">
 <p class="date">Date: Fri Jan  7 19:59:11 2022</p>
 <p class="author">Author: Zi Liang</p>
-<p class="date">Created: 2023-06-16 周五 10:04</p>
+<p class="date">Created: 2023-08-21 一 15:03</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

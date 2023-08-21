@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2023-06-16 周五 10:04 -->
+<!-- 2023-08-21 一 15:03 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>huggingface transformers 源码剖析(一)</title>
@@ -189,7 +189,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { }
+  .org-svg { width: 90%; }
 </style>
 <link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/>
 </head>
@@ -200,28 +200,28 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orga2f0929">1. Logging</a></li>
-<li><a href="#org8caa580">2. Tokenizer</a></li>
-<li><a href="#orgc2e1faf">3. Models</a></li>
-<li><a href="#org0d9706a">4. Model outputs</a></li>
-<li><a href="#org2c5f931">5. Optimization</a></li>
-<li><a href="#org0b74ac3">6. Configuration</a></li>
-<li><a href="#org82381bb">7. Processors</a></li>
-<li><a href="#org152552f">8. Callbacks</a></li>
-<li><a href="#orgd409e7a">9. Pipelines</a></li>
+<li><a href="#org87e3d36">1. Logging</a></li>
+<li><a href="#org9c590c4">2. Tokenizer</a></li>
+<li><a href="#org36c4b59">3. Models</a></li>
+<li><a href="#orge3dbfc6">4. Model outputs</a></li>
+<li><a href="#orgca2b1cc">5. Optimization</a></li>
+<li><a href="#orgabb9975">6. Configuration</a></li>
+<li><a href="#org5babbf3">7. Processors</a></li>
+<li><a href="#org1b569e7">8. Callbacks</a></li>
+<li><a href="#org6db47e6">9. Pipelines</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orga2f0929" class="outline-2">
-<h2 id="orga2f0929"><span class="section-number-2">1.</span> Logging</h2>
+<div id="outline-container-org87e3d36" class="outline-2">
+<h2 id="org87e3d36"><span class="section-number-2">1.</span> Logging</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 transformers也提供了logging功能，类似于python标准库中的实现。我还是建议使用默认的python库中的logging，你可以在<a href="https://docs.python.org/3/library/logging.html">这里</a>找到相关信息。如果你还是想使用transformers.logging做日志，那么你可以使用以下API：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #9d81ba; font-style: italic; text-decoration: underline;">import</span> transformers.logging <span style="color: #9d81ba; font-style: italic; text-decoration: underline;">as</span> logging
+<pre class="src src-python"><span style="color: #9587DD; font-style: italic; text-decoration: underline;">import</span> transformers.logging <span style="color: #9587DD; font-style: italic; text-decoration: underline;">as</span> logging
 
 <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">## get logger</span>
 <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">logging.get_logger()</span>
@@ -243,42 +243,42 @@ logging.get_verbosity<span style="color: #0D9C94;">()</span>
 </div>
 </div>
 
-<div id="outline-container-org8caa580" class="outline-2">
-<h2 id="org8caa580"><span class="section-number-2">2.</span> Tokenizer</h2>
+<div id="outline-container-org9c590c4" class="outline-2">
+<h2 id="org9c590c4"><span class="section-number-2">2.</span> Tokenizer</h2>
 </div>
 
-<div id="outline-container-orgc2e1faf" class="outline-2">
-<h2 id="orgc2e1faf"><span class="section-number-2">3.</span> Models</h2>
+<div id="outline-container-org36c4b59" class="outline-2">
+<h2 id="org36c4b59"><span class="section-number-2">3.</span> Models</h2>
 </div>
 
-<div id="outline-container-org0d9706a" class="outline-2">
-<h2 id="org0d9706a"><span class="section-number-2">4.</span> Model outputs</h2>
+<div id="outline-container-orge3dbfc6" class="outline-2">
+<h2 id="orge3dbfc6"><span class="section-number-2">4.</span> Model outputs</h2>
 </div>
 
-<div id="outline-container-org2c5f931" class="outline-2">
-<h2 id="org2c5f931"><span class="section-number-2">5.</span> Optimization</h2>
+<div id="outline-container-orgca2b1cc" class="outline-2">
+<h2 id="orgca2b1cc"><span class="section-number-2">5.</span> Optimization</h2>
 </div>
 
-<div id="outline-container-org0b74ac3" class="outline-2">
-<h2 id="org0b74ac3"><span class="section-number-2">6.</span> Configuration</h2>
+<div id="outline-container-orgabb9975" class="outline-2">
+<h2 id="orgabb9975"><span class="section-number-2">6.</span> Configuration</h2>
 </div>
 
-<div id="outline-container-org82381bb" class="outline-2">
-<h2 id="org82381bb"><span class="section-number-2">7.</span> Processors</h2>
+<div id="outline-container-org5babbf3" class="outline-2">
+<h2 id="org5babbf3"><span class="section-number-2">7.</span> Processors</h2>
 </div>
 
-<div id="outline-container-org152552f" class="outline-2">
-<h2 id="org152552f"><span class="section-number-2">8.</span> Callbacks</h2>
+<div id="outline-container-org1b569e7" class="outline-2">
+<h2 id="org1b569e7"><span class="section-number-2">8.</span> Callbacks</h2>
 </div>
 
-<div id="outline-container-orgd409e7a" class="outline-2">
-<h2 id="orgd409e7a"><span class="section-number-2">9.</span> Pipelines</h2>
+<div id="outline-container-org6db47e6" class="outline-2">
+<h2 id="org6db47e6"><span class="section-number-2">9.</span> Pipelines</h2>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: Tue Nov 23 15:37:36 2021</p>
 <p class="author">Author: Zi Liang</p>
-<p class="date">Created: 2023-06-16 周五 10:04</p>
+<p class="date">Created: 2023-08-21 一 15:03</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

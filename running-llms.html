@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2023-08-16 周三 18:24 -->
+<!-- 2023-08-21 一 15:03 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Access state-of-the-art Large Language Models &amp; APIs</title>
@@ -189,7 +189,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { }
+  .org-svg { width: 90%; }
 </style>
 <link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/>
 </head>
@@ -200,23 +200,23 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgfd9eaff">1. Overview</a></li>
-<li><a href="#orgdd3296b">2. APIs</a>
+<li><a href="#org66d6a60">1. Overview</a></li>
+<li><a href="#orgbd143b4">2. APIs</a>
 <ul>
-<li><a href="#org79d3c2a">2.1. GPT-3.5-turbo (ChatGPT) &amp; GPT-4</a></li>
-<li><a href="#org62d31d8">2.2. Bard</a></li>
-<li><a href="#org508e567">2.3. Claude</a>
+<li><a href="#org727a067">2.1. GPT-3.5-turbo (ChatGPT) &amp; GPT-4</a></li>
+<li><a href="#org6165376">2.2. Bard</a></li>
+<li><a href="#org31820f4">2.3. Claude</a>
 <ul>
-<li><a href="#orgf3c05ef">2.3.1. Step 1: set on slack, to obtain a access token to slack as well as a APP ID of your claude chatbot</a></li>
-<li><a href="#org85ff114">2.3.2. Step 2: use the API of claude</a></li>
+<li><a href="#org83510e1">2.3.1. Step 1: set on slack, to obtain a access token to slack as well as a APP ID of your claude chatbot</a></li>
+<li><a href="#org8365165">2.3.2. Step 2: use the API of claude</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orga839177">3. LLMs</a>
+<li><a href="#orge227f89">3. LLMs</a>
 <ul>
-<li><a href="#org06687ef">3.1. Llama &amp; Llama2</a></li>
-<li><a href="#org2a58b04">3.2. By candle, to obtain llama &amp; llama2 &amp; falcon</a></li>
+<li><a href="#orgb6fc98a">3.1. Llama &amp; Llama2</a></li>
+<li><a href="#org0ad1f03">3.2. By candle, to obtain llama &amp; llama2 &amp; falcon</a></li>
 </ul>
 </li>
 </ul>
@@ -226,8 +226,8 @@
 It is common to evalute existing LLMs under certain benchmarks. This article is a summerization of some of the existing state-of-the-art language models.
 </p>
 
-<div id="outline-container-orgfd9eaff" class="outline-2">
-<h2 id="orgfd9eaff"><span class="section-number-2">1.</span> Overview</h2>
+<div id="outline-container-org66d6a60" class="outline-2">
+<h2 id="org66d6a60"><span class="section-number-2">1.</span> Overview</h2>
 <div class="outline-text-2" id="text-1">
 <table>
 
@@ -291,12 +291,12 @@ It is common to evalute existing LLMs under certain benchmarks. This article is 
 </div>
 
 
-<div id="outline-container-orgdd3296b" class="outline-2">
-<h2 id="orgdd3296b"><span class="section-number-2">2.</span> APIs</h2>
+<div id="outline-container-orgbd143b4" class="outline-2">
+<h2 id="orgbd143b4"><span class="section-number-2">2.</span> APIs</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org79d3c2a" class="outline-3">
-<h3 id="org79d3c2a"><span class="section-number-3">2.1.</span> GPT-3.5-turbo (ChatGPT) &amp; GPT-4</h3>
+<div id="outline-container-org727a067" class="outline-3">
+<h3 id="org727a067"><span class="section-number-3">2.1.</span> GPT-3.5-turbo (ChatGPT) &amp; GPT-4</h3>
 <div class="outline-text-3" id="text-2-1">
 <ul class="org-ul">
 <li>OS: Unbuntu 18.04, also works in Linux mint, Windows, and other environments</li>
@@ -326,12 +326,12 @@ Usage to evalute the politness:
     <span style="color: #41b0f3; background-color: #372E40;">res</span>=openai.ChatCompletion.create<span style="color: #0D9C94;">(</span>model=<span style="color: #62D2DB; font-style: italic;">"gpt-3.5-turbo"</span>,
                                         messages=past_msg_ls,
                                         <span style="color: #0D9C94;">)</span>
-    <span style="color: #41b0f3; background-color: #372E40;">resp</span>=res<span style="color: #0D9C94;">[</span><span style="color: #62D2DB; font-style: italic;">"choices"</span><span style="color: #0D9C94;">][</span>0<span style="color: #0D9C94;">][</span><span style="color: #62D2DB; font-style: italic;">'message'</span><span style="color: #0D9C94;">][</span><span style="color: #62D2DB; font-style: italic;">'content'</span><span style="color: #0D9C94;">]</span>
+    resp=res<span style="color: #0D9C94;">[</span><span style="color: #62D2DB; font-style: italic;">"choices"</span><span style="color: #0D9C94;">][</span>0<span style="color: #0D9C94;">][</span><span style="color: #62D2DB; font-style: italic;">'message'</span><span style="color: #0D9C94;">][</span><span style="color: #62D2DB; font-style: italic;">'content'</span><span style="color: #0D9C94;">]</span>
     <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> resp
 
 
 <span style="color: #9587DD; font-style: italic; text-decoration: underline;">def</span> <span style="color: #CE8EC8;">main</span><span style="color: #0D9C94;">()</span>:
-    <span style="color: #41b0f3; background-color: #372E40;">res</span>=reference_one_sample<span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"fuck your mother. your son of bitch."</span><span style="color: #0D9C94;">)</span>
+    res=reference_one_sample<span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"fuck your mother. your son of bitch."</span><span style="color: #0D9C94;">)</span>
     <span style="color: #63E8C1;">print</span><span style="color: #0D9C94;">(</span>res<span style="color: #0D9C94;">)</span>
     <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> 0
 
@@ -341,8 +341,8 @@ Usage to evalute the politness:
 </div>
 </div>
 
-<div id="outline-container-org62d31d8" class="outline-3">
-<h3 id="org62d31d8"><span class="section-number-3">2.2.</span> Bard</h3>
+<div id="outline-container-org6165376" class="outline-3">
+<h3 id="org6165376"><span class="section-number-3">2.2.</span> Bard</h3>
 <div class="outline-text-3" id="text-2-2">
 <ul class="org-ul">
 <li>OS: Unbuntu 18.04, also works in Linux mint, Windows, and other environments</li>
@@ -373,7 +373,7 @@ Usages:
     <span style="color: #62D2DB; font-style: italic;">'http'</span>: <span style="color: #62D2DB; font-style: italic;">'http://username:pswd@ip:port'</span>,
     <span style="color: #62D2DB; font-style: italic;">'https'</span>: <span style="color: #62D2DB; font-style: italic;">'http://uname:pswd@ip:port'</span>
     <span style="color: #0D9C94;">}</span>
-    <span style="color: #41b0f3; background-color: #372E40;">session</span> = requests.Session<span style="color: #0D9C94;">()</span>
+    session = requests.Session<span style="color: #0D9C94;">()</span>
     session.<span style="color: #41b0f3; background-color: #372E40;">headers</span> = <span style="color: #0D9C94;">{</span>
             <span style="color: #62D2DB; font-style: italic;">"Host"</span>: <span style="color: #62D2DB; font-style: italic;">"bard.google.com"</span>,
             <span style="color: #62D2DB; font-style: italic;">"X-Same-Domain"</span>: <span style="color: #62D2DB; font-style: italic;">"1"</span>,
@@ -384,12 +384,12 @@ Usages:
         <span style="color: #0D9C94;">}</span>
     session.cookies.<span style="color: #63E8C1;">set</span><span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"__Secure-1PSID"</span>, os.getenv<span style="color: #47ba99;">(</span><span style="color: #62D2DB; font-style: italic;">"BARD_KEY"</span><span style="color: #47ba99;">)</span><span style="color: #0D9C94;">)</span> 
 
-    <span style="color: #41b0f3; background-color: #372E40;">bard</span> = Bard<span style="color: #0D9C94;">(</span>token=token_bard,
+    bard = Bard<span style="color: #0D9C94;">(</span>token=token_bard,
                 session=session,
                 proxies=proxies,
                 timeout=30<span style="color: #0D9C94;">)</span>
 
-    <span style="color: #41b0f3; background-color: #372E40;">res</span>=bard.get_answer<span style="color: #0D9C94;">(</span>text<span style="color: #0D9C94;">)[</span><span style="color: #62D2DB; font-style: italic;">'content'</span><span style="color: #0D9C94;">]</span>
+    res=bard.get_answer<span style="color: #0D9C94;">(</span>text<span style="color: #0D9C94;">)[</span><span style="color: #62D2DB; font-style: italic;">'content'</span><span style="color: #0D9C94;">]</span>
     <span style="color: #63E8C1;">print</span><span style="color: #0D9C94;">(</span>res<span style="color: #0D9C94;">)</span>
 
 <span style="color: #9587DD; font-style: italic; text-decoration: underline;">def</span> <span style="color: #CE8EC8;">main</span><span style="color: #0D9C94;">()</span>:
@@ -412,8 +412,8 @@ using time.sleep(60*15) to control the access frequency to one time per 15 minut
 </p>
 </div>
 </div>
-<div id="outline-container-org508e567" class="outline-3">
-<h3 id="org508e567"><span class="section-number-3">2.3.</span> Claude</h3>
+<div id="outline-container-org31820f4" class="outline-3">
+<h3 id="org31820f4"><span class="section-number-3">2.3.</span> Claude</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 NOTE: for claude I use the slack API to send/receive messages to/from the claude chatbot in slack.
@@ -431,8 +431,8 @@ NOTE: for claude I use the slack API to send/receive messages to/from the claude
 </div>
 
 
-<div id="outline-container-orgf3c05ef" class="outline-4">
-<h4 id="orgf3c05ef"><span class="section-number-4">2.3.1.</span> Step 1: set on slack, to obtain a access token to slack as well as a APP ID of your claude chatbot</h4>
+<div id="outline-container-org83510e1" class="outline-4">
+<h4 id="org83510e1"><span class="section-number-4">2.3.1.</span> Step 1: set on slack, to obtain a access token to slack as well as a APP ID of your claude chatbot</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <p>
 lookup this article: <a href="https://mp.weixin.qq.com/s?__biz=Mzg4MjkzMzc1Mg==&amp;mid=2247483961&amp;idx=1&amp;sn=c009f4ea28287daeaa4de17278c8228e&amp;chksm=cf4e68aef839e1b8fe49110341e2a557e0b118fee82d490143656a12c7f85bdd4ef6f65ffd16&amp;token=1094126126&amp;lang=zh_CN#rd">blablabla</a>
@@ -440,8 +440,8 @@ lookup this article: <a href="https://mp.weixin.qq.com/s?__biz=Mzg4MjkzMzc1Mg==&
 </div>
 </div>
 
-<div id="outline-container-org85ff114" class="outline-4">
-<h4 id="org85ff114"><span class="section-number-4">2.3.2.</span> Step 2: use the API of claude</h4>
+<div id="outline-container-org8365165" class="outline-4">
+<h4 id="org8365165"><span class="section-number-4">2.3.2.</span> Step 2: use the API of claude</h4>
 <div class="outline-text-4" id="text-2-3-2">
 <p>
 Usages:
@@ -461,16 +461,16 @@ Usages:
     <span style="color: #41b0f3; background-color: #372E40;">CLAUDE_BOT_ID</span>=os.getenv<span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"CLAUDE_BOT_ID"</span><span style="color: #0D9C94;">)</span>
 
     <span style="color: #9587DD; font-style: italic; text-decoration: underline;">def</span> <span style="color: #CE8EC8;">chat</span><span style="color: #0D9C94;">(</span><span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>, text<span style="color: #0D9C94;">)</span>:
-        <span style="color: #9587DD; font-style: italic; text-decoration: underline;">if</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">not</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.CHANNEL_ID:
+        <span style="color: #9587DD; font-style: italic; text-decoration: underline;">if</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">not</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.<span style="color: #41b0f3; background-color: #372E40;">CHANNEL_ID</span>:
             <span style="color: #9587DD; font-style: italic; text-decoration: underline;">raise</span> <span style="color: #0D9C94;">Exception</span><span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"Channel not found."</span><span style="color: #0D9C94;">)</span>
-        <span style="color: #41b0f3; background-color: #372E40;">resp</span> = <span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.chat_postMessage<span style="color: #0D9C94;">(</span>channel=<span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.CHANNEL_ID, text=text<span style="color: #0D9C94;">)</span>
-        <span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.<span style="color: #41b0f3; background-color: #372E40;">LAST_TS</span> = resp<span style="color: #0D9C94;">[</span><span style="color: #62D2DB; font-style: italic;">"ts"</span><span style="color: #0D9C94;">]</span>
+        resp = <span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.chat_postMessage<span style="color: #0D9C94;">(</span>channel=<span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.CHANNEL_ID, text=text<span style="color: #0D9C94;">)</span>
+        <span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.LAST_TS = resp<span style="color: #0D9C94;">[</span><span style="color: #62D2DB; font-style: italic;">"ts"</span><span style="color: #0D9C94;">]</span>
 
     <span style="color: #9587DD; font-style: italic; text-decoration: underline;">def</span> <span style="color: #CE8EC8;">get_reply</span><span style="color: #0D9C94;">(</span><span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span><span style="color: #0D9C94;">)</span>:
         <span style="color: #9587DD; font-style: italic; text-decoration: underline;">for</span> _ <span style="color: #9587DD; font-style: italic; text-decoration: underline;">in</span> <span style="color: #63E8C1;">range</span><span style="color: #0D9C94;">(</span>150<span style="color: #0D9C94;">)</span>:
             <span style="color: #9587DD; font-style: italic; text-decoration: underline;">try</span>:
-                <span style="color: #41b0f3; background-color: #372E40;">resp</span> = <span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.conversations_history<span style="color: #0D9C94;">(</span>channel=<span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.CHANNEL_ID, oldest=<span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.LAST_TS, limit=2<span style="color: #0D9C94;">)</span>
-                <span style="color: #41b0f3; background-color: #372E40;">msg</span> = <span style="color: #0D9C94;">[</span>msg<span style="color: #47ba99;">[</span><span style="color: #62D2DB; font-style: italic;">"text"</span><span style="color: #47ba99;">]</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">for</span> msg <span style="color: #9587DD; font-style: italic; text-decoration: underline;">in</span> resp<span style="color: #47ba99;">[</span><span style="color: #62D2DB; font-style: italic;">"messages"</span><span style="color: #47ba99;">]</span>\
+                resp = <span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.conversations_history<span style="color: #0D9C94;">(</span>channel=<span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.CHANNEL_ID, oldest=<span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.LAST_TS, limit=2<span style="color: #0D9C94;">)</span>
+                msg = <span style="color: #0D9C94;">[</span>msg<span style="color: #47ba99;">[</span><span style="color: #62D2DB; font-style: italic;">"text"</span><span style="color: #47ba99;">]</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">for</span> msg <span style="color: #9587DD; font-style: italic; text-decoration: underline;">in</span> resp<span style="color: #47ba99;">[</span><span style="color: #62D2DB; font-style: italic;">"messages"</span><span style="color: #47ba99;">]</span>\
                        <span style="color: #9587DD; font-style: italic; text-decoration: underline;">if</span> msg<span style="color: #47ba99;">[</span><span style="color: #62D2DB; font-style: italic;">"user"</span><span style="color: #47ba99;">]</span> == <span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.CLAUDE_BOT_ID<span style="color: #0D9C94;">]</span>
                 <span style="color: #9587DD; font-style: italic; text-decoration: underline;">if</span> msg <span style="color: #9587DD; font-style: italic; text-decoration: underline;">and</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">not</span> msg<span style="color: #0D9C94;">[</span>-1<span style="color: #0D9C94;">]</span>.endswith<span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"Typing&#8230;_"</span><span style="color: #0D9C94;">)</span>:
                     <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> msg<span style="color: #0D9C94;">[</span>-1<span style="color: #0D9C94;">]</span>
@@ -479,15 +479,15 @@ Usages:
                 <span style="color: #9587DD; font-style: italic; text-decoration: underline;">raise</span> <span style="color: #0D9C94;">Exception</span><span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"Get replay timeout"</span><span style="color: #0D9C94;">)</span>
 
     <span style="color: #9587DD; font-style: italic; text-decoration: underline;">def</span> <span style="color: #CE8EC8;">open_channel</span><span style="color: #0D9C94;">(</span><span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span><span style="color: #0D9C94;">)</span>:
-        <span style="color: #41b0f3; background-color: #372E40;">response</span> = <span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.conversations_open<span style="color: #0D9C94;">(</span>users=<span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.CLAUDE_BOT_ID<span style="color: #0D9C94;">)</span>
-        <span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.<span style="color: #41b0f3; background-color: #372E40;">CHANNEL_ID</span> = response<span style="color: #0D9C94;">[</span><span style="color: #62D2DB; font-style: italic;">"channel"</span><span style="color: #0D9C94;">][</span><span style="color: #62D2DB; font-style: italic;">"id"</span><span style="color: #0D9C94;">]</span>
+        response = <span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.conversations_open<span style="color: #0D9C94;">(</span>users=<span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.CLAUDE_BOT_ID<span style="color: #0D9C94;">)</span>
+        <span style="color: #9587DD; font-style: italic; text-decoration: underline;">self</span>.CHANNEL_ID = response<span style="color: #0D9C94;">[</span><span style="color: #62D2DB; font-style: italic;">"channel"</span><span style="color: #0D9C94;">][</span><span style="color: #62D2DB; font-style: italic;">"id"</span><span style="color: #0D9C94;">]</span>
 
 <span style="color: #9587DD; font-style: italic; text-decoration: underline;">def</span> <span style="color: #CE8EC8;">forward</span><span style="color: #0D9C94;">(</span>text<span style="color: #0D9C94;">)</span>:
-    <span style="color: #41b0f3; background-color: #372E40;">client</span> = SlackClient<span style="color: #0D9C94;">(</span>token=os.getenv<span style="color: #47ba99;">(</span><span style="color: #62D2DB; font-style: italic;">"SLACK_USER_TOKEN"</span><span style="color: #47ba99;">)</span><span style="color: #0D9C94;">)</span> 
+    client = SlackClient<span style="color: #0D9C94;">(</span>token=os.getenv<span style="color: #47ba99;">(</span><span style="color: #62D2DB; font-style: italic;">"SLACK_USER_TOKEN"</span><span style="color: #47ba99;">)</span><span style="color: #0D9C94;">)</span> 
     client.open_channel<span style="color: #0D9C94;">()</span>
     client.chat<span style="color: #0D9C94;">(</span>text<span style="color: #0D9C94;">)</span>
-    <span style="color: #41b0f3; background-color: #372E40;">reply</span> = client.get_reply<span style="color: #0D9C94;">()</span>
-    <span style="color: #63E8C1;">print</span><span style="color: #0D9C94;">(</span>f<span style="color: #62D2DB; font-style: italic;">"Claude: </span>{reply}<span style="color: #41b0f3;">\n</span><span style="color: #62D2DB; font-style: italic;">--------------------"</span><span style="color: #0D9C94;">)</span>
+    reply = client.get_reply<span style="color: #0D9C94;">()</span>
+    <span style="color: #63E8C1;">print</span><span style="color: #0D9C94;">(</span>f<span style="color: #62D2DB; font-style: italic;">"Claude: </span>{reply}<span style="color: #62D2DB; font-style: italic;">\n--------------------"</span><span style="color: #0D9C94;">)</span>
 
 <span style="color: #454459;">## </span><span style="color: #454459; font-style: italic;">running entry</span>
 <span style="color: #9587DD; font-style: italic; text-decoration: underline;">if</span> <span style="color: #63E8C1;">__name__</span>==<span style="color: #62D2DB; font-style: italic;">"__main__"</span>:
@@ -505,12 +505,12 @@ using time.sleep(60*5) to control the access frequency to one time per 5 minutes
 </div>
 </div>
 
-<div id="outline-container-orga839177" class="outline-2">
-<h2 id="orga839177"><span class="section-number-2">3.</span> LLMs</h2>
+<div id="outline-container-orge227f89" class="outline-2">
+<h2 id="orge227f89"><span class="section-number-2">3.</span> LLMs</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org06687ef" class="outline-3">
-<h3 id="org06687ef"><span class="section-number-3">3.1.</span> Llama &amp; Llama2</h3>
+<div id="outline-container-orgb6fc98a" class="outline-3">
+<h3 id="orgb6fc98a"><span class="section-number-3">3.1.</span> Llama &amp; Llama2</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 you can use llama.cpp to run different version of LLAMA models.
@@ -604,7 +604,7 @@ options:
   --multiline-input     allows you to write or paste multiple lines without ending each<span style="color: #9587DD; font-style: italic; text-decoration: underline;"> in</span> <span style="color: #62D2DB; font-style: italic;">'\'</span>
   -r PROMPT, --reverse-prompt PROMPT
                         halt generation at PROMPT, return control<span style="color: #9587DD; font-style: italic; text-decoration: underline;"> in</span> interactive mode
-                        <span style="color: #0D9C94;">(</span>can be specified more than once for multiple prompts<span style="color: #0D9C94;">)</span>.
+                        <span style="color: #0D9C94;">(</span>can be specified more than once for multiple prompts<span style="color: #0D9C94;">)</span><span style="color: #63E8C1;">.</span>
   --color               colorise output to distinguish prompt and user input from generations
   -s SEED, --seed SEED  RNG seed <span style="color: #0D9C94;">(</span>default: -1, use random seed for &lt; 0<span style="color: #0D9C94;">)</span>
   -t N, --threads N     number of threads to use during computation <span style="color: #0D9C94;">(</span>default: 40<span style="color: #0D9C94;">)</span>
@@ -682,7 +682,7 @@ If you have no LLAMA checkpoints, you can access from the LLAMA page, or downloa
 </p>
 
 
-<div id="org988715f" class="figure">
+<div id="orgb87ed2a" class="figure">
 <p><img src="./images/screenshot_20230816_180642.png" alt="screenshot_20230816_180642.png">
 </p>
 </div>
@@ -700,13 +700,13 @@ Beyond the interactive mode of llama.cpp, you might hope to use it as a API, it 
     <span style="color: #41b0f3; background-color: #372E40;">llama</span>=<span style="color: #62D2DB; font-style: italic;">"/home/liangzi/llama.cpp/main"</span>
     <span style="color: #41b0f3; background-color: #372E40;">model</span>=<span style="color: #62D2DB; font-style: italic;">"/home/liangzi/models/llama2/llama-2-7b-chat.ggmlv3.q8_0.bin"</span>
     <span style="color: #41b0f3; background-color: #372E40;">scripts</span>=f<span style="color: #62D2DB; font-style: italic;">"""</span>
-<span style="color: #62D2DB; font-style: italic;">    </span>{llama}<span style="color: #62D2DB; font-style: italic;"> -m </span>{model}<span style="color: #62D2DB; font-style: italic;"> -p "Please response to the question of user. User: </span>{sent}<span style="color: #62D2DB; font-style: italic;"> Answer: "</span>
+<span style="color: #62D2DB; font-style: italic;">    {llama} -m {model} -p "Please response to the question of user. User: {sent} Answer: "</span>
 <span style="color: #62D2DB; font-style: italic;">    """</span>
-    <span style="color: #41b0f3; background-color: #372E40;">result</span> = subprocess.run<span style="color: #0D9C94;">(</span>scripts, shell=<span style="color: #41b0f3;">True</span>, capture_output=<span style="color: #41b0f3;">True</span><span style="color: #0D9C94;">)</span>.stdout.decode<span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"utf8"</span><span style="color: #0D9C94;">)</span>
+    result = subprocess.run<span style="color: #0D9C94;">(</span>scripts, shell=<span style="color: #41b0f3;">True</span>, capture_output=<span style="color: #41b0f3;">True</span><span style="color: #0D9C94;">)</span>.stdout.decode<span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"utf8"</span><span style="color: #0D9C94;">)</span>
     <span style="color: #9587DD; font-style: italic; text-decoration: underline;">if</span> <span style="color: #62D2DB; font-style: italic;">"Answer: "</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">in</span> result:
-        <span style="color: #41b0f3; background-color: #372E40;">result</span>=result.split<span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"Answer: "</span><span style="color: #0D9C94;">)[</span>1<span style="color: #0D9C94;">]</span>
+        result=result.split<span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"Answer: "</span><span style="color: #0D9C94;">)[</span>1<span style="color: #0D9C94;">]</span>
     <span style="color: #9587DD; font-style: italic; text-decoration: underline;">if</span> <span style="color: #62D2DB; font-style: italic;">"User"</span> <span style="color: #9587DD; font-style: italic; text-decoration: underline;">in</span> result:
-        <span style="color: #41b0f3; background-color: #372E40;">result</span>=result.split<span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"User"</span><span style="color: #0D9C94;">)[</span>0<span style="color: #0D9C94;">]</span>
+        result=result.split<span style="color: #0D9C94;">(</span><span style="color: #62D2DB; font-style: italic;">"User"</span><span style="color: #0D9C94;">)[</span>0<span style="color: #0D9C94;">]</span>
     <span style="color: #63E8C1;">print</span><span style="color: #0D9C94;">(</span>result<span style="color: #0D9C94;">)</span>
     <span style="color: #9587DD; font-style: italic; text-decoration: underline;">return</span> result
 </pre>
@@ -720,8 +720,8 @@ This is very simple, you can write your own version to support more complicated 
 
 
 
-<div id="outline-container-org2a58b04" class="outline-3">
-<h3 id="org2a58b04"><span class="section-number-3">3.2.</span> By candle, to obtain llama &amp; llama2 &amp; falcon</h3>
+<div id="outline-container-org0ad1f03" class="outline-3">
+<h3 id="org0ad1f03"><span class="section-number-3">3.2.</span> By candle, to obtain llama &amp; llama2 &amp; falcon</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 candle is a ML framework in Rust, by huggingface.
@@ -779,7 +779,7 @@ Take llama2 as an example, you may should first acess this model in <a href="htt
 </p>
 
 
-<div id="orgc45e010" class="figure">
+<div id="orgfb4e0ca" class="figure">
 <p><img src="./images/screenshot_20230816_181741.png" alt="screenshot_20230816_181741.png">
 </p>
 </div>
@@ -808,7 +808,7 @@ Above solution comes from <a href="https://github.com/huggingface/candle/issues/
 <div id="postamble" class="status">
 <p class="date">Date: Sat Aug 12 18:04:48 2023</p>
 <p class="author">Author: Zi Liang</p>
-<p class="date">Created: 2023-08-16 周三 18:24</p>
+<p class="date">Created: 2023-08-21 一 15:03</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
