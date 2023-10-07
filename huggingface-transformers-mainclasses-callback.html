@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2023-08-21 一 15:03 -->
+<!-- 2023-10-07 Sat 09:57 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>huggingface transformers 源码剖析(一)</title>
@@ -200,85 +200,85 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org87e3d36">1. Logging</a></li>
-<li><a href="#org9c590c4">2. Tokenizer</a></li>
-<li><a href="#org36c4b59">3. Models</a></li>
-<li><a href="#orge3dbfc6">4. Model outputs</a></li>
-<li><a href="#orgca2b1cc">5. Optimization</a></li>
-<li><a href="#orgabb9975">6. Configuration</a></li>
-<li><a href="#org5babbf3">7. Processors</a></li>
-<li><a href="#org1b569e7">8. Callbacks</a></li>
-<li><a href="#org6db47e6">9. Pipelines</a></li>
+<li><a href="#orga29b948">1. Logging</a></li>
+<li><a href="#orge27ab9a">2. Tokenizer</a></li>
+<li><a href="#org7d9b5d6">3. Models</a></li>
+<li><a href="#orgd7ab716">4. Model outputs</a></li>
+<li><a href="#org03653c6">5. Optimization</a></li>
+<li><a href="#org34b915c">6. Configuration</a></li>
+<li><a href="#orgc27840a">7. Processors</a></li>
+<li><a href="#org94f305e">8. Callbacks</a></li>
+<li><a href="#org52a90f0">9. Pipelines</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org87e3d36" class="outline-2">
-<h2 id="org87e3d36"><span class="section-number-2">1.</span> Logging</h2>
+<div id="outline-container-orga29b948" class="outline-2">
+<h2 id="orga29b948"><span class="section-number-2">1.</span> Logging</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 transformers也提供了logging功能，类似于python标准库中的实现。我还是建议使用默认的python库中的logging，你可以在<a href="https://docs.python.org/3/library/logging.html">这里</a>找到相关信息。如果你还是想使用transformers.logging做日志，那么你可以使用以下API：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #9587DD; font-style: italic; text-decoration: underline;">import</span> transformers.logging <span style="color: #9587DD; font-style: italic; text-decoration: underline;">as</span> logging
+<pre class="src src-python"><span style="color: #C68EDE;">import</span> transformers.logging <span style="color: #C68EDE;">as</span> logging
 
-<span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">## get logger</span>
-<span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">logging.get_logger()</span>
+<span style="color: #7A6884;"># </span><span style="color: #7A6884; font-style: italic;">## get logger</span>
+<span style="color: #7A6884;"># </span><span style="color: #7A6884; font-style: italic;">logging.get_logger()</span>
 
-<span style="color: #454459;">## </span><span style="color: #454459; font-style: italic;">set level</span>
-logging.set_verbosity_error<span style="color: #0D9C94;">()</span>
-logging.set_verbosity_warning<span style="color: #0D9C94;">()</span>
-logging.set_verbosity_info<span style="color: #0D9C94;">()</span>
-logging.set_verbosity_debug<span style="color: #0D9C94;">()</span>
+<span style="color: #7A6884;">## </span><span style="color: #7A6884; font-style: italic;">set level</span>
+logging.set_verbosity_error<span style="color: #a0586c;">()</span>
+logging.set_verbosity_warning<span style="color: #a0586c;">()</span>
+logging.set_verbosity_info<span style="color: #a0586c;">()</span>
+logging.set_verbosity_debug<span style="color: #a0586c;">()</span>
 
-logging.set_verbosity<span style="color: #0D9C94;">(</span>p<span style="color: #0D9C94;">)</span> <span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">where p can be int: 10(debug),20(info),30(warning),40(error),50(critical)</span>
-<span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">you can get the int value by logging.DEBUG, logging.INFO, ...</span>
+logging.set_verbosity<span style="color: #a0586c;">(</span>p<span style="color: #a0586c;">)</span> <span style="color: #7A6884;"># </span><span style="color: #7A6884; font-style: italic;">where p can be int: 10(debug),20(info),30(warning),40(error),50(critical)</span>
+<span style="color: #7A6884;"># </span><span style="color: #7A6884; font-style: italic;">you can get the int value by logging.DEBUG, logging.INFO, ...</span>
 
-<span style="color: #454459;">## </span><span style="color: #454459; font-style: italic;">get level</span>
-logging.get_verbosity<span style="color: #0D9C94;">()</span>
+<span style="color: #7A6884;">## </span><span style="color: #7A6884; font-style: italic;">get level</span>
+logging.get_verbosity<span style="color: #a0586c;">()</span>
 
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org9c590c4" class="outline-2">
-<h2 id="org9c590c4"><span class="section-number-2">2.</span> Tokenizer</h2>
+<div id="outline-container-orge27ab9a" class="outline-2">
+<h2 id="orge27ab9a"><span class="section-number-2">2.</span> Tokenizer</h2>
 </div>
 
-<div id="outline-container-org36c4b59" class="outline-2">
-<h2 id="org36c4b59"><span class="section-number-2">3.</span> Models</h2>
+<div id="outline-container-org7d9b5d6" class="outline-2">
+<h2 id="org7d9b5d6"><span class="section-number-2">3.</span> Models</h2>
 </div>
 
-<div id="outline-container-orge3dbfc6" class="outline-2">
-<h2 id="orge3dbfc6"><span class="section-number-2">4.</span> Model outputs</h2>
+<div id="outline-container-orgd7ab716" class="outline-2">
+<h2 id="orgd7ab716"><span class="section-number-2">4.</span> Model outputs</h2>
 </div>
 
-<div id="outline-container-orgca2b1cc" class="outline-2">
-<h2 id="orgca2b1cc"><span class="section-number-2">5.</span> Optimization</h2>
+<div id="outline-container-org03653c6" class="outline-2">
+<h2 id="org03653c6"><span class="section-number-2">5.</span> Optimization</h2>
 </div>
 
-<div id="outline-container-orgabb9975" class="outline-2">
-<h2 id="orgabb9975"><span class="section-number-2">6.</span> Configuration</h2>
+<div id="outline-container-org34b915c" class="outline-2">
+<h2 id="org34b915c"><span class="section-number-2">6.</span> Configuration</h2>
 </div>
 
-<div id="outline-container-org5babbf3" class="outline-2">
-<h2 id="org5babbf3"><span class="section-number-2">7.</span> Processors</h2>
+<div id="outline-container-orgc27840a" class="outline-2">
+<h2 id="orgc27840a"><span class="section-number-2">7.</span> Processors</h2>
 </div>
 
-<div id="outline-container-org1b569e7" class="outline-2">
-<h2 id="org1b569e7"><span class="section-number-2">8.</span> Callbacks</h2>
+<div id="outline-container-org94f305e" class="outline-2">
+<h2 id="org94f305e"><span class="section-number-2">8.</span> Callbacks</h2>
 </div>
 
-<div id="outline-container-org6db47e6" class="outline-2">
-<h2 id="org6db47e6"><span class="section-number-2">9.</span> Pipelines</h2>
+<div id="outline-container-org52a90f0" class="outline-2">
+<h2 id="org52a90f0"><span class="section-number-2">9.</span> Pipelines</h2>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: Tue Nov 23 15:37:36 2021</p>
 <p class="author">Author: Zi Liang</p>
-<p class="date">Created: 2023-08-21 一 15:03</p>
+<p class="date">Created: 2023-10-07 Sat 09:57</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2023-08-21 一 15:03 -->
+<!-- 2023-10-07 Sat 09:57 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>知识图谱增强的预训练模型</title>
@@ -37,39 +37,39 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org6a44b30">1. 0 前言</a></li>
-<li><a href="#orgdf6d47e">2. 1 为什么要用知识图谱去增强预训练模型？</a></li>
-<li><a href="#org9fe4299">3. 2 知识图谱与预训练模型结合时的常见问题</a></li>
-<li><a href="#org4e8c102">4. 3 相关工作</a>
+<li><a href="#orge92f06f">1. 0 前言</a></li>
+<li><a href="#orgbb5216d">2. 1 为什么要用知识图谱去增强预训练模型？</a></li>
+<li><a href="#orgc1b4dc4">3. 2 知识图谱与预训练模型结合时的常见问题</a></li>
+<li><a href="#org571b2f4">4. 3 相关工作</a>
 <ul>
-<li><a href="#orgbce4295">4.1. 3.1 隐式融合——使用embedding在模型内部融合</a>
+<li><a href="#org32b4730">4.1. 3.1 隐式融合——使用embedding在模型内部融合</a>
 <ul>
-<li><a href="#org5052e3f">4.1.1. ERNIE</a></li>
-<li><a href="#orge6011fd">4.1.2. KnowBERT</a></li>
+<li><a href="#org579fd56">4.1.1. ERNIE</a></li>
+<li><a href="#org41eadac">4.1.2. KnowBERT</a></li>
 </ul>
 </li>
-<li><a href="#org977128e">4.2. 3.2 显式融合——不改变模型结构的融合方式</a>
+<li><a href="#org9eedb30">4.2. 3.2 显式融合——不改变模型结构的融合方式</a>
 <ul>
-<li><a href="#orge3a8829">4.2.1. K-BERT</a></li>
-<li><a href="#org81ed389">4.2.2. CoLAKE</a></li>
+<li><a href="#org4bf1dd8">4.2.1. K-BERT</a></li>
+<li><a href="#orga759701">4.2.2. CoLAKE</a></li>
 </ul>
 </li>
-<li><a href="#org6386177">4.3. 3.3 知识图谱与预训练模型的共同学习</a>
+<li><a href="#org76a68ec">4.3. 3.3 知识图谱与预训练模型的共同学习</a>
 <ul>
-<li><a href="#orgde3caf1">4.3.1. KEPLER</a></li>
-<li><a href="#orgb111820">4.3.2. JAKET</a></li>
+<li><a href="#orgc55a90f">4.3.1. KEPLER</a></li>
+<li><a href="#orgb89f176">4.3.2. JAKET</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org759dd84">5. 4 总结与未来展望</a></li>
-<li><a href="#org23e0290">6. 参考文献</a></li>
+<li><a href="#orgd38777c">5. 4 总结与未来展望</a></li>
+<li><a href="#org77f4558">6. 参考文献</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org6a44b30" class="outline-2">
-<h2 id="org6a44b30"><span class="section-number-2">1.</span> 0 前言</h2>
+<div id="outline-container-orge92f06f" class="outline-2">
+<h2 id="orge92f06f"><span class="section-number-2">1.</span> 0 前言</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 如果2019年BERT对于NLP从业人员而言尚还有一些新颖之处，那么到2021年，transformer对于整个AI圈都已是老生常谈的话题了。当然，比起transformer的横空出世，知识图谱近年来也越来越受到关注。然而，作为语义网络、万维网、数据库的后继者，2012年被提出的知识图谱旨在提供一种更加复杂灵活的知识的显式建模，这对缺乏特定领域知识和常识信息捕捉的预训练模型无疑是一种良好的补充。本文将梳理用知识图谱增强预训练模型的相关工作。
@@ -77,16 +77,16 @@
 </div>
 </div>
 
-<div id="outline-container-orgdf6d47e" class="outline-2">
-<h2 id="orgdf6d47e"><span class="section-number-2">2.</span> 1 为什么要用知识图谱去增强预训练模型？</h2>
+<div id="outline-container-orgbb5216d" class="outline-2">
+<h2 id="orgbb5216d"><span class="section-number-2">2.</span> 1 为什么要用知识图谱去增强预训练模型？</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 当然是因为需求（灌水），我们期望让预训练模型在需要特定知识或常识的任务中表现得更好。比如一段文字“Harry Potter points his wand at Lord Voldmort.”，要想让模型理解这句话，就需要预训练模型知道一些《哈利波特》中的信息，换而言之，应该具有更好的对文本中某些实体的理解，而不仅仅是把它们当作一个称谓。再比如说文本生成中的例子，如果我们让模型用“河、鱼、网、捉”几个词造句，我们至少应当保证生成的句子是人在河里用网捉鱼，而非鱼在捉网等等。这里面就涉及到一些常识。尽管这些常识已经通过大量的文本预训练或多或少隐式存储在了模型中，但这些知识并不足以让预训练模型处理当下的任务，所以才需要进行知识的注入和增强。另一方面，得到了知识的增强之后，预训练模型可以表现得更像是领域专家，或更像是人。比如你在和对话机器人聊天，你说：“翻译翻译，什么叫惊喜。”你是希望它把“惊喜”翻译成英文，还是想让它玩汤师爷的梗呢？
 </p>
 </div>
 </div>
-<div id="outline-container-org9fe4299" class="outline-2">
-<h2 id="org9fe4299"><span class="section-number-2">3.</span> 2 知识图谱与预训练模型结合时的常见问题</h2>
+<div id="outline-container-orgc1b4dc4" class="outline-2">
+<h2 id="orgc1b4dc4"><span class="section-number-2">3.</span> 2 知识图谱与预训练模型结合时的常见问题</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 了解相关意图之后，再来看看结合需要考虑的难点。将知识图谱信息注入到预训练模型中，常见的三个问题就是结构化信息的非结构化，异构特征空间的对齐，以及知识噪声的解决。
@@ -109,8 +109,8 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org4e8c102" class="outline-2">
-<h2 id="org4e8c102"><span class="section-number-2">4.</span> 3 相关工作</h2>
+<div id="outline-container-org571b2f4" class="outline-2">
+<h2 id="org571b2f4"><span class="section-number-2">4.</span> 3 相关工作</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 用知识图谱增强预训练模型的工作可依据多个角度进行划分。从主客关系上看，有通过知识图谱增强预训练模型，以实现更好的知识图谱构建的，也有通过知识图谱引入知识，为预训练模型在NLP本身的下游任务上提升效果的。从知识图谱与预训练模型的增强方式来看，有通过线性变化、注意力机制等在知识实体与关系的嵌入式表达上进行知识融合的，也有直接使用实体描述，设计特定的预训练模型输入。在面向的任务上，除去GLUE等进行通用自然语言理解测试的benchmark之外，还包括近期热门的知识增强的开放领域问答、常识文本生成等等。
@@ -121,23 +121,23 @@
 </p>
 </div>
 
-<div id="outline-container-orgbce4295" class="outline-3">
-<h3 id="orgbce4295"><span class="section-number-3">4.1.</span> 3.1 隐式融合——使用embedding在模型内部融合</h3>
+<div id="outline-container-org32b4730" class="outline-3">
+<h3 id="org32b4730"><span class="section-number-3">4.1.</span> 3.1 隐式融合——使用embedding在模型内部融合</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 隐式融合是比较直接的embedding融合方法，该类方法基于一些KGE（Knowledge Graph Embedding，使用最多的是TransE）算法获得知识图谱中的实体与关系的embedding，并为这些embedding修改预训练模型结构，以便将二者进行结合。根据将embedding与预训练模型结合的方式，可以粗略分为基于projection的结合方法和基于attention的结合方法。下面以几篇论文为例。
 </p>
 </div>
 
-<div id="outline-container-org5052e3f" class="outline-4">
-<h4 id="org5052e3f"><span class="section-number-4">4.1.1.</span> ERNIE</h4>
+<div id="outline-container-org579fd56" class="outline-4">
+<h4 id="org579fd56"><span class="section-number-4">4.1.1.</span> ERNIE</h4>
 <div class="outline-text-4" id="text-4-1-1">
 <p>
 ERNIE算得上是该领域的较早工作，其知识融合方法可通过下图进行表达。
 </p>
 
 
-<div id="org5978139" class="figure">
+<div id="org12fbf1c" class="figure">
 <p><img src="./images/screenshot_20211121_163217.png" alt="screenshot_20211121_163217.png">
 </p>
 </div>
@@ -152,7 +152,7 @@ ERNIE中知识主要指实体，即从待理解的输入语句中提取的一些
 </p>
 
 
-<div id="orge0946e3" class="figure">
+<div id="orge0974c9" class="figure">
 <p><img src="./images/screenshot_20211121_163314.png" alt="screenshot_20211121_163314.png">
 </p>
 </div>
@@ -162,7 +162,7 @@ ERNIE中知识主要指实体，即从待理解的输入语句中提取的一些
 </p>
 
 
-<div id="org8cb6a7d" class="figure">
+<div id="org55afbec" class="figure">
 <p><img src="./images/screenshot_20211121_163325.png" alt="screenshot_20211121_163325.png">
 </p>
 </div>
@@ -177,15 +177,15 @@ ERNIE中知识主要指实体，即从待理解的输入语句中提取的一些
 </div>
 </div>
 
-<div id="outline-container-orge6011fd" class="outline-4">
-<h4 id="orge6011fd"><span class="section-number-4">4.1.2.</span> KnowBERT</h4>
+<div id="outline-container-org41eadac" class="outline-4">
+<h4 id="org41eadac"><span class="section-number-4">4.1.2.</span> KnowBERT</h4>
 <div class="outline-text-4" id="text-4-1-2">
 <p>
 这篇论文同样是用embedding融合的方式去做的，只不过复杂了一点，废话少说，上图：
 </p>
 
 
-<div id="orgfd3d9a7" class="figure">
+<div id="org49638dc" class="figure">
 <p><img src="./images/screenshot_20211121_163339.png" alt="screenshot_20211121_163339.png"> 
 </p>
 </div>
@@ -209,7 +209,7 @@ ERNIE中知识主要指实体，即从待理解的输入语句中提取的一些
 </p>
 
 
-<div id="orgf88569c" class="figure">
+<div id="org5ac79af" class="figure">
 <p><img src="./images/screenshot_20211121_163354.png" alt="screenshot_20211121_163354.png">
 </p>
 </div>
@@ -225,7 +225,7 @@ KG-BART
 </p>
 
 
-<div id="orgca47baf" class="figure">
+<div id="org8086f6a" class="figure">
 <p><img src="./images/screenshot_20211121_163414.png" alt="screenshot_20211121_163414.png">
 </p>
 </div>
@@ -237,7 +237,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="org30c8a43" class="figure">
+<div id="orgbe0afc3" class="figure">
 <p><img src="./images/screenshot_20211121_163426.png" alt="screenshot_20211121_163426.png">
 </p>
 </div>
@@ -248,7 +248,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="org21bd84b" class="figure">
+<div id="orgd71f5d1" class="figure">
 <p><img src="./images/screenshot_20211121_163437.png" alt="screenshot_20211121_163437.png">
 </p>
 </div>
@@ -259,7 +259,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="org840c736" class="figure">
+<div id="orgdef559f" class="figure">
 <p><img src="./images/screenshot_20211121_163449.png" alt="screenshot_20211121_163449.png">
 </p>
 </div>
@@ -269,7 +269,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="orge5fe9a4" class="figure">
+<div id="orgf8e65fe" class="figure">
 <p><img src="./images/screenshot_20211121_163500.png" alt="screenshot_20211121_163500.png">
 </p>
 </div>
@@ -279,7 +279,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="org8db2b31" class="figure">
+<div id="org3096c4a" class="figure">
 <p><img src="./images/screenshot_20211121_163521.png" alt="screenshot_20211121_163521.png"> 
 </p>
 </div>
@@ -289,7 +289,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="orgb126cbd" class="figure">
+<div id="org68221b0" class="figure">
 <p><img src="./images/screenshot_20211121_163538.png" alt="screenshot_20211121_163538.png">
 </p>
 </div>
@@ -299,7 +299,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="orgafa7711" class="figure">
+<div id="org9f73054" class="figure">
 <p><img src="./images/screenshot_20211121_163555.png" alt="screenshot_20211121_163555.png"> 
 </p>
 </div>
@@ -321,8 +321,8 @@ Encoder部分的框图如下图所示：
 </div>
 </div>
 
-<div id="outline-container-org977128e" class="outline-3">
-<h3 id="org977128e"><span class="section-number-3">4.2.</span> 3.2 显式融合——不改变模型结构的融合方式</h3>
+<div id="outline-container-org9eedb30" class="outline-3">
+<h3 id="org9eedb30"><span class="section-number-3">4.2.</span> 3.2 显式融合——不改变模型结构的融合方式</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 与之前所述的基于embedding的结合相比，另一种思路更为直接：既然知识图谱本身就是借助自然语言表达的，能不能直接把实体和关系经过某些变换后以token的形式输入到预训练模型中，以实现效果较好的增强呢？这样就不需要再去为每个实体学习embedding，更不需要考虑两种特征空间的聚合了。
@@ -333,15 +333,15 @@ Encoder部分的框图如下图所示：
 </p>
 </div>
 
-<div id="outline-container-orge3a8829" class="outline-4">
-<h4 id="orge3a8829"><span class="section-number-4">4.2.1.</span> K-BERT</h4>
+<div id="outline-container-org4bf1dd8" class="outline-4">
+<h4 id="org4bf1dd8"><span class="section-number-4">4.2.1.</span> K-BERT</h4>
 <div class="outline-text-4" id="text-4-2-1">
 <p>
 该类工作中，较早的是K-BERT。K-BERT基于输入序列，通过查询语句中的三元组，将输入语句转化为输入树。之后，通过特殊设计BERT的输入信息编码和mask矩阵，实现推理时模型增强的目的。具体过程可通过下面的框图描述。
 </p>
 
 
-<div id="orgcb5584e" class="figure">
+<div id="org24c25df" class="figure">
 <p><img src="./images/screenshot_20211121_163613.png" alt="screenshot_20211121_163613.png">
 </p>
 </div>
@@ -360,15 +360,15 @@ Encoder部分的框图如下图所示：
 </div>
 </div>
 
-<div id="outline-container-org81ed389" class="outline-4">
-<h4 id="org81ed389"><span class="section-number-4">4.2.2.</span> CoLAKE</h4>
+<div id="outline-container-orga759701" class="outline-4">
+<h4 id="orga759701"><span class="section-number-4">4.2.2.</span> CoLAKE</h4>
 <div class="outline-text-4" id="text-4-2-2">
 <p>
 如果说K-BERT是在想，该如何把输入文本扩展成一棵树的话，那么CoLAKE的核心思路就是，能不能把输入文本通过知识图谱扩展成一张图？这当然是可行的。比起K-BERT将输入文本理解为按照位置编码组织起来的一条线，CoLAKE则基于self-attention与GNN相似性上的结论，将输入文本看作是全连接图，并在此基础上将该图通过知识图谱进行扩展。也就形成了下图所示的框图。
 </p>
 
 
-<div id="org0775acb" class="figure">
+<div id="org6add232" class="figure">
 <p><img src="./images/screenshot_20211121_163627.png" alt="screenshot_20211121_163627.png">
 </p>
 </div>
@@ -378,7 +378,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="org63ff779" class="figure">
+<div id="org7e3ac60" class="figure">
 <p><img src="./images/screenshot_20211121_163637.png" alt="screenshot_20211121_163637.png">
 </p>
 </div>
@@ -392,23 +392,23 @@ CoLAKE的另外一个特色在于，通过这种方式得到的知识图谱中�
 </div>
 
 
-<div id="outline-container-org6386177" class="outline-3">
-<h3 id="org6386177"><span class="section-number-3">4.3.</span> 3.3 知识图谱与预训练模型的共同学习</h3>
+<div id="outline-container-org76a68ec" class="outline-3">
+<h3 id="org76a68ec"><span class="section-number-3">4.3.</span> 3.3 知识图谱与预训练模型的共同学习</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 除去上述两部分的工作之外，还有一类工作进行了额外的尝试。这类工作同前面所介绍的第二类工作，即通过不改变模型结构而进行融合十分相似，但该类工作并不满足于单纯地将知识图谱增强于预训练模型。换而言之，这类工作实际上将知识图谱表示学习和面向知识的自然语言理解一起做了，并希望通过这种方式可以在这两个领域内都得到模型的提升。上文中所介绍的CoLAKE也可以说属于这类工作，但CoLAKE的核心还是在知识图谱增强预训练模型上的，下面介绍明显地将这两个任务结合在一起的工作。
 </p>
 </div>
 
-<div id="outline-container-orgde3caf1" class="outline-4">
-<h4 id="orgde3caf1"><span class="section-number-4">4.3.1.</span> KEPLER</h4>
+<div id="outline-container-orgc55a90f" class="outline-4">
+<h4 id="orgc55a90f"><span class="section-number-4">4.3.1.</span> KEPLER</h4>
 <div class="outline-text-4" id="text-4-3-1">
 <p>
 KEPLER是借用此种思路的较简单的工作。其基本框架可以用下文所述的框图进行表达：
 </p>
 
 
-<div id="org695deb9" class="figure">
+<div id="org14b77a5" class="figure">
 <p><img src="./images/screenshot_20211121_163650.png" alt="screenshot_20211121_163650.png">
 </p>
 </div>
@@ -418,7 +418,7 @@ KEPLER是借用此种思路的较简单的工作。其基本框架可以用下�
 </p>
 
 
-<div id="org9c664e3" class="figure">
+<div id="org50c2648" class="figure">
 <p><img src="./images/screenshot_20211121_163701.png" alt="screenshot_20211121_163701.png">
 </p>
 </div>
@@ -428,7 +428,7 @@ KEPLER是借用此种思路的较简单的工作。其基本框架可以用下�
 </p>
 
 
-<div id="org9ed6e85" class="figure">
+<div id="orgbad65d5" class="figure">
 <p><img src="./images/screenshot_20211121_163711.png" alt="screenshot_20211121_163711.png">
 </p>
 </div>
@@ -439,8 +439,8 @@ KEPLER是借用此种思路的较简单的工作。其基本框架可以用下�
 </div>
 </div>
 
-<div id="outline-container-orgb111820" class="outline-4">
-<h4 id="orgb111820"><span class="section-number-4">4.3.2.</span> JAKET</h4>
+<div id="outline-container-orgb89f176" class="outline-4">
+<h4 id="orgb89f176"><span class="section-number-4">4.3.2.</span> JAKET</h4>
 <div class="outline-text-4" id="text-4-3-2">
 <p>
 JAKET将知识图谱表示学习与知识图谱增强的NLU两个任务视为彼此可以互相促进的任务，并以此思路作为论文的最大卖点。下图展示了JAKET的整体流程。
@@ -476,8 +476,8 @@ JAKET整体来看比KEPLER复杂了许多，但在实验上有明显的欠缺。
 </div>
 </div>
 
-<div id="outline-container-org759dd84" class="outline-2">
-<h2 id="org759dd84"><span class="section-number-2">5.</span> 4 总结与未来展望</h2>
+<div id="outline-container-orgd38777c" class="outline-2">
+<h2 id="orgd38777c"><span class="section-number-2">5.</span> 4 总结与未来展望</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 将知识图谱同预训练模型进行结合，目前已经出现了大量的工作。除去上述文章中所介绍的论文之外，还有将KG转化为自然语言语料融入到训练中、设置即插即用的知识图谱等其他工作。目前来看，将知识图谱与预训练模型结合，并在此过程中对彼此任务都获得提升，已经成为一个趋势。另外的一个趋势是，针对于不同的下游任务，在融合方式上进行特殊的适配，毕竟目前出现了大量的需要知识图谱支撑的NLP任务。未来的工作或许会从这些角度继续深入。
@@ -485,8 +485,8 @@ JAKET整体来看比KEPLER复杂了许多，但在实验上有明显的欠缺。
 </div>
 </div>
 
-<div id="outline-container-org23e0290" class="outline-2">
-<h2 id="org23e0290"><span class="section-number-2">6.</span> 参考文献</h2>
+<div id="outline-container-org77f4558" class="outline-2">
+<h2 id="org77f4558"><span class="section-number-2">6.</span> 参考文献</h2>
 <div class="outline-text-2" id="text-6">
 <ol class="org-ol">
 <li>ERNIE：Zhang, Zhengyan, et al. "ERNIE: Enhanced language representation with informative entities." arXiv preprint arXiv:1905.07129 (2019).</li>
@@ -503,7 +503,7 @@ JAKET整体来看比KEPLER复杂了许多，但在实验上有明显的欠缺。
 <div id="postamble" class="status">
 <p class="date">Date: 2021年秋天</p>
 <p class="author">Author: Zi Liang</p>
-<p class="date">Created: 2023-08-21 一 15:03</p>
+<p class="date">Created: 2023-10-07 Sat 09:57</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

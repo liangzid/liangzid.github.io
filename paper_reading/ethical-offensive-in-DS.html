@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2023-08-21 一 15:03 -->
+<!-- 2023-10-07 Sat 09:57 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>对话系统中的伦理问题小考</title>
@@ -200,20 +200,20 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgf66a62b">1. Challenge</a></li>
-<li><a href="#org9d23f4b">2. Detection un-labeld contexts</a>
+<li><a href="#orgb27f37f">1. Challenge</a></li>
+<li><a href="#orgaa5dfb9">2. Detection un-labeld contexts</a>
 <ul>
-<li><a href="#orgaa82842">2.1. Recipes for Safety in Open-domain Chatbots</a>
+<li><a href="#orgdc0a57e">2.1. Recipes for Safety in Open-domain Chatbots</a>
 <ul>
-<li><a href="#org539b8a8">2.1.1. unsafe utterance detection</a></li>
-<li><a href="#org082cb20">2.1.2. safe utterance generation</a></li>
-<li><a href="#org469dc31">2.1.3. 不去接触敏感话题</a></li>
-<li><a href="#org3a3ea46">2.1.4. 性别上的词汇</a></li>
+<li><a href="#org9edf1d5">2.1.1. unsafe utterance detection</a></li>
+<li><a href="#orgb3b7ab1">2.1.2. safe utterance generation</a></li>
+<li><a href="#org8dc403f">2.1.3. 不去接触敏感话题</a></li>
+<li><a href="#org77bdc4d">2.1.4. 性别上的词汇</a></li>
 </ul>
 </li>
-<li><a href="#orge6a4617">2.2. Task-Based Evaluation of NLG Systems: Control VS Real-world Context</a></li>
-<li><a href="#orgf1d9e1c">2.3. Universal Adversarial Triggers for Attacking and Analyzing NLP</a></li>
-<li><a href="#orgc6db962">2.4. task-based evaluation of NLG systems: Control vs Realworld context</a></li>
+<li><a href="#org18c51a2">2.2. Task-Based Evaluation of NLG Systems: Control VS Real-world Context</a></li>
+<li><a href="#org74fd16e">2.3. Universal Adversarial Triggers for Attacking and Analyzing NLP</a></li>
+<li><a href="#org072e50c">2.4. task-based evaluation of NLG systems: Control vs Realworld context</a></li>
 </ul>
 </li>
 </ul>
@@ -227,15 +227,15 @@
 文章虽是以“对话系统”为题，但实际上，NLG，task-oriented，chatbot都被纳入了考虑范围。
 并且，这些论文大多以 <b>检测上述不良语句</b> 或 <b>提出这样一种挑战</b> 的形式呈现出来。
 </p>
-<div id="outline-container-orgf66a62b" class="outline-2">
-<h2 id="orgf66a62b"><span class="section-number-2">1.</span> Challenge</h2>
+<div id="outline-container-orgb27f37f" class="outline-2">
+<h2 id="orgb27f37f"><span class="section-number-2">1.</span> Challenge</h2>
 </div>
 
 
 
 
-<div id="outline-container-org9d23f4b" class="outline-2">
-<h2 id="org9d23f4b"><span class="section-number-2">2.</span> Detection un-labeld contexts</h2>
+<div id="outline-container-orgaa5dfb9" class="outline-2">
+<h2 id="orgaa5dfb9"><span class="section-number-2">2.</span> Detection un-labeld contexts</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 见表格如下：
@@ -289,15 +289,15 @@
 
 
 
-<div id="outline-container-orgaa82842" class="outline-3">
-<h3 id="orgaa82842"><span class="section-number-3">2.1.</span> Recipes for Safety in Open-domain Chatbots</h3>
+<div id="outline-container-orgdc0a57e" class="outline-3">
+<h3 id="orgdc0a57e"><span class="section-number-3">2.1.</span> Recipes for Safety in Open-domain Chatbots</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 这是一篇28页的长文，进行了各种有意义的实验。但是其主要想法可以通过下图进行展现：
 </p>
 
 
-<div id="org7e775dd" class="figure">
+<div id="org22d45d2" class="figure">
 <p><img src="./images/20210511150319.png" alt="20210511150319.png">
 </p>
 </div>
@@ -347,8 +347,8 @@
 </p>
 </div>
 
-<div id="outline-container-org539b8a8" class="outline-4">
-<h4 id="org539b8a8"><span class="section-number-4">2.1.1.</span> unsafe utterance detection</h4>
+<div id="outline-container-org9edf1d5" class="outline-4">
+<h4 id="org9edf1d5"><span class="section-number-4">2.1.1.</span> unsafe utterance detection</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <p>
 分类器的训练是基于transformer相关的encoder模型进行的，一般而言，该问题被归纳为一个二分类问题（是offensive的或不是）或多分类问题（属于哪一种冒犯性的语句）。
@@ -386,8 +386,8 @@
 </div>
 </div>
 
-<div id="outline-container-org082cb20" class="outline-4">
-<h4 id="org082cb20"><span class="section-number-4">2.1.2.</span> safe utterance generation</h4>
+<div id="outline-container-orgb3b7ab1" class="outline-4">
+<h4 id="orgb3b7ab1"><span class="section-number-4">2.1.2.</span> safe utterance generation</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <p>
 安全句子的生成，除了依靠过滤数据集之外，还应当在生成端做一些准备。主要包括：
@@ -400,15 +400,15 @@
 </div>
 </div>
 
-<div id="outline-container-org469dc31" class="outline-4">
-<h4 id="org469dc31"><span class="section-number-4">2.1.3.</span> 不去接触敏感话题</h4>
+<div id="outline-container-org8dc403f" class="outline-4">
+<h4 id="org8dc403f"><span class="section-number-4">2.1.3.</span> 不去接触敏感话题</h4>
 <div class="outline-text-4" id="text-2-1-3">
 <p>
 不去接触一些敏感话题。
 </p>
 
 
-<div id="orga797f67" class="figure">
+<div id="orga7386d4" class="figure">
 <p><img src="./images/20210512103714.png" alt="20210512103714.png">
 </p>
 </div>
@@ -419,8 +419,8 @@
 </div>
 </div>
 
-<div id="outline-container-org3a3ea46" class="outline-4">
-<h4 id="org3a3ea46"><span class="section-number-4">2.1.4.</span> 性别上的词汇</h4>
+<div id="outline-container-org77bdc4d" class="outline-4">
+<h4 id="org77bdc4d"><span class="section-number-4">2.1.4.</span> 性别上的词汇</h4>
 <div class="outline-text-4" id="text-2-1-4">
 <p>
 主要指，通过不存在男女性别歧视的台词，对模型进行最终的训练。
@@ -429,21 +429,21 @@
 </div>
 </div>
 
-<div id="outline-container-orge6a4617" class="outline-3">
-<h3 id="orge6a4617"><span class="section-number-3">2.2.</span> Task-Based Evaluation of NLG Systems: Control VS Real-world Context</h3>
+<div id="outline-container-org18c51a2" class="outline-3">
+<h3 id="org18c51a2"><span class="section-number-3">2.2.</span> Task-Based Evaluation of NLG Systems: Control VS Real-world Context</h3>
 </div>
 
 
 
-<div id="outline-container-orgf1d9e1c" class="outline-3">
-<h3 id="orgf1d9e1c"><span class="section-number-3">2.3.</span> Universal Adversarial Triggers for Attacking and Analyzing NLP</h3>
+<div id="outline-container-org74fd16e" class="outline-3">
+<h3 id="org74fd16e"><span class="section-number-3">2.3.</span> Universal Adversarial Triggers for Attacking and Analyzing NLP</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 这篇论文就是准备去找到一些triggers，使得模型尽可能地产生不太好的结果。如下图所示：
 </p>
 
 
-<div id="orgd1367f7" class="figure">
+<div id="org04a34ba" class="figure">
 <p><img src="./images/20210512105819.png" alt="20210512105819.png">
 </p>
 </div>
@@ -453,7 +453,7 @@
 </p>
 
 
-<div id="orgf205f14" class="figure">
+<div id="orgc974662" class="figure">
 <p><img src="./images/20210512105530.png" alt="20210512105530.png">
 </p>
 </div>
@@ -461,14 +461,14 @@
 </div>
 
 
-<div id="outline-container-orgc6db962" class="outline-3">
-<h3 id="orgc6db962"><span class="section-number-3">2.4.</span> task-based evaluation of NLG systems: Control vs Realworld context</h3>
+<div id="outline-container-org072e50c" class="outline-3">
+<h3 id="org072e50c"><span class="section-number-3">2.4.</span> task-based evaluation of NLG systems: Control vs Realworld context</h3>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: LiangZi</p>
-<p class="date">Created: 2023-08-21 一 15:03</p>
+<p class="date">Created: 2023-10-07 Sat 09:57</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

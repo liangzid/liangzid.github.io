@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2023-08-21 一 15:03 -->
+<!-- 2023-10-07 Sat 09:56 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>FATE: 一种联邦学习框架</title>
@@ -200,16 +200,16 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd2d4692">1. 联邦学习基本概念</a></li>
-<li><a href="#org6f69aad">2. 安装</a></li>
-<li><a href="#org49e0ed4">3. FATE总览</a></li>
-<li><a href="#org0473aa1">4. fate demo测试</a></li>
+<li><a href="#org7a30516">1. 联邦学习基本概念</a></li>
+<li><a href="#org8a8b4fe">2. 安装</a></li>
+<li><a href="#org1ef5245">3. FATE总览</a></li>
+<li><a href="#orgc7fe7f5">4. fate demo测试</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgd2d4692" class="outline-2">
-<h2 id="orgd2d4692"><span class="section-number-2">1.</span> 联邦学习基本概念</h2>
+<div id="outline-container-org7a30516" class="outline-2">
+<h2 id="org7a30516"><span class="section-number-2">1.</span> 联邦学习基本概念</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 之前听学长讲过关于联邦学习的汇报，但后来发现该报告无法cover阅读文档时所出现的问题，因此还是需要自己再补充一些知识。
@@ -243,8 +243,8 @@ FATE就是这样的一个框架。
 </div>
 </div>
 
-<div id="outline-container-org6f69aad" class="outline-2">
-<h2 id="org6f69aad"><span class="section-number-2">2.</span> 安装</h2>
+<div id="outline-container-org8a8b4fe" class="outline-2">
+<h2 id="org8a8b4fe"><span class="section-number-2">2.</span> 安装</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 官网提供了两种安装方式，即单机安装与集群安装。从这里了解到<a href="https://fate.fedai.org/install/">细节</a>。
@@ -261,28 +261,28 @@ docker即容器技术，也是目前最常用的解决系统环境依赖的解�
 </p>
 <div class="org-src-container">
 <pre class="src src-bash">
-<span style="color: #454459;">## </span><span style="color: #454459; font-style: italic;">install</span>
-<span style="color: #454459;">#</span><span style="color: #454459; font-style: italic;">Get code</span>
-wget https://webank-ai-1251170195.cos.ap-guangzhou.myqcloud.com/docker_standalone_fate_$<span style="color: #0D9C94;">{</span><span style="color: #41b0f3; background-color: #372E40;">version</span><span style="color: #0D9C94;">}</span>.tar.gz
-tar -xzvf docker_standalone_fate_$<span style="color: #0D9C94;">{</span><span style="color: #41b0f3; background-color: #372E40;">version</span><span style="color: #0D9C94;">}</span>.tar.gz
+<span style="color: #7A6884;">## </span><span style="color: #7A6884; font-style: italic;">install</span>
+<span style="color: #7A6884;">#</span><span style="color: #7A6884; font-style: italic;">Get code</span>
+wget https://webank-ai-1251170195.cos.ap-guangzhou.myqcloud.com/docker_standalone_fate_$<span style="color: #a0586c;">{</span><span style="color: #9587DD; background-color: #372E40;">version</span><span style="color: #a0586c;">}</span>.tar.gz
+tar -xzvf docker_standalone_fate_$<span style="color: #a0586c;">{</span><span style="color: #9587DD; background-color: #372E40;">version</span><span style="color: #a0586c;">}</span>.tar.gz
 
-<span style="color: #454459;">#</span><span style="color: #454459; font-style: italic;">Execute the command</span>
-<span style="color: #63E8C1;">cd</span> docker_standalone_fate_$<span style="color: #0D9C94;">{</span><span style="color: #41b0f3; background-color: #372E40;">version</span><span style="color: #0D9C94;">}</span>
+<span style="color: #7A6884;">#</span><span style="color: #7A6884; font-style: italic;">Execute the command</span>
+<span style="color: #fbaed2;">cd</span> docker_standalone_fate_$<span style="color: #a0586c;">{</span><span style="color: #9587DD; background-color: #372E40;">version</span><span style="color: #a0586c;">}</span>
 bash install_standalone_docker.sh
 
-<span style="color: #454459;"># </span><span style="color: #454459; font-style: italic;">where ${version} should be replaced into docker version.</span>
+<span style="color: #7A6884;"># </span><span style="color: #7A6884; font-style: italic;">where ${version} should be replaced into docker version.</span>
 
 
-<span style="color: #454459;">## </span><span style="color: #454459; font-style: italic;">unit test</span>
-<span style="color: #41b0f3; background-color: #372E40;">CONTAINER_ID</span>=<span style="color: #c79af4;">`docker ps -aqf "name=fate"`</span>
-docker exec -t -i $<span style="color: #0D9C94;">{</span><span style="color: #41b0f3; background-color: #372E40;">CONTAINER_ID</span><span style="color: #0D9C94;">}</span> bash
+<span style="color: #7A6884;">## </span><span style="color: #7A6884; font-style: italic;">unit test</span>
+<span style="color: #9587DD; background-color: #372E40;">CONTAINER_ID</span>=<span style="color: #f5c791;">`docker ps -aqf "name=fate"`</span>
+docker exec -t -i $<span style="color: #a0586c;">{</span><span style="color: #9587DD; background-color: #372E40;">CONTAINER_ID</span><span style="color: #a0586c;">}</span> bash
 bash ./python/federatedml/test/run_test.sh
 
-<span style="color: #454459;">## </span><span style="color: #454459; font-style: italic;">install more tool</span>
+<span style="color: #7A6884;">## </span><span style="color: #7A6884; font-style: italic;">install more tool</span>
  pip install fate-client
  pip install fate-test
 
-<span style="color: #454459;">## </span><span style="color: #454459; font-style: italic;">see the fateboard access via browser with http://hostip:8080</span>
+<span style="color: #7A6884;">## </span><span style="color: #7A6884; font-style: italic;">see the fateboard access via browser with http://hostip:8080</span>
 </pre>
 </div>
 
@@ -292,8 +292,8 @@ bash ./python/federatedml/test/run_test.sh
 </div>
 </div>
 
-<div id="outline-container-org49e0ed4" class="outline-2">
-<h2 id="org49e0ed4"><span class="section-number-2">3.</span> FATE总览</h2>
+<div id="outline-container-org1ef5245" class="outline-2">
+<h2 id="org1ef5245"><span class="section-number-2">3.</span> FATE总览</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 根据<a href="https://fate.fedai.org/overview/">官网</a>的介绍，fate主要包括以下几个大的板块：
@@ -313,8 +313,8 @@ bash ./python/federatedml/test/run_test.sh
 </p>
 </div>
 </div>
-<div id="outline-container-org0473aa1" class="outline-2">
-<h2 id="org0473aa1"><span class="section-number-2">4.</span> fate demo测试</h2>
+<div id="outline-container-orgc7fe7f5" class="outline-2">
+<h2 id="orgc7fe7f5"><span class="section-number-2">4.</span> fate demo测试</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 目前fate支持两个版本，官方支持使用v2,因此后续就以v2为例子进行。注意：即使官方版本是1.x.x版本（例如我使用时官方推荐版本是1.6.1），也是可以使用v2的！
@@ -333,7 +333,7 @@ bash ./python/federatedml/test/run_test.sh
 <div id="postamble" class="status">
 <p class="date">Date: Sat Sep 18 20:55:59 2021</p>
 <p class="author">Author: liangzid</p>
-<p class="date">Created: 2023-08-21 一 15:03</p>
+<p class="date">Created: 2023-10-07 Sat 09:56</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
