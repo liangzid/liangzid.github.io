@@ -1,0 +1,155 @@
+#+title: rust 生命周期（lifetime）解析
+#+OPTIONS: html-style:nil
+#+date: Fri Nov 19 09:36:11 2021
+#+author: Zi Liang
+#+email: liangzid@stu.xjtu.edu.cn
+#+latex_class: elegantpaper
+#+filetags: prog:rust:lifetime:
+
+在阅读这篇文章之前，如果我不知道什么是所有权（ownership），那么我会先去搜索相关知识或者阅读[[file:rust-learning.org][这篇]]笔记。
+
+如果我之前学过所有权相关的知识，那么就不用去看了。
+
+* 回顾ownership和reference。
+
+  首先试图回顾一下关于所有权和引用的一些问题。
+  所有权是指：一个指针在一个作用域内对一片内存空间的操作能力。rust规定了一片区域有且仅能有一个这样的指针，这个指针在编程语言里就是变量名。
+  但是：有时我们不得不频繁访问一个变量，如果仅仅按照所有权规则，我们必须不停地将这个指针传播。
+  为此，rust沿袭了引用的概念。一个变量的引用其实就是一个指针，这个指针指向了指向这个变量的指针，也就是这个指针指向了变量名。由此，我们就可以使用这个引用快速访问原有的数据，同时不会让变量名失去所有权。
+  但与此同时也会存在一些新的问题。
+  1. 关于一致性的问题：正如我们之前介绍的，对于mut的变量，如果其引用也是mut的，
+     那么我们可以通过引用修改该变量的值。为了保持修改过程中没有问题，我们规定这种可写的引用只有一个。
+  2. 第二个问题就是关于悬垂引用的问题。即如果我的这个变量被注销了——那么对应的数据也被清楚了。
+     如果此时我的这个引用还活着，该引用就可以被用来访问内存区域。——这是完全有可能的。而针对这一类问题的检查，就引出了生命周期这个思路。
+
+
+* rust设计哲学
+
+  在介绍什么是生命周期之前，可能还需要简单介绍一下rust的设计哲学。我理解rust的设计哲学是：
+
++ 将问题约束在编译时，而非运行时；
++ 要求编程者更细粒度地表达其意图；
++ 先复杂化，再简化；
+
+现以生命周期为例，验证这些设计哲学。
+
+* 生命周期解析
+  
+** 先复杂化：引入生命周期
+   我们先以一个返回两个字符串中最长的一个的函数，来引入生命周期的概念。
+   首先给出一个无法编译的代码：
+
+   #+BEGIN_SRC rust
+     fn longest(x: &str, y: &str) -> &str {
+	 if x.len() > y.len() {
+	     x
+	 } else {
+	     y
+	 }
+     }
+   #+END_SRC
+   这个代码有什么问题？逻辑上当然是没有问题的。现在让我们试试用这个函数构造一个悬垂引用。
+
+   #+BEGIN_SRC rust
+
+     let s2="blabla";
+     let smax;
+     {
+     let s1=String::from("abcccccccccccc");
+	 smax=longest(s1.as_str(),s2);
+     }
+     println!("{}", smax);
+
+   #+END_SRC
+
+如果没有lifetime，单纯靠所有权，是检查不出上述代码的问题的。同样地，在运行中，这段代码有时候也会执行正确（如果s2比s1长），但我们不能冒这个险——这就是rust的哲学。所以，既然存在风险，那么rust就会让这个函数不通过。————可是这样一个函数确实极其常见的，所以，rust强令我补充信息，所补充的信息就是各个变量的生命周期。
+
+生命周期就是一个单引号形态的东西，跟定义类型一样，都是泛型的写法：
+
+(泛型的文章请见：[[file:rust-trait-lifetime.org][这里]])
+
+#+BEGIN_SRC rust
+  fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+      if x.len() > y.len() {
+	  x
+      } else {
+	  y
+      }
+  }
+#+END_SRC
+
+就像类型一般都是T一样，生命周期一般就用'a意思一下，具有相同的符号的变量，代表他们有相同的生命周期。
+
+然后，编译器就会拿着这个生命周期去检查，看看使用这个函数的变量都满不满足这个生命周期的要求。当然，我们上面给的运行示例肯定是不满足这个生命周期的，所以编译器就会报错，这个错误就避免了。假如我这么用这个函数：
+   #+BEGIN_SRC rust
+
+     let s2="blabla";
+     let smax;
+     let s1=String::from("abcccccccccccc");
+	 smax=longest(s1.as_str(),s2);
+     println!("{}", smax);
+
+   #+END_SRC
+
+就符合这个生命周期了，同时我们也可以发现，这段代码确实没有错。
+
+一般而言，也就是根据我们的常识所能理解的：引用的存在周期肯定要在对应变量的存在周期内部，至少是其一个子集。我们提供的生命周期信息，就是为了检查这个东西。
+
+下面给出一些变体：
+
+
+#+BEGIN_SRC rust
+
+  fn longest<'a>(x: &'a str, y: &str) -> &'a str {
+      x
+  }
+
+  struct ImportantExcerpt<'a> {
+      part: &'a str,
+  }
+
+#+END_SRC
+
+** 简化生命周期的描述
+   下面来试着简化生命周期的描述。如果一直写生命周期，就显得有些繁琐，因此rust也设计了简化生命周期描述的方式。主要包括三条规则：
+   1. 单参数输入，输出与输入的生命周期相同——>不用写；
+   2. 如果输入中包括&self或& mut self，即一个方法，那么输出参数的生命周期与self一致；——>省写
+   3. 多参数输入，默认每一个参数的生命周期都不一样-->最坏情况。
+
+举个例子，第一种情况：
+
+#+BEGIN_SRC rust
+  fn first_word(s: &str) -> &str {}
+  //等价于
+  fn first_word<'a>(s: &'a str) -> &'a str {}
+#+END_SRC
+
+第二种情况：
+
+#+BEGIN_SRC rust
+
+  #![allow(unused)]
+  fn main() {
+  struct ImportantExcerpt<'a> {
+      part: &'a str,
+  }
+
+  impl<'a> ImportantExcerpt<'a> {
+      fn announce_and_return_part(&self, announcement: &str) -> &str {
+	  println!("Attention please: {}", announcement);
+	  self.part
+      }
+  }
+  }
+
+#+END_SRC
+
+  第三种情况：
+#+BEGIN_SRC rust
+    fn longest(x: &str, y: &str) -> &str {}
+      //等价于
+  fn longest<'a, 'b>(x: &'a str, y: &'b str) -> &str {}
+#+END_SRC
+
+
+关于lifetime的内容就是这些，一些static等虾米就不整理了。

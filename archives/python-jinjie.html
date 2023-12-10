@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2023-10-07 Sat 09:57 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>python进阶使用</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">python进阶使用</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org3ed4d20">1. python标准库进阶</a>
+<ul>
+<li><a href="#org17ccbd5">1.1. 命令行函数: argparse</a></li>
+<li><a href="#orgf3497f6">1.2. 日志：logging相关</a></li>
+<li><a href="#org1469a21">1.3. 规范参数类型：typing</a></li>
+<li><a href="#org71ef760">1.4. collections：常见的特殊数据结构</a>
+<ul>
+<li><a href="#org5457216">1.4.1. Counter</a></li>
+<li><a href="#orgda82eed">1.4.2. defaultdict</a></li>
+<li><a href="#org6e673f7">1.4.3. OrderedDict</a></li>
+</ul>
+</li>
+<li><a href="#orgab9c397">1.5. 我真的理解了正则匹配嘛？re</a></li>
+</ul>
+</li>
+<li><a href="#orgc8e7cc4">2. python特殊用法</a>
+<ul>
+<li><a href="#org23fc3f2">2.1. f-string: 格式化字符串</a></li>
+<li><a href="#orgdd31409">2.2. \*args与\**kwargs</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+自大四上学期使用python炼丹开始计算，笔者使用python已经两年了。目前自以为对python的使用十分纯熟，但在阅读他们代码时，仍然发现很多地方是自己从未用过的，因而总结如下，作为针对笔者自己的进阶指南。希望能够通过这种方式对python本身和其标准库的使用更进一层楼。
+</p>
+
+<div id="outline-container-org3ed4d20" class="outline-2">
+<h2 id="org3ed4d20"><span class="section-number-2">1.</span> python标准库进阶</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org17ccbd5" class="outline-3">
+<h3 id="org17ccbd5"><span class="section-number-3">1.1.</span> 命令行函数: argparse</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+可以通过传递参数的名字来告诉文件我在传递哪个参数，模拟C程序的命令行效果。示例如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-python">     <span style="color: #7A6884;">## </span><span style="color: #7A6884; font-style: italic;">init argparse for better application.</span>
+     <span style="color: #7A6884;"># </span><span style="color: #7A6884; font-style: italic;">you should finally edit this function for better use</span>
+     <span style="color: #C68EDE;">def</span> <span style="color: #fbaed2;">setup_train_args</span><span style="color: #a0586c;">()</span>:
+
+         <span style="color: #9587DD; background-color: #372E40;">parser</span> = argparse.ArgumentParser<span style="color: #a0586c;">()</span>
+         <span style="color: #7A6884;">## </span><span style="color: #7A6884; font-style: italic;">this line is for logging, please do not delete it.</span>
+         parser.add_argument<span style="color: #a0586c;">(</span><span style="color: #e361c3;">'--save_log_path'</span>, default=<span style="color: #e361c3;">'./running_results.log'</span>,
+                             <span style="color: #fbaed2;">type</span>=<span style="color: #fbaed2;">str</span>, required=<span style="color: #738FD7;">False</span><span style="color: #a0586c;">)</span>
+
+         <span style="color: #7A6884;">### </span><span style="color: #7A6884; font-style: italic;">you can change, comment or delete blew sections.</span>
+         parser.add_argument<span style="color: #a0586c;">(</span><span style="color: #e361c3;">"--max_seq_length"</span>, default=64,
+                             <span style="color: #fbaed2;">type</span>=<span style="color: #fbaed2;">int</span>, required=<span style="color: #738FD7;">False</span>, <span style="color: #fbaed2;">help</span>=<span style="color: #e361c3;">"max sequence length"</span><span style="color: #a0586c;">)</span>
+         parser.add_argument<span style="color: #a0586c;">(</span><span style="color: #e361c3;">'--cuda_num'</span>, default=<span style="color: #e361c3;">'6'</span>, <span style="color: #fbaed2;">type</span>=<span style="color: #fbaed2;">str</span>, required=<span style="color: #738FD7;">False</span><span style="color: #a0586c;">)</span>
+         parser.add_argument<span style="color: #a0586c;">(</span><span style="color: #e361c3;">'--fraction'</span>, default=<span style="color: #e361c3;">'0.5'</span>,
+                             <span style="color: #fbaed2;">type</span>=<span style="color: #fbaed2;">float</span>, required=<span style="color: #738FD7;">False</span><span style="color: #a0586c;">)</span>
+         parser.add_argument<span style="color: #a0586c;">(</span><span style="color: #e361c3;">'--no_cuda'</span>, action=<span style="color: #e361c3;">'store_true'</span><span style="color: #a0586c;">)</span>
+
+         <span style="color: #C68EDE;">return</span> parser.parse_args<span style="color: #a0586c;">()</span>
+
+args=setup_train_args<span style="color: #a0586c;">()</span>
+</pre>
+</div>
+<p>
+基本数据类型的使用，基本的参数都在示例之中了。
+</p>
+
+<p>
+顺便：不要忘记import argparse。
+</p>
+</div>
+</div>
+<div id="outline-container-orgf3497f6" class="outline-3">
+<h3 id="orgf3497f6"><span class="section-number-3">1.2.</span> 日志：logging相关</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+logging的功能比print稍微复杂一些，当然好处就是看起来更不错了，同时流输出到文件中也更加稳定，如果忍不住用print，可以 <code>print\=logger.info</code> alias一下。。。当然我目前还是很喜欢print来debug。
+</p>
+
+<p>
+我自己写了一个万能logging配置，如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #C68EDE;">global</span> logger
+
+
+<span style="color: #7A6884;">## </span><span style="color: #7A6884; font-style: italic;">config logging formatter.</span>
+<span style="color: #C68EDE;">class</span> <span style="color: #6bd9db;">CustomFormatter</span><span style="color: #a0586c;">(</span>logging.Formatter<span style="color: #a0586c;">)</span>:
+    <span style="color: #9587DD; background-color: #372E40;">grey</span> = <span style="color: #e361c3;">"\x1b[0;37m"</span>
+    <span style="color: #9587DD; background-color: #372E40;">green</span> = <span style="color: #e361c3;">"\x1b[1;32m"</span>
+    <span style="color: #9587DD; background-color: #372E40;">yellow</span> = <span style="color: #e361c3;">"\x1b[1;33m"</span>
+    <span style="color: #9587DD; background-color: #372E40;">red</span> = <span style="color: #e361c3;">"\x1b[1;31m"</span>
+    <span style="color: #9587DD; background-color: #372E40;">purple</span> = <span style="color: #e361c3;">"\x1b[1;35m"</span>
+    <span style="color: #9587DD; background-color: #372E40;">blue</span> = <span style="color: #e361c3;">"\x1b[1;34m"</span>
+    <span style="color: #9587DD; background-color: #372E40;">light_blue</span> = <span style="color: #e361c3;">"\x1b[1;36m"</span>
+    <span style="color: #9587DD; background-color: #372E40;">reset</span> = <span style="color: #e361c3;">"\x1b[0m"</span>
+    <span style="color: #9587DD; background-color: #372E40;">blink_red</span> = <span style="color: #e361c3;">"\x1b[5m\x1b[1;31m"</span>
+
+    <span style="color: #fbaed2;">format</span> = <span style="color: #e361c3;">"%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"</span>
+    <span style="color: #9587DD; background-color: #372E40;">FORMATS</span> = <span style="color: #a0586c;">{</span>
+        logging.DEBUG: purple + <span style="color: #fbaed2;">format</span> + reset,
+        logging.INFO: green + <span style="color: #fbaed2;">format</span> + reset,
+        logging.WARNING: yellow + <span style="color: #fbaed2;">format</span> + reset,
+        logging.ERROR: red + <span style="color: #fbaed2;">format</span> + reset,
+        logging.CRITICAL: blink_red + <span style="color: #fbaed2;">format</span> + reset
+    <span style="color: #a0586c;">}</span>
+
+    <span style="color: #C68EDE;">def</span> <span style="color: #fbaed2;">format</span><span style="color: #a0586c;">(</span><span style="color: #C68EDE;">self</span>, record<span style="color: #a0586c;">)</span>:
+        <span style="color: #9587DD; background-color: #372E40;">log_fmt</span> = <span style="color: #C68EDE;">self</span>.FORMATS.get<span style="color: #a0586c;">(</span>record.levelno<span style="color: #a0586c;">)</span>
+        <span style="color: #9587DD; background-color: #372E40;">formatter</span> = logging.Formatter<span style="color: #a0586c;">(</span>log_fmt<span style="color: #a0586c;">)</span>
+        <span style="color: #C68EDE;">return</span> formatter.<span style="color: #fbaed2;">format</span><span style="color: #a0586c;">(</span>record<span style="color: #a0586c;">)</span>
+
+<span style="color: #7A6884;">## </span><span style="color: #7A6884; font-style: italic;">generate logger</span>
+<span style="color: #C68EDE;">def</span> <span style="color: #fbaed2;">_create_logger</span><span style="color: #a0586c;">(</span>args<span style="color: #a0586c;">)</span>:
+
+
+    <span style="color: #9587DD; background-color: #372E40;">logger</span> = logging.getLogger<span style="color: #a0586c;">(</span><span style="color: #fbaed2;">__name__</span><span style="color: #a0586c;">)</span>
+    logger.setLevel<span style="color: #a0586c;">(</span>logging.INFO<span style="color: #a0586c;">)</span>
+
+    <span style="color: #7A6884;"># </span><span style="color: #7A6884; font-style: italic;">formatter = logging.Formatter(</span>
+    <span style="color: #7A6884;">#     </span><span style="color: #7A6884; font-style: italic;">'%(asctime)s - %(levelname)s - %(message)s')</span>
+    <span style="color: #9587DD; background-color: #372E40;">formatter</span>=CustomFormatter<span style="color: #a0586c;">()</span>
+
+    <span style="color: #7A6884;"># </span><span style="color: #7A6884; font-style: italic;">construct a handle for file logs.</span>
+    <span style="color: #9587DD; background-color: #372E40;">file_handler</span> = logging.FileHandler<span style="color: #a0586c;">(</span>
+        filename=args.save_log_path<span style="color: #a0586c;">)</span>
+    file_handler.setFormatter<span style="color: #a0586c;">(</span>formatter<span style="color: #a0586c;">)</span>
+    file_handler.setLevel<span style="color: #a0586c;">(</span>logging.INFO<span style="color: #a0586c;">)</span>
+    logger.addHandler<span style="color: #a0586c;">(</span>file_handler<span style="color: #a0586c;">)</span>
+
+    <span style="color: #7A6884;"># </span><span style="color: #7A6884; font-style: italic;">construct a handle for console logs.</span>
+    console = logging.StreamHandler<span style="color: #a0586c;">()</span>
+    console.setLevel<span style="color: #a0586c;">(</span>logging.DEBUG<span style="color: #a0586c;">)</span>
+    console.setFormatter<span style="color: #a0586c;">(</span>formatter<span style="color: #a0586c;">)</span>
+    logger.addHandler<span style="color: #a0586c;">(</span>console<span style="color: #a0586c;">)</span>
+    <span style="color: #C68EDE;">return</span> logger
+
+<span style="color: #7A6884;">## </span><span style="color: #7A6884; font-style: italic;">main function</span>
+<span style="color: #C68EDE;">def</span> <span style="color: #fbaed2;">main</span><span style="color: #a0586c;">()</span>:
+    args=setup_train_args<span style="color: #a0586c;">()</span>
+    logger=_create_logger<span style="color: #a0586c;">(</span>args<span style="color: #a0586c;">)</span>
+    logger.setLevel<span style="color: #a0586c;">(</span>logging.DEBUG<span style="color: #a0586c;">)</span>
+
+
+    logger.info<span style="color: #a0586c;">(</span><span style="color: #e361c3;">"aaaaaaaaaaaaaaaa"</span><span style="color: #a0586c;">)</span>
+    logger.debug<span style="color: #a0586c;">(</span><span style="color: #e361c3;">"bbbbbbbbb"</span><span style="color: #a0586c;">)</span>
+    logger.error<span style="color: #a0586c;">(</span><span style="color: #e361c3;">"cccccccccccccc"</span><span style="color: #a0586c;">)</span>
+    logger.critical<span style="color: #a0586c;">(</span><span style="color: #e361c3;">"ddddd"</span><span style="color: #a0586c;">)</span>
+
+</pre>
+</div>
+
+<p>
+以上配置基本就是debug的使用使用的，它会把logging的结果调成不同的颜色，比如info是绿色，error是红色等等，还会提供诸如触发未知的行号等等额外信息。具体效果如下图所示：
+</p>
+
+
+<div id="orgc058056" class="figure">
+<p><img src="./images/screenshot_20211206_155849.png" alt="screenshot_20211206_155849.png">
+</p>
+</div>
+
+<p>
+顺便：不要忘记import logging。
+</p>
+</div>
+</div>
+<div id="outline-container-org1469a21" class="outline-3">
+<h3 id="org1469a21"><span class="section-number-3">1.3.</span> 规范参数类型：typing</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+python身为动态语言，对类型的要求不是很高。但是，如果试图撰写清晰的、标准的代码，如写一个库，那么对参数类型的刻画是十分必要的。可以通过标准库typing进行解决。
+</p>
+
+<p>
+比如以下示例：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #C68EDE;">from</span> typing <span style="color: #C68EDE;">import</span> Any, Dict, List, Optional, Tuple, Union, overload
+
+<span style="color: #C68EDE;">def</span> <span style="color: #fbaed2;">prepare_for_tokenization</span><span style="color: #a0586c;">(</span>text: <span style="color: #fbaed2;">str</span>,
+                             is_split_into_words: <span style="color: #fbaed2;">bool</span> = <span style="color: #738FD7;">False</span>,
+                             **kwargs<span style="color: #a0586c;">)</span> -&gt; Tuple<span style="color: #a0586c;">[</span><span style="color: #fbaed2;">str</span>, Dict<span style="color: #9d81ba;">[</span><span style="color: #fbaed2;">str</span>, Any<span style="color: #9d81ba;">]</span><span style="color: #a0586c;">]</span>:
+    blablabla...
+
+</pre>
+</div>
+<p>
+我们从中可以清晰地理解其输入参数的类型和返回值是什么。下表总结了一些常用的类型。
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">类型</th>
+<th scope="col" class="org-left">介绍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Dict</td>
+<td class="org-left">Dict[KeyType,ValueType]</td>
+</tr>
+
+<tr>
+<td class="org-left">List</td>
+<td class="org-left">List[ElementType]</td>
+</tr>
+
+<tr>
+<td class="org-left">Optional</td>
+<td class="org-left">Optional[]</td>
+</tr>
+
+<tr>
+<td class="org-left">Any</td>
+<td class="org-left">any type</td>
+</tr>
+
+<tr>
+<td class="org-left">Tuple</td>
+<td class="org-left">Tuple[int,float,str]</td>
+</tr>
+
+<tr>
+<td class="org-left">Union</td>
+<td class="org-left">Union[A,B],二者之一均可</td>
+</tr>
+
+<tr>
+<td class="org-left">Optional</td>
+<td class="org-left">Optional[X]即Union[X,None]</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+如果我想了解更多，我会去<a href="https://docs.python.org/zh-cn/3/library/typing.html?highlight=typing#module-typing">这里</a>进行阅读。
+</p>
+</div>
+</div>
+<div id="outline-container-org71ef760" class="outline-3">
+<h3 id="org71ef760"><span class="section-number-3">1.4.</span> collections：常见的特殊数据结构</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+大家已经对dict,list,set,tuple这些东西习以为常了，还有一些稍微高阶的结构，记录如下。
+</p>
+</div>
+<div id="outline-container-org5457216" class="outline-4">
+<h4 id="org5457216"><span class="section-number-4">1.4.1.</span> Counter</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<p>
+Counter就是计数器，用以统计频率。其输入是一个迭代器对象（如一个列表），输出是一个字典，该字典的key就是迭代器里的值，该字典的value就是该值出现的频率。
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #C68EDE;">from</span> collections <span style="color: #C68EDE;">import</span> Counter
+
+<span style="color: #9587DD; background-color: #372E40;">a</span>=<span style="color: #a0586c;">[</span>1,1,1,2,2,2,3,3,1,1,2,4,5,6,7,7,7,7,7,7,7,7,7<span style="color: #a0586c;">]</span>
+<span style="color: #9587DD; background-color: #372E40;">b</span>=Counter<span style="color: #a0586c;">(</span>a<span style="color: #a0586c;">)</span>
+<span style="color: #fbaed2;">print</span><span style="color: #a0586c;">(</span>f<span style="color: #e361c3;">"a: </span>{a}<span style="color: #e361c3;">\nb: </span>{b}<span style="color: #e361c3;">\n"</span><span style="color: #a0586c;">)</span>
+<span style="color: #C68EDE;">return</span> <span style="color: #a0586c;">(</span>f<span style="color: #e361c3;">"b: </span>{b}<span style="color: #e361c3;">\n"</span><span style="color: #a0586c;">)</span>
+</pre>
+</div>
+
+<p>
+难道是有序列的吗？！
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgda82eed" class="outline-4">
+<h4 id="orgda82eed"><span class="section-number-4">1.4.2.</span> defaultdict</h4>
+<div class="outline-text-4" id="text-1-4-2">
+<p>
+defualtdict与dict的不同在于，defaultDict对于一个未收录的key，会自动根据初始化defaultDict的函数来初始化这个key的value。如：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #C68EDE;">from</span> collections <span style="color: #C68EDE;">import</span> defaultdict
+
+<span style="color: #9587DD; background-color: #372E40;">a</span>=defaultdict<span style="color: #a0586c;">(</span><span style="color: #fbaed2;">list</span><span style="color: #a0586c;">)</span>
+a<span style="color: #a0586c;">[</span><span style="color: #e361c3;">"test"</span><span style="color: #a0586c;">]</span>.append<span style="color: #a0586c;">(</span><span style="color: #e361c3;">"test result"</span><span style="color: #a0586c;">)</span>
+
+<span style="color: #C68EDE;">return</span> a
+</pre>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+<div id="outline-container-org6e673f7" class="outline-4">
+<h4 id="org6e673f7"><span class="section-number-4">1.4.3.</span> OrderedDict</h4>
+<div class="outline-text-4" id="text-1-4-3">
+<p>
+OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。比如在我读取一个json文件时，可能就需要约束OrderedDict的形式：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #C68EDE;">import</span> json
+<span style="color: #C68EDE;">from</span> collections <span style="color: #C68EDE;">import</span> OrderedDict
+
+<span style="color: #9587DD; background-color: #372E40;">filename</span>=<span style="color: #e361c3;">"blablabla"</span>
+<span style="color: #C68EDE;">with</span> <span style="color: #fbaed2;">open</span><span style="color: #a0586c;">(</span>filename,<span style="color: #e361c3;">"r"</span><span style="color: #a0586c;">)</span> <span style="color: #C68EDE;">as</span> <span style="color: #9587DD; background-color: #372E40;">f</span>:
+    data=json.load<span style="color: #a0586c;">(</span>f, object_pairs_hook=OrderedDict<span style="color: #a0586c;">)</span>
+</pre>
+</div>
+
+
+<p>
+如果我想了解更多，我会选择阅读<a href="https://docs.python.org/zh-cn/3/library/collections.html#module-collections">这个</a>链接。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgab9c397" class="outline-3">
+<h3 id="orgab9c397"><span class="section-number-3">1.5.</span> 我真的理解了正则匹配嘛？re</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+正则表达式匹配是一个大坑，我曾经在读书馆看到一本厚厚的书，就在讲这一件事。所以此处仅仅是简单描绘一下我所遇到的场景。后续可能会补充。
+</p>
+
+<p>
+我理解正则表达式：先写出一个pattern，然后用这个pattern去做过滤。
+</p>
+
+<p>
+先来几个pattern尝尝咸淡。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #9587DD; background-color: #372E40;">p1</span>=r<span style="color: #e361c3;">"("</span> + r<span style="color: #e361c3;">"|"</span>.join<span style="color: #a0586c;">(</span>escaped_special_toks<span style="color: #a0586c;">)</span> + r<span style="color: #e361c3;">")|"</span> + r<span style="color: #e361c3;">"(.+?)"</span>
+</pre>
+</div>
+<p>
+这个pattern的意思时这样的，实现，对于一个列表escaped_special_toks，我用“|”把里面的元素拼接在一起（如“a|b|c”），之后，添加上括号和后面的部分。因此，这里面涉及到几种re符号，|，（），.+?。
+</p>
+
+<p>
+下面一个表格是简单的介绍。
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">符号</th>
+<th scope="col" class="org-left">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">.</td>
+<td class="org-left">匹配任意一个非换行字符</td>
+</tr>
+
+<tr>
+<td class="org-left">+</td>
+<td class="org-left">匹配前一个字符的任意多字符</td>
+</tr>
+
+<tr>
+<td class="org-left">？</td>
+<td class="org-left">前一个字符匹配0次也可以被接受</td>
+</tr>
+
+<tr>
+<td class="org-left">\*</td>
+<td class="org-left">匹配前面的0个，1个，无穷多字符</td>
+</tr>
+
+<tr>
+<td class="org-left">竖线</td>
+<td class="org-left">或运算，无需多提及</td>
+</tr>
+
+<tr>
+<td class="org-left">{a,b}</td>
+<td class="org-left">对前述内容最少a次最多b次匹配，ab为数字</td>
+</tr>
+
+<tr>
+<td class="org-left">[]</td>
+<td class="org-left">只要满足中括号中的一个即可</td>
+</tr>
+
+<tr>
+<td class="org-left">()</td>
+<td class="org-left">括号用以捕获()所匹配到的内容，以进行进一步的处理</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+依照以上知识可以知道，原来p1可以实现：1. 要么进行左侧的匹配，要么进行右侧的匹配。2. 左侧的匹配是：查看字符串是否不好escaped_special_toks里的任何一个元素，如果包含，那么返回该元素；2. 右侧的匹配是：如果左侧匹配失败，那么我把所有内容完全返回。
+</p>
+
+<p>
+是不是这个样子？
+</p>
+
+<p>
+下面介绍几个re的api。
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">compile</td>
+<td class="org-left">编译正则表达式为re对象</td>
+</tr>
+
+<tr>
+<td class="org-left">search</td>
+<td class="org-left">返回一个候选</td>
+</tr>
+
+<tr>
+<td class="org-left">findall</td>
+<td class="org-left">返回多个候选</td>
+</tr>
+
+<tr>
+<td class="org-left">sub（pattern,input, need_replaced）</td>
+<td class="org-left">对于input中符合pattern的用need_repalced替换</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+<a href="https://www.jianshu.com/p/5295c5988b7f">这篇博客</a>对re模块进行了更为细致的介绍，且文理较为清晰，可供一读。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc8e7cc4" class="outline-2">
+<h2 id="orgc8e7cc4"><span class="section-number-2">2.</span> python特殊用法</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org23fc3f2" class="outline-3">
+<h3 id="org23fc3f2"><span class="section-number-3">2.1.</span> f-string: 格式化字符串</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+之前一直用 <code>format</code> 函数来格式化字符串，后来发现下面的两种形式是等效的。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #9587DD; background-color: #372E40;">result</span>=12.5
+<span style="color: #fbaed2;">print</span><span style="color: #a0586c;">(</span><span style="color: #e361c3;">"result: {}"</span>.<span style="color: #fbaed2;">format</span><span style="color: #9d81ba;">(</span>result<span style="color: #9d81ba;">)</span><span style="color: #a0586c;">)</span>
+<span style="color: #fbaed2;">print</span><span style="color: #a0586c;">(</span>f<span style="color: #e361c3;">"result: </span>{result}<span style="color: #e361c3;">"</span><span style="color: #a0586c;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdd31409" class="outline-3">
+<h3 id="orgdd31409"><span class="section-number-3">2.2.</span> \*args与\**kwargs</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+对于函数而言，我可能不知道我能接受的参数有多长，甚至不知道他们都是啥。这时候就可以用上述两个关键字。对于函数而言，
+</p>
+<ol class="org-ol">
+<li>\*args是一个固定长度但长度未知的参数列表。</li>
+
+<li><p>
+\**kwargs是一个固定长度但长度未知的字典，字典的key就是参数名，value是参数的值。
+</p>
+
+<p>
+如下面的例子
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #C68EDE;">def</span> <span style="color: #fbaed2;">fourPrint</span><span style="color: #a0586c;">(</span>first,*args<span style="color: #a0586c;">)</span>:
+    <span style="color: #fbaed2;">print</span><span style="color: #a0586c;">(</span>f<span style="color: #e361c3;">"first: </span>{first}<span style="color: #e361c3;">"</span><span style="color: #a0586c;">)</span>
+    <span style="color: #C68EDE;">for</span> i <span style="color: #C68EDE;">in</span> args:
+        <span style="color: #fbaed2;">print</span><span style="color: #a0586c;">(</span>f<span style="color: #e361c3;">"and: </span>{i}<span style="color: #e361c3;">"</span><span style="color: #a0586c;">)</span>
+    <span style="color: #C68EDE;">return</span> args<span style="color: #a0586c;">[</span>0<span style="color: #a0586c;">]</span> 
+
+<span style="color: #C68EDE;">return</span> fourPrint<span style="color: #a0586c;">(</span>0,1,2,3<span style="color: #a0586c;">)</span>
+
+</pre>
+</div></li>
+</ol>
+
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #C68EDE;">def</span> <span style="color: #fbaed2;">fourPrint</span><span style="color: #a0586c;">(</span>first,**kwargs<span style="color: #a0586c;">)</span>:
+    <span style="color: #fbaed2;">print</span><span style="color: #a0586c;">(</span>f<span style="color: #e361c3;">"first: </span>{first}<span style="color: #e361c3;">"</span><span style="color: #a0586c;">)</span>
+    <span style="color: #C68EDE;">for</span> key <span style="color: #C68EDE;">in</span> kwargs:
+        <span style="color: #fbaed2;">print</span><span style="color: #a0586c;">(</span>f<span style="color: #e361c3;">"and: </span>{kwargs[key]}<span style="color: #e361c3;">"</span><span style="color: #a0586c;">)</span>
+    <span style="color: #C68EDE;">return</span> kwargs<span style="color: #a0586c;">[</span>key<span style="color: #a0586c;">]</span>,key 
+
+<span style="color: #C68EDE;">return</span> fourPrint<span style="color: #a0586c;">(</span>first=0,second=1,third=2,fourth=3<span style="color: #a0586c;">)</span>
+
+</pre>
+</div>
+
+<p>
+还有一种情况，也可以使用这个trick。如下面的例子：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #9587DD; background-color: #372E40;">mytupe</span>=<span style="color: #a0586c;">(</span>1,2,3,4<span style="color: #a0586c;">)</span>
+<span style="color: #9587DD; background-color: #372E40;">mydict</span>=<span style="color: #a0586c;">{</span><span style="color: #e361c3;">"first"</span>:1,<span style="color: #e361c3;">"second"</span>:2,<span style="color: #e361c3;">"third"</span>:3,<span style="color: #e361c3;">"fourth"</span>:4<span style="color: #a0586c;">}</span>
+
+<span style="color: #C68EDE;">def</span> <span style="color: #fbaed2;">fourPrint</span><span style="color: #a0586c;">(</span>first,second,third,fourth<span style="color: #a0586c;">)</span>:
+    <span style="color: #fbaed2;">print</span><span style="color: #a0586c;">(</span>f<span style="color: #e361c3;">"first: </span>{first}<span style="color: #e361c3;">"</span><span style="color: #a0586c;">)</span>
+    <span style="color: #C68EDE;">return</span> fourth 
+
+<span style="color: #C68EDE;">return</span> <span style="color: #a0586c;">(</span>fourPrint<span style="color: #9d81ba;">(</span>*mytupe<span style="color: #9d81ba;">)</span>,fourPrint<span style="color: #9d81ba;">(</span>**mydict<span style="color: #9d81ba;">)</span><span style="color: #a0586c;">)</span>
+
+</pre>
+</div>
+
+
+
+<p>
+后续待整理……
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: Mon Dec  6 14:55:52 2021</p>
+<p class="author">Author: Zi Liang</p>
+<p class="date">Created: 2023-10-07 Sat 09:57</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

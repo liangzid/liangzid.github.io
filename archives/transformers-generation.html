@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2023-10-07 Sat 09:57 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>transformers源码分析之 生成函数（generation）</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">transformers源码分析之 生成函数（generation）</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org1e8cc9d">1. </a></li>
+</ul>
+</div>
+</div>
+<p>
+transformers做文本生成的基本思路是：封装一个包含了生成的所有流程的 <code>MixMin</code> 类，并默认让所有生成模型都继承这个类。
+</p>
+
+<p>
+在这个MixIn类中， <code>generate</code> 方法是总入口，使得用户可以通过调用generate来调用整个函数。
+</p>
+
+<p>
+一般而言，文本生成被认为存在四种结构，这四种结构分别由两类组成：模型是贪婪采样（即argmax）还是按照分布概率采样;模型是greedy search还是beam search。在进行NLG的约束时，主要的约束包括：
+</p>
+<ol class="org-ol">
+<li>logitsProcessor</li>
+<li>LogitsWarper</li>
+</ol>
+<p>
+二者的输入与输出格式差距不大。
+</p>
+<ol class="org-ol">
+<li>输入： 一个shape 为 （bs, msl）的input index;一个shape为（bs, vocab_len）的对nextoken的一个预测分布</li>
+<li>输出：一个新的分布</li>
+</ol>
+
+<p>
+Processor和Warper都旨在通过一些操作来对上述这个输入的distribution进行扭曲变动，最终返回一个新的分布。其实这二者没有太大的区别，唯一的区别可能是warper更多是一些连续的变形操作，而processor中常常样会有自动赋值等做法。
+</p>
+
+
+
+
+<div id="outline-container-org1e8cc9d" class="outline-2">
+<h2 id="org1e8cc9d"><span class="section-number-2">1.</span> </h2>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: Mon Oct  3 16:38:42 2022</p>
+<p class="author">Author: Zi Liang</p>
+<p class="date">Created: 2023-10-07 Sat 09:57</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

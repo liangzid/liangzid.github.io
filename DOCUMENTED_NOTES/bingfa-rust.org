@@ -1,0 +1,81 @@
+#+title: 【低质量】rust是如何适配并发的？
+#+date: Sat Nov 20 09:19:26 2021
+#+author: Zi Liang
+#+email: liangzid@stu.xjtu.edu.cn
+#+latex_class: elegantpaper
+#+filetags: rust:prog:sync
+
+* 什么是并发？
+  并发包括两个概念：并发（concurrent）和并行（parallel）。前者主要是指如何让程序的各个模块彼此独立的执行；而后者，主要指如何将多个程序同时执行。在rust中并不会对并发和并行进行特别清楚地区分。
+
+  
+* 处理并行、并发问题的计算机知识
+** 使用rust创建多线程
+   我们知道，一个正在执行的计算机程序一般就是一个进程，这个进程里可以包括很多个线程。
+   所以，我们可以在主线程里创建别的线程，也就是下面所示：
+
+
+   #+BEGIN_SRC rust
+     use std::thread;
+     use std::time::Duration;
+
+     fn main() {
+	 let handle = thread::spawn(|| {
+	     for i in 1..10 {
+		 println!("hi number {} from the spawned thread!", i);
+		 thread::sleep(Duration::from_millis(1));
+	     }
+	 });
+
+	 handle.join().unwrap();
+
+	 for i in 1..5 {
+	     println!("hi number {} from the main thread!", i);
+	     thread::sleep(Duration::from_millis(1));
+	 }
+     }
+   #+END_SRC
+   可以看出，thread::spawn就是用来创建新的线程的，而thead::sleep用来对这个定期做一个暂停，
+   而除此之外还有一行，handle.join(),这一行用来做线程阻断（blocking），也就是要求handle所对应的线程，
+   在这一行必须运行完成，如果不运行完成，程序就会在这里等待。
+
+   以上示例主要适用于新线程不需要和主线程做数据交换的情况。下面我们先来看一个最简单的例子，
+   用以介绍新线程如何借用主线程的数据：
+
+#+begin_src rust 
+   use std::thread;
+fn main() {
+    let v = vec![1, 2, 3];
+
+    let handle = thread::spawn(move || {
+        println!("Here's a vector: {:?}", v);
+    });
+
+    handle.join().unwrap();
+}
+#+end_src
+从这个示例中可以看出，我们可以通过move来获取v的ownership，而非通过引用。因为我们将v的所有权移到了新线程里，原始的main函数将不再拥有处理新线程的作用。这样可以规避什么风险呢？很简单：如果我们在新线程里删掉了v，那么主线程里使用v就会访问一片不存在的内存区域，从而可能引发问题。那我们再来看一看为什么我们不能把v的引用传入到新线程里。这其实涉及到悬垂引用的问题。如果我们把v的引用传入到新线程里，当我们的v在老线程里被处理掉了，新线程必然会出现通过引用访问一片不存在的内存区域的情况。
+
+以上两种情况，总结一下就是： *由于线程之间执行时间上的弱相关性，如果没有ownership或者强限制的引用，
+程序很容易会出现错误。rust尝试在编译时解决以上问题，因此会进行非常严格的检查* 。
+
+
+* 安全并发的若干解决方案
+
+** 消息传递：不要通过共享内存来通讯，而是通过通讯来共享内存
+
+
+   
+** 共享状态：
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,37 @@
+#+title: 在GPU上进行训练的一些指南
+* GPU数目决策及主GPU设置
+** 优势劣势比较
+   单GPU模式常常可以训练在多GPU上出现out of memory现象的代码。这可能是因为：无论是单GPU还是多GPU，
+   模型参数和数据集都需要加载在一个主GPU上（对应.to(device)操作），因此，多GPU或会对该主GPU产生更大的
+   负担，因此，当数据较大、内存不足时，使用单GPU反而比多GPU要好。
+** 单GPU模式指定主GPU
+   说出来可能不信，单GPU也要指定主GPU！不然就会加载到0号GPU上去。
+   十分简单。只需要定义cuda编号，然后将模型与数据加载上去。
+
+   #+BEGIN_SRC python
+     # set device
+     device = 'cuda:2' if args.cuda else 'cpu'
+     # set environment
+     os.environ["CUDA_VISIBLE_DEVICES"] = "2,3,4"
+     model.to(device)
+     data.to(device)
+   #+END_SRC
+** 多GPU模式使用与指定主GPU
+   多GPU主要是使用到了Parallel方法，此处展示一个示例：
+
+   #+BEGIN_SRC python
+     # set device
+     device = 'cuda:2' if args.cuda else 'cpu'
+
+     # args.device="2,3,4"
+
+     # set environment
+     os.environ["CUDA_VISIBLE_DEVICES"] =args.device
+     if args.cuda and torch.cuda.device_count() > 1:
+	     LOGGER.info("Let's use GPUs to train")
+	     model = DataParallel(model, device_ids=[int(i) for i in args.device.split(',')])
+	     multi_gpu = True
+     model.to(device)
+     data.to(device)
+   #+END_SRC
+  

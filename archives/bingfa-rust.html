@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2023-10-07 Sat 09:56 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>【低质量】rust是如何适配并发的？</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+</style>
+<link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">【低质量】rust是如何适配并发的？</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org67c19e0">1. 什么是并发？</a></li>
+<li><a href="#org40ca54b">2. 处理并行、并发问题的计算机知识</a>
+<ul>
+<li><a href="#org2d5af76">2.1. 使用rust创建多线程</a></li>
+</ul>
+</li>
+<li><a href="#org78164f6">3. 安全并发的若干解决方案</a>
+<ul>
+<li><a href="#org47a76de">3.1. 消息传递：不要通过共享内存来通讯，而是通过通讯来共享内存</a></li>
+<li><a href="#orgff35718">3.2. 共享状态：</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org67c19e0" class="outline-2">
+<h2 id="org67c19e0"><span class="section-number-2">1.</span> 什么是并发？</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+并发包括两个概念：并发（concurrent）和并行（parallel）。前者主要是指如何让程序的各个模块彼此独立的执行；而后者，主要指如何将多个程序同时执行。在rust中并不会对并发和并行进行特别清楚地区分。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org40ca54b" class="outline-2">
+<h2 id="org40ca54b"><span class="section-number-2">2.</span> 处理并行、并发问题的计算机知识</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org2d5af76" class="outline-3">
+<h3 id="org2d5af76"><span class="section-number-3">2.1.</span> 使用rust创建多线程</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+我们知道，一个正在执行的计算机程序一般就是一个进程，这个进程里可以包括很多个线程。
+所以，我们可以在主线程里创建别的线程，也就是下面所示：
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-rust"><span style="color: #C68EDE;">use</span> <span style="color: #738FD7;">std</span>::thread;
+<span style="color: #C68EDE;">use</span> <span style="color: #738FD7;">std</span>::<span style="color: #738FD7;">time</span>::<span style="color: #6bd9db;">Duration</span>;
+
+<span style="color: #C68EDE;">fn</span> <span style="color: #fbaed2;">main</span><span style="color: #a0586c;">()</span> <span style="color: #a0586c;">{</span>
+    <span style="color: #C68EDE;">let</span> <span style="color: #9587DD; background-color: #372E40;">handle</span> = <span style="color: #738FD7;">thread</span>::spawn<span style="color: #9d81ba;">(</span>|| <span style="color: #9587DD;">{</span>
+        <span style="color: #C68EDE;">for</span> <span style="color: #9587DD; background-color: #372E40;">i</span> <span style="color: #C68EDE;">in</span> 1..10 <span style="color: #C68EDE;">{</span>
+            <span style="color: #fbaed2;">println!</span><span style="color: #80bcb6;">(</span><span style="color: #e361c3;">"hi number </span><span style="color: #e361c3; font-style: italic;">{}</span><span style="color: #e361c3;"> from the spawned thread!"</span>, i<span style="color: #80bcb6;">)</span>;
+            <span style="color: #738FD7;">thread</span>::sleep<span style="color: #80bcb6;">(</span><span style="color: #6bd9db;">Duration</span>::from_millis<span style="color: #738FD7;">(</span>1<span style="color: #738FD7;">)</span><span style="color: #80bcb6;">)</span>;
+        <span style="color: #C68EDE;">}</span>
+    <span style="color: #9587DD;">}</span><span style="color: #9d81ba;">)</span>;
+
+    handle.join<span style="color: #9d81ba;">()</span>.unwrap<span style="color: #9d81ba;">()</span>;
+
+    <span style="color: #C68EDE;">for</span> <span style="color: #9587DD; background-color: #372E40;">i</span> <span style="color: #C68EDE;">in</span> 1..5 <span style="color: #9d81ba;">{</span>
+        <span style="color: #fbaed2;">println!</span><span style="color: #9587DD;">(</span><span style="color: #e361c3;">"hi number </span><span style="color: #e361c3; font-style: italic;">{}</span><span style="color: #e361c3;"> from the main thread!"</span>, i<span style="color: #9587DD;">)</span>;
+        <span style="color: #738FD7;">thread</span>::sleep<span style="color: #9587DD;">(</span><span style="color: #6bd9db;">Duration</span>::from_millis<span style="color: #C68EDE;">(</span>1<span style="color: #C68EDE;">)</span><span style="color: #9587DD;">)</span>;
+    <span style="color: #9d81ba;">}</span>
+<span style="color: #a0586c;">}</span>
+</pre>
+</div>
+<p>
+可以看出，thread::spawn就是用来创建新的线程的，而thead::sleep用来对这个定期做一个暂停，
+而除此之外还有一行，handle.join(),这一行用来做线程阻断（blocking），也就是要求handle所对应的线程，
+在这一行必须运行完成，如果不运行完成，程序就会在这里等待。
+</p>
+
+<p>
+以上示例主要适用于新线程不需要和主线程做数据交换的情况。下面我们先来看一个最简单的例子，
+用以介绍新线程如何借用主线程的数据：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-rust">   <span style="color: #C68EDE;">use</span> <span style="color: #738FD7;">std</span>::thread;
+<span style="color: #C68EDE;">fn</span> <span style="color: #fbaed2;">main</span><span style="color: #a0586c;">()</span> <span style="color: #a0586c;">{</span>
+    <span style="color: #C68EDE;">let</span> <span style="color: #9587DD; background-color: #372E40;">v</span> = <span style="color: #41b0f3;">vec!</span><span style="color: #9d81ba;">[</span>1, 2, 3<span style="color: #9d81ba;">]</span>;
+
+    <span style="color: #C68EDE;">let</span> <span style="color: #9587DD; background-color: #372E40;">handle</span> = <span style="color: #738FD7;">thread</span>::spawn<span style="color: #9d81ba;">(</span><span style="color: #C68EDE;">move</span> || <span style="color: #9587DD;">{</span>
+        <span style="color: #fbaed2;">println!</span><span style="color: #C68EDE;">(</span><span style="color: #e361c3;">"Here's a vector: </span><span style="color: #e361c3; font-style: italic;">{:?}</span><span style="color: #e361c3;">"</span>, v<span style="color: #C68EDE;">)</span>;
+    <span style="color: #9587DD;">}</span><span style="color: #9d81ba;">)</span>;
+
+    handle.join<span style="color: #9d81ba;">()</span>.unwrap<span style="color: #9d81ba;">()</span>;
+<span style="color: #a0586c;">}</span>
+</pre>
+</div>
+<p>
+从这个示例中可以看出，我们可以通过move来获取v的ownership，而非通过引用。因为我们将v的所有权移到了新线程里，原始的main函数将不再拥有处理新线程的作用。这样可以规避什么风险呢？很简单：如果我们在新线程里删掉了v，那么主线程里使用v就会访问一片不存在的内存区域，从而可能引发问题。那我们再来看一看为什么我们不能把v的引用传入到新线程里。这其实涉及到悬垂引用的问题。如果我们把v的引用传入到新线程里，当我们的v在老线程里被处理掉了，新线程必然会出现通过引用访问一片不存在的内存区域的情况。
+</p>
+
+<p>
+以上两种情况，总结一下就是： <b>由于线程之间执行时间上的弱相关性，如果没有ownership或者强限制的引用，
+程序很容易会出现错误。rust尝试在编译时解决以上问题，因此会进行非常严格的检查</b> 。
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org78164f6" class="outline-2">
+<h2 id="org78164f6"><span class="section-number-2">3.</span> 安全并发的若干解决方案</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org47a76de" class="outline-3">
+<h3 id="org47a76de"><span class="section-number-3">3.1.</span> 消息传递：不要通过共享内存来通讯，而是通过通讯来共享内存</h3>
+</div>
+
+
+
+<div id="outline-container-orgff35718" class="outline-3">
+<h3 id="orgff35718"><span class="section-number-3">3.2.</span> 共享状态：</h3>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: Sat Nov 20 09:19:26 2021</p>
+<p class="author">Author: Zi Liang</p>
+<p class="date">Created: 2023-10-07 Sat 09:56</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

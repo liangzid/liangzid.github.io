@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2023-10-07 Sat 09:57 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>C++中template模板的学习</title>
+<meta name="author" content="LiangZi" />
+<meta name="generator" content="Org Mode" />
+<link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">C++中template模板的学习</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org4920076">1. 模板的定义</a>
+<ul>
+<li><a href="#org2d76af9">1.1. 函数模板</a>
+<ul>
+<li><a href="#orge2b2641">1.1.1. 基本的函数模板定义与调用形式</a></li>
+<li><a href="#orgd52c32d">1.1.2. 函数模板的参数问题(类型参数与非类型参数)</a></li>
+</ul>
+</li>
+<li><a href="#orga70e184">1.2. 类模板</a></li>
+</ul>
+</li>
+<li><a href="#org12a554d">2. <span class="todo TODO">TODO</span> 模板的实参推断</a></li>
+<li><a href="#org43aa42d">3. <span class="todo TODO">TODO</span> 重载与模板</a></li>
+<li><a href="#org2330f10">4. <span class="todo TODO">TODO</span> 模板的特例化</a></li>
+</ul>
+</div>
+</div>
+<p>
+今天遇到了一些学习C++的困难,主要在于,如何去使用template.
+</p>
+
+<p>
+primer中说:"一个模板就是一个创建类或函数的蓝图(公式)".
+</p>
+<div id="outline-container-org4920076" class="outline-2">
+<h2 id="org4920076"><span class="section-number-2">1.</span> 模板的定义</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+模板的灵活性,多是体现在"对类型的推断上".比如,针对一个比较两个数谁大谁小的函数,我们哪里知道这两个数是什么类型的呢?因此可以用到模板.
+</p>
+</div>
+
+<div id="outline-container-org2d76af9" class="outline-3">
+<h3 id="org2d76af9"><span class="section-number-3">1.1.</span> 函数模板</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="outline-container-orge2b2641" class="outline-4">
+<h4 id="orge2b2641"><span class="section-number-4">1.1.1.</span> 基本的函数模板定义与调用形式</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+顾名思义,就是通过一个固定的架构来生成一堆函数.
+比如刚刚提到的:
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #C68EDE;">template</span><span style="color: #a0586c;">&lt;</span><span style="color: #C68EDE;">typename</span> <span style="color: #6bd9db;">T</span><span style="color: #a0586c;">&gt;</span>
+<span style="color: #6bd9db;">int</span> <span style="color: #fbaed2;">compare</span><span style="color: #a0586c;">(</span><span style="color: #C68EDE;">const</span> <span style="color: #6bd9db;">T</span> &amp;<span style="color: #9587DD; background-color: #372E40;">a</span>, <span style="color: #C68EDE;">const</span> <span style="color: #6bd9db;">T</span> &amp;<span style="color: #9587DD; background-color: #372E40;">b</span><span style="color: #a0586c;">){</span>
+  <span style="color: #C68EDE;">if</span> <span style="color: #9d81ba;">(</span>a&lt;b<span style="color: #9d81ba;">)</span> <span style="color: #C68EDE;">return</span> -1;
+  <span style="color: #C68EDE;">if</span> <span style="color: #9d81ba;">(</span>a&gt;b<span style="color: #9d81ba;">)</span> <span style="color: #C68EDE;">return</span> +1;
+  <span style="color: #C68EDE;">return</span> 0;
+<span style="color: #a0586c;">}</span>
+</pre>
+</div>
+<p>
+只要记住这个基本的格式就行了.在实际使用的时候,只需要调用这样一个template,比如
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #6bd9db;">int</span> <span style="color: #9587DD; background-color: #372E40;">a</span>=1;
+<span style="color: #6bd9db;">int</span> <span style="color: #9587DD; background-color: #372E40;">b</span>=0;
+<span style="color: #6bd9db;">int</span> <span style="color: #9587DD; background-color: #372E40;">c</span>;
+c=compare<span style="color: #a0586c;">(</span>a,b<span style="color: #a0586c;">)</span>
+</pre>
+</div>
+<p>
+就可以直接调用了.剩下的活全部都交给了编译器,是不是非常简单.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd52c32d" class="outline-4">
+<h4 id="orgd52c32d"><span class="section-number-4">1.1.2.</span> 函数模板的参数问题(类型参数与非类型参数)</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<ol class="org-ol">
+<li>类型参数. 类型参数就是单指对"对象"的"类型"进行确定的参数.每一个类型参数前面都需要加一个"typename",或者"class".这样被定义的类型一般可以被使用在函数的任何地方.</li>
+<li><p>
+非类型参数. 非类型参数的定义,都会使用固定的,已知的类型.比如下面的代码
+</p>
+
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #7A6884;">//</span><span style="color: #7A6884; font-style: italic;">&#19979;&#38754;&#30340;T,A&#26159;&#31867;&#22411;&#21442;&#25968;,m,n&#26159;&#38750;&#31867;&#22411;&#21442;&#25968;.</span>
+<span style="color: #C68EDE;">template</span><span style="color: #a0586c;">&lt;</span><span style="color: #C68EDE;">typename</span> <span style="color: #6bd9db;">T</span>, <span style="color: #C68EDE;">class</span> <span style="color: #6bd9db;">A</span>, <span style="color: #6bd9db;">unsigned</span> <span style="color: #6bd9db;">int</span> <span style="color: #9587DD; background-color: #372E40;">m</span>, <span style="color: #6bd9db;">unsigned</span> <span style="color: #6bd9db;">int</span> <span style="color: #9587DD; background-color: #372E40;">n</span><span style="color: #a0586c;">&gt;</span>
+<span style="color: #6bd9db;">int</span> <span style="color: #fbaed2;">concat</span><span style="color: #a0586c;">(</span><span style="color: #C68EDE;">const</span> <span style="color: #6bd9db;">T</span> &amp;<span style="color: #9587DD; background-color: #372E40;">a</span><span style="color: #9d81ba;">[</span>m<span style="color: #9d81ba;">]</span>, <span style="color: #C68EDE;">const</span> <span style="color: #6bd9db;">T</span> &amp;<span style="color: #9587DD; background-color: #372E40;">b</span><span style="color: #9d81ba;">[</span>n<span style="color: #9d81ba;">]</span>, <span style="color: #C68EDE;">const</span> <span style="color: #6bd9db;">A</span> <span style="color: #9587DD; background-color: #372E40;">c</span><span style="color: #a0586c;">)</span>
+<span style="color: #a0586c;">{</span>
+  something;
+  <span style="color: #C68EDE;">return</span> 0
+<span style="color: #a0586c;">}</span>
+#+BEGIN_SRC C++
+
+</pre>
+</div></li>
+</ol>
+<p>
+一般来说,模板在头文件里,既包含声明,也包含定义.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga70e184" class="outline-3">
+<h3 id="orga70e184"><span class="section-number-3">1.2.</span> 类模板</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+与函数模板不同,类模板自定义的类型参数无法通过编译器的推理获得.因此,类模板需要提供额外的参数信息.下面是一个关于类模板的简单示例.
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #C68EDE;">template</span><span style="color: #a0586c;">&lt;</span><span style="color: #C68EDE;">typename</span> <span style="color: #6bd9db;">T</span><span style="color: #a0586c;">&gt;</span> <span style="color: #C68EDE;">class</span> <span style="color: #6bd9db;">Blob</span><span style="color: #a0586c;">{</span>
+<span style="color: #C68EDE;">public</span>:
+  <span style="color: #C68EDE;">typedef</span> <span style="color: #6bd9db;">T</span> <span style="color: #6bd9db;">value_type</span>;
+  <span style="color: #C68EDE;">typedef</span> <span style="color: #6bd9db;">T</span> <span style="color: #738FD7;">std</span>::<span style="color: #738FD7;">vector</span><span style="color: #9d81ba;">&lt;</span><span style="color: #6bd9db;">T</span><span style="color: #9d81ba;">&gt;</span>::<span style="color: #6bd9db;">size_type</span> <span style="color: #6bd9db;">size_type</span>;
+
+  <span style="color: #7A6884;">//</span><span style="color: #7A6884; font-style: italic;">constrcution function</span>
+  <span style="color: #fbaed2;">Blob</span><span style="color: #9d81ba;">()</span>;
+  <span style="color: #fbaed2;">Blob</span><span style="color: #9d81ba;">(</span><span style="color: #738FD7;">std</span>::<span style="color: #6bd9db;">initializer_list</span><span style="color: #9587DD;">&lt;</span><span style="color: #6bd9db;">T</span><span style="color: #9587DD;">&gt;</span> <span style="color: #9587DD; background-color: #372E40;">il</span><span style="color: #9d81ba;">)</span>;
+  <span style="color: #6bd9db;">size_type</span> <span style="color: #fbaed2;">size</span><span style="color: #9d81ba;">()</span> <span style="color: #C68EDE;">const</span> <span style="color: #9d81ba;">{</span>
+    <span style="color: #C68EDE;">return</span> data-&gt;size<span style="color: #9587DD;">()</span>;
+  <span style="color: #9d81ba;">}</span>
+  <span style="color: #6bd9db;">bool</span> <span style="color: #fbaed2;">empty</span><span style="color: #9d81ba;">()</span> <span style="color: #C68EDE;">const</span> <span style="color: #9d81ba;">{</span>
+    <span style="color: #C68EDE;">return</span> data-&gt;empty<span style="color: #9587DD;">()</span>;
+  <span style="color: #9d81ba;">}</span>
+  <span style="color: #6bd9db;">void</span> <span style="color: #fbaed2;">push_back</span><span style="color: #9d81ba;">(</span><span style="color: #C68EDE;">const</span> <span style="color: #6bd9db;">T</span> &amp;<span style="color: #9587DD; background-color: #372E40;">t</span><span style="color: #9d81ba;">){</span>
+    data-&gt;push_back<span style="color: #9587DD;">(</span>t<span style="color: #9587DD;">)</span>;
+  <span style="color: #9d81ba;">}</span>
+  <span style="color: #6bd9db;">void</span> <span style="color: #fbaed2;">push_back</span><span style="color: #9d81ba;">(</span><span style="color: #6bd9db;">T</span> &amp;&amp;<span style="color: #9587DD; background-color: #372E40;">t</span><span style="color: #9d81ba;">){</span>
+    data-&gt;push_back<span style="color: #9587DD;">(</span><span style="color: #738FD7;">std</span>::<span style="color: #6bd9db;">mouve</span><span style="color: #C68EDE;">(</span><span style="color: #9587DD; background-color: #372E40;">t</span><span style="color: #C68EDE;">)</span><span style="color: #9587DD;">)</span>;
+  <span style="color: #9d81ba;">}</span>
+  <span style="color: #6bd9db;">void</span> <span style="color: #fbaed2;">pop_back</span><span style="color: #9d81ba;">()</span>;
+
+  <span style="color: #7A6884;">//</span><span style="color: #7A6884; font-style: italic;">&#20803;&#32032;&#35775;&#38382;</span>
+  <span style="color: #6bd9db;">T</span> &amp; <span style="color: #fbaed2;">back</span><span style="color: #9d81ba;">()</span>;
+  <span style="color: #6bd9db;">T</span> &amp; <span style="color: #C68EDE;">operator</span><span style="color: #9d81ba;">[]</span><span style="color: #9d81ba;">(</span><span style="color: #6bd9db;">size_type</span> <span style="color: #9587DD; background-color: #372E40;">i</span><span style="color: #9d81ba;">)</span>;;
+<span style="color: #C68EDE;">private</span>:
+  <span style="color: #738FD7;">std</span>::<span style="color: #6bd9db;">shared_ptr</span><span style="color: #9d81ba;">&lt;</span><span style="color: #738FD7;">std</span>::<span style="color: #6bd9db;">vector</span><span style="color: #9587DD;">&lt;</span><span style="color: #6bd9db;">T</span><span style="color: #9587DD;">&gt;</span><span style="color: #9d81ba;">&gt;</span><span style="color: #9587DD; background-color: #372E40;">data</span>;
+<span style="color: #a0586c;">}</span>
+</pre>
+</div>
+
+<p>
+先不去纠结这个类究竟有何意义,我们直接看一下如何调用之.
+啊,非常简单:
+</p>
+<div class="org-src-container">
+<pre class="src src-C++"><span style="color: #6bd9db;">Blob</span><span style="color: #a0586c;">&lt;</span><span style="color: #6bd9db;">int</span><span style="color: #a0586c;">&gt;</span> <span style="color: #9587DD; background-color: #372E40;">ia</span>;
+<span style="color: #6bd9db;">Blob</span><span style="color: #a0586c;">&lt;</span><span style="color: #6bd9db;">int</span><span style="color: #a0586c;">&gt;</span><span style="color: #9587DD; background-color: #372E40;">ia1</span>=<span style="color: #a0586c;">{</span>0,1,2,3,4<span style="color: #a0586c;">}</span>;
+</pre>
+</div>
+<p>
+总之,单纯使用一个尖括号进行调用就可以了.
+</p>
+
+<p>
+好了,不先往下看,要去和hnswlib对线了!
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org12a554d" class="outline-2">
+<h2 id="org12a554d"><span class="section-number-2">2.</span> <span class="todo TODO">TODO</span> 模板的实参推断</h2>
+</div>
+<div id="outline-container-org43aa42d" class="outline-2">
+<h2 id="org43aa42d"><span class="section-number-2">3.</span> <span class="todo TODO">TODO</span> 重载与模板</h2>
+</div>
+<div id="outline-container-org2330f10" class="outline-2">
+<h2 id="org2330f10"><span class="section-number-2">4.</span> <span class="todo TODO">TODO</span> 模板的特例化</h2>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: LiangZi</p>
+<p class="date">Created: 2023-10-07 Sat 09:57</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
