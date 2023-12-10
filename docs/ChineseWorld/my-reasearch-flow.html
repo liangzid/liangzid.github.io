@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2023-12-10 日 22:25 -->
+<!-- 2023-12-10 日 22:47 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>我的科研实验工作流</title>
 <meta name="author" content="Zi Liang" />
 <meta name="generator" content="Org Mode" />
-<link rel='stylesheet' type='text/css' href='https://liangzid.github.org/orgcss/org.css'/>
+<link rel='stylesheet' type='text/css' href='https://liangzid.github.io/orgcss/org.css'/>
 </head>
 <body>
 <div id="content" class="content">
@@ -16,9 +16,9 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orga3075f5">1. 远程连接</a></li>
-<li><a href="#org3b70b3a">2. 在后台运行当前buffer</a></li>
-<li><a href="#org645f5f4">3. 其他操作</a></li>
+<li><a href="#orga4983b0">1. 远程连接</a></li>
+<li><a href="#org01704de">2. 在后台运行当前buffer</a></li>
+<li><a href="#org072fc38">3. 其他操作</a></li>
 </ul>
 </div>
 </div>
@@ -55,27 +55,27 @@ shell脚本，需要通过shell脚本来批量化进行实验；
 </ol>
 
 
-<div id="outline-container-orga3075f5" class="outline-2">
-<h2 id="orga3075f5"><span class="section-number-2">1.</span> 远程连接</h2>
+<div id="outline-container-orga4983b0" class="outline-2">
+<h2 id="orga4983b0"><span class="section-number-2">1.</span> 远程连接</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 可通过emacs的tramp实现，tramp是一个用起来挺不错的ssh工具，你甚至可以写一个简单的函数来管理你的服务器，然后把他绑定到对应的数字上。比如下面的配置：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #727072; font-style: italic;">;; </span><span style="color: #727072; font-style: italic;">add function</span>
-<span style="color: #AB9DF2;">(</span><span style="color: #FF6188;">defun</span> <span style="color: #A9DC76;">ssh-connect-41</span> <span style="color: #78DCE8;">()</span>
-  <span style="color: #78DCE8;">(</span><span style="color: #FF6188;">interactive</span><span style="color: #78DCE8;">)</span>
-  <span style="color: #78DCE8;">(</span>counsel-find-file <span style="color: #FFD866;">"/ssh:username@xxx.xxx.xxx.41:/home/username/myfilepath"</span><span style="color: #78DCE8;">)</span>
-  <span style="color: #AB9DF2;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #503F65; font-style: italic;">;; </span><span style="color: #503F65; font-style: italic;">add function</span>
+<span style="color: #51afef;">(</span><span style="color: #9783b1;">defun</span> <span style="color: #51afef;">ssh-connect-41</span> <span style="color: #98be65;">()</span>
+  <span style="color: #98be65;">(</span><span style="color: #9783b1;">interactive</span><span style="color: #98be65;">)</span>
+  <span style="color: #98be65;">(</span>counsel-find-file <span style="color: #98be65;">"/ssh:username@xxx.xxx.xxx.41:/home/username/myfilepath"</span><span style="color: #98be65;">)</span>
+  <span style="color: #51afef;">)</span>
 
-<span style="color: #AB9DF2;">(</span><span style="color: #FF6188;">general-create-definer</span> my-space-leader-def
-  <span style="color: #78DCE8;">:prefix</span> <span style="color: #FFD866;">"SPC"</span>
-  <span style="color: #78DCE8;">:states</span> '<span style="color: #78DCE8;">(</span>normal visual<span style="color: #78DCE8;">)</span><span style="color: #AB9DF2;">)</span>
+<span style="color: #51afef;">(</span><span style="color: #9783b1;">general-create-definer</span> my-space-leader-def
+  <span style="color: #7A619A;">:prefix</span> <span style="color: #98be65;">"SPC"</span>
+  <span style="color: #7A619A;">:states</span> '<span style="color: #98be65;">(</span>normal visual<span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
 
-<span style="color: #AB9DF2;">(</span><span style="color: #FF6188;">my-space-leader-def</span>
- <span style="color: #FFD866;">"41"</span> 'ssh-connect-41
-<span style="color: #AB9DF2;">)</span>
+<span style="color: #51afef;">(</span><span style="color: #9783b1;">my-space-leader-def</span>
+ <span style="color: #98be65;">"41"</span> 'ssh-connect-41
+<span style="color: #51afef;">)</span>
 </pre>
 </div>
 </div>
@@ -85,59 +85,59 @@ shell脚本，需要通过shell脚本来批量化进行实验；
 
 
 
-<div id="outline-container-org3b70b3a" class="outline-2">
-<h2 id="org3b70b3a"><span class="section-number-2">2.</span> 在后台运行当前buffer</h2>
+<div id="outline-container-org01704de" class="outline-2">
+<h2 id="org01704de"><span class="section-number-2">2.</span> 在后台运行当前buffer</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">
-<span style="color: #AB9DF2;">(</span><span style="color: #FF6188;">defun</span> <span style="color: #A9DC76;">lz/running-current-bash-with-nohup</span> <span style="color: #78DCE8;">()</span>
-  <span style="color: #78DCE8;">(</span><span style="color: #FF6188;">interactive</span><span style="color: #78DCE8;">)</span>
-  <span style="color: #78DCE8;">(</span><span style="color: #FF6188;">let*</span> <span style="color: #FC9867;">(</span><span style="color: #A9DC76;">(</span>buffer-name <span style="color: #AB9DF2;">(</span>buffer-name<span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>filepath <span style="color: #AB9DF2;">(</span>buffer-file-name<span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>current-day-time <span style="color: #AB9DF2;">(</span>format-time-string <span style="color: #FFD866;">"%F_%A_%T"</span><span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>filename <span style="color: #AB9DF2;">(</span>concat <span style="color: #FFD866;">"running_"</span> <span style="color: #FFD866;">(</span>s-replace <span style="color: #FFD866;">".sh"</span> <span style="color: #FFD866;">""</span> buffer-name<span style="color: #FFD866;">)</span><span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>directory-path <span style="color: #AB9DF2;">(</span>nth 0<span style="color: #FFD866;">(</span>split-string filepath buffer-name<span style="color: #FFD866;">)</span><span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>running-string <span style="color: #AB9DF2;">(</span>concat <span style="color: #FFD866;">"nohup bash "</span> buffer-name <span style="color: #FFD866;">"&gt; "</span>
-                                 current-day-time <span style="color: #FFD866;">"-"</span> filename <span style="color: #FFD866;">".log &amp;"</span><span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>default-directory directory-path<span style="color: #A9DC76;">)</span><span style="color: #FC9867;">)</span>
+<span style="color: #51afef;">(</span><span style="color: #9783b1;">defun</span> <span style="color: #51afef;">lz/running-current-bash-with-nohup</span> <span style="color: #98be65;">()</span>
+  <span style="color: #98be65;">(</span><span style="color: #9783b1;">interactive</span><span style="color: #98be65;">)</span>
+  <span style="color: #98be65;">(</span><span style="color: #9783b1;">let*</span> <span style="color: #da8548;">(</span><span style="color: #51afef;">(</span>buffer-name <span style="color: #98be65;">(</span>buffer-name<span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>filepath <span style="color: #98be65;">(</span>buffer-file-name<span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>current-day-time <span style="color: #98be65;">(</span>format-time-string <span style="color: #98be65;">"%F_%A_%T"</span><span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>filename <span style="color: #98be65;">(</span>concat <span style="color: #98be65;">"running_"</span> <span style="color: #ff6c6b;">(</span>s-replace <span style="color: #98be65;">".sh"</span> <span style="color: #98be65;">""</span> buffer-name<span style="color: #ff6c6b;">)</span><span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>directory-path <span style="color: #98be65;">(</span>nth 0<span style="color: #ff6c6b;">(</span>split-string filepath buffer-name<span style="color: #ff6c6b;">)</span><span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>running-string <span style="color: #98be65;">(</span>concat <span style="color: #98be65;">"nohup bash "</span> buffer-name <span style="color: #98be65;">"&gt; "</span>
+                                 current-day-time <span style="color: #98be65;">"-"</span> filename <span style="color: #98be65;">".log &amp;"</span><span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>default-directory directory-path<span style="color: #51afef;">)</span><span style="color: #da8548;">)</span>
 
-    <span style="color: #FC9867;">(</span>shell-command running-string<span style="color: #FC9867;">)</span><span style="color: #78DCE8;">)</span>
-  <span style="color: #AB9DF2;">)</span>
+    <span style="color: #da8548;">(</span>shell-command running-string<span style="color: #da8548;">)</span><span style="color: #98be65;">)</span>
+  <span style="color: #51afef;">)</span>
 
-<span style="color: #AB9DF2;">(</span><span style="color: #FF6188;">defun</span> <span style="color: #A9DC76;">lz/running-current-python-with-nohup</span> <span style="color: #78DCE8;">()</span>
-  <span style="color: #78DCE8;">(</span><span style="color: #FF6188;">interactive</span><span style="color: #78DCE8;">)</span>
-  <span style="color: #78DCE8;">(</span><span style="color: #FF6188;">let*</span> <span style="color: #FC9867;">(</span><span style="color: #A9DC76;">(</span>buffer-name <span style="color: #AB9DF2;">(</span>buffer-name<span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>filepath <span style="color: #AB9DF2;">(</span>buffer-file-name<span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>current-day-time <span style="color: #AB9DF2;">(</span>format-time-string <span style="color: #FFD866;">"%F"</span><span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>filename <span style="color: #AB9DF2;">(</span>concat <span style="color: #FFD866;">"running_"</span> <span style="color: #FFD866;">(</span>s-replace <span style="color: #FFD866;">".sh"</span> <span style="color: #FFD866;">""</span> buffer-name<span style="color: #FFD866;">)</span><span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>directory-path <span style="color: #AB9DF2;">(</span>nth 0<span style="color: #FFD866;">(</span>split-string filepath buffer-name<span style="color: #FFD866;">)</span><span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>running-string <span style="color: #AB9DF2;">(</span>concat <span style="color: #FFD866;">"nohup python "</span> buffer-name <span style="color: #FFD866;">"&gt; "</span>
-                                 current-day-time <span style="color: #FFD866;">"-"</span> filename <span style="color: #FFD866;">".log &amp;"</span><span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>default-directory directory-path<span style="color: #A9DC76;">)</span><span style="color: #FC9867;">)</span>
+<span style="color: #51afef;">(</span><span style="color: #9783b1;">defun</span> <span style="color: #51afef;">lz/running-current-python-with-nohup</span> <span style="color: #98be65;">()</span>
+  <span style="color: #98be65;">(</span><span style="color: #9783b1;">interactive</span><span style="color: #98be65;">)</span>
+  <span style="color: #98be65;">(</span><span style="color: #9783b1;">let*</span> <span style="color: #da8548;">(</span><span style="color: #51afef;">(</span>buffer-name <span style="color: #98be65;">(</span>buffer-name<span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>filepath <span style="color: #98be65;">(</span>buffer-file-name<span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>current-day-time <span style="color: #98be65;">(</span>format-time-string <span style="color: #98be65;">"%F"</span><span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>filename <span style="color: #98be65;">(</span>concat <span style="color: #98be65;">"running_"</span> <span style="color: #ff6c6b;">(</span>s-replace <span style="color: #98be65;">".sh"</span> <span style="color: #98be65;">""</span> buffer-name<span style="color: #ff6c6b;">)</span><span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>directory-path <span style="color: #98be65;">(</span>nth 0<span style="color: #ff6c6b;">(</span>split-string filepath buffer-name<span style="color: #ff6c6b;">)</span><span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>running-string <span style="color: #98be65;">(</span>concat <span style="color: #98be65;">"nohup python "</span> buffer-name <span style="color: #98be65;">"&gt; "</span>
+                                 current-day-time <span style="color: #98be65;">"-"</span> filename <span style="color: #98be65;">".log &amp;"</span><span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>default-directory directory-path<span style="color: #51afef;">)</span><span style="color: #da8548;">)</span>
 
-    <span style="color: #FC9867;">(</span>shell-command running-string<span style="color: #FC9867;">)</span><span style="color: #78DCE8;">)</span>
-  <span style="color: #AB9DF2;">)</span>
+    <span style="color: #da8548;">(</span>shell-command running-string<span style="color: #da8548;">)</span><span style="color: #98be65;">)</span>
+  <span style="color: #51afef;">)</span>
 
-<span style="color: #AB9DF2;">(</span><span style="color: #FF6188;">defun</span> <span style="color: #A9DC76;">lz/running-current-python-with-nohup-env</span> <span style="color: #78DCE8;">()</span>
-  <span style="color: #78DCE8;">(</span><span style="color: #FF6188;">interactive</span><span style="color: #78DCE8;">)</span>
-  <span style="color: #78DCE8;">(</span><span style="color: #FF6188;">let*</span> <span style="color: #FC9867;">(</span><span style="color: #A9DC76;">(</span>buffer-name <span style="color: #AB9DF2;">(</span>buffer-name<span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>filepath <span style="color: #AB9DF2;">(</span>buffer-file-name<span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>current-day-time <span style="color: #AB9DF2;">(</span>format-time-string <span style="color: #FFD866;">"%F"</span><span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>filename <span style="color: #AB9DF2;">(</span>concat <span style="color: #FFD866;">"running_"</span> <span style="color: #FFD866;">(</span>s-replace <span style="color: #FFD866;">".sh"</span> <span style="color: #FFD866;">""</span> buffer-name<span style="color: #FFD866;">)</span><span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>directory-path <span style="color: #AB9DF2;">(</span>nth 0<span style="color: #FFD866;">(</span>split-string filepath buffer-name<span style="color: #FFD866;">)</span><span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>running-string <span style="color: #AB9DF2;">(</span>concat <span style="color: #FFD866;">"nohup python "</span> buffer-name <span style="color: #FFD866;">"&gt; "</span>
-                                 current-day-time <span style="color: #FFD866;">"-"</span> filename <span style="color: #FFD866;">".log &amp;"</span><span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>default-directory directory-path<span style="color: #A9DC76;">)</span><span style="color: #FC9867;">)</span>
+<span style="color: #51afef;">(</span><span style="color: #9783b1;">defun</span> <span style="color: #51afef;">lz/running-current-python-with-nohup-env</span> <span style="color: #98be65;">()</span>
+  <span style="color: #98be65;">(</span><span style="color: #9783b1;">interactive</span><span style="color: #98be65;">)</span>
+  <span style="color: #98be65;">(</span><span style="color: #9783b1;">let*</span> <span style="color: #da8548;">(</span><span style="color: #51afef;">(</span>buffer-name <span style="color: #98be65;">(</span>buffer-name<span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>filepath <span style="color: #98be65;">(</span>buffer-file-name<span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>current-day-time <span style="color: #98be65;">(</span>format-time-string <span style="color: #98be65;">"%F"</span><span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>filename <span style="color: #98be65;">(</span>concat <span style="color: #98be65;">"running_"</span> <span style="color: #ff6c6b;">(</span>s-replace <span style="color: #98be65;">".sh"</span> <span style="color: #98be65;">""</span> buffer-name<span style="color: #ff6c6b;">)</span><span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>directory-path <span style="color: #98be65;">(</span>nth 0<span style="color: #ff6c6b;">(</span>split-string filepath buffer-name<span style="color: #ff6c6b;">)</span><span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>running-string <span style="color: #98be65;">(</span>concat <span style="color: #98be65;">"nohup python "</span> buffer-name <span style="color: #98be65;">"&gt; "</span>
+                                 current-day-time <span style="color: #98be65;">"-"</span> filename <span style="color: #98be65;">".log &amp;"</span><span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>default-directory directory-path<span style="color: #51afef;">)</span><span style="color: #da8548;">)</span>
 
-    <span style="color: #FC9867;">(</span><span style="color: #FF6188;">setq</span> envname <span style="color: #A9DC76;">(</span>read-from-minibuffer <span style="color: #FFD866;">"running environment? Ans:"</span><span style="color: #A9DC76;">)</span><span style="color: #FC9867;">)</span>
-    <span style="color: #FC9867;">(</span><span style="color: #FF6188;">setq</span> full-string <span style="color: #A9DC76;">(</span>concat
-                       <span style="color: #AB9DF2;">(</span>concat <span style="color: #FFD866;">"export python=~/anaconda3/envs/"</span>
-                               envname <span style="color: #FFD866;">"/bin/python \n"</span><span style="color: #AB9DF2;">)</span>
-                       <span style="color: #FFD866;">"nohup $python "</span> buffer-name <span style="color: #FFD866;">"&gt; "</span>
-                       current-day-time <span style="color: #FFD866;">"-"</span> filename <span style="color: #FFD866;">".log &amp;"</span><span style="color: #A9DC76;">)</span><span style="color: #FC9867;">)</span>
+    <span style="color: #da8548;">(</span><span style="color: #9783b1;">setq</span> envname <span style="color: #51afef;">(</span>read-from-minibuffer <span style="color: #98be65;">"running environment? Ans:"</span><span style="color: #51afef;">)</span><span style="color: #da8548;">)</span>
+    <span style="color: #da8548;">(</span><span style="color: #9783b1;">setq</span> full-string <span style="color: #51afef;">(</span>concat
+                       <span style="color: #98be65;">(</span>concat <span style="color: #98be65;">"export python=~/anaconda3/envs/"</span>
+                               envname <span style="color: #98be65;">"/bin/python \n"</span><span style="color: #98be65;">)</span>
+                       <span style="color: #98be65;">"nohup $python "</span> buffer-name <span style="color: #98be65;">"&gt; "</span>
+                       current-day-time <span style="color: #98be65;">"-"</span> filename <span style="color: #98be65;">".log &amp;"</span><span style="color: #51afef;">)</span><span style="color: #da8548;">)</span>
 
-    <span style="color: #FC9867;">(</span>shell-command <span style="color: #A9DC76;">(</span>format <span style="color: #FFD866;">"bash -c %s"</span> <span style="color: #AB9DF2;">(</span>shell-quote-argument full-string<span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span><span style="color: #FC9867;">)</span><span style="color: #78DCE8;">)</span>
-  <span style="color: #AB9DF2;">)</span>
+    <span style="color: #da8548;">(</span>shell-command <span style="color: #51afef;">(</span>format <span style="color: #98be65;">"bash -c %s"</span> <span style="color: #98be65;">(</span>shell-quote-argument full-string<span style="color: #98be65;">)</span><span style="color: #51afef;">)</span><span style="color: #da8548;">)</span><span style="color: #98be65;">)</span>
+  <span style="color: #51afef;">)</span>
 </pre>
 </div>
 
@@ -146,15 +146,15 @@ shell脚本，需要通过shell脚本来批量化进行实验；
 </p>
 
 
-<div id="org35cfb4a" class="figure">
+<div id="orgc2288cc" class="figure">
 <p><img src="./images/screenshot_20220124_163737.png" alt="screenshot_20220124_163737.png">
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org645f5f4" class="outline-2">
-<h2 id="org645f5f4"><span class="section-number-2">3.</span> 其他操作</h2>
+<div id="outline-container-org072fc38" class="outline-2">
+<h2 id="org072fc38"><span class="section-number-2">3.</span> 其他操作</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 主要涉及到两个部分，一个是关注一下GPU有没有人在用（或者或哪一个没有人用），第二个是通过查看tensorboard的情况来调试超参数。
@@ -165,35 +165,35 @@ shell脚本，需要通过shell脚本来批量化进行实验；
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #727072; font-style: italic;">;; </span><span style="color: #727072; font-style: italic;">tensorboard configuration.</span>
+<pre class="src src-emacs-lisp"><span style="color: #503F65; font-style: italic;">;; </span><span style="color: #503F65; font-style: italic;">tensorboard configuration.</span>
 
-<span style="color: #AB9DF2;">(</span><span style="color: #FF6188;">defun</span> <span style="color: #A9DC76;">lz/open-tensorboard-in-current-buffer</span><span style="color: #78DCE8;">()</span>
-  <span style="color: #78DCE8;">(</span><span style="color: #FF6188;">interactive</span><span style="color: #78DCE8;">)</span>
+<span style="color: #51afef;">(</span><span style="color: #9783b1;">defun</span> <span style="color: #51afef;">lz/open-tensorboard-in-current-buffer</span><span style="color: #98be65;">()</span>
+  <span style="color: #98be65;">(</span><span style="color: #9783b1;">interactive</span><span style="color: #98be65;">)</span>
 
-  <span style="color: #78DCE8;">(</span><span style="color: #FF6188;">let*</span> <span style="color: #FC9867;">(</span><span style="color: #A9DC76;">(</span>buffer-name <span style="color: #AB9DF2;">(</span>buffer-name<span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>filepath <span style="color: #AB9DF2;">(</span>buffer-file-name<span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>current-day-time <span style="color: #AB9DF2;">(</span>format-time-string <span style="color: #FFD866;">"%F"</span><span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>directory-path <span style="color: #AB9DF2;">(</span>nth 0<span style="color: #FFD866;">(</span>split-string filepath buffer-name<span style="color: #FFD866;">)</span><span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>default-directory directory-path<span style="color: #A9DC76;">)</span>
-         <span style="color: #A9DC76;">(</span>host <span style="color: #AB9DF2;">(</span>nth 0 <span style="color: #FFD866;">(</span>split-string <span style="color: #78DCE8;">(</span>nth 1 <span style="color: #A9DC76;">(</span>split-string filepath <span style="color: #FFD866;">"@"</span><span style="color: #A9DC76;">)</span><span style="color: #78DCE8;">)</span> <span style="color: #FFD866;">":"</span><span style="color: #FFD866;">)</span><span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span><span style="color: #FC9867;">)</span>
+  <span style="color: #98be65;">(</span><span style="color: #9783b1;">let*</span> <span style="color: #da8548;">(</span><span style="color: #51afef;">(</span>buffer-name <span style="color: #98be65;">(</span>buffer-name<span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>filepath <span style="color: #98be65;">(</span>buffer-file-name<span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>current-day-time <span style="color: #98be65;">(</span>format-time-string <span style="color: #98be65;">"%F"</span><span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>directory-path <span style="color: #98be65;">(</span>nth 0<span style="color: #ff6c6b;">(</span>split-string filepath buffer-name<span style="color: #ff6c6b;">)</span><span style="color: #98be65;">)</span><span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>default-directory directory-path<span style="color: #51afef;">)</span>
+         <span style="color: #51afef;">(</span>host <span style="color: #98be65;">(</span>nth 0 <span style="color: #ff6c6b;">(</span>split-string <span style="color: #7dcfff;">(</span>nth 1 <span style="color: #1abc9c;">(</span>split-string filepath <span style="color: #98be65;">"@"</span><span style="color: #1abc9c;">)</span><span style="color: #7dcfff;">)</span> <span style="color: #98be65;">":"</span><span style="color: #ff6c6b;">)</span><span style="color: #98be65;">)</span><span style="color: #51afef;">)</span><span style="color: #da8548;">)</span>
 
-    <span style="color: #FC9867;">(</span><span style="color: #FF6188;">setq</span> tpath <span style="color: #A9DC76;">(</span>read-from-minibuffer <span style="color: #FFD866;">"tenserboard path is:"</span> <span style="color: #FFD866;">"\"./tensorboard\""</span><span style="color: #A9DC76;">)</span><span style="color: #FC9867;">)</span>
-    <span style="color: #FC9867;">(</span><span style="color: #FF6188;">setq</span> envname <span style="color: #FFD866;">"dslz"</span><span style="color: #FC9867;">)</span>
-    <span style="color: #FC9867;">(</span><span style="color: #FF6188;">setq</span> full-string <span style="color: #A9DC76;">(</span>concat
-                       <span style="color: #FFD866;">"source ~/anaconda3/bin/activate ~/anaconda3/envs/"</span> envname <span style="color: #FFD866;">"\n"</span>
-                       <span style="color: #FFD866;">"nohup tensorboard --host="</span> host <span style="color: #FFD866;">" --logdir="</span> tpath <span style="color: #FFD866;">"&gt;&gt;results.log &amp;"</span><span style="color: #A9DC76;">)</span><span style="color: #FC9867;">)</span>
+    <span style="color: #da8548;">(</span><span style="color: #9783b1;">setq</span> tpath <span style="color: #51afef;">(</span>read-from-minibuffer <span style="color: #98be65;">"tenserboard path is:"</span> <span style="color: #98be65;">"\"./tensorboard\""</span><span style="color: #51afef;">)</span><span style="color: #da8548;">)</span>
+    <span style="color: #da8548;">(</span><span style="color: #9783b1;">setq</span> envname <span style="color: #98be65;">"dslz"</span><span style="color: #da8548;">)</span>
+    <span style="color: #da8548;">(</span><span style="color: #9783b1;">setq</span> full-string <span style="color: #51afef;">(</span>concat
+                       <span style="color: #98be65;">"source ~/anaconda3/bin/activate ~/anaconda3/envs/"</span> envname <span style="color: #98be65;">"\n"</span>
+                       <span style="color: #98be65;">"nohup tensorboard --host="</span> host <span style="color: #98be65;">" --logdir="</span> tpath <span style="color: #98be65;">"&gt;&gt;results.log &amp;"</span><span style="color: #51afef;">)</span><span style="color: #da8548;">)</span>
 
-    <span style="color: #FC9867;">(</span>shell-command <span style="color: #A9DC76;">(</span>format <span style="color: #FFD866;">"bash -c %s"</span> <span style="color: #AB9DF2;">(</span>shell-quote-argument full-string<span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span><span style="color: #FC9867;">)</span><span style="color: #78DCE8;">)</span>
+    <span style="color: #da8548;">(</span>shell-command <span style="color: #51afef;">(</span>format <span style="color: #98be65;">"bash -c %s"</span> <span style="color: #98be65;">(</span>shell-quote-argument full-string<span style="color: #98be65;">)</span><span style="color: #51afef;">)</span><span style="color: #da8548;">)</span><span style="color: #98be65;">)</span>
 
-  <span style="color: #AB9DF2;">)</span>
+  <span style="color: #51afef;">)</span>
 
-<span style="color: #AB9DF2;">(</span><span style="color: #FF6188;">defun</span> <span style="color: #A9DC76;">lz/look-nvidia-state</span><span style="color: #78DCE8;">()</span>
-  <span style="color: #78DCE8;">(</span><span style="color: #FF6188;">interactive</span><span style="color: #78DCE8;">)</span>
-  <span style="color: #78DCE8;">(</span><span style="color: #FF6188;">let</span> <span style="color: #FC9867;">(</span><span style="color: #A9DC76;">(</span>default-directory <span style="color: #AB9DF2;">(</span>nth 0 <span style="color: #FFD866;">(</span>split-string <span style="color: #78DCE8;">(</span>buffer-file-name<span style="color: #78DCE8;">)</span> <span style="color: #78DCE8;">(</span>buffer-name<span style="color: #78DCE8;">)</span><span style="color: #FFD866;">)</span><span style="color: #AB9DF2;">)</span><span style="color: #A9DC76;">)</span><span style="color: #FC9867;">)</span>
+<span style="color: #51afef;">(</span><span style="color: #9783b1;">defun</span> <span style="color: #51afef;">lz/look-nvidia-state</span><span style="color: #98be65;">()</span>
+  <span style="color: #98be65;">(</span><span style="color: #9783b1;">interactive</span><span style="color: #98be65;">)</span>
+  <span style="color: #98be65;">(</span><span style="color: #9783b1;">let</span> <span style="color: #da8548;">(</span><span style="color: #51afef;">(</span>default-directory <span style="color: #98be65;">(</span>nth 0 <span style="color: #ff6c6b;">(</span>split-string <span style="color: #7dcfff;">(</span>buffer-file-name<span style="color: #7dcfff;">)</span> <span style="color: #7dcfff;">(</span>buffer-name<span style="color: #7dcfff;">)</span><span style="color: #ff6c6b;">)</span><span style="color: #98be65;">)</span><span style="color: #51afef;">)</span><span style="color: #da8548;">)</span>
 
-    <span style="color: #FC9867;">(</span>shell-command <span style="color: #FFD866;">"nvidia-smi"</span><span style="color: #FC9867;">)</span>
-    <span style="color: #78DCE8;">)</span>
-  <span style="color: #AB9DF2;">)</span>
+    <span style="color: #da8548;">(</span>shell-command <span style="color: #98be65;">"nvidia-smi"</span><span style="color: #da8548;">)</span>
+    <span style="color: #98be65;">)</span>
+  <span style="color: #51afef;">)</span>
 </pre>
 </div>
 </div>
@@ -202,7 +202,7 @@ shell脚本，需要通过shell脚本来批量化进行实验；
 <div id="postamble" class="status">
 <p class="date">Date: Mon Jan 24 10:27:07 2022</p>
 <p class="author">Author: Zi Liang</p>
-<p class="date">Created: 2023-12-10 日 22:25</p>
+<p class="date">Created: 2023-12-10 日 22:47</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

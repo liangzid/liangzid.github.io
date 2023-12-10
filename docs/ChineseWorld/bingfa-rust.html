@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2023-12-10 日 22:25 -->
+<!-- 2023-12-10 日 22:47 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>【低质量】rust是如何适配并发的？</title>
@@ -191,7 +191,7 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { width: 90%; }
 </style>
-<link rel='stylesheet' type='text/css' href='https://liangzid.github.org/orgcss/org.css'/>
+<link rel='stylesheet' type='text/css' href='https://liangzid.github.io/orgcss/org.css'/>
 </head>
 <body>
 <div id="content" class="content">
@@ -200,24 +200,24 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org40b88f6">1. 什么是并发？</a></li>
-<li><a href="#orgbbd5508">2. 处理并行、并发问题的计算机知识</a>
+<li><a href="#org4febe30">1. 什么是并发？</a></li>
+<li><a href="#org2ba7da7">2. 处理并行、并发问题的计算机知识</a>
 <ul>
-<li><a href="#orga10f25f">2.1. 使用rust创建多线程</a></li>
+<li><a href="#orgb2d11e1">2.1. 使用rust创建多线程</a></li>
 </ul>
 </li>
-<li><a href="#orgbfd92ac">3. 安全并发的若干解决方案</a>
+<li><a href="#org4502499">3. 安全并发的若干解决方案</a>
 <ul>
-<li><a href="#org891b9db">3.1. 消息传递：不要通过共享内存来通讯，而是通过通讯来共享内存</a></li>
-<li><a href="#org9913723">3.2. 共享状态：</a></li>
+<li><a href="#org29dfd2e">3.1. 消息传递：不要通过共享内存来通讯，而是通过通讯来共享内存</a></li>
+<li><a href="#org17fb950">3.2. 共享状态：</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org40b88f6" class="outline-2">
-<h2 id="org40b88f6"><span class="section-number-2">1.</span> 什么是并发？</h2>
+<div id="outline-container-org4febe30" class="outline-2">
+<h2 id="org4febe30"><span class="section-number-2">1.</span> 什么是并发？</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 并发包括两个概念：并发（concurrent）和并行（parallel）。前者主要是指如何让程序的各个模块彼此独立的执行；而后者，主要指如何将多个程序同时执行。在rust中并不会对并发和并行进行特别清楚地区分。
@@ -226,12 +226,12 @@
 </div>
 
 
-<div id="outline-container-orgbbd5508" class="outline-2">
-<h2 id="orgbbd5508"><span class="section-number-2">2.</span> 处理并行、并发问题的计算机知识</h2>
+<div id="outline-container-org2ba7da7" class="outline-2">
+<h2 id="org2ba7da7"><span class="section-number-2">2.</span> 处理并行、并发问题的计算机知识</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orga10f25f" class="outline-3">
-<h3 id="orga10f25f"><span class="section-number-3">2.1.</span> 使用rust创建多线程</h3>
+<div id="outline-container-orgb2d11e1" class="outline-3">
+<h3 id="orgb2d11e1"><span class="section-number-3">2.1.</span> 使用rust创建多线程</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 我们知道，一个正在执行的计算机程序一般就是一个进程，这个进程里可以包括很多个线程。
@@ -240,24 +240,24 @@
 
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #FF6188;">use</span> <span style="color: #AB9DF2;">std</span>::thread;
-<span style="color: #FF6188;">use</span> <span style="color: #AB9DF2;">std</span>::<span style="color: #AB9DF2;">time</span>::<span style="color: #78DCE8;">Duration</span>;
+<pre class="src src-rust"><span style="color: #9783b1;">use</span> <span style="color: #da8548;">std</span>::thread;
+<span style="color: #9783b1;">use</span> <span style="color: #da8548;">std</span>::<span style="color: #da8548;">time</span>::<span style="color: #1abc9c;">Duration</span>;
 
-<span style="color: #FF6188;">fn</span> <span style="color: #A9DC76;">main</span><span style="color: #AB9DF2;">()</span> <span style="color: #AB9DF2;">{</span>
-    <span style="color: #FF6188;">let</span> <span style="color: #FCFCFA; background-color: #372E40;">handle</span> = <span style="color: #AB9DF2;">thread</span>::spawn<span style="color: #78DCE8;">(</span>|| <span style="color: #FC9867;">{</span>
-        <span style="color: #FF6188;">for</span> <span style="color: #FCFCFA; background-color: #372E40;">i</span> <span style="color: #FF6188;">in</span> 1..10 <span style="color: #A9DC76;">{</span>
-            <span style="color: #78DCE8;">println!</span><span style="color: #AB9DF2;">(</span><span style="color: #FFD866;">"hi number </span><span style="color: #FFD866; font-style: italic;">{}</span><span style="color: #FFD866;"> from the spawned thread!"</span>, i<span style="color: #AB9DF2;">)</span>;
-            <span style="color: #AB9DF2;">thread</span>::sleep<span style="color: #AB9DF2;">(</span><span style="color: #78DCE8;">Duration</span>::from_millis<span style="color: #FFD866;">(</span>1<span style="color: #FFD866;">)</span><span style="color: #AB9DF2;">)</span>;
-        <span style="color: #A9DC76;">}</span>
-    <span style="color: #FC9867;">}</span><span style="color: #78DCE8;">)</span>;
+<span style="color: #9783b1;">fn</span> <span style="color: #51afef;">main</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+    <span style="color: #9783b1;">let</span> <span style="color: #b1e2ff; background-color: #372E40;">handle</span> = <span style="color: #da8548;">thread</span>::spawn<span style="color: #98be65;">(</span>|| <span style="color: #da8548;">{</span>
+        <span style="color: #9783b1;">for</span> <span style="color: #b1e2ff; background-color: #372E40;">i</span> <span style="color: #9783b1;">in</span> 1..10 <span style="color: #51afef;">{</span>
+            <span style="color: #7A619A;">println!</span><span style="color: #98be65;">(</span><span style="color: #98be65;">"hi number </span><span style="color: #98be65; font-style: italic;">{}</span><span style="color: #98be65;"> from the spawned thread!"</span>, i<span style="color: #98be65;">)</span>;
+            <span style="color: #da8548;">thread</span>::sleep<span style="color: #98be65;">(</span><span style="color: #1abc9c;">Duration</span>::from_millis<span style="color: #ff6c6b;">(</span>1<span style="color: #ff6c6b;">)</span><span style="color: #98be65;">)</span>;
+        <span style="color: #51afef;">}</span>
+    <span style="color: #da8548;">}</span><span style="color: #98be65;">)</span>;
 
-    handle.join<span style="color: #78DCE8;">()</span>.unwrap<span style="color: #78DCE8;">()</span>;
+    handle.join<span style="color: #98be65;">()</span>.unwrap<span style="color: #98be65;">()</span>;
 
-    <span style="color: #FF6188;">for</span> <span style="color: #FCFCFA; background-color: #372E40;">i</span> <span style="color: #FF6188;">in</span> 1..5 <span style="color: #78DCE8;">{</span>
-        <span style="color: #78DCE8;">println!</span><span style="color: #FC9867;">(</span><span style="color: #FFD866;">"hi number </span><span style="color: #FFD866; font-style: italic;">{}</span><span style="color: #FFD866;"> from the main thread!"</span>, i<span style="color: #FC9867;">)</span>;
-        <span style="color: #AB9DF2;">thread</span>::sleep<span style="color: #FC9867;">(</span><span style="color: #78DCE8;">Duration</span>::from_millis<span style="color: #A9DC76;">(</span>1<span style="color: #A9DC76;">)</span><span style="color: #FC9867;">)</span>;
-    <span style="color: #78DCE8;">}</span>
-<span style="color: #AB9DF2;">}</span>
+    <span style="color: #9783b1;">for</span> <span style="color: #b1e2ff; background-color: #372E40;">i</span> <span style="color: #9783b1;">in</span> 1..5 <span style="color: #98be65;">{</span>
+        <span style="color: #7A619A;">println!</span><span style="color: #da8548;">(</span><span style="color: #98be65;">"hi number </span><span style="color: #98be65; font-style: italic;">{}</span><span style="color: #98be65;"> from the main thread!"</span>, i<span style="color: #da8548;">)</span>;
+        <span style="color: #da8548;">thread</span>::sleep<span style="color: #da8548;">(</span><span style="color: #1abc9c;">Duration</span>::from_millis<span style="color: #51afef;">(</span>1<span style="color: #51afef;">)</span><span style="color: #da8548;">)</span>;
+    <span style="color: #98be65;">}</span>
+<span style="color: #51afef;">}</span>
 </pre>
 </div>
 <p>
@@ -272,16 +272,16 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust">   <span style="color: #FF6188;">use</span> <span style="color: #AB9DF2;">std</span>::thread;
-<span style="color: #FF6188;">fn</span> <span style="color: #A9DC76;">main</span><span style="color: #AB9DF2;">()</span> <span style="color: #AB9DF2;">{</span>
-    <span style="color: #FF6188;">let</span> <span style="color: #FCFCFA; background-color: #372E40;">v</span> = <span style="color: #FF6188; font-weight: bold;">vec!</span><span style="color: #78DCE8;">[</span>1, 2, 3<span style="color: #78DCE8;">]</span>;
+<pre class="src src-rust">   <span style="color: #9783b1;">use</span> <span style="color: #da8548;">std</span>::thread;
+<span style="color: #9783b1;">fn</span> <span style="color: #51afef;">main</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
+    <span style="color: #9783b1;">let</span> <span style="color: #b1e2ff; background-color: #372E40;">v</span> = <span style="color: #1abc9c; font-weight: bold;">vec!</span><span style="color: #98be65;">[</span>1, 2, 3<span style="color: #98be65;">]</span>;
 
-    <span style="color: #FF6188;">let</span> <span style="color: #FCFCFA; background-color: #372E40;">handle</span> = <span style="color: #AB9DF2;">thread</span>::spawn<span style="color: #78DCE8;">(</span><span style="color: #FF6188;">move</span> || <span style="color: #FC9867;">{</span>
-        <span style="color: #78DCE8;">println!</span><span style="color: #A9DC76;">(</span><span style="color: #FFD866;">"Here's a vector: </span><span style="color: #FFD866; font-style: italic;">{:?}</span><span style="color: #FFD866;">"</span>, v<span style="color: #A9DC76;">)</span>;
-    <span style="color: #FC9867;">}</span><span style="color: #78DCE8;">)</span>;
+    <span style="color: #9783b1;">let</span> <span style="color: #b1e2ff; background-color: #372E40;">handle</span> = <span style="color: #da8548;">thread</span>::spawn<span style="color: #98be65;">(</span><span style="color: #9783b1;">move</span> || <span style="color: #da8548;">{</span>
+        <span style="color: #7A619A;">println!</span><span style="color: #51afef;">(</span><span style="color: #98be65;">"Here's a vector: </span><span style="color: #98be65; font-style: italic;">{:?}</span><span style="color: #98be65;">"</span>, v<span style="color: #51afef;">)</span>;
+    <span style="color: #da8548;">}</span><span style="color: #98be65;">)</span>;
 
-    handle.join<span style="color: #78DCE8;">()</span>.unwrap<span style="color: #78DCE8;">()</span>;
-<span style="color: #AB9DF2;">}</span>
+    handle.join<span style="color: #98be65;">()</span>.unwrap<span style="color: #98be65;">()</span>;
+<span style="color: #51afef;">}</span>
 </pre>
 </div>
 <p>
@@ -297,25 +297,25 @@
 </div>
 
 
-<div id="outline-container-orgbfd92ac" class="outline-2">
-<h2 id="orgbfd92ac"><span class="section-number-2">3.</span> 安全并发的若干解决方案</h2>
+<div id="outline-container-org4502499" class="outline-2">
+<h2 id="org4502499"><span class="section-number-2">3.</span> 安全并发的若干解决方案</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org891b9db" class="outline-3">
-<h3 id="org891b9db"><span class="section-number-3">3.1.</span> 消息传递：不要通过共享内存来通讯，而是通过通讯来共享内存</h3>
+<div id="outline-container-org29dfd2e" class="outline-3">
+<h3 id="org29dfd2e"><span class="section-number-3">3.1.</span> 消息传递：不要通过共享内存来通讯，而是通过通讯来共享内存</h3>
 </div>
 
 
 
-<div id="outline-container-org9913723" class="outline-3">
-<h3 id="org9913723"><span class="section-number-3">3.2.</span> 共享状态：</h3>
+<div id="outline-container-org17fb950" class="outline-3">
+<h3 id="org17fb950"><span class="section-number-3">3.2.</span> 共享状态：</h3>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: Sat Nov 20 09:19:26 2021</p>
 <p class="author">Author: Zi Liang</p>
-<p class="date">Created: 2023-12-10 日 22:25</p>
+<p class="date">Created: 2023-12-10 日 22:47</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

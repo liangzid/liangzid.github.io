@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2023-12-10 日 22:25 -->
+<!-- 2023-12-10 日 22:47 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>阅读《Pro Git》有感</title>
 <meta name="author" content="liangzid" />
 <meta name="generator" content="Org Mode" />
-<link rel='stylesheet' type='text/css' href='https://liangzid.github.org/orgcss/org.css'/>
+<link rel='stylesheet' type='text/css' href='https://liangzid.github.io/orgcss/org.css'/>
 </head>
 <body>
 <div id="content" class="content">
@@ -16,26 +16,26 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org499040e">1. VCS是什么？——以时间为方向的有向无环图。git是什么？——精妙的VCS</a></li>
-<li><a href="#org623e129">2. 在上述有向无环图基础上添加一个新的维度：空间。——git里面的“储物间”以及储物间之间的“移动”方式</a></li>
-<li><a href="#org15808b9">3. 形成一张版本控制图</a>
+<li><a href="#org09e25c3">1. VCS是什么？——以时间为方向的有向无环图。git是什么？——精妙的VCS</a></li>
+<li><a href="#org0c689f2">2. 在上述有向无环图基础上添加一个新的维度：空间。——git里面的“储物间”以及储物间之间的“移动”方式</a></li>
+<li><a href="#org148a06c">3. 形成一张版本控制图</a>
 <ul>
-<li><a href="#orgfa5ffb9">3.1. 通过branch、clone和fetch产生分支</a></li>
-<li><a href="#orgb302b34">3.2. 通过merge和rebase合并分支</a></li>
-<li><a href="#orgc851350">3.3. 删除分支</a></li>
-<li><a href="#org894de3f">3.4. 通过log访问图中的节点</a></li>
+<li><a href="#orgfc73753">3.1. 通过branch、clone和fetch产生分支</a></li>
+<li><a href="#org2b42c70">3.2. 通过merge和rebase合并分支</a></li>
+<li><a href="#org65febbc">3.3. 删除分支</a></li>
+<li><a href="#orgd243b29">3.4. 通过log访问图中的节点</a></li>
 </ul>
 </li>
-<li><a href="#org7cab179">4. 工作流</a>
+<li><a href="#org47b2c65">4. 工作流</a>
 <ul>
-<li><a href="#orgcfe1caf">4.1. 单人工作流</a></li>
-<li><a href="#orgc9c2ea2">4.2. 典型的多人工作流</a></li>
+<li><a href="#org86a3dea">4.1. 单人工作流</a></li>
+<li><a href="#orgebdd58c">4.2. 典型的多人工作流</a></li>
 </ul>
 </li>
-<li><a href="#org45ef46c">5. 我的git个人适配文档</a>
+<li><a href="#org791f65c">5. 我的git个人适配文档</a>
 <ul>
-<li><a href="#org7ddbe55">5.1. 我的gitignore</a></li>
-<li><a href="#org176c1cd">5.2. 我的git脚本</a></li>
+<li><a href="#orgbcd24a7">5.1. 我的gitignore</a></li>
+<li><a href="#org49fcd54">5.2. 我的git脚本</a></li>
 </ul>
 </li>
 </ul>
@@ -45,8 +45,8 @@
 git真是一个非常不错的版本控制工具！我以前只是在用add，commit，push，pull这几个操作，把github之流的网站当作是云备份平台。如今需要使用git中的一些分支、历史信息等功能，所以就自然而然重新找书读起来了。
 这篇笔记是个人对git的一点理解，不无谬误。
 </p>
-<div id="outline-container-org499040e" class="outline-2">
-<h2 id="org499040e"><span class="section-number-2">1.</span> VCS是什么？——以时间为方向的有向无环图。git是什么？——精妙的VCS</h2>
+<div id="outline-container-org09e25c3" class="outline-2">
+<h2 id="org09e25c3"><span class="section-number-2">1.</span> VCS是什么？——以时间为方向的有向无环图。git是什么？——精妙的VCS</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 个人理解，git是服务于“文本文件”的，准确地说，是服务于程序代码那种文本文件的。所以git本自然的以 <b>行</b> 作为其最小粒度。所以后面在merge等处理冲突（或者说合并多个流）的时候，git都是以行为单位进行匹配。这样做比目前较为通用的云同步在粒度上稍微细了一点，因为后者主要是面向二进制文件的，而二进制文件，是一变百变的。
@@ -83,8 +83,8 @@ git则有些不同。git不以文件为单位，而以版本为单位，版本�
 </div>
 </div>
 
-<div id="outline-container-org623e129" class="outline-2">
-<h2 id="org623e129"><span class="section-number-2">2.</span> 在上述有向无环图基础上添加一个新的维度：空间。——git里面的“储物间”以及储物间之间的“移动”方式</h2>
+<div id="outline-container-org0c689f2" class="outline-2">
+<h2 id="org0c689f2"><span class="section-number-2">2.</span> 在上述有向无环图基础上添加一个新的维度：空间。——git里面的“储物间”以及储物间之间的“移动”方式</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 从物理上而言，git一般包含以下两类物理地址：若干个本地终端；若干个云终端。对不对？
@@ -156,8 +156,8 @@ git则有些不同。git不以文件为单位，而以版本为单位，版本�
 </p>
 </div>
 </div>
-<div id="outline-container-org15808b9" class="outline-2">
-<h2 id="org15808b9"><span class="section-number-2">3.</span> 形成一张版本控制图</h2>
+<div id="outline-container-org148a06c" class="outline-2">
+<h2 id="org148a06c"><span class="section-number-2">3.</span> 形成一张版本控制图</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 之前提及过，版本控制过程，本质上可以理解为一张有向无环图。那么两个操作是VCS中最重要的：建图，和看图。
@@ -169,8 +169,8 @@ git则有些不同。git不以文件为单位，而以版本为单位，版本�
 更特殊地，版本控制中，大多数节点其实入度出度都是一，就像是一个一字长蛇阵。我们在上一章节已经看到了怎么去用commit形成这样的一个一字长蛇阵，因此此处要玩点花样，看看同样频繁使用的分支等功能的实现。
 </p>
 </div>
-<div id="outline-container-orgfa5ffb9" class="outline-3">
-<h3 id="orgfa5ffb9"><span class="section-number-3">3.1.</span> 通过branch、clone和fetch产生分支</h3>
+<div id="outline-container-orgfc73753" class="outline-3">
+<h3 id="orgfc73753"><span class="section-number-3">3.1.</span> 通过branch、clone和fetch产生分支</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 分支（branch）很简单，就是为了验证一个新的功能，或者“开辟一个新的试验田”去干别的事情。所以产生分支的方式主要有两种：
@@ -192,8 +192,8 @@ git则有些不同。git不以文件为单位，而以版本为单位，版本�
 </p>
 </div>
 </div>
-<div id="outline-container-orgb302b34" class="outline-3">
-<h3 id="orgb302b34"><span class="section-number-3">3.2.</span> 通过merge和rebase合并分支</h3>
+<div id="outline-container-org2b42c70" class="outline-3">
+<h3 id="org2b42c70"><span class="section-number-3">3.2.</span> 通过merge和rebase合并分支</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 当分支上的功能完成了验证之后，后面就需要将其与主分支合并。一般而言，合并的方式有两种，merge形式，和rebase形式。二者的内核是一致的。
@@ -220,8 +220,8 @@ merge的过程是这样的：当前仓库处于分支A下，然后需要merge掉
 </div>
 </div>
 
-<div id="outline-container-orgc851350" class="outline-3">
-<h3 id="orgc851350"><span class="section-number-3">3.3.</span> 删除分支</h3>
+<div id="outline-container-org65febbc" class="outline-3">
+<h3 id="org65febbc"><span class="section-number-3">3.3.</span> 删除分支</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 git branch -d branchname
@@ -229,8 +229,8 @@ git branch -d branchname
 </div>
 </div>
 
-<div id="outline-container-org894de3f" class="outline-3">
-<h3 id="org894de3f"><span class="section-number-3">3.4.</span> 通过log访问图中的节点</h3>
+<div id="outline-container-orgd243b29" class="outline-3">
+<h3 id="orgd243b29"><span class="section-number-3">3.4.</span> 通过log访问图中的节点</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 前面已经对如何建立版本控制图进行了全方位的讨论，现在可以看看如何遍历地访问这张图中的一些节点了。
@@ -243,20 +243,20 @@ git branch -d branchname
 </div>
 </div>
 
-<div id="outline-container-org7cab179" class="outline-2">
-<h2 id="org7cab179"><span class="section-number-2">4.</span> 工作流</h2>
+<div id="outline-container-org47b2c65" class="outline-2">
+<h2 id="org47b2c65"><span class="section-number-2">4.</span> 工作流</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgcfe1caf" class="outline-3">
-<h3 id="orgcfe1caf"><span class="section-number-3">4.1.</span> 单人工作流</h3>
+<div id="outline-container-org86a3dea" class="outline-3">
+<h3 id="org86a3dea"><span class="section-number-3">4.1.</span> 单人工作流</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 略。
 </p>
 </div>
 </div>
-<div id="outline-container-orgc9c2ea2" class="outline-3">
-<h3 id="orgc9c2ea2"><span class="section-number-3">4.2.</span> 典型的多人工作流</h3>
+<div id="outline-container-orgebdd58c" class="outline-3">
+<h3 id="orgebdd58c"><span class="section-number-3">4.2.</span> 典型的多人工作流</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 累了不想写了。。。。
@@ -279,18 +279,18 @@ git branch -d branchname
 </div>
 </div>
 
-<div id="outline-container-org45ef46c" class="outline-2">
-<h2 id="org45ef46c"><span class="section-number-2">5.</span> 我的git个人适配文档</h2>
+<div id="outline-container-org791f65c" class="outline-2">
+<h2 id="org791f65c"><span class="section-number-2">5.</span> 我的git个人适配文档</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 有时间补充
 </p>
 </div>
-<div id="outline-container-org7ddbe55" class="outline-3">
-<h3 id="org7ddbe55"><span class="section-number-3">5.1.</span> 我的gitignore</h3>
+<div id="outline-container-orgbcd24a7" class="outline-3">
+<h3 id="orgbcd24a7"><span class="section-number-3">5.1.</span> 我的gitignore</h3>
 </div>
-<div id="outline-container-org176c1cd" class="outline-3">
-<h3 id="org176c1cd"><span class="section-number-3">5.2.</span> 我的git脚本</h3>
+<div id="outline-container-org49fcd54" class="outline-3">
+<h3 id="org49fcd54"><span class="section-number-3">5.2.</span> 我的git脚本</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 没想到写一篇笔记的时间比看这本书的时间还长。。。
@@ -302,7 +302,7 @@ git branch -d branchname
 <div id="postamble" class="status">
 <p class="date">Date: Tue Sep 21 21:08:07 2021</p>
 <p class="author">Author: liangzid</p>
-<p class="date">Created: 2023-12-10 日 22:25</p>
+<p class="date">Created: 2023-12-10 日 22:47</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

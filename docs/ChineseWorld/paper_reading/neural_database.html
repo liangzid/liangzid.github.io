@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2023-12-10 日 22:25 -->
+<!-- 2023-12-10 日 22:47 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>神经数据库（neural templates） 阅读笔记</title>
@@ -191,7 +191,7 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { width: 90%; }
 </style>
-<link rel='stylesheet' type='text/css' href='https://liangzid.github.org/orgcss/org.css'/>
+<link rel='stylesheet' type='text/css' href='https://liangzid.github.io/orgcss/org.css'/>
 </head>
 <body>
 <div id="content" class="content">
@@ -200,21 +200,21 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org2ce7ec8">1. Paper Information</a></li>
-<li><a href="#org5ee93eb">2. 简介</a>
+<li><a href="#orga75c231">1. Paper Information</a></li>
+<li><a href="#org8086688">2. 简介</a>
 <ul>
-<li><a href="#org81c43cd">2.1. 一点相关工作：Question Answering from text.</a></li>
-<li><a href="#org20a7c32">2.2. 神经数据库是干什么的</a></li>
-<li><a href="#orga6af2e4">2.3. 模型优缺点</a></li>
+<li><a href="#org69bbe45">2.1. 一点相关工作：Question Answering from text.</a></li>
+<li><a href="#orgf12ebbe">2.2. 神经数据库是干什么的</a></li>
+<li><a href="#org0dfe3de">2.3. 模型优缺点</a></li>
 </ul>
 </li>
-<li><a href="#org05b2d3a">3. 模型结构</a>
+<li><a href="#orga94d441">3. 模型结构</a>
 <ul>
-<li><a href="#orgafa3445">3.1. 支持集合生成 Support Set Generation</a></li>
-<li><a href="#orgf0b6979">3.2. 聚合操作 Aggregation</a></li>
+<li><a href="#org497cd45">3.1. 支持集合生成 Support Set Generation</a></li>
+<li><a href="#orgbe50828">3.2. 聚合操作 Aggregation</a></li>
 </ul>
 </li>
-<li><a href="#orgec51f31">4. 实验与总结</a></li>
+<li><a href="#org9e0e602">4. 实验与总结</a></li>
 </ul>
 </div>
 </div>
@@ -222,8 +222,8 @@
 今天分享VLDB上的一篇论文, 和数据库, QA等相关, 或许会对自己的未来工作产生影响.
 先看一下基本信息
 </p>
-<div id="outline-container-org2ce7ec8" class="outline-2">
-<h2 id="org2ce7ec8"><span class="section-number-2">1.</span> Paper Information</h2>
+<div id="outline-container-orga75c231" class="outline-2">
+<h2 id="orga75c231"><span class="section-number-2">1.</span> Paper Information</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Name: Neural Databases
@@ -234,8 +234,8 @@ Famous authors or University: 剑桥，Facebook AI
 </p>
 </div>
 </div>
-<div id="outline-container-org5ee93eb" class="outline-2">
-<h2 id="org5ee93eb"><span class="section-number-2">2.</span> 简介</h2>
+<div id="outline-container-org8086688" class="outline-2">
+<h2 id="org8086688"><span class="section-number-2">2.</span> 简介</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 作者的讲故事逻辑是这样的: 目前的数据库存在一个特点: 所有的数据都是事先被固定好数据格式(database schema),然后才被使用的. 
@@ -251,8 +251,8 @@ Famous authors or University: 剑桥，Facebook AI
 换而言之，一个查询的问题,最终成了一个QA问题. 所以不如先简单回顾一下QA在做什么。
 </p>
 </div>
-<div id="outline-container-org81c43cd" class="outline-3">
-<h3 id="org81c43cd"><span class="section-number-3">2.1.</span> 一点相关工作：Question Answering from text.</h3>
+<div id="outline-container-org69bbe45" class="outline-3">
+<h3 id="org69bbe45"><span class="section-number-3">2.1.</span> 一点相关工作：Question Answering from text.</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 问答问答，顾名思义，就是问然后答。这样的一个过程本身就类似于一种宽化了的检索。
@@ -281,15 +281,15 @@ Famous authors or University: 剑桥，Facebook AI
 </p>
 </div>
 </div>
-<div id="outline-container-org20a7c32" class="outline-3">
-<h3 id="org20a7c32"><span class="section-number-3">2.2.</span> 神经数据库是干什么的</h3>
+<div id="outline-container-orgf12ebbe" class="outline-3">
+<h3 id="orgf12ebbe"><span class="section-number-3">2.2.</span> 神经数据库是干什么的</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 先放一张图：
 </p>
 
 
-<div id="org8228d36" class="figure">
+<div id="orgbd62955" class="figure">
 <p><img src="./images/20210329141839.png" alt="20210329141839.png">
 </p>
 </div>
@@ -343,8 +343,8 @@ groundtruth会大大降低目标效果。
 </p>
 </div>
 </div>
-<div id="outline-container-orga6af2e4" class="outline-3">
-<h3 id="orga6af2e4"><span class="section-number-3">2.3.</span> 模型优缺点</h3>
+<div id="outline-container-org0dfe3de" class="outline-3">
+<h3 id="org0dfe3de"><span class="section-number-3">2.3.</span> 模型优缺点</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 对此, 作者的说法是:
@@ -375,15 +375,15 @@ NeuralDB, a database system in which updates and queries are given in natural la
 </div>
 </div>
 
-<div id="outline-container-org05b2d3a" class="outline-2">
-<h2 id="org05b2d3a"><span class="section-number-2">3.</span> 模型结构</h2>
+<div id="outline-container-orga94d441" class="outline-2">
+<h2 id="orga94d441"><span class="section-number-2">3.</span> 模型结构</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 这篇论文的整体结构可由下图所示：
 </p>
 
 
-<div id="org0208565" class="figure">
+<div id="org826a690" class="figure">
 <p><img src="./images/20210329143413.png" alt="20210329143413.png">
 </p>
 </div>
@@ -395,8 +395,8 @@ NeuralDB, a database system in which updates and queries are given in natural la
 </p>
 </div>
 
-<div id="outline-container-orgafa3445" class="outline-3">
-<h3 id="orgafa3445"><span class="section-number-3">3.1.</span> 支持集合生成 Support Set Generation</h3>
+<div id="outline-container-org497cd45" class="outline-3">
+<h3 id="org497cd45"><span class="section-number-3">3.1.</span> 支持集合生成 Support Set Generation</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 支持集合生成可以简单对照QA里的多跳模型进行理解，同样也是在众多的事实里选择和问题有关的事实。针对这个任务的一个
@@ -404,7 +404,7 @@ NeuralDB, a database system in which updates and queries are given in natural la
 </p>
 
 
-<div id="org4f14991" class="figure">
+<div id="orgfd8c274" class="figure">
 <p><img src="./images/20210329144025.png" alt="20210329144025.png">
 </p>
 </div>
@@ -433,7 +433,7 @@ NeuralDB, a database system in which updates and queries are given in natural la
 </p>
 
 
-<div id="org6c3d87d" class="figure">
+<div id="org597e720" class="figure">
 <p><img src="./images/20210329144620.png" alt="20210329144620.png">
 </p>
 </div>
@@ -454,7 +454,7 @@ NeuralDB, a database system in which updates and queries are given in natural la
 </p>
 
 
-<div id="orgff14e95" class="figure">
+<div id="org945d11d" class="figure">
 <p><img src="./images/20210329145117.png" alt="20210329145117.png">
 </p>
 </div>
@@ -465,8 +465,8 @@ NeuralDB, a database system in which updates and queries are given in natural la
 </div>
 </div>
 
-<div id="outline-container-orgf0b6979" class="outline-3">
-<h3 id="orgf0b6979"><span class="section-number-3">3.2.</span> 聚合操作 Aggregation</h3>
+<div id="outline-container-orgbe50828" class="outline-3">
+<h3 id="orgbe50828"><span class="section-number-3">3.2.</span> 聚合操作 Aggregation</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 聚合操作，是指需要将检索得到的结果进行一定地整理才能得到最终结果的过程。例如，从一些人物的数据库中找到
@@ -492,7 +492,7 @@ NeuralDB, a database system in which updates and queries are given in natural la
 </p>
 
 
-<div id="org33fbe4f" class="figure">
+<div id="org46d57b7" class="figure">
 <p><img src="./images/20210329150013.png" alt="20210329150013.png">
 </p>
 </div>
@@ -506,8 +506,8 @@ NeuralDB, a database system in which updates and queries are given in natural la
 </div>
 
 
-<div id="outline-container-orgec51f31" class="outline-2">
-<h2 id="orgec51f31"><span class="section-number-2">4.</span> 实验与总结</h2>
+<div id="outline-container-org9e0e602" class="outline-2">
+<h2 id="org9e0e602"><span class="section-number-2">4.</span> 实验与总结</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 人懒，就不写实验了。没什么意思，都是自己跟自己比的（当然，也没法跟别人比？）
@@ -523,7 +523,7 @@ NeuralDB, a database system in which updates and queries are given in natural la
 <div id="postamble" class="status">
 <p class="date">Date: 2021-03-29 一 00:00</p>
 <p class="author">Author: 梁子</p>
-<p class="date">Created: 2023-12-10 日 22:25</p>
+<p class="date">Created: 2023-12-10 日 22:47</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
