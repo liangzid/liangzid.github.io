@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2023-12-10 日 22:24 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>多方安全计算整理笔记</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<link rel='stylesheet' type='text/css' href='https://liangzid.github.org/orgcss/org.css'/>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">多方安全计算整理笔记</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org8addb74">1. 多方安全计算的典型算法</a>
+<ul>
+<li><a href="#orgc0fba5b">1.1. 简介</a></li>
+<li><a href="#org92b9cd4">1.2. 百万富翁问题</a></li>
+<li><a href="#org03f627e">1.3. 不经意传输 oblivious transfer，OT</a></li>
+<li><a href="#org382123b">1.4. 混淆电路 garbled circuit</a></li>
+<li><a href="#org9992786">1.5. 同态加密 homomophic encryption</a></li>
+</ul>
+</li>
+<li><a href="#orgf0cbecd">2. 将多方安全计算应用在深度学习模型推理上</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org8addb74" class="outline-2">
+<h2 id="org8addb74"><span class="section-number-2">1.</span> 多方安全计算的典型算法</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orgc0fba5b" class="outline-3">
+<h3 id="orgc0fba5b"><span class="section-number-3">1.1.</span> 简介</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+所有的多方安全计算方法，都在试图解决一个问题：面对输入数据分布在不同参与方的前提下，如何在不泄露各方数据的前提下得到一个运算的输出结果？
+</p>
+</div>
+</div>
+
+<div id="outline-container-org92b9cd4" class="outline-3">
+<h3 id="org92b9cd4"><span class="section-number-3">1.2.</span> 百万富翁问题</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+场景：两个百万富翁想比一比谁的钱多，但是又都不想让对方知道自己具体有多少钱。
+</p>
+
+<p>
+抽象：Alice有数字x，Bob有数字y，如何在不让对方知道自己数字的前提下，确定\(argmax（x,y）= 0 or 1 ？\)
+</p>
+</div>
+</div>
+
+<div id="outline-container-org03f627e" class="outline-3">
+<h3 id="org03f627e"><span class="section-number-3">1.3.</span> 不经意传输 oblivious transfer，OT</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+不经意传输是指通过过量信息输入来达到部分信息泄露和部分信息隐藏的信息交换方法。考虑这样两个用户：
+</p>
+<ol class="org-ol">
+<li>Alice，他有过量的信息，并且想分享信息中的其中一部分给bob，同时不能泄露出去剩余的部分。</li>
+<li>Bob，它想从Alice那里获得指定index的信息，但是它不能让Alice发现自己所获得的是哪些信息。</li>
+</ol>
+
+<p>
+以上就是一个n条信息中解密m条（m&lt;n)的任务，被称作OT扩展。特殊的，如果只需要选择一条，那么便是n选1，如果n=2，那么便是2选1.
+</p>
+
+<p>
+下面给出一个RSA做n选1的示例。
+</p>
+
+<p>
+基本思想是：
+</p>
+<ol class="org-ol">
+<li>Alice为自己的每条信息都设置一个公钥，并分享给bob。</li>
+<li>bob如果需要的是第t条信息，那么他会随机也生成一个密钥，然后用非对称加密使用Alice的第t个公钥加密这个密钥。注意：这里bob所生成的密钥主要是为了后续解密Alice的第t条信息，所以会使用第t个公钥对该密钥解密。</li>
+<li>Alice接到密钥的公钥加密后，使用n个私钥做解密，然后使用解密之后的n个结果分别对消息做加密。最终，把加密的n条消息传给bob</li>
+<li>bob解密第t条，用之前生成的密钥。</li>
+</ol>
+
+
+<p>
+为什么上述流程可以实现不经意传输？
+</p>
+
+<ol class="org-ol">
+<li>首先Alice给了Bob n个选择，bob只需要返回1个密钥，由此带来了信息冗余。Bob可以随意选择这n个中的1个，而Alice不知道是哪一个。由此保护了bob的选择隐私。</li>
+<li>Alice获得的bob生成的key，只有第t个是正确的，剩下的都是不匹配的公钥与私钥的混淆。如此确保了安全性。</li>
+</ol>
+
+
+<p>
+问题：
+</p>
+
+<ol class="org-ol">
+<li>Bob怎么知道自己应该选择第几条？这个t，有什么特殊含义？ 答：t的存在一般被认为是bob所能获取到的信息，换句话说，t是bob在这场交换中的门槛。上述流程认为Alice是冤大头（泄露了更多信息）。</li>
+</ol>
+
+
+<p>
+百万富翁问题在OT中的解决思路：
+</p>
+
+<ol class="org-ol">
+<li>首先把Alice的钱转化为一个binary vector=[0,0,0,&#x2026;,1,1,1..,1]，使得这个向量的前x个变量为0，后面n-x为1.</li>
+<li>通过不经意传输，bob获得这个n维的0-1向量的第y位。</li>
+<li>为1表示bob钱多，否则Alice钱多。</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org382123b" class="outline-3">
+<h3 id="org382123b"><span class="section-number-3">1.4.</span> 混淆电路 garbled circuit</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+混淆电路是一种密码学协议。遵照这个协议，两个 party 能在互相不知晓对方数据的情况下计算某一能被逻辑电路表示的函数。
+</p>
+
+<ul class="org-ul">
+<li>混淆：确保隐私。</li>
+<li>电路：必须是可被逻辑表示的，i.e.，必须是可被枚举的。</li>
+</ul>
+
+<p>
+设想Alice有数据x，Bob有数据y。二人想在不泄露自己数据的前提下共同完成计算z=f(x,y)，并共享结果z。这时可以用到GC算法。注意：如果f函数本质上就是单射，那么单纯通过混淆电路是达不到安全目标的。比如如果\(f(x,y)=x+y\)，那么如果我得到了z，很容易发现y=z-x。但是如果是百万富翁问题，那么完全可以使用\(argmax(x,y)={0,1}\)，这时由于函数的信息有损，就很难反推了。
+</p>
+
+<p>
+混淆电路的思路如下：
+</p>
+<ol class="org-ol">
+<li>构建混淆电路：Alice 枚举f函数所有可能出现的情况（真值表），而后将真值表里的0和1映射为字符串（可以理解为密钥)，即（密钥x，密钥y-&gt;密钥z）这样的三元组。然后，使用密钥x和密钥y对z加密，以对真值表的结果产生混淆。</li>
+<li>Alice 基于自己的输入可以筛选掉真值表中不可能出出现的情况，并将剩余情况打乱发给Bob。</li>
+<li>Alice将自己的输入对应的密钥x发给Bob。</li>
+<li>Bob借助不经意传输(OT)从Alice那里获得自己的输入对应的密钥y。此处使用OT是为了不泄露Bob自己的输入。</li>
+<li>通过2，3，4，Bob已经有了自己的密钥x、Alice的密钥y和（密钥x，密钥y)-&gt;使用密钥x、密钥y加密密钥z得到的密钥z' 这样的映射表。Bob利用这些数据，搜索映射表，可以得到结果，然后解密得到对应的密钥z。</li>
+<li>Bob将密钥z给Alice，Alice将密钥z对应的01返回，双方得到答案。</li>
+</ol>
+
+<p>
+示例可以参考链接：<a href="https://zhuanlan.zhihu.com/p/138371497">https://zhuanlan.zhihu.com/p/138371497</a>
+</p>
+
+<p>
+问题：
+</p>
+
+<ol class="org-ol">
+<li>对于一些无法枚举的场景，如何使用混淆电路？例如，Relu函数是一个简单的运算，他会在输入x大于0时返回x，小于等于0时返回0。那么如果给定输入 x-r, r, 要求设计Relu2（x,y,r）= Relu(x+y)的函数，这时应当如何处理呢？再比如一些更复杂的，如Gelu，又应当如何处理？ 答：数字运算可以通过逻辑运算得到模拟。  下面的链接给出了一个对加法器的电路模拟，由此可以实现加法的安全运算：<a href="https://www.8btc.com/article/572746">https://www.8btc.com/article/572746</a></li>
+<li></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org9992786" class="outline-3">
+<h3 id="org9992786"><span class="section-number-3">1.5.</span> 同态加密 homomophic encryption</h3>
+</div>
+</div>
+
+<div id="outline-container-orgf0cbecd" class="outline-2">
+<h2 id="orgf0cbecd"><span class="section-number-2">2.</span> 将多方安全计算应用在深度学习模型推理上</h2>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: Thu Dec  8 20:20:52 2022</p>
+<p class="author">Author: Zi Liang</p>
+<p class="date">Created: 2023-12-10 日 22:24</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
