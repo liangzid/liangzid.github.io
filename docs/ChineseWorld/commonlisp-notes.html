@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2023-12-10 日 22:47 -->
+<!-- 2023-12-14 Thu 20:59 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Common Lisp notes and thinkings (Part I: Functions)</title>
@@ -200,33 +200,33 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org840ab0b">1. (eq function object) ?</a>
+<li><a href="#orgb50daf3">1. (eq function object) ?</a>
 <ul>
-<li><a href="#org9d9ff99">1.1. Three state of a function</a></li>
-<li><a href="#orge4a7aed">1.2. Closure: those functions who have <b>undefined</b> variable</a></li>
+<li><a href="#org989047e">1.1. Three state of a function</a></li>
+<li><a href="#org627c2b4">1.2. Closure: those functions who have <b>undefined</b> variable</a></li>
 </ul>
 </li>
-<li><a href="#org9b4a0a3">2. Functional programming principle</a></li>
-<li><a href="#org09612eb">3. From Bottom to Top: another programming Strategy</a>
+<li><a href="#orgea31440">2. Functional programming principle</a></li>
+<li><a href="#org0b7a14b">3. From Bottom to Top: another programming Strategy</a>
 <ul>
-<li><a href="#org26b7b65">3.1. Some abstraction examples of functions</a></li>
-<li><a href="#orgc68aa01">3.2. Rethink Recursion</a></li>
+<li><a href="#org5fc2998">3.1. Some abstraction examples of functions</a></li>
+<li><a href="#org66ed640">3.2. Rethink Recursion</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org840ab0b" class="outline-2">
-<h2 id="org840ab0b"><span class="section-number-2">1.</span> (eq function object) ?</h2>
+<div id="outline-container-orgb50daf3" class="outline-2">
+<h2 id="orgb50daf3"><span class="section-number-2">1.</span> (eq function object) ?</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Yes.
 </p>
 </div>
 
-<div id="outline-container-org9d9ff99" class="outline-3">
-<h3 id="org9d9ff99"><span class="section-number-3">1.1.</span> Three state of a function</h3>
+<div id="outline-container-org989047e" class="outline-3">
+<h3 id="org989047e"><span class="section-number-3">1.1.</span> Three state of a function</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 We use <code>(defun plus1 (x) (\+ x 1))</code> to define a function named <code>'plus1</code>,
@@ -245,8 +245,8 @@ three types of state for this function, as:
 </div>
 </div>
 
-<div id="outline-container-orge4a7aed" class="outline-3">
-<h3 id="orge4a7aed"><span class="section-number-3">1.2.</span> Closure: those functions who have <b>undefined</b> variable</h3>
+<div id="outline-container-org627c2b4" class="outline-3">
+<h3 id="org627c2b4"><span class="section-number-3">1.2.</span> Closure: those functions who have <b>undefined</b> variable</h3>
 <div class="outline-text-3" id="text-1-2">
 <div class="org-src-container">
 <pre class="src src-elisp"><span style="color: #51afef;">(</span><span style="color: #9783b1;">setq</span> w
@@ -268,8 +268,8 @@ functions with different <code>a</code>. Here <code>plus-a</code> is a closure.
 </div>
 
 
-<div id="outline-container-org9b4a0a3" class="outline-2">
-<h2 id="org9b4a0a3"><span class="section-number-2">2.</span> Functional programming principle</h2>
+<div id="outline-container-orgea31440" class="outline-2">
+<h2 id="orgea31440"><span class="section-number-2">2.</span> Functional programming principle</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 What is FPP?
@@ -313,8 +313,8 @@ C++, JAVA, PYTHON, and so on.
 </div>
 </div>
 
-<div id="outline-container-org09612eb" class="outline-2">
-<h2 id="org09612eb"><span class="section-number-2">3.</span> From Bottom to Top: another programming Strategy</h2>
+<div id="outline-container-org0b7a14b" class="outline-2">
+<h2 id="org0b7a14b"><span class="section-number-2">3.</span> From Bottom to Top: another programming Strategy</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 What we learn in courses or real-world encourage us to give a plan
@@ -348,8 +348,8 @@ on our own fields.
 </div>
 
 
-<div id="outline-container-org26b7b65" class="outline-3">
-<h3 id="org26b7b65"><span class="section-number-3">3.1.</span> Some abstraction examples of functions</h3>
+<div id="outline-container-org5fc2998" class="outline-3">
+<h3 id="org5fc2998"><span class="section-number-3">3.1.</span> Some abstraction examples of functions</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span style="color: #51afef;">(</span>proclaim '<span style="color: #98be65;">(</span>inline last1 single append1 nconc1 mklist<span style="color: #98be65;">)</span><span style="color: #51afef;">)</span> <span style="color: #503F65; font-style: italic;">;; </span><span style="color: #503F65; font-style: italic;">compile it</span>
@@ -501,8 +501,8 @@ result <span style="color: #ECBE7B;">(</span>list obj<span style="color: #ECBE7B
 
 
 
-<div id="outline-container-orgc68aa01" class="outline-3">
-<h3 id="orgc68aa01"><span class="section-number-3">3.2.</span> Rethink Recursion</h3>
+<div id="outline-container-org66ed640" class="outline-3">
+<h3 id="org66ed640"><span class="section-number-3">3.2.</span> Rethink Recursion</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 while other languages use <b>loop</b> for a complicated object, lisp prefer <b>recusion</b>. Consider a function that returns the length of a list:
@@ -569,7 +569,7 @@ how to understand and use <b>macro</b> in <i>common lisp</i>.
 <div id="postamble" class="status">
 <p class="date">Date: Fri Oct  6 16:20:35 2023</p>
 <p class="author">Author: Zi Liang</p>
-<p class="date">Created: 2023-12-10 日 22:47</p>
+<p class="date">Created: 2023-12-14 Thu 20:59</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

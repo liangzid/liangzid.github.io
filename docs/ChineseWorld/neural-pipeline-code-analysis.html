@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2023-12-10 日 22:47 -->
+<!-- 2023-12-14 Thu 20:59 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>任务型对话系统中Neural Pipeline系列源码剖析</title>
@@ -16,33 +16,33 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org53cdf8a">1. 总体结构</a></li>
-<li><a href="#org0d67753">2. Data部分</a>
+<li><a href="#orga74c1bf">1. 总体结构</a></li>
+<li><a href="#org2383180">2. Data部分</a>
 <ul>
-<li><a href="#orgab32fef">2.1. GPT-2的输入形态</a></li>
-<li><a href="#org8ca8e16">2.2. Neural Pipeline中的文本输入与输出</a></li>
-<li><a href="#org24c669d">2.3. neural pipline与GPT-2的结合</a></li>
-<li><a href="#orgb374be9">2.4. 再坚持一下: 为什么说一个TOD很复杂?</a>
+<li><a href="#orge1f3a0b">2.1. GPT-2的输入形态</a></li>
+<li><a href="#orgb8fa7a3">2.2. Neural Pipeline中的文本输入与输出</a></li>
+<li><a href="#org805bf56">2.3. neural pipline与GPT-2的结合</a></li>
+<li><a href="#orged4b628">2.4. 再坚持一下: 为什么说一个TOD很复杂?</a>
 <ul>
-<li><a href="#org5fd26e7">2.4.1. 如何预处理任务型对话系统数据集?</a></li>
-<li><a href="#orgb54d9d7">2.4.2. TOD的层级结构以及各个常见的数据对象</a></li>
-<li><a href="#org8048825">2.4.3. 如何解析tod数据集?</a></li>
+<li><a href="#orgf4fcdac">2.4.1. 如何预处理任务型对话系统数据集?</a></li>
+<li><a href="#org603c826">2.4.2. TOD的层级结构以及各个常见的数据对象</a></li>
+<li><a href="#orgd6bfd69">2.4.3. 如何解析tod数据集?</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgce15fe2">3. Model的设计</a>
+<li><a href="#orgbaf788e">3. Model的设计</a>
 <ul>
-<li><a href="#org7ca8692">3.1. train- forward</a></li>
+<li><a href="#orgfb77bfb">3.1. train- forward</a></li>
 </ul>
 </li>
-<li><a href="#orgb8fc7fc">4. 训练流程</a></li>
-<li><a href="#orgfb676b0">5. 推理流程</a></li>
+<li><a href="#org94f26ab">4. 训练流程</a></li>
+<li><a href="#orgb4cceb3">5. 推理流程</a></li>
 </ul>
 </div>
 </div>
 <p>
-本文于<span class="timestamp-wrapper"><span class="timestamp">&lt;2022-03-26 六&gt;</span></span>进行了修改.
+本文于<span class="timestamp-wrapper"><span class="timestamp">&lt;2022-03-26 Sat&gt;</span></span>进行了修改.
 </p>
 
 <p>
@@ -57,8 +57,8 @@
 然后,这篇文章就着重于描述上述模型的代码实现了!
 </p>
 
-<div id="outline-container-org53cdf8a" class="outline-2">
-<h2 id="org53cdf8a"><span class="section-number-2">1.</span> 总体结构</h2>
+<div id="outline-container-orga74c1bf" class="outline-2">
+<h2 id="orga74c1bf"><span class="section-number-2">1.</span> 总体结构</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 总体上而言, 任何一个深度学习的代码无外乎以下几个主要部分:
@@ -72,8 +72,8 @@
 </div>
 </div>
 
-<div id="outline-container-org0d67753" class="outline-2">
-<h2 id="org0d67753"><span class="section-number-2">2.</span> Data部分</h2>
+<div id="outline-container-org2383180" class="outline-2">
+<h2 id="org2383180"><span class="section-number-2">2.</span> Data部分</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 对于深度学习,尤其是transformer时代的深度学习而言, 当下的创新多从训练任务和整理数据入手,而非模型的结构. 笔者的同学甚至因为在面向某个NLP任务时自己设计了特殊的结构而被审稿人质疑. neural pipeline的方法, 其核心思路是将TOD中的各个基本组件都统一地放在单一的一个NLG模型中,所以, 对数据的编排就不得不算是重中之重了.
@@ -85,8 +85,8 @@
 </div>
 
 
-<div id="outline-container-orgab32fef" class="outline-3">
-<h3 id="orgab32fef"><span class="section-number-3">2.1.</span> GPT-2的输入形态</h3>
+<div id="outline-container-orge1f3a0b" class="outline-3">
+<h3 id="orge1f3a0b"><span class="section-number-3">2.1.</span> GPT-2的输入形态</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 GPT-2的输入严格而言主要包括三部分:
@@ -161,8 +161,8 @@ GPT-2的输入严格而言主要包括三部分:
 </div>
 </div>
 
-<div id="outline-container-org8ca8e16" class="outline-3">
-<h3 id="org8ca8e16"><span class="section-number-3">2.2.</span> Neural Pipeline中的文本输入与输出</h3>
+<div id="outline-container-orgb8fa7a3" class="outline-3">
+<h3 id="orgb8fa7a3"><span class="section-number-3">2.2.</span> Neural Pipeline中的文本输入与输出</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 下面来看任务型对话系统Neural Pipeline的输入与输出形态.
@@ -288,8 +288,8 @@ GPT-2的输入严格而言主要包括三部分:
 </div>
 </div>
 
-<div id="outline-container-org24c669d" class="outline-3">
-<h3 id="org24c669d"><span class="section-number-3">2.3.</span> neural pipline与GPT-2的结合</h3>
+<div id="outline-container-org805bf56" class="outline-3">
+<h3 id="org805bf56"><span class="section-number-3">2.3.</span> neural pipline与GPT-2的结合</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 我们最终的目标是用GPT-2来完成一个pipeline, 所以相当于用history做输出输出belief state, 之后检索数据库得到datbase matching result, 用三者做输入去产生actions, 最终产生delexicalized response.
@@ -300,7 +300,7 @@ GPT-2的输入严格而言主要包括三部分:
 </p>
 
 
-<div id="org5c07f43" class="figure">
+<div id="org8002382" class="figure">
 <p><img src="./images/screenshot_20220326_173041.png" alt="screenshot_20220326_173041.png">
 </p>
 </div>
@@ -608,15 +608,15 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 
 
 
-<div id="outline-container-orgb374be9" class="outline-3">
-<h3 id="orgb374be9"><span class="section-number-3">2.4.</span> 再坚持一下: 为什么说一个TOD很复杂?</h3>
+<div id="outline-container-orged4b628" class="outline-3">
+<h3 id="orged4b628"><span class="section-number-3">2.4.</span> 再坚持一下: 为什么说一个TOD很复杂?</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 如果你认为上述部分就是TOD data部分源码的核心, 未免有点小看任务型对话系统的复杂度了. 因为我们其实还没有正式开始介绍全部的流程. 
 </p>
 </div>
-<div id="outline-container-org5fd26e7" class="outline-4">
-<h4 id="org5fd26e7"><span class="section-number-4">2.4.1.</span> 如何预处理任务型对话系统数据集?</h4>
+<div id="outline-container-orgf4fcdac" class="outline-4">
+<h4 id="orgf4fcdac"><span class="section-number-4">2.4.1.</span> 如何预处理任务型对话系统数据集?</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <p>
 略.
@@ -1781,8 +1781,8 @@ replacements = <span style="color: #51afef;">[]</span>
 </div>
 </div>
 
-<div id="outline-container-orgb54d9d7" class="outline-4">
-<h4 id="orgb54d9d7"><span class="section-number-4">2.4.2.</span> TOD的层级结构以及各个常见的数据对象</h4>
+<div id="outline-container-org603c826" class="outline-4">
+<h4 id="org603c826"><span class="section-number-4">2.4.2.</span> TOD的层级结构以及各个常见的数据对象</h4>
 <div class="outline-text-4" id="text-2-4-2">
 <p>
 对话系统的最小单元, 应该是什么? 是一个组件吗? 不, 组件是不统一的,多个组件才能形成一次输入. 那么是一个对话吗? 当然也不是,因为一个对话包含了多个轮. 对的, 对话系统的基本单元,是轮. 对话系统是以轮为单位进行展示的. 我们的每次训练, 所传入的每一条数据,都是1轮数据整理成了一条线状的输入.
@@ -1950,8 +1950,8 @@ replacements = <span style="color: #51afef;">[]</span>
 </p>
 </div>
 </div>
-<div id="outline-container-org8048825" class="outline-4">
-<h4 id="org8048825"><span class="section-number-4">2.4.3.</span> 如何解析tod数据集?</h4>
+<div id="outline-container-orgd6bfd69" class="outline-4">
+<h4 id="orgd6bfd69"><span class="section-number-4">2.4.3.</span> 如何解析tod数据集?</h4>
 <div class="outline-text-4" id="text-2-4-3">
 <p>
 该源码直接基于名字加载数据集,如下面函数所示 <code>loader.py -&gt; load_dataset</code>
@@ -2119,16 +2119,16 @@ replacements = <span style="color: #51afef;">[]</span>
 </div>
 </div>
 
-<div id="outline-container-orgce15fe2" class="outline-2">
-<h2 id="orgce15fe2"><span class="section-number-2">3.</span> Model的设计</h2>
+<div id="outline-container-orgbaf788e" class="outline-2">
+<h2 id="orgbaf788e"><span class="section-number-2">3.</span> Model的设计</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 model的设计中, training的forward和inference时的generation其实是两种形态,因此在此处进行两种描述. 先看一下训练时.
 </p>
 </div>
 
-<div id="outline-container-org7ca8692" class="outline-3">
-<h3 id="org7ca8692"><span class="section-number-3">3.1.</span> train- forward</h3>
+<div id="outline-container-orgfb77bfb" class="outline-3">
+<h3 id="orgfb77bfb"><span class="section-number-3">3.1.</span> train- forward</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 核心代码如下:
@@ -2266,17 +2266,17 @@ model的设计中, training的forward和inference时的generation其实是两种
 </div>
 </div>
 
-<div id="outline-container-orgb8fc7fc" class="outline-2">
-<h2 id="orgb8fc7fc"><span class="section-number-2">4.</span> 训练流程</h2>
+<div id="outline-container-org94f26ab" class="outline-2">
+<h2 id="org94f26ab"><span class="section-number-2">4.</span> 训练流程</h2>
 </div>
-<div id="outline-container-orgfb676b0" class="outline-2">
-<h2 id="orgfb676b0"><span class="section-number-2">5.</span> 推理流程</h2>
+<div id="outline-container-orgb4cceb3" class="outline-2">
+<h2 id="orgb4cceb3"><span class="section-number-2">5.</span> 推理流程</h2>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: Sun Jan 16 15:43:35 2022</p>
 <p class="author">Author: Zi Liang</p>
-<p class="date">Created: 2023-12-10 日 22:47</p>
+<p class="date">Created: 2023-12-14 Thu 20:59</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
