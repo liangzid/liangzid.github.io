@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-03-09 Sat 20:51 -->
+<!-- 2024-03-09 Sat 21:04 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>关于huggingface transformers NLG模块实现的基本思路</title>
@@ -209,13 +209,13 @@
 <li><a href="#org93c27f1">2.1. 语言模型的训练与测试的不同之处</a></li>
 <li><a href="#org2e5bd57">2.2. 训练环节</a>
 <ul>
-<li><a href="#org10b2beb">2.2.1. 数据集封装形式</a></li>
+<li><a href="#orgdbb9188">2.2.1. 数据集封装形式</a></li>
 <li><a href="#org220f450">2.2.2. 微不足道的模型训练细节</a></li>
 </ul>
 </li>
 <li><a href="#org26ea201">2.3. 测试环节</a>
 <ul>
-<li><a href="#orgdbb9188">2.3.1. 数据集封装形式</a></li>
+<li><a href="#org2477043">2.3.1. 数据集封装形式</a></li>
 <li><a href="#orgea8478e">2.3.2. NLG生成细节</a></li>
 </ul>
 </li>
@@ -250,8 +250,8 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 <h3 id="org2e5bd57"><span class="section-number-3">2.2.</span> 训练环节</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-org10b2beb" class="outline-4">
-<h4 id="org10b2beb"><span class="section-number-4">2.2.1.</span> 数据集封装形式</h4>
+<div id="outline-container-orgdbb9188" class="outline-4">
+<h4 id="orgdbb9188"><span class="section-number-4">2.2.1.</span> 数据集封装形式</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 一般而言，是数据等于标签的格式。以对话为例，可能就是"Q+[SEP]+A"这种。
@@ -282,8 +282,8 @@ loss_autoencoder=loss_func_cls<span style="color: #61bfff;">(</span>output_predi
 <h3 id="org26ea201"><span class="section-number-3">2.3.</span> 测试环节</h3>
 <div class="outline-text-3" id="text-2-3">
 </div>
-<div id="outline-container-orgdbb9188" class="outline-4">
-<h4 id="orgdbb9188"><span class="section-number-4">2.3.1.</span> 数据集封装形式</h4>
+<div id="outline-container-org2477043" class="outline-4">
+<h4 id="org2477043"><span class="section-number-4">2.3.1.</span> 数据集封装形式</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <p>
 测试环节的数据集同训练环节有所不同，因为在测试环节，相当于是基于一个prefix去生成后面的话。
@@ -335,7 +335,7 @@ loss_autoencoder=loss_func_cls<span style="color: #61bfff;">(</span>output_predi
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: liangzid (<a href="mailto:2273067585@qq.com">2273067585@qq.com</a>)</span> <span class="date">Create Date: Wed Nov 17 19:40:30 2021</span> <span class="date">Last modified: 2024-03-09 Sat 20:39</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 28.1 (<a href="https://orgmode.org">Org</a> mode 9.5.2)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: liangzid (<a href="mailto:2273067585@qq.com">2273067585@qq.com</a>)</span> <span class="date">Create Date: Wed Nov 17 19:40:30 2021</span> <span class="date">Last modified: 2024-03-09 Sat 20:56</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 28.1 (<a href="https://orgmode.org">Org</a> mode 9.5.2)</span> </div>
 </div>
 </body>
 </html>
