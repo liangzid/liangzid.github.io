@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2024-03-09 Sat 20:51 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Language Models as Knowledge Bases?</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a>  </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">Language Models as Knowledge Bases?</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org7374e8d">1. 相关benchmark及对应效果</a></li>
+<li><a href="#org0e98fb1">2. 相关工作</a>
+<ul>
+<li><a href="#org04344eb">2.1. Language Models as Knowledge Bases? ‘19</a></li>
+<li><a href="#org0eab47f">2.2. Neural Databases '20</a></li>
+<li><a href="#org0fc8bd6">2.3. Can Prompt Probe Pretrained Language Models? Understanding the Invisible Risks from a Causal View ACL'22</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org7374e8d" class="outline-2">
+<h2 id="org7374e8d"><span class="section-number-2">1.</span> 相关benchmark及对应效果</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+LAMA
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org0e98fb1" class="outline-2">
+<h2 id="org0e98fb1"><span class="section-number-2">2.</span> 相关工作</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org04344eb" class="outline-3">
+<h3 id="org04344eb"><span class="section-number-3">2.1.</span> Language Models as Knowledge Bases? ‘19</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+出发点：构建并使用KB需要一个完整的麻烦的pipeline，如果LM在语法知识之外还可以学会文档中的关系型知识，那么就不需要如此麻烦。该论文试图探究：LM预训练模型中是否含有关系型知识？和已有的方法比效果如何？
+</p>
+
+
+<div id="org63d86a6" class="figure">
+<p><img src="./images/screenshot_20221124_171406.png" alt="screenshot_20221124_171406.png">   
+</p>
+</div>
+
+
+<p>
+结论：
+</p>
+<ol class="org-ol">
+<li>即使不做微调，LM里面也含有关系型的知识</li>
+<li>BERT通过完形填空任务做QA，效果还是挺好的</li>
+</ol>
+
+
+<p>
+该文属于开山之作，提出了这种可能
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0eab47f" class="outline-3">
+<h3 id="org0eab47f"><span class="section-number-3">2.2.</span> Neural Databases '20</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+出发点：LM能否作为数据库来用，即我们通过自然语言进行数据库的一系列操作，诸如查询、更新、删除等等。
+</p>
+
+<p>
+作者首先测试了当前的LM的效果，发现：1）在slect-project-join querys 上够用，如果已经拥有了对应的事实；2）在一些特殊操作（no-trival databases）或聚合操作的查询上，不太够用。
+</p>
+
+<p>
+为此作者自己提出了一套architecture（NeuralDB）解决这个问题。输入大概是这个样子：
+</p>
+
+
+<div id="orgadb133e" class="figure">
+<p><img src="./images/screenshot_20221124_172725.png" alt="screenshot_20221124_172725.png"> 
+</p>
+</div>
+
+<p>
+可以看出，这其实也就是非结构化的知识信息。
+</p>
+
+<p>
+模型的推理时刻表示图，backbone是t5
+</p>
+
+
+<div id="orgb81b789" class="figure">
+<p><img src="./images/screenshot_20221124_172829.png" alt="screenshot_20221124_172829.png"> 
+</p>
+</div>
+
+<p>
+作者统计了在各种数据库查询问题上的结果，如下：
+</p>
+
+
+<div id="orgb7bc03d" class="figure">
+<p><img src="./images/screenshot_20221124_173016.png" alt="screenshot_20221124_173016.png"> 
+</p>
+</div>
+
+
+<p>
+于是作者自己搞了一个模型（NeuralDB），总体上看，就是加了一些trick，效果图如下：
+</p>
+
+
+<div id="org3223a3e" class="figure">
+<p><img src="./images/screenshot_20221124_173154.png" alt="screenshot_20221124_173154.png">
+</p>
+</div>
+
+<p>
+具体流程就是，通过检索获得一些支撑集合。然后动过比对这些支撑集合来生成答案。最终通过聚合器聚合这些答案，得到最终的结果。
+</p>
+
+<p>
+之前写过一篇笔记，见：<a href="https://liangzid.github.io/paper_reading/neural_database.html">https://liangzid.github.io/paper_reading/neural_database.html</a>
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org0fc8bd6" class="outline-3">
+<h3 id="org0fc8bd6"><span class="section-number-3">2.3.</span> Can Prompt Probe Pretrained Language Models? Understanding the Invisible Risks from a Causal View ACL'22</h3>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Thu Nov 24 16:42:04 2022</span> <span class="date">Last modified: 2024-03-09 Sat 20:39</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 28.1 (<a href="https://orgmode.org">Org</a> mode 9.5.2)</span> </div>
+</div>
+</body>
+</html>

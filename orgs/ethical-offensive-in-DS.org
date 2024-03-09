@@ -1,0 +1,112 @@
+#+title: 对话系统中的伦理问题小考
+
+
+
+本文旨在总结对话系统中出现冒犯性语句（offensive words）和一些伦理（ethic）上的、歧视性的（discriminated)语句生成问题的相关论文的总结。
+
+文章虽是以“对话系统”为题，但实际上，NLG，task-oriented，chatbot都被纳入了考虑范围。
+并且，这些论文大多以 *检测上述不良语句* 或 *提出这样一种挑战* 的形式呈现出来。
+* Challenge 
+
+
+
+
+* Detection un-labeld contexts
+见表格如下：
+
+| Name                    |    Date | U or Com or author | summary |
+|-------------------------+---------+--------------------+---------|
+| Recipes for Safety      | 2020.10 | Facebook AI        |         |
+| in Open-domain Chatbots |         |                    |         |
+|                         |         |                    |         |
+
+
+
+
+** Recipes for Safety in Open-domain Chatbots
+
+这是一篇28页的长文，进行了各种有意义的实验。但是其主要想法可以通过下图进行展现：
+
+[[file:./images/20210511150319.png]]
+
+其中，图左是之前论文中涉及的方法，其核心想法是训练一个分类器，当模型说出一些不良对话后将之滤掉。其训练分类器的方法为：
+1. 使用正常数据训练一个分类器，使其具有基本的判定一个句子是否冒犯的能力；
+2. 借助众包让人专门去找茬，探索那些能让分类器错误的数据；
+3. 借助新的数据，增强分类器的能力。
+
+一般而言，借助于分类器，当判断出来模型生成的句子有问题，就可以采取两种措施应对：
+
+1. 装傻。 比如：对不起，我不知道该说啥了。不过你能跟我聊天并分享这些东西，我很开心。
+2. 开启一个新话题。可以从诸多topic中选取一个新的topic，然后转移话题。
+
+上述即为基于分类器的方法。
+
+本文的思路则在此基础上多走了一步，即：不仅要去观察分类器，而是让模型本身就不说脏话。这也就是右图的思维：
+1. 使用已有的数据语料训练一个聊天机器人；
+2. 借助众包让人专门去找茬，探索那些能让机器人犯错的数据；
+3. 借助新的数据训练机器人，作为增强。
+
+
+这里的问题是，
+1. 如何知道机器人犯了错？所以存在一个分类器去判断一句话是否是offensive的，也是必须的；
+2. 当有了offensive的数据之后，如何去训练机器人让其不犯这种错？
+
+论文对这两方面做了特殊介绍。
+
+*** unsafe utterance detection
+分类器的训练是基于transformer相关的encoder模型进行的，一般而言，该问题被归纳为一个二分类问题（是offensive的或不是）或多分类问题（属于哪一种冒犯性的语句）。
+
+此处作者列举了几个需要的数据库，可以作为一个相关的有用示例：
+
++ 脏话数据集： Wikipedia Toxic Comments dataset（WTC），大概包括了150k个样本，可以试一试。
++ 用于预训练的英文语料： Reddit for pretraining，
++ 用于fine-tune的对话语料
+  + ConvAI2 for personality
+  + Empathetic dialogues for empathy
+  + Wizard of Wikipedia for Knowledge
+  + Blended Skill Talk (BST) for blending above skills.
+
+除了用上面描述的脏话数据集WTC进行训练之外，作者还尝试用人工交互的方式进行。这一方式就是前面所说的方式。
+唯一值得注意的是论文对结果进行了分析，可以发现，大多数自然人通过使用骂chatbot的方式来让其说脏话。
+
+那么，如果训练完成一个分类器，如何使用他呢？
+使用方法主要有两种：
+1. 在模型生成话语之后，进行过滤；
+2. 对无监督语料进行过滤，以用来训练。
+
+*** safe utterance generation
+
+安全句子的生成，除了依靠过滤数据集之外，还应当在生成端做一些准备。主要包括：
+1. 在beam search中进行处理。比如，对于一个敏感词表格，在beam search时对对应的token选取较小的比例；
+2. 基于control的方式对安全性和风格进行维护。主要指，通过添加控制变量使得各个模型之间是彼此独立的
+3. 训练一个不会说脏话的模型。这个的方法比较简单，即对于数据集中被标注的脏话数据，将之替换为不说脏话的数据或之前提及的，开启新话题的方式，以这种数据集来对模型进行训练。
+
+*** 不去接触敏感话题
+不去接触一些敏感话题。
+
+[[file:./images/20210512103714.png]]
+
+实现思路比较简单，就是训练一个分类器，此处就不赘述了。
+
+*** 性别上的词汇
+主要指，通过不存在男女性别歧视的台词，对模型进行最终的训练。
+
+** Task-Based Evaluation of NLG Systems: Control VS Real-world Context
+
+
+
+** Universal Adversarial Triggers for Attacking and Analyzing NLP
+
+这篇论文就是准备去找到一些triggers，使得模型尽可能地产生不太好的结果。如下图所示：
+
+[[file:./images/20210512105819.png]]
+
+攻击方法是一种基于梯度的白盒攻击方法。下面就不重点展开了。
+
+[[file:./images/20210512105530.png]]
+
+
+** task-based evaluation of NLG systems: Control vs Realworld context
+
+
+
