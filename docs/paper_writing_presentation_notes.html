@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2024-09-01 Sun 10:53 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>对论文写作的一些评价和方法论</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">对论文写作的一些评价和方法论</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org6f63a99">1. Relying on</a></li>
+<li><a href="#org978f0af">2. Confusing</a></li>
+<li><a href="#org335d8e4">3. However</a></li>
+<li><a href="#orgb488d01">4. Introduction</a></li>
+<li><a href="#org52ef481">5. Ready</a></li>
+<li><a href="#org7cd29ac">6. Top tier</a></li>
+<li><a href="#orgdedd7e5">7. 系</a></li>
+<li><a href="#org5b7319d">8. 80%</a></li>
+<li><a href="#org820b0cb">9. Logic</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org6f63a99" class="outline-2">
+<h2 id="org6f63a99"><span class="section-number-2">1.</span> Relying on</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+主语少用动名词短语，这一看就是中国人写的，我觉得这是你无意间的习惯
+</p>
+</div>
+</div>
+
+<div id="outline-container-org978f0af" class="outline-2">
+<h2 id="org978f0af"><span class="section-number-2">2.</span> Confusing</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+你想引入信息的越多，就可能让读者造成更多的confusing
+</p>
+</div>
+</div>
+
+<div id="outline-container-org335d8e4" class="outline-2">
+<h2 id="org335d8e4"><span class="section-number-2">3.</span> However</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+还有一个更detail的建议是，however这个词，最好出现在你提出核心问题之前
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb488d01" class="outline-2">
+<h2 id="orgb488d01"><span class="section-number-2">4.</span> Introduction</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+就是我们在介绍introduction时，有一个比较八股的模式是：大背景-&gt;小背景-&gt;现有工作-&gt; however -&gt; 尚未有人考虑/解决某个问题 -&gt; 这个问题很重要/有挑战性 -&gt; 本文主要就是探索这个问题，并提出了个什么有效的方法  
+</p>
+
+
+<p>
+大概是这个逻辑
+</p>
+
+<p>
+摘要就是在这个框架下更简化一些，突出强调研究挑战和解决思路
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org52ef481" class="outline-2">
+<h2 id="org52ef481"><span class="section-number-2">5.</span> Ready</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+你可以说方法部分没有改进的空间了，但不意味这这个论文的presentation没有改进空间
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7cd29ac" class="outline-2">
+<h2 id="org7cd29ac"><span class="section-number-2">6.</span> Top tier</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+你既然想投顶会，就得方法和撰写都达到top tier的标准
+</p>
+
+<p>
+即使problem和idea很好，但因为presentation不行被拒的也比比皆是
+</p>
+
+<p>
+所以别老想着弄一个差不多的半成品赶紧投出去，这样某种意义上也是在浪费时间。除了内容本身之外，你怎么把你做的东西更好地表达出来，也是一个费时间和精力的活。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgdedd7e5" class="outline-2">
+<h2 id="orgdedd7e5"><span class="section-number-2">7.</span> 系</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+你要构建自己符合正常人的逻辑体系，不能随着自己发挥。
+</p>
+
+<p>
+你需要好好捋一下逻辑。现在内容太散了，没有关联。你想写的东西太多就会出现这些问题。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5b7319d" class="outline-2">
+<h2 id="org5b7319d"><span class="section-number-2">8.</span> 80%</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+改论文一个重要的思路就是得让没有太多背景的人理解80%的内容。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org820b0cb" class="outline-2">
+<h2 id="org820b0cb"><span class="section-number-2">9.</span> Logic</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+逻辑才是王道。
+</p>
+
+<p>
+你写的时候得假设你的读者时候有限的背景知识。
+</p>
+
+<p>
+逻辑太跳跃，就会给自己埋下隐患。
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Sun Sep  1 10:41:42 2024</span> <span class="date">Last modified: 2024-09-01 Sun 10:53</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 28.1 (<a href="https://orgmode.org">Org</a> mode 9.6.28)</span> </div>
+</div>
+</body>
+</html>
