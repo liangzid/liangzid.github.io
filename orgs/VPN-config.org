@@ -1,0 +1,172 @@
+#+title: VPN Configuration to Bypass Some Firewalls.
+#+date: Tue Oct 29 20:05:13 2024
+#+author: Zi Liang
+#+email: zi1415926.liang@connect.polyu.hk
+#+latex_class: elegantpaper
+#+filetags: :tool:
+
+
+This article collects all contents/situations I faced to configure the commandline environment for the whole visiting without limitations. 
+
+* Client Side Configuration
+
+** METHOD 1: With Trojan 
+
+*** =trojan=
+Trojan is a method to bypass XXX. It can be used and configured very easily.
+
+
+Step 1: install trojan.
+
+
+#+BEGIN_SRC sh
+  cd path-to-install
+  wget https://github.com/trojan-gfw/trojan/releases/download/v1.16.0/trojan-1.16.0-linux-amd64.tar.xz
+  tarxvf tar xvf trojan-1.16.0-linux-amd64.tar.xz
+#+END_SRC
+
+The above commands download the uncompress the binary executable file of =trojan=. You can also find other releases in =https://github.com/trojan-gfw/trojan/releases/=.
+
+Step 2: configure the Vpn file.
+
+Simply copy the configuration (with a ~json~ format) text into a place, such as the =path-to-install/trojan/config.json=. This configuration file contains the info of the server machine, such as:
+
+
+#+BEGIN_SRC js
+  {
+      "run_type":"client",
+      "local_addr":"127.0.0.1",
+      "local_port":1080,
+      "remote_addr":"xxxxxxxxxxxxxxx.com",
+      "remote_port":443,
+      "password":["xxxxxxxxxxxxxxxxxxxxxxxxxx"],
+      "log_level":1,
+      "ssl":
+      {
+          "verify":true,
+          "verify_hostname":true,
+          "cert":"",
+          "cipher":"ECDHE-ECDSA-xxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "cipher_tls13":"TLS_AES_xxxxxxxxxxxxxxxxxxxxxxxx",
+          "sni":"",
+          "alpn":["h2","http/1.1"],
+          "reuse_session":true,
+          "session_ticket":false,
+          "curves":""
+      },
+      "tcp":
+      {
+          "no_delay":true,
+          "keep_alive":true,
+          "reuse_port":false,
+          "fast_open":false,
+          "fast_open_qlen":20
+      }
+  }
+#+END_SRC
+
+Then step 2 ends.
+
+You can now use it via =/home/pathtoinstall/trojan/trojan -c /home/pathtocofnig/config.json -l /home/pathtolog/trojan.log=.
+
+
+Step 3: Configure the auto-start
+
+There exist some convenient tools for a command-line VPN configuration.
+
+***  =systemctl=
+
+  It allows the machine automatically start a service when necessary.
+
+  First, Create a file for the configuration:
+
+#+BEGIN_SRC sh
+  vim ~/.config/systemd/user/trojan.service
+#+END_SRC
+
+Then insert the following contents:
+
+
+#+BEGIN_SRC service
+[Unit]
+Description=trojan
+After=network.target
+
+[Service]
+Type=simple
+PIDFile=/home/path-to-install/trojan/trojan.pid
+ExecStart=/home/pathtoinstall/trojan/trojan -c /home/pathtoconfig/trojan/config.json -l /home/pathtolog/trojan/trojan.log
+ExecReload=/bin/kill -HUP \$MAINPID
+Restart=on-failure
+RestartSec=1s
+
+[Install]
+WantedBy=multi-user.target
+#+END_SRC
+
+Now you are ready to start the services by =systemctl --user start trojan=.
+
+You can also check the status of your service by =systemctl --user status trojan.service=.
+
+
+*** =proxychains= :SudoRequired:
+
+
+=proxychains= is a useful tool to use the trojan.
+
+First, install it: =sudo apt install proxychains=.
+
+Second, configure it by edit its configuration file:
+=sudo vim /etc/proxychains.conf=
+
+Comment the line of "socks4  xxxxxxxx xxxx", and add a new line :
+
+
+#+BEGIN_SRC conf
+  socks5 127.0.0.1 1080
+#+END_SRC
+
+where the port is the port you set in your =config.json= in the trojan.
+
+Now you can use it via: =proxychains command-yours XXXXXXXXXX=.
+
+
+  
+*** Test the Configuration
+
+
+#+BEGIN_SRC sh
+
+  # 1. test the configuration of trojan:
+  curl ip.sb --socks5 127.0.0.1 1080
+
+  # 2. test the configuration of systemctl
+
+  systemctl --user status trojan.service
+
+  # 3. test the configuration of proxychains
+  curl -4 ip.sb
+  proxychains curl -4 ip.sb
+
+#+END_SRC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
