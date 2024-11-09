@@ -1,0 +1,46 @@
+#+title: Linux: mount the disk into ~/home~
+#+date: Tue Nov  5 14:40:40 2024
+#+author: Zi Liang
+#+email: zi1415926.liang@connect.polyu.hk
+#+latex_class: elegantpaper
+#+filetags: ::
+
+
+
+** Step 1: find the filename of disk with =sudo fdisk -l=, like =/dev/sda=
+
+** Step2: mount the disk to a temporal directory.
+
+   1. =mkdir /media/home=
+
+   2. =mount /dev/sda /media/home=
+   
+** Step3: Copy the data in home and backup.
+
+#+BEGIN_SRC sh
+  rsync -aXS /home/. /media/home/.
+
+  mv /home /home_old
+#+END_SRC
+    
+** Step 4: new =/home= and mount it.
+
+#+BEGIN_SRC sh
+  mkdir /home
+  umount /dev/sda
+  mount /dev/sda /home
+#+END_SRC
+
+** Step 5: automatically mount for future usage.
+
+
+=sudo vim /etc/fstab=
+
+add
+
+=/dev/sda  /home  ext4  defaults  0  2=
+
+or
+
+=UUID=8da46012-ab9c-434f-a855-2484112fd1a7 /home ext4 nodev,nosuid 0 2=
+
