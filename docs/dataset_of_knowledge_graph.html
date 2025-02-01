@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-03-09 Sat 21:04 -->
+<!-- 2025-02-01 Sat 17:45 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>[长]知识图谱入坑笔记</title>
@@ -189,13 +189,13 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
+  .org-svg { }
 </style>
 <link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
 </head>
 <body>
 <div id="preamble" class="status">
-<nav class="nav"> <a href="/index.html" class="button">Home</a>  </nav> <hr>
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
 </div>
 <div id="content" class="content">
 <h1 class="title">[长]知识图谱入坑笔记</h1>
@@ -203,48 +203,48 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgbba13bb">1. 知识图谱本身</a>
+<li><a href="#org8028aa8">1. 知识图谱本身</a>
 <ul>
-<li><a href="#orgc6d58f5">1.1. 在知识图谱之前，有待了解的一些基本知识</a>
+<li><a href="#orgc19d604">1.1. 在知识图谱之前，有待了解的一些基本知识</a>
 <ul>
-<li><a href="#org8f30b0c">1.1.1. 实体（entity）、本体（ontology）、与模式（schema）</a></li>
-<li><a href="#org42976e0">1.1.2. RDF（Resource Description Framework） 资源描述框架</a></li>
-<li><a href="#orgd22fc05">1.1.3. RDFS ——RDF Schema</a></li>
-<li><a href="#orgdff71ae">1.1.4. OWL  Ontology of Web Language</a></li>
-<li><a href="#org63a0a69">1.1.5. SPARQL： RDF的Query Language</a></li>
+<li><a href="#orgabc9e15">1.1.1. 实体（entity）、本体（ontology）、与模式（schema）</a></li>
+<li><a href="#org68e6513">1.1.2. RDF（Resource Description Framework） 资源描述框架</a></li>
+<li><a href="#org6363fb4">1.1.3. RDFS ——RDF Schema</a></li>
+<li><a href="#orgbe7b93a">1.1.4. OWL  Ontology of Web Language</a></li>
+<li><a href="#orgefe7c80">1.1.5. SPARQL： RDF的Query Language</a></li>
 </ul>
 </li>
-<li><a href="#org88b3598">1.2. 知识图谱相关数据集归纳</a>
+<li><a href="#org576b812">1.2. 知识图谱相关数据集归纳</a>
 <ul>
-<li><a href="#org5350e65">1.2.1. DBpedia</a></li>
-<li><a href="#org65e18ce">1.2.2. Yago</a></li>
-<li><a href="#org2ec1013">1.2.3. wikidata</a></li>
-<li><a href="#org2f78771">1.2.4. ConceptNet</a></li>
-<li><a href="#orgab2b6a4">1.2.5. Microsoft Concept Graph</a></li>
-<li><a href="#orgfcd59c4">1.2.6. 特定的中文知识图谱</a></li>
+<li><a href="#org5d635d2">1.2.1. DBpedia</a></li>
+<li><a href="#org750ac5d">1.2.2. Yago</a></li>
+<li><a href="#orgdb2a7ce">1.2.3. wikidata</a></li>
+<li><a href="#orgcd185de">1.2.4. ConceptNet</a></li>
+<li><a href="#org99f2655">1.2.5. Microsoft Concept Graph</a></li>
+<li><a href="#orgb3b476a">1.2.6. 特定的中文知识图谱</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org8d0a758">2. 近年来将知识图谱用于预训练模型的相关工作</a>
+<li><a href="#org9bca43f">2. 近年来将知识图谱用于预训练模型的相关工作</a>
 <ul>
-<li><a href="#org5b85045">2.1. 将知识嵌入到预训练模型中常常存在的两个问题:</a>
+<li><a href="#org24fe7ec">2.1. 将知识嵌入到预训练模型中常常存在的两个问题:</a>
 <ul>
-<li><a href="#org74b0f8b">2.1.1. 嵌入空间不同</a></li>
-<li><a href="#orgda4802a">2.1.2. 知识噪声</a></li>
+<li><a href="#org938eba3">2.1.1. 嵌入空间不同</a></li>
+<li><a href="#org49975e3">2.1.2. 知识噪声</a></li>
 </ul>
 </li>
-<li><a href="#orgab99afb">2.2. 隐式融合的相关工作</a>
+<li><a href="#orgfbef837">2.2. 隐式融合的相关工作</a>
 <ul>
-<li><a href="#orgc93460d">2.2.1. ERNIE</a></li>
-<li><a href="#org5996c36">2.2.2. Know-BERT</a></li>
-<li><a href="#orgb84ef9f">2.2.3. KG-BART: Knowledge Graph-Augmented BART for Generative Commonsense Reasoning</a></li>
+<li><a href="#orgdf6abf2">2.2.1. ERNIE</a></li>
+<li><a href="#org88f5903">2.2.2. Know-BERT</a></li>
+<li><a href="#org9ce182f">2.2.3. KG-BART: Knowledge Graph-Augmented BART for Generative Commonsense Reasoning</a></li>
 </ul>
 </li>
-<li><a href="#org1d78eae">2.3. 显式融合的相关工作</a>
+<li><a href="#org388f15e">2.3. 显式融合的相关工作</a>
 <ul>
-<li><a href="#org6029dc9">2.3.1. K-Adapter</a></li>
-<li><a href="#org75e5dba">2.3.2. K-BERT</a></li>
+<li><a href="#orgc487150">2.3.1. K-Adapter</a></li>
+<li><a href="#org6a2ce6f">2.3.2. K-BERT</a></li>
 </ul>
 </li>
 </ul>
@@ -254,16 +254,16 @@
 </div>
 
 
-<div id="outline-container-orgbba13bb" class="outline-2">
-<h2 id="orgbba13bb"><span class="section-number-2">1.</span> 知识图谱本身</h2>
+<div id="outline-container-org8028aa8" class="outline-2">
+<h2 id="org8028aa8"><span class="section-number-2">1.</span> 知识图谱本身</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orgc6d58f5" class="outline-3">
-<h3 id="orgc6d58f5"><span class="section-number-3">1.1.</span> 在知识图谱之前，有待了解的一些基本知识</h3>
+<div id="outline-container-orgc19d604" class="outline-3">
+<h3 id="orgc19d604"><span class="section-number-3">1.1.</span> 在知识图谱之前，有待了解的一些基本知识</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-org8f30b0c" class="outline-4">
-<h4 id="org8f30b0c"><span class="section-number-4">1.1.1.</span> 实体（entity）、本体（ontology）、与模式（schema）</h4>
+<div id="outline-container-orgabc9e15" class="outline-4">
+<h4 id="orgabc9e15"><span class="section-number-4">1.1.1.</span> 实体（entity）、本体（ontology）、与模式（schema）</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
 这三个词汇有点像是从哲学中舶来味道，本质上都是对存在的一种抽象。下面依次简单介绍之。
@@ -289,8 +289,8 @@
 </div>
 
 
-<div id="outline-container-org42976e0" class="outline-4">
-<h4 id="org42976e0"><span class="section-number-4">1.1.2.</span> RDF（Resource Description Framework） 资源描述框架</h4>
+<div id="outline-container-org68e6513" class="outline-4">
+<h4 id="org68e6513"><span class="section-number-4">1.1.2.</span> RDF（Resource Description Framework） 资源描述框架</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <p>
 参考链接：
@@ -302,7 +302,7 @@
 </div>
 
 <ol class="org-ol">
-<li><a id="org270b001"></a>基本要素<br>
+<li><a id="org94ef86b"></a>基本要素<br>
 <div class="outline-text-5" id="text-1-1-2-1">
 <p>
 资源描述框架是干什么的？
@@ -361,7 +361,7 @@ RDF中存储的就是声明。声明主要是包括了（资源，属性，值�
 </div>
 </li>
 
-<li><a id="orga875165"></a>声明也是一种对象，图也是一种资源<br>
+<li><a id="org7d147c3"></a>声明也是一种对象，图也是一种资源<br>
 <div class="outline-text-5" id="text-1-1-2-2">
 <p>
 刚才说过，一个实体可以有多个属性，这样不同的实体就可以彼此连接起来，形成一张巨大而稀疏的图，这和知识图谱具有了结构上的一致。
@@ -384,9 +384,9 @@ RDF中存储的就是声明。声明主要是包括了（资源，属性，值�
 </div>
 </li>
 
-<li><a id="org3f13c29"></a>RDF常用语法<br>
+<li><a id="org94bed8b"></a>RDF常用语法<br>
 <ol class="org-ol">
-<li><a id="org9a9ce6b"></a>Turtle .ttl文件<br>
+<li><a id="orgf3a55a2"></a>Turtle .ttl文件<br>
 <div class="outline-text-6" id="text-1-1-2-3-1">
 <p>
 下图展示了一个基本的三元组：
@@ -438,24 +438,24 @@ RDF中存储的就是声明。声明主要是包括了（资源，属性，值�
 </div>
 </li>
 
-<li><a id="orgee0df28"></a>XML语言<br>
+<li><a id="orgff024df"></a>XML语言<br>
 <div class="outline-text-6" id="text-1-1-2-3-2">
 <p>
 例子如下：
 </p>
 <div class="org-src-container">
-<pre class="src src-xml">&lt;?<span style="color: #ff79c6;">xml</span> <span style="color: #8995ba; font-style: italic;">version="1.0" encoding="utf-8"</span>?&gt;
-&lt;<span style="color: #ffb86c;">rdf</span>:<span style="color: #50fa7b;">RDF</span> <span style="color: #ffb86c;">xmlns</span>:<span style="color: #ffc9e8; background-color: #372E40;">dbpedia-owl</span>=<span style="color: #f1fa8c;">"http://dbpedia.org/ontology/"</span>
-    <span style="color: #ffb86c;">xmlns</span>:<span style="color: #ffc9e8; background-color: #372E40;">dbpedia</span>=<span style="color: #f1fa8c;">"http://dbpedia.org/resource/"</span>
-    <span style="color: #ffb86c;">xmlns</span>:<span style="color: #ffc9e8; background-color: #372E40;">rdf</span>=<span style="color: #f1fa8c;">"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</span>
-    <span style="color: #ffb86c;">xmlns</span>:<span style="color: #ffc9e8; background-color: #372E40;">swp</span>=<span style="color: #f1fa8c;">"http://www.semanticwebprimer.org/ontology/apartments.ttl#"</span>&gt;
-&lt;<span style="color: #ffb86c;">rdf</span>:<span style="color: #50fa7b;">Description</span>
-<span style="color: #ffb86c;">rdf</span>:<span style="color: #ffc9e8; background-color: #372E40;">about</span>=<span style="color: #f1fa8c;">"http://www.semanticwebprimer.org/ontology/apartments.ttl#BaronWayAppartment"</span>&gt;
-    &lt;<span style="color: #ffb86c;">swp</span>:<span style="color: #50fa7b;">hasNumberOfBedrooms</span>
-    <span style="color: #ffb86c;">rdf</span>:<span style="color: #ffc9e8; background-color: #372E40;">datatype</span>=<span style="color: #f1fa8c;">"http:www.w3.org/2001/XMLSchema#integer"</span>&gt;
+<pre class="src src-xml">&lt;?<span style="color: #ff8080;">xml</span> <span style="color: #62d196;">version="1.0" encoding="utf-8"</span>?&gt;
+&lt;<span style="color: #c991e1;">rdf</span>:<span style="color: #c991e1;">RDF</span> <span style="color: #c991e1;">xmlns</span>:<span style="color: #ffe9aa;">dbpedia-owl</span>=<span style="color: #ffe9aa;">"http://dbpedia.org/ontology/"</span>
+    <span style="color: #c991e1;">xmlns</span>:<span style="color: #ffe9aa;">dbpedia</span>=<span style="color: #ffe9aa;">"http://dbpedia.org/resource/"</span>
+    <span style="color: #c991e1;">xmlns</span>:<span style="color: #ffe9aa;">rdf</span>=<span style="color: #ffe9aa;">"http://www.w3.org/1999/02/22-rdf-syntax-ns#"</span>
+    <span style="color: #c991e1;">xmlns</span>:<span style="color: #ffe9aa;">swp</span>=<span style="color: #ffe9aa;">"http://www.semanticwebprimer.org/ontology/apartments.ttl#"</span>&gt;
+&lt;<span style="color: #c991e1;">rdf</span>:<span style="color: #c991e1;">Description</span>
+<span style="color: #c991e1;">rdf</span>:<span style="color: #ffe9aa;">about</span>=<span style="color: #ffe9aa;">"http://www.semanticwebprimer.org/ontology/apartments.ttl#BaronWayAppartment"</span>&gt;
+    &lt;<span style="color: #c991e1;">swp</span>:<span style="color: #c991e1;">hasNumberOfBedrooms</span>
+    <span style="color: #c991e1;">rdf</span>:<span style="color: #ffe9aa;">datatype</span>=<span style="color: #ffe9aa;">"http:www.w3.org/2001/XMLSchema#integer"</span>&gt;
         3
-    &lt;<span style="color: #ffb86c;">swp</span>:<span style="color: #50fa7b;">hasNumberOfBedrooms</span>&gt;
-&lt;/<span style="color: #ffb86c;">rdf</span>:<span style="color: #50fa7b;">Description</span>&gt;
+    &lt;<span style="color: #c991e1;">swp</span>:<span style="color: #c991e1;">hasNumberOfBedrooms</span>&gt;
+&lt;/<span style="color: #c991e1;">rdf</span>:<span style="color: #c991e1;">Description</span>&gt;
 </pre>
 </div>
 </div>
@@ -466,12 +466,12 @@ RDF中存储的就是声明。声明主要是包括了（资源，属性，值�
 </div>
 
 
-<div id="outline-container-orgd22fc05" class="outline-4">
-<h4 id="orgd22fc05"><span class="section-number-4">1.1.3.</span> RDFS ——RDF Schema</h4>
+<div id="outline-container-org6363fb4" class="outline-4">
+<h4 id="org6363fb4"><span class="section-number-4">1.1.3.</span> RDFS ——RDF Schema</h4>
 <div class="outline-text-4" id="text-1-1-3">
 </div>
 <ol class="org-ol">
-<li><a id="org164f20c"></a>与RDF的区别<br>
+<li><a id="org21940c6"></a>与RDF的区别<br>
 <div class="outline-text-5" id="text-1-1-3-1">
 <p>
 如果说RDF是在对对象进行的操作的话，那么RDFS就是在对类进行操作。这就是二者的区别。
@@ -482,7 +482,7 @@ RDF中存储的就是声明。声明主要是包括了（资源，属性，值�
 </p>
 
 
-<div id="org078dfa2" class="figure">
+<div id="orgc07bc36" class="figure">
 <p><img src="./images/20210330151105.png" alt="20210330151105.png">
 </p>
 </div>
@@ -490,7 +490,7 @@ RDF中存储的就是声明。声明主要是包括了（资源，属性，值�
 </li>
 
 
-<li><a id="org590e9b4"></a>基本语法<br>
+<li><a id="org7ff1495"></a>基本语法<br>
 <div class="outline-text-5" id="text-1-1-3-2">
 <p>
 现以<a href="https://zhuanlan.zhihu.com/p/32122644">这篇笔记</a>为例展示其基本语法。
@@ -507,44 +507,44 @@ RDF中存储的就是声明。声明主要是包括了（资源，属性，值�
 
 ### rdfs当中不区分数据属性和对象属性，词汇rdf:Property定义了属性，即RDF的“边”。
 :chineseName rdf:type rdf:Property;
-	rdfs:domain :Person;
-	rdfs:range xsd:string .
+        rdfs:domain :Person;
+        rdfs:range xsd:string .
 
 :career rdf:type rdf:Property;
-	rdfs:domain :Person;
-	rdfs:range xsd:string .
+        rdfs:domain :Person;
+        rdfs:range xsd:string .
 
 :fullName rdf:type rdf:Property;
-	rdfs:domain :Person;
-	rdfs:range xsd:string .
+        rdfs:domain :Person;
+        rdfs:range xsd:string .
 
 :birthDate rdf:type rdf:Property;
-	rdfs:domain :Person;
-	rdfs:range xsd:date .
+        rdfs:domain :Person;
+        rdfs:range xsd:date .
 
 :height rdf:type rdf:Property;
-	rdfs:domain :Person;
-	rdfs:range xsd:int .
+        rdfs:domain :Person;
+        rdfs:range xsd:int .
 
 :weight rdf:type rdf:Property;
-	rdfs:domain :Person;
-	rdfs:range xsd:int .
+        rdfs:domain :Person;
+        rdfs:range xsd:int .
 
 :nationality rdf:type rdf:Property;
-	rdfs:domain :Person;
-	rdfs:range xsd:string .
+        rdfs:domain :Person;
+        rdfs:range xsd:string .
 
 :hasBirthPlace rdf:type rdf:Property;
-	rdfs:domain :Person;
-	rdfs:range :Place .
+        rdfs:domain :Person;
+        rdfs:range :Place .
 
 :address rdf:type rdf:Property;
-	rdfs:domain :Place;
-	rdfs:range xsd:string .
+        rdfs:domain :Place;
+        rdfs:range xsd:string .
 
 :coordinate rdf:type rdf:Property;
-	rdfs:domain :Place;
-	rdfs:range xsd:string .
+        rdfs:domain :Place;
+        rdfs:range xsd:string .
 </pre>
 </div>
 
@@ -594,7 +594,7 @@ RDF中存储的就是声明。声明主要是包括了（资源，属性，值�
 </p>
 
 
-<div id="orgbeba995" class="figure">
+<div id="org8296aa4" class="figure">
 <p><img src="./images/20210330162134.png" alt="20210330162134.png">
 </p>
 </div>
@@ -616,7 +616,7 @@ RDF中存储的就是声明。声明主要是包括了（资源，属性，值�
 </p>
 
 
-<div id="org6631089" class="figure">
+<div id="org81947bd" class="figure">
 <p><img src="./images/20210330153222.png" alt="20210330153222.png">
 </p>
 </div>
@@ -626,8 +626,8 @@ RDF中存储的就是声明。声明主要是包括了（资源，属性，值�
 </div>
 
 
-<div id="outline-container-orgdff71ae" class="outline-4">
-<h4 id="orgdff71ae"><span class="section-number-4">1.1.4.</span> OWL  Ontology of Web Language</h4>
+<div id="outline-container-orgbe7b93a" class="outline-4">
+<h4 id="orgbe7b93a"><span class="section-number-4">1.1.4.</span> OWL  Ontology of Web Language</h4>
 <div class="outline-text-4" id="text-1-1-4">
 <p>
 从schema走出来之后，我们看看另一种更为严格一点的封装方式，被称作OWL。
@@ -647,44 +647,44 @@ RDF中存储的就是声明。声明主要是包括了（资源，属性，值�
 
 ### owl区分数据属性和对象属性（对象属性表示实体和实体之间的关系）。词汇owl:DatatypeProperty定义了数据属性，owl:ObjectProperty定义了对象属性。
 :chineseName rdf:type owl:DatatypeProperty;
-	rdfs:domain :Person;
-	rdfs:range xsd:string .
+        rdfs:domain :Person;
+        rdfs:range xsd:string .
 
 :career rdf:type owl:DatatypeProperty;
-	rdfs:domain :Person;
-	rdfs:range xsd:string .
+        rdfs:domain :Person;
+        rdfs:range xsd:string .
 
 :fullName rdf:type owl:DatatypeProperty;
-	rdfs:domain :Person;
-	rdfs:range xsd:string .
+        rdfs:domain :Person;
+        rdfs:range xsd:string .
 
 :birthDate rdf:type owl:DatatypeProperty;
-	rdfs:domain :Person;
-	rdfs:range xsd:date .
+        rdfs:domain :Person;
+        rdfs:range xsd:date .
 
 :height rdf:type owl:DatatypeProperty;
-	rdfs:domain :Person;
-	rdfs:range xsd:int .
+        rdfs:domain :Person;
+        rdfs:range xsd:int .
 
 :weight rdf:type owl:DatatypeProperty;
-	rdfs:domain :Person;
-	rdfs:range xsd:int .
+        rdfs:domain :Person;
+        rdfs:range xsd:int .
 
 :nationality rdf:type owl:DatatypeProperty;
-	rdfs:domain :Person;
-	rdfs:range xsd:string .
+        rdfs:domain :Person;
+        rdfs:range xsd:string .
 
 :hasBirthPlace rdf:type owl:ObjectProperty;
-	rdfs:domain :Person;
-	rdfs:range :Place .
+        rdfs:domain :Person;
+        rdfs:range :Place .
 
 :address rdf:type owl:DatatypeProperty;
-	rdfs:domain :Place;
-	rdfs:range xsd:string .
+        rdfs:domain :Place;
+        rdfs:range xsd:string .
 
 :coordinate rdf:type owl:DatatypeProperty;
-	rdfs:domain :Place;
-	rdfs:range xsd:string .
+        rdfs:domain :Place;
+        rdfs:range xsd:string .
 </pre>
 </div>
 
@@ -701,7 +701,7 @@ RDF中存储的就是声明。声明主要是包括了（资源，属性，值�
 </p>
 
 
-<div id="org006e51a" class="figure">
+<div id="org4ccd957" class="figure">
 <p><img src="./images/20210330163551.png" alt="20210330163551.png">
 </p>
 </div>
@@ -709,7 +709,7 @@ RDF中存储的就是声明。声明主要是包括了（资源，属性，值�
 
 
 <ol class="org-ol">
-<li><a id="org824fc27"></a>OWL的推理与知识图谱补全<br>
+<li><a id="org3abab43"></a>OWL的推理与知识图谱补全<br>
 <div class="outline-text-5" id="text-1-1-4-1">
 <p>
 OWL的优势在于推理。主要包括以下推理：
@@ -731,8 +731,8 @@ OWL的优势在于推理。主要包括以下推理：
 
 
 
-<div id="outline-container-org63a0a69" class="outline-4">
-<h4 id="org63a0a69"><span class="section-number-4">1.1.5.</span> SPARQL： RDF的Query Language</h4>
+<div id="outline-container-orgefe7c80" class="outline-4">
+<h4 id="orgefe7c80"><span class="section-number-4">1.1.5.</span> SPARQL： RDF的Query Language</h4>
 <div class="outline-text-4" id="text-1-1-5">
 <p>
 在做查询之前，先想一个一个问题，我们要查的是什么？
@@ -759,9 +759,9 @@ OWL的优势在于推理。主要包括以下推理：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sql"><span style="color: #ff79c6;">SELECT</span> * <span style="color: #ff79c6;">WHERE</span> <span style="color: #61bfff;">{</span>
+<pre class="src src-sql"><span style="color: #ff8080;">SELECT</span> * <span style="color: #ff8080;">WHERE</span> <span style="color: #c66; font-weight: bold;">{</span>
   ?s ?p ?o
-<span style="color: #61bfff;">}</span>
+<span style="color: #c66; font-weight: bold;">}</span>
 </pre>
 </div>
 
@@ -771,12 +771,12 @@ OWL的优势在于推理。主要包括以下推理：
 
 
 <div class="org-src-container">
-<pre class="src src-sql"><span style="color: #ff79c6;">SELECT</span> ?n <span style="color: #ff79c6;">WHERE</span> <span style="color: #61bfff;">{</span>
-  ?s rdf:<span style="color: #ff79c6;">type</span> :Person.
-  ?s :personName <span style="color: #f1fa8c;">'&#21608;&#26143;&#39536;'</span>.
+<pre class="src src-sql"><span style="color: #ff8080;">SELECT</span> ?n <span style="color: #ff8080;">WHERE</span> <span style="color: #c66; font-weight: bold;">{</span>
+  ?s rdf:<span style="color: #ff8080;">type</span> :Person.
+  ?s :personName <span style="color: #ffe9aa;">'&#21608;&#26143;&#39536;'</span>.
   ?s :hasActedIn ?o.
   ?o :movieTitle ?n
-<span style="color: #61bfff;">}</span>
+<span style="color: #c66; font-weight: bold;">}</span>
 </pre>
 </div>
 
@@ -809,7 +809,7 @@ OWL的优势在于推理。主要包括以下推理：
 </p>
 
 
-<div id="org437acce" class="figure">
+<div id="org5a88366" class="figure">
 <p><img src="./images/20210403151531.png" alt="20210403151531.png">
 </p>
 </div>
@@ -822,8 +822,8 @@ OWL的优势在于推理。主要包括以下推理：
 </div>
 
 
-<div id="outline-container-org88b3598" class="outline-3">
-<h3 id="org88b3598"><span class="section-number-3">1.2.</span> 知识图谱相关数据集归纳</h3>
+<div id="outline-container-org576b812" class="outline-3">
+<h3 id="org576b812"><span class="section-number-3">1.2.</span> 知识图谱相关数据集归纳</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 本节首先介绍当前世界范围内知名的高质量大规模开放知识图谱，包括
@@ -839,8 +839,8 @@ OWL的优势在于推理。主要包括以下推理：
 </ul>
 </div>
 
-<div id="outline-container-org5350e65" class="outline-4">
-<h4 id="org5350e65"><span class="section-number-4">1.2.1.</span> DBpedia</h4>
+<div id="outline-container-org5d635d2" class="outline-4">
+<h4 id="org5d635d2"><span class="section-number-4">1.2.1.</span> DBpedia</h4>
 <div class="outline-text-4" id="text-1-2-1">
 <p>
 地址： <a href="https://wiki.dbpedia.org">https://wiki.dbpedia.org</a>
@@ -860,8 +860,8 @@ DBpedia 支持数据集的完全下载。
 </div>
 </div>
 
-<div id="outline-container-org65e18ce" class="outline-4">
-<h4 id="org65e18ce"><span class="section-number-4">1.2.2.</span> Yago</h4>
+<div id="outline-container-org750ac5d" class="outline-4">
+<h4 id="org750ac5d"><span class="section-number-4">1.2.2.</span> Yago</h4>
 <div class="outline-text-4" id="text-1-2-2">
 <p>
 项目地址： <a href="https://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/yago/downloads/">yago</a>
@@ -917,8 +917,8 @@ Yago 是一个整合了维基百科与 WordNet的大规模本体，它首先制�
 </div>
 </div>
 
-<div id="outline-container-org2ec1013" class="outline-4">
-<h4 id="org2ec1013"><span class="section-number-4">1.2.3.</span> wikidata</h4>
+<div id="outline-container-orgdb2a7ce" class="outline-4">
+<h4 id="orgdb2a7ce"><span class="section-number-4">1.2.3.</span> wikidata</h4>
 <div class="outline-text-4" id="text-1-2-3">
 <p>
 目前找到的下载地址在<a href="https://dumps.wikimedia.org/wikidatawiki/entities/">这里</a>
@@ -933,21 +933,21 @@ wikidata里面存储的实体是简化版的URL，这让我对他的可读性产
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">&gt;&gt;&gt; <span style="color: #ff79c6;">from</span> wikidata.client <span style="color: #ff79c6;">import</span> Client
-&gt;&gt;&gt; <span style="color: #ffc9e8; background-color: #372E40;">client</span> = Client<span style="color: #61bfff;">()</span>  <span style="color: #6272a4; font-style: italic;"># </span><span style="color: #6272a4; font-style: italic;">doctest: +SKIP</span>
-&gt;&gt;&gt; <span style="color: #ffc9e8; background-color: #372E40;">entity</span> = client.get<span style="color: #61bfff;">(</span><span style="color: #f1fa8c;">'Q20145'</span>, load=<span style="color: #8be9fd;">True</span><span style="color: #61bfff;">)</span>
+<pre class="src src-python">&gt;&gt;&gt; <span style="color: #ff8080;">from</span> wikidata.client <span style="color: #ff8080;">import</span> Client
+&gt;&gt;&gt; client = Client<span style="color: #c66; font-weight: bold;">()</span>  <span style="color: #565575;"># </span><span style="color: #96a0aa;">doctest: +SKIP</span>
+&gt;&gt;&gt; entity = client.get<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">'Q20145'</span>, load=<span style="color: #aaffe4;">True</span><span style="color: #c66; font-weight: bold;">)</span>
 &gt;&gt;&gt; entity
-&lt;wikidata.entity.Entity Q20145 <span style="color: #f1fa8c;">'IU'</span>&gt;
+&lt;wikidata.entity.Entity Q20145 <span style="color: #ffe9aa;">'IU'</span>&gt;
 &gt;&gt;&gt; entity.description
-m<span style="color: #f1fa8c;">'South Korean singer and actress'</span>
-&gt;&gt;&gt; image_prop = client.get<span style="color: #61bfff;">(</span><span style="color: #f1fa8c;">'P18'</span><span style="color: #61bfff;">)</span>
-&gt;&gt;&gt; image = entity<span style="color: #61bfff;">[</span>image_prop<span style="color: #61bfff;">]</span>
+m<span style="color: #ffe9aa;">'South Korean singer and actress'</span>
+&gt;&gt;&gt; image_prop = client.get<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">'P18'</span><span style="color: #c66; font-weight: bold;">)</span>
+&gt;&gt;&gt; image = entity<span style="color: #c66; font-weight: bold;">[</span>image_prop<span style="color: #c66; font-weight: bold;">]</span>
 &gt;&gt;&gt; image
-&lt;wikidata.commonsmedia.File <span style="color: #f1fa8c;">'File:KBS "The Producers" press conference, 11 May 2015 10.jpg'</span>&gt;
+&lt;wikidata.commonsmedia.File <span style="color: #ffe9aa;">'File:KBS "The Producers" press conference, 11 May 2015 10.jpg'</span>&gt;
 &gt;&gt;&gt; image.image_resolution
-<span style="color: #61bfff;">(</span>820, 1122<span style="color: #61bfff;">)</span>
+<span style="color: #c66; font-weight: bold;">(</span>820, 1122<span style="color: #c66; font-weight: bold;">)</span>
 &gt;&gt;&gt; image.image_url
-<span style="color: #f1fa8c;">'https://upload.wikimedia.org/wikipedia/commons/6/60/KBS_%22The_Producers%22_press_conference%2C_11_May_2015_10.jpg'</span>
+<span style="color: #ffe9aa;">'https://upload.wikimedia.org/wikipedia/commons/6/60/KBS_%22The_Producers%22_press_conference%2C_11_May_2015_10.jpg'</span>
 </pre>
 </div>
 
@@ -973,8 +973,8 @@ claim 包括property:“Population”、value:“8173900”以及一些 qualifie
 </div>
 </div>
 
-<div id="outline-container-org2f78771" class="outline-4">
-<h4 id="org2f78771"><span class="section-number-4">1.2.4.</span> ConceptNet</h4>
+<div id="outline-container-orgcd185de" class="outline-4">
+<h4 id="orgcd185de"><span class="section-number-4">1.2.4.</span> ConceptNet</h4>
 <div class="outline-text-4" id="text-1-2-4">
 <p>
 ConceptNet 是一个大规模的多语言常识知识库，其本质为一个以自然语言的方式描述人类常识的大型语义网络。
@@ -992,8 +992,8 @@ conceptNet是我见过的少有的资料健全访问简单的KG。他的项目�
 </div>
 </div>
 
-<div id="outline-container-orgab2b6a4" class="outline-4">
-<h4 id="orgab2b6a4"><span class="section-number-4">1.2.5.</span> Microsoft Concept Graph</h4>
+<div id="outline-container-org99f2655" class="outline-4">
+<h4 id="org99f2655"><span class="section-number-4">1.2.5.</span> Microsoft Concept Graph</h4>
 <div class="outline-text-4" id="text-1-2-5">
 <p>
 Microsoft Concept Graph 是一个大规模的英文 Taxonomy，
@@ -1013,12 +1013,12 @@ Microsoft Concept Graph 的前身是 Probase，它过自动化地抽取自数十
 </div>
 </div>
 
-<div id="outline-container-orgfcd59c4" class="outline-4">
-<h4 id="orgfcd59c4"><span class="section-number-4">1.2.6.</span> 特定的中文知识图谱</h4>
+<div id="outline-container-orgb3b476a" class="outline-4">
+<h4 id="orgb3b476a"><span class="section-number-4">1.2.6.</span> 特定的中文知识图谱</h4>
 <div class="outline-text-4" id="text-1-2-6">
 </div>
 <ol class="org-ol">
-<li><a id="org5983b3d"></a>Zhishi.me<br>
+<li><a id="org53778c3"></a>Zhishi.me<br>
 <div class="outline-text-5" id="text-1-2-6-1">
 <p>
 下载地址： <a href="http://openkg1.oss-cn-beijing.aliyuncs.com/470c372e-9b16-4076-9101-5696fa4f810d/zhishime-ttl.zip">http://openkg1.oss-cn-beijing.aliyuncs.com/470c372e-9b16-4076-9101-5696fa4f810d/zhishime-ttl.zip</a>
@@ -1038,7 +1038,7 @@ Zhishi.me 是第一份构建中文链接数据的工作，
 </div>
 </li>
 
-<li><a id="org01aa92b"></a>Zhishi.schema<br>
+<li><a id="org851170a"></a>Zhishi.schema<br>
 <div class="outline-text-5" id="text-1-2-6-2">
 <p>
 Zhishi.schema 是一个大规模的中文模式（Schema）知识库，其本质是一个语义网络，
@@ -1049,7 +1049,7 @@ Zhishi.schema抽取自社交站点的分类目录(Category Taxonomy)及标签云
 </div>
 </li>
 
-<li><a id="orgb398455"></a>XLore<br>
+<li><a id="org295f986"></a>XLore<br>
 <div class="outline-text-5" id="text-1-2-6-3">
 <p>
 XLore 是一个大型的中英文知识图谱。来自于THUNLP组。
@@ -1068,7 +1068,7 @@ XLore 是一个大型的中英文知识图谱。来自于THUNLP组。
 </div>
 </li>
 
-<li><a id="org770ef3f"></a>中文开放知识图谱平台<br>
+<li><a id="org1f513e7"></a>中文开放知识图谱平台<br>
 <div class="outline-text-5" id="text-1-2-6-4">
 <p>
 从上面可以找到各种知识图谱相关的数据。
@@ -1082,16 +1082,16 @@ XLore 是一个大型的中英文知识图谱。来自于THUNLP组。
 </div>
 
 
-<div id="outline-container-org8d0a758" class="outline-2">
-<h2 id="org8d0a758"><span class="section-number-2">2.</span> 近年来将知识图谱用于预训练模型的相关工作</h2>
+<div id="outline-container-org9bca43f" class="outline-2">
+<h2 id="org9bca43f"><span class="section-number-2">2.</span> 近年来将知识图谱用于预训练模型的相关工作</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org5b85045" class="outline-3">
-<h3 id="org5b85045"><span class="section-number-3">2.1.</span> 将知识嵌入到预训练模型中常常存在的两个问题:</h3>
+<div id="outline-container-org24fe7ec" class="outline-3">
+<h3 id="org24fe7ec"><span class="section-number-3">2.1.</span> 将知识嵌入到预训练模型中常常存在的两个问题:</h3>
 <div class="outline-text-3" id="text-2-1">
 </div>
-<div id="outline-container-org74b0f8b" class="outline-4">
-<h4 id="org74b0f8b"><span class="section-number-4">2.1.1.</span> 嵌入空间不同</h4>
+<div id="outline-container-org938eba3" class="outline-4">
+<h4 id="org938eba3"><span class="section-number-4">2.1.1.</span> 嵌入空间不同</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <p>
 KG的embedding space和预训练模型的embedding space隶属于两种space.
@@ -1103,8 +1103,8 @@ KG的embedding space和预训练模型的embedding space隶属于两种space.
 </div>
 </div>
 
-<div id="outline-container-orgda4802a" class="outline-4">
-<h4 id="orgda4802a"><span class="section-number-4">2.1.2.</span> 知识噪声</h4>
+<div id="outline-container-org49975e3" class="outline-4">
+<h4 id="org49975e3"><span class="section-number-4">2.1.2.</span> 知识噪声</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <p>
 太多的知识集成反而会破坏掉输入句子的语义.
@@ -1115,12 +1115,12 @@ KG的embedding space和预训练模型的embedding space隶属于两种space.
 
 
 
-<div id="outline-container-orgab99afb" class="outline-3">
-<h3 id="orgab99afb"><span class="section-number-3">2.2.</span> 隐式融合的相关工作</h3>
+<div id="outline-container-orgfbef837" class="outline-3">
+<h3 id="orgfbef837"><span class="section-number-3">2.2.</span> 隐式融合的相关工作</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-orgc93460d" class="outline-4">
-<h4 id="orgc93460d"><span class="section-number-4">2.2.1.</span> ERNIE</h4>
+<div id="outline-container-orgdf6abf2" class="outline-4">
+<h4 id="orgdf6abf2"><span class="section-number-4">2.2.1.</span> ERNIE</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 ERNIE是THU 刘致远组的工作，也是比较早将知识图谱和BERT进行融合的论文。
@@ -1140,7 +1140,7 @@ ERNIE是THU 刘致远组的工作，也是比较早将知识图谱和BERT进行�
 </p>
 
 
-<div id="orgdf8bf8f" class="figure">
+<div id="orgc8b0d2b" class="figure">
 <p><img src="./images/20210416165914.png" alt="20210416165914.png">
 </p>
 </div>
@@ -1151,7 +1151,7 @@ ERNIE是THU 刘致远组的工作，也是比较早将知识图谱和BERT进行�
 </div>
 
 <ol class="org-ol">
-<li><a id="org4385144"></a>模型输入<br>
+<li><a id="orgf139915"></a>模型输入<br>
 <div class="outline-text-5" id="text-2-2-1-1">
 <p>
 seqence的输入比较简单，就是各token的各层次embedding（如位置、段、语义等等）在组合之后进入T-encoder模块；
@@ -1161,7 +1161,7 @@ seqence的输入比较简单，就是各token的各层次embedding（如位置�
 </li>
 
 
-<li><a id="org49aa495"></a>知识融合<br>
+<li><a id="orgbe765c8"></a>知识融合<br>
 <div class="outline-text-5" id="text-2-2-1-2">
 <p>
 ERNIE的知识融合，只是在sequence中和实体相同意义的token之间完成的。比如在上图中，bob这个名字，和实体一致，所以二者才会融合。
@@ -1174,7 +1174,7 @@ ERNIE的知识融合，只是在sequence中和实体相同意义的token之间�
 </p>
 
 
-<div id="org225e7fd" class="figure">
+<div id="org2a85f05" class="figure">
 <p><img src="./images/20210416170826.png" alt="20210416170826.png">
 </p>
 </div>
@@ -1188,7 +1188,7 @@ ERNIE的知识融合，只是在sequence中和实体相同意义的token之间�
 </p>
 
 
-<div id="orgad3a62e" class="figure">
+<div id="org15c3f57" class="figure">
 <p><img src="./images/20210416170324.png" alt="20210416170324.png">
 </p>
 </div>
@@ -1198,7 +1198,7 @@ ERNIE的知识融合，只是在sequence中和实体相同意义的token之间�
 </p>
 
 
-<div id="orgec0668e" class="figure">
+<div id="org7e20c92" class="figure">
 <p><img src="./images/20210416170427.png" alt="20210416170427.png">
 </p>
 </div>
@@ -1215,8 +1215,8 @@ ERNIE的知识融合，只是在sequence中和实体相同意义的token之间�
 </ol>
 </div>
 
-<div id="outline-container-org5996c36" class="outline-4">
-<h4 id="org5996c36"><span class="section-number-4">2.2.2.</span> Know-BERT</h4>
+<div id="outline-container-org88f5903" class="outline-4">
+<h4 id="org88f5903"><span class="section-number-4">2.2.2.</span> Know-BERT</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <p>
 Know-BERT的思路和ERNIE有一点相似，但在结合方式等诸多层面上进行了改动。笔者在阅读有关knowBERT的论文时整体上是比较困惑的，
@@ -1224,7 +1224,7 @@ Know-BERT的思路和ERNIE有一点相似，但在结合方式等诸多层面上
 </p>
 
 
-<div id="org0e0c984" class="figure">
+<div id="org6fe014a" class="figure">
 <p><img src="./images/20210417094157.png" alt="20210417094157.png">
 </p>
 </div>
@@ -1238,7 +1238,7 @@ Know-BERT的思路和ERNIE有一点相似，但在结合方式等诸多层面上
 </p>
 
 
-<div id="org57e9db1" class="figure">
+<div id="orgca318e0" class="figure">
 <p><img src="./images/20210417094712.png" alt="20210417094712.png">
 </p>
 </div>
@@ -1257,7 +1257,7 @@ Know-BERT的思路和ERNIE有一点相似，但在结合方式等诸多层面上
 </p>
 
 
-<div id="orga708ede" class="figure">
+<div id="org3987901" class="figure">
 <p><img src="./images/20210417094931.png" alt="20210417094931.png">
 </p>
 </div>
@@ -1280,7 +1280,7 @@ Know-BERT的思路和ERNIE有一点相似，但在结合方式等诸多层面上
 </p>
 
 
-<div id="org6ca7384" class="figure">
+<div id="org4a7c28d" class="figure">
 <p><img src="./images/20210417101526.png" alt="20210417101526.png">
 </p>
 </div>
@@ -1299,7 +1299,7 @@ Know-BERT的思路和ERNIE有一点相似，但在结合方式等诸多层面上
 </p>
 
 
-<div id="orge88ef5b" class="figure">
+<div id="org3b80e9e" class="figure">
 <p><img src="./images/20210417102144.png" alt="20210417102144.png">
 </p>
 </div>
@@ -1309,7 +1309,7 @@ Know-BERT的思路和ERNIE有一点相似，但在结合方式等诸多层面上
 </p>
 
 
-<div id="org58fa4d2" class="figure">
+<div id="org11775ee" class="figure">
 <p><img src="./images/20210417102352.png" alt="20210417102352.png">
 </p>
 </div>
@@ -1319,7 +1319,7 @@ Know-BERT的思路和ERNIE有一点相似，但在结合方式等诸多层面上
 </p>
 
 
-<div id="orgef21816" class="figure">
+<div id="org89676cf" class="figure">
 <p><img src="./images/20210417102441.png" alt="20210417102441.png">
 </p>
 </div>
@@ -1329,7 +1329,7 @@ Know-BERT的思路和ERNIE有一点相似，但在结合方式等诸多层面上
 </p>
 
 
-<div id="org9e5bc4b" class="figure">
+<div id="org7867807" class="figure">
 <p><img src="./images/20210417102514.png" alt="20210417102514.png">
 </p>
 </div>
@@ -1339,7 +1339,7 @@ Know-BERT的思路和ERNIE有一点相似，但在结合方式等诸多层面上
 </p>
 
 
-<div id="orga710c4e" class="figure">
+<div id="orgf7a0e26" class="figure">
 <p><img src="./images/20210417102545.png" alt="20210417102545.png">
 </p>
 </div>
@@ -1354,7 +1354,7 @@ Know-BERT的思路和ERNIE有一点相似，但在结合方式等诸多层面上
 </p>
 
 
-<div id="orgf624972" class="figure">
+<div id="orgb1ac4ce" class="figure">
 <p><img src="./images/20210417103108.png" alt="20210417103108.png">
 </p>
 </div>
@@ -1369,7 +1369,7 @@ Know-BERT的思路和ERNIE有一点相似，但在结合方式等诸多层面上
 </p>
 
 
-<div id="org1484bb0" class="figure">
+<div id="org76f99a5" class="figure">
 <p><img src="./images/20210417103306.png" alt="20210417103306.png">
 </p>
 </div>
@@ -1383,7 +1383,7 @@ Know-BERT的思路和ERNIE有一点相似，但在结合方式等诸多层面上
 </p>
 
 
-<div id="orgc601c2b" class="figure">
+<div id="orgc86b29d" class="figure">
 <p><img src="./images/20210417103518.png" alt="20210417103518.png">
 </p>
 </div>
@@ -1408,12 +1408,12 @@ Know-BERT的思路和ERNIE有一点相似，但在结合方式等诸多层面上
 </div>
 </div>
 
-<div id="outline-container-orgb84ef9f" class="outline-4">
-<h4 id="orgb84ef9f"><span class="section-number-4">2.2.3.</span> KG-BART: Knowledge Graph-Augmented BART for Generative Commonsense Reasoning</h4>
+<div id="outline-container-org9ce182f" class="outline-4">
+<h4 id="org9ce182f"><span class="section-number-4">2.2.3.</span> KG-BART: Knowledge Graph-Augmented BART for Generative Commonsense Reasoning</h4>
 <div class="outline-text-4" id="text-2-2-3">
 </div>
 <ol class="org-ol">
-<li><a id="org8750742"></a>论文基本信息<br>
+<li><a id="orgae7a16e"></a>论文基本信息<br>
 <div class="outline-text-5" id="text-2-2-3-1">
 <p>
 论文地址见<a href="https://arxiv.org/pdf/2009.12677v2.pdf">这里</a>，源码见<a href="https://github.com/yeliu918/KG-BART">这里</a>。
@@ -1441,7 +1441,7 @@ BERT那种NLU的能力，同时也具有GPT那种NLG的能力。不过目前来�
 </p>
 
 
-<div id="orgc884d71" class="figure">
+<div id="orga4275ff" class="figure">
 <p><img src="./images/20210405170137.png" alt="20210405170137.png">
 </p>
 </div>
@@ -1465,9 +1465,9 @@ BERT那种NLU的能力，同时也具有GPT那种NLG的能力。不过目前来�
 
 
 
-<li><a id="orgb6408cb"></a>结合前的模型<br>
+<li><a id="org2fe3efe"></a>结合前的模型<br>
 <ol class="org-ol">
-<li><a id="org74e8c34"></a>预训练模型<br>
+<li><a id="org6f6b3a9"></a>预训练模型<br>
 <div class="outline-text-6" id="text-2-2-3-2-1">
 <p>
 BART, 包含encoder和decoder两个部分.
@@ -1475,7 +1475,7 @@ BART, 包含encoder和decoder两个部分.
 </div>
 </li>
 
-<li><a id="org4b6af4e"></a>知识图谱及其表示的提取方法<br>
+<li><a id="org103d7b3"></a>知识图谱及其表示的提取方法<br>
 <div class="outline-text-6" id="text-2-2-3-2-2">
 <p>
 所使用的知识图谱是conceptNet, 前面已经有过介绍.
@@ -1492,7 +1492,7 @@ BART, 包含encoder和decoder两个部分.
 </p>
 
 
-<div id="org5cf93d6" class="figure">
+<div id="org2708bb2" class="figure">
 <p><img src="./images/20210410152640.png" alt="20210410152640.png">
 </p>
 </div>
@@ -1509,16 +1509,16 @@ BART, 包含encoder和decoder两个部分.
 </ol>
 </li>
 
-<li><a id="org2e0aa5d"></a>结合方式及具体相关细节<br>
+<li><a id="org6d23410"></a>结合方式及具体相关细节<br>
 <ol class="org-ol">
-<li><a id="org075d31d"></a>概览<br>
+<li><a id="org248d222"></a>概览<br>
 <div class="outline-text-6" id="text-2-2-3-3-1">
 <p>
 二者总体的结合方式可由下图表示:
 </p>
 
 
-<div id="orgd8c28da" class="figure">
+<div id="orge548485" class="figure">
 <p><img src="./images/20210410152911.png" alt="20210410152911.png">
 </p>
 </div>
@@ -1543,10 +1543,10 @@ BART, 包含encoder和decoder两个部分.
 </div>
 </li>
 
-<li><a id="orga79c863"></a>encoder部分结合细节<br>
+<li><a id="orgdbbfa26"></a>encoder部分结合细节<br>
 <div class="outline-text-6" id="text-2-2-3-3-2">
 
-<div id="orgee60124" class="figure">
+<div id="org1cec876" class="figure">
 <p><img src="./images/20210410154406.png" alt="20210410154406.png">
 </p>
 </div>
@@ -1564,7 +1564,7 @@ BART, 包含encoder和decoder两个部分.
 </div>
 
 <ol class="org-ol">
-<li><a id="org910724b"></a>SCI<br>
+<li><a id="org898d076"></a>SCI<br>
 <div class="outline-text-7" id="text-2-2-3-3-2-1">
 <p>
 使用的是一维卷积+池化层.
@@ -1572,14 +1572,14 @@ BART, 包含encoder和decoder两个部分.
 </div>
 </li>
 
-<li><a id="orgddee622"></a>[重点]融合部分 Multi-head Graph Attention<br>
+<li><a id="org2c2eef5"></a>[重点]融合部分 Multi-head Graph Attention<br>
 <div class="outline-text-7" id="text-2-2-3-3-2-2">
 <p>
 融合部分使用的是GAT里的策略, 如下图所示.
 </p>
 
 
-<div id="org8213c07" class="figure">
+<div id="org121d8a0" class="figure">
 <p><img src="./images/20210410155051.png" alt="20210410155051.png">
 </p>
 </div>
@@ -1595,7 +1595,7 @@ BART, 包含encoder和decoder两个部分.
 </div>
 </li>
 
-<li><a id="org4b6ec8b"></a>CSD: Concept 2 subword<br>
+<li><a id="org2341d5d"></a>CSD: Concept 2 subword<br>
 <div class="outline-text-7" id="text-2-2-3-3-2-3">
 <p>
 先使用上采样进行序列扩充, 之后使用反卷积(Deconv1D)进行扩充处理,之后再使用两层全连接做线性变换,最后接上GeLU和LayerNorm.
@@ -1607,10 +1607,10 @@ BART, 包含encoder和decoder两个部分.
 
 
 
-<li><a id="org38abdce"></a>decoder部分结合细节<br>
+<li><a id="org5fa8b07"></a>decoder部分结合细节<br>
 <div class="outline-text-6" id="text-2-2-3-3-3">
 
-<div id="orgf14416b" class="figure">
+<div id="org029e303" class="figure">
 <p><img src="./images/20210410160131.png" alt="20210410160131.png">
 </p>
 </div>
@@ -1627,7 +1627,7 @@ decoder部分的知识图谱和前面的推理图谱,除了内容上的不一致
 </ul>
 
 
-<div id="org9660647" class="figure">
+<div id="org1c10d7e" class="figure">
 <p><img src="./images/20210410161927.png" alt="20210410161927.png">
 </p>
 </div>
@@ -1637,7 +1637,7 @@ decoder部分的知识图谱和前面的推理图谱,除了内容上的不一致
 </ul>
 
 
-<div id="org783c5e0" class="figure">
+<div id="orgf5c81f0" class="figure">
 <p><img src="./images/20210410162044.png" alt="20210410162044.png">
 </p>
 </div>
@@ -1647,7 +1647,7 @@ decoder部分的知识图谱和前面的推理图谱,除了内容上的不一致
 </p>
 
 
-<div id="org628d713" class="figure">
+<div id="org25b9a5c" class="figure">
 <p><img src="./images/20210410162229.png" alt="20210410162229.png">
 </p>
 </div>
@@ -1661,7 +1661,7 @@ decoder部分的知识图谱和前面的推理图谱,除了内容上的不一致
 </p>
 
 
-<div id="orgbe8f391" class="figure">
+<div id="org32dc5d1" class="figure">
 <p><img src="./images/20210410162347.png" alt="20210410162347.png">
 </p>
 </div>
@@ -1700,12 +1700,12 @@ decoder部分的知识图谱和前面的推理图谱,除了内容上的不一致
 
 
 
-<div id="outline-container-org1d78eae" class="outline-3">
-<h3 id="org1d78eae"><span class="section-number-3">2.3.</span> 显式融合的相关工作</h3>
+<div id="outline-container-org388f15e" class="outline-3">
+<h3 id="org388f15e"><span class="section-number-3">2.3.</span> 显式融合的相关工作</h3>
 <div class="outline-text-3" id="text-2-3">
 </div>
-<div id="outline-container-org6029dc9" class="outline-4">
-<h4 id="org6029dc9"><span class="section-number-4">2.3.1.</span> K-Adapter</h4>
+<div id="outline-container-orgc487150" class="outline-4">
+<h4 id="orgc487150"><span class="section-number-4">2.3.1.</span> K-Adapter</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <p>
 K-adaptor在knowBERT，ERNIRE等论文的基础上又往前走了一步。从创新性上而言，K-Adapter的主要创新点在于其支持持续的知识注入（continual learning），
@@ -1714,7 +1714,7 @@ K-adaptor在knowBERT，ERNIRE等论文的基础上又往前走了一步。从创
 </p>
 
 
-<div id="org7a33c5a" class="figure">
+<div id="org0144f49" class="figure">
 <p><img src="./images/20210417112744.png" alt="20210417112744.png">
 </p>
 </div>
@@ -1732,7 +1732,7 @@ K-adaptor在knowBERT，ERNIRE等论文的基础上又往前走了一步。从创
 </p>
 
 
-<div id="org6611cae" class="figure">
+<div id="org7635330" class="figure">
 <p><img src="./images/20210417205915.png" alt="20210417205915.png">
 </p>
 </div>
@@ -1777,8 +1777,8 @@ Their development was one of the biggest breakthroughs in natural language proce
 
 
 
-<div id="outline-container-org75e5dba" class="outline-4">
-<h4 id="org75e5dba"><span class="section-number-4">2.3.2.</span> K-BERT</h4>
+<div id="outline-container-org6a2ce6f" class="outline-4">
+<h4 id="org6a2ce6f"><span class="section-number-4">2.3.2.</span> K-BERT</h4>
 <div class="outline-text-4" id="text-2-3-2">
 <p>
 同其他论文的思路不同,K-BERT通过维护一个良好的句子树来实现知识的嵌入。换而言之，所有的知识注入都是通过PTM自己完成的，而不是先有一个表示，再把该表示同seq的表示做融合。
@@ -1789,7 +1789,7 @@ K-BERT的核心idea可以用下图表达
 </p>
 
 
-<div id="org6bccdf0" class="figure">
+<div id="orge33ebb0" class="figure">
 <p><img src="./images/20210417213253.png" alt="20210417213253.png">
 </p>
 </div>
@@ -1800,7 +1800,7 @@ K-BERT的核心idea可以用下图表达
 </p>
 
 
-<div id="orgec961c3" class="figure">
+<div id="org07a5c15" class="figure">
 <p><img src="./images/20210417213423.png" alt="20210417213423.png">
 </p>
 </div>
@@ -1825,7 +1825,7 @@ K-BERT的核心idea可以用下图表达
 </p>
 
 
-<div id="org96a7309" class="figure">
+<div id="orge2db517" class="figure">
 <p><img src="./images/20210417214552.png" alt="20210417214552.png">
 </p>
 </div>
@@ -1839,7 +1839,7 @@ K-BERT的核心idea可以用下图表达
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: 梁子 (<a href="mailto:frostliangzi@qq.com">frostliangzi@qq.com</a>)</span> <span class="date">Create Date: 2021-04-06 Tue 00:00</span> <span class="date">Last modified: 2024-03-09 Sat 20:56</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 28.1 (<a href="https://orgmode.org">Org</a> mode 9.5.2)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: 梁子 (<a href="mailto:frostliangzi@qq.com">frostliangzi@qq.com</a>)</span> <span class="date">Create Date: 2021-04-06 Tue 00:00</span> <span class="date">Last modified: 2025-02-01 Sat 17:21</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</span> </div>
 </div>
 </body>
 </html>

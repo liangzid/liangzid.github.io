@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-11-11 Mon 17:01 -->
+<!-- 2025-02-01 Sat 17:45 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Linux: mount the disk into ~/home~</title>
 <meta name="author" content="Zi Liang" />
 <meta name="generator" content="Org Mode" />
-<style type="text/css">
+<style>
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -203,23 +203,23 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgaacbb7f">1. Step 1: find the filename of disk with <code>sudo fdisk -l</code>, like <code>/dev/sda</code></a></li>
-<li><a href="#org8969eba">2. Step2: mount the disk to a temporal directory.</a></li>
-<li><a href="#orgb98dfab">3. Step3: Copy the data in home and backup.</a></li>
-<li><a href="#orgf62464e">4. Step 4: new <code>/home</code> and mount it.</a></li>
-<li><a href="#org2b02b91">5. Step 5: automatically mount for future usage.</a></li>
+<li><a href="#org95c9072">1. Step 1: find the filename of disk with <code>sudo fdisk -l</code>, like <code>/dev/sda</code></a></li>
+<li><a href="#org918f393">2. Step2: mount the disk to a temporal directory.</a></li>
+<li><a href="#orgb57b5da">3. Step3: Copy the data in home and backup.</a></li>
+<li><a href="#orgc3b7f23">4. Step 4: new <code>/home</code> and mount it.</a></li>
+<li><a href="#org8dfe6a6">5. Step 5: automatically mount for future usage.</a></li>
 </ul>
 </div>
 </div>
 
 
 
-<div id="outline-container-orgaacbb7f" class="outline-2">
-<h2 id="orgaacbb7f"><span class="section-number-2">1.</span> Step 1: find the filename of disk with <code>sudo fdisk -l</code>, like <code>/dev/sda</code></h2>
+<div id="outline-container-org95c9072" class="outline-2">
+<h2 id="org95c9072"><span class="section-number-2">1.</span> Step 1: find the filename of disk with <code>sudo fdisk -l</code>, like <code>/dev/sda</code></h2>
 </div>
 
-<div id="outline-container-org8969eba" class="outline-2">
-<h2 id="org8969eba"><span class="section-number-2">2.</span> Step2: mount the disk to a temporal directory.</h2>
+<div id="outline-container-org918f393" class="outline-2">
+<h2 id="org918f393"><span class="section-number-2">2.</span> Step2: mount the disk to a temporal directory.</h2>
 <div class="outline-text-2" id="text-2">
 <ol class="org-ol">
 <li><code>mkdir /media/home</code></li>
@@ -229,8 +229,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgb98dfab" class="outline-2">
-<h2 id="orgb98dfab"><span class="section-number-2">3.</span> Step3: Copy the data in home and backup.</h2>
+<div id="outline-container-orgb57b5da" class="outline-2">
+<h2 id="orgb57b5da"><span class="section-number-2">3.</span> Step3: Copy the data in home and backup.</h2>
 <div class="outline-text-2" id="text-3">
 <div class="org-src-container">
 <pre class="src src-sh">rsync -aXS /home/. /media/home/.
@@ -241,8 +241,8 @@ mv /home /home_old
 </div>
 </div>
 
-<div id="outline-container-orgf62464e" class="outline-2">
-<h2 id="orgf62464e"><span class="section-number-2">4.</span> Step 4: new <code>/home</code> and mount it.</h2>
+<div id="outline-container-orgc3b7f23" class="outline-2">
+<h2 id="orgc3b7f23"><span class="section-number-2">4.</span> Step 4: new <code>/home</code> and mount it.</h2>
 <div class="outline-text-2" id="text-4">
 <div class="org-src-container">
 <pre class="src src-sh">mkdir /home
@@ -253,8 +253,8 @@ mount /dev/sda /home
 </div>
 </div>
 
-<div id="outline-container-org2b02b91" class="outline-2">
-<h2 id="org2b02b91"><span class="section-number-2">5.</span> Step 5: automatically mount for future usage.</h2>
+<div id="outline-container-org8dfe6a6" class="outline-2">
+<h2 id="org8dfe6a6"><span class="section-number-2">5.</span> Step 5: automatically mount for future usage.</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 <code>sudo vim /etc/fstab</code>
@@ -279,7 +279,7 @@ or
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Tue Nov  5 14:40:40 2024</span> <span class="date">Last modified: 2024-11-09 Sat 15:00</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.28)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Tue Nov  5 14:40:40 2024</span> <span class="date">Last modified: 2025-02-01 Sat 17:21</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</span> </div>
 </div>
 </body>
 </html>

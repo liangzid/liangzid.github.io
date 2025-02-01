@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-03-09 Sat 21:04 -->
+<!-- 2025-02-01 Sat 17:45 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>FATE: 一种联邦学习框架</title>
@@ -189,13 +189,13 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
+  .org-svg { }
 </style>
 <link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
 </head>
 <body>
 <div id="preamble" class="status">
-<nav class="nav"> <a href="/index.html" class="button">Home</a>  </nav> <hr>
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
 </div>
 <div id="content" class="content">
 <h1 class="title">FATE: 一种联邦学习框架</h1>
@@ -203,16 +203,16 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orged21e43">1. 联邦学习基本概念</a></li>
-<li><a href="#org7f2ab9b">2. 安装</a></li>
-<li><a href="#org5e44922">3. FATE总览</a></li>
-<li><a href="#orgb00aa98">4. fate demo测试</a></li>
+<li><a href="#orgc5a8ac9">1. 联邦学习基本概念</a></li>
+<li><a href="#orgff68ded">2. 安装</a></li>
+<li><a href="#org10c2143">3. FATE总览</a></li>
+<li><a href="#org07d12f8">4. fate demo测试</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orged21e43" class="outline-2">
-<h2 id="orged21e43"><span class="section-number-2">1.</span> 联邦学习基本概念</h2>
+<div id="outline-container-orgc5a8ac9" class="outline-2">
+<h2 id="orgc5a8ac9"><span class="section-number-2">1.</span> 联邦学习基本概念</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 之前听学长讲过关于联邦学习的汇报，但后来发现该报告无法cover阅读文档时所出现的问题，因此还是需要自己再补充一些知识。
@@ -246,8 +246,8 @@ FATE就是这样的一个框架。
 </div>
 </div>
 
-<div id="outline-container-org7f2ab9b" class="outline-2">
-<h2 id="org7f2ab9b"><span class="section-number-2">2.</span> 安装</h2>
+<div id="outline-container-orgff68ded" class="outline-2">
+<h2 id="orgff68ded"><span class="section-number-2">2.</span> 安装</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 官网提供了两种安装方式，即单机安装与集群安装。从这里了解到<a href="https://fate.fedai.org/install/">细节</a>。
@@ -264,28 +264,28 @@ docker即容器技术，也是目前最常用的解决系统环境依赖的解�
 </p>
 <div class="org-src-container">
 <pre class="src src-bash">
-<span style="color: #6272a4; font-style: italic;">## </span><span style="color: #6272a4; font-style: italic;">install</span>
-<span style="color: #6272a4; font-style: italic;">#</span><span style="color: #6272a4; font-style: italic;">Get code</span>
-wget https://webank-ai-1251170195.cos.ap-guangzhou.myqcloud.com/docker_standalone_fate_$<span style="color: #61bfff;">{</span><span style="color: #ffc9e8; background-color: #372E40;">version</span><span style="color: #61bfff;">}</span>.tar.gz
-tar -xzvf docker_standalone_fate_$<span style="color: #61bfff;">{</span><span style="color: #ffc9e8; background-color: #372E40;">version</span><span style="color: #61bfff;">}</span>.tar.gz
+<span style="color: #565575;">## </span><span style="color: #96a0aa;">install</span>
+<span style="color: #565575;">#</span><span style="color: #96a0aa;">Get code</span>
+wget https://webank-ai-1251170195.cos.ap-guangzhou.myqcloud.com/docker_standalone_fate_$<span style="color: #c66; font-weight: bold;">{</span><span style="color: #ffe9aa;">version</span><span style="color: #c66; font-weight: bold;">}</span>.tar.gz
+tar -xzvf docker_standalone_fate_$<span style="color: #c66; font-weight: bold;">{</span><span style="color: #ffe9aa;">version</span><span style="color: #c66; font-weight: bold;">}</span>.tar.gz
 
-<span style="color: #6272a4; font-style: italic;">#</span><span style="color: #6272a4; font-style: italic;">Execute the command</span>
-<span style="color: #ffb86c;">cd</span> docker_standalone_fate_$<span style="color: #61bfff;">{</span><span style="color: #ffc9e8; background-color: #372E40;">version</span><span style="color: #61bfff;">}</span>
+<span style="color: #565575;">#</span><span style="color: #96a0aa;">Execute the command</span>
+<span style="color: #c991e1;">cd</span> docker_standalone_fate_$<span style="color: #c66; font-weight: bold;">{</span><span style="color: #ffe9aa;">version</span><span style="color: #c66; font-weight: bold;">}</span>
 bash install_standalone_docker.sh
 
-<span style="color: #6272a4; font-style: italic;"># </span><span style="color: #6272a4; font-style: italic;">where ${version} should be replaced into docker version.</span>
+<span style="color: #565575;"># </span><span style="color: #96a0aa;">where ${version} should be replaced into docker version.</span>
 
 
-<span style="color: #6272a4; font-style: italic;">## </span><span style="color: #6272a4; font-style: italic;">unit test</span>
-<span style="color: #ffc9e8; background-color: #372E40;">CONTAINER_ID</span>=<span style="color: #bd93f9; font-weight: bold;">`docker ps -aqf "name=fate"`</span>
-docker exec -t -i $<span style="color: #61bfff;">{</span><span style="color: #ffc9e8; background-color: #372E40;">CONTAINER_ID</span><span style="color: #61bfff;">}</span> bash
+<span style="color: #565575;">## </span><span style="color: #96a0aa;">unit test</span>
+<span style="color: #ffe9aa;">CONTAINER_ID</span>=<span style="color: #fa8072;">`docker ps -aqf "name=fate"`</span>
+docker exec -t -i $<span style="color: #c66; font-weight: bold;">{</span><span style="color: #ffe9aa;">CONTAINER_ID</span><span style="color: #c66; font-weight: bold;">}</span> bash
 bash ./python/federatedml/test/run_test.sh
 
-<span style="color: #6272a4; font-style: italic;">## </span><span style="color: #6272a4; font-style: italic;">install more tool</span>
+<span style="color: #565575;">## </span><span style="color: #96a0aa;">install more tool</span>
  pip install fate-client
  pip install fate-test
 
-<span style="color: #6272a4; font-style: italic;">## </span><span style="color: #6272a4; font-style: italic;">see the fateboard access via browser with http://hostip:8080</span>
+<span style="color: #565575;">## </span><span style="color: #96a0aa;">see the fateboard access via browser with http://hostip:8080</span>
 </pre>
 </div>
 
@@ -295,8 +295,8 @@ bash ./python/federatedml/test/run_test.sh
 </div>
 </div>
 
-<div id="outline-container-org5e44922" class="outline-2">
-<h2 id="org5e44922"><span class="section-number-2">3.</span> FATE总览</h2>
+<div id="outline-container-org10c2143" class="outline-2">
+<h2 id="org10c2143"><span class="section-number-2">3.</span> FATE总览</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 根据<a href="https://fate.fedai.org/overview/">官网</a>的介绍，fate主要包括以下几个大的板块：
@@ -316,8 +316,8 @@ bash ./python/federatedml/test/run_test.sh
 </p>
 </div>
 </div>
-<div id="outline-container-orgb00aa98" class="outline-2">
-<h2 id="orgb00aa98"><span class="section-number-2">4.</span> fate demo测试</h2>
+<div id="outline-container-org07d12f8" class="outline-2">
+<h2 id="org07d12f8"><span class="section-number-2">4.</span> fate demo测试</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 目前fate支持两个版本，官方支持使用v2,因此后续就以v2为例子进行。注意：即使官方版本是1.x.x版本（例如我使用时官方推荐版本是1.6.1），也是可以使用v2的！
@@ -334,7 +334,7 @@ bash ./python/federatedml/test/run_test.sh
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: liangzid (<a href="mailto:2273067585@qq.com">2273067585@qq.com</a>)</span> <span class="date">Create Date: Sat Sep 18 20:55:59 2021</span> <span class="date">Last modified: 2024-03-09 Sat 20:56</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 28.1 (<a href="https://orgmode.org">Org</a> mode 9.5.2)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: liangzid (<a href="mailto:2273067585@qq.com">2273067585@qq.com</a>)</span> <span class="date">Create Date: Sat Sep 18 20:55:59 2021</span> <span class="date">Last modified: 2025-02-01 Sat 17:21</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</span> </div>
 </div>
 </body>
 </html>

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-09-14 Sat 12:06 -->
+<!-- 2025-02-01 Sat 17:45 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>理解Kernel Trick、Gaussian Process以及Neural Tangent Kernel</title>
 <meta name="author" content="Zi Liang" />
 <meta name="generator" content="Org Mode" />
-<style type="text/css">
+<style>
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -235,38 +235,38 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orga2a9203">1. Kernel Method</a>
+<li><a href="#org7d22589">1. Kernel Method</a>
 <ul>
-<li><a href="#org8360cfe">1.1. Motivation for proposing Kernel Methods</a></li>
-<li><a href="#orgf080567">1.2. 核方法的核心思路：基于当前的线性无关组通过非线性组合构建一组维度更高的“基”以使得在过去线性无关组上无法线性可分的数据在新的基上存在线性可分的可能</a></li>
-<li><a href="#orgc10b50d">1.3. 核技巧（Kernel Trick）：在新基上的线性操作（尤其是点积）可以借助核函数直接在原空间中计算</a></li>
-<li><a href="#orga08c230">1.4. 几种常见的Kernel Function</a>
+<li><a href="#orge14b0b7">1.1. Motivation for proposing Kernel Methods</a></li>
+<li><a href="#org55babb7">1.2. 核方法的核心思路：基于当前的线性无关组通过非线性组合构建一组维度更高的“基”以使得在过去线性无关组上无法线性可分的数据在新的基上存在线性可分的可能</a></li>
+<li><a href="#org38cde3c">1.3. 核技巧（Kernel Trick）：在新基上的线性操作（尤其是点积）可以借助核函数直接在原空间中计算</a></li>
+<li><a href="#org5ba9f81">1.4. 几种常见的Kernel Function</a>
 <ul>
-<li><a href="#org0b52a7d">1.4.1. Linear Kernel</a></li>
-<li><a href="#org843e7dd">1.4.2. Polynomial Kernel</a></li>
-<li><a href="#orgd8da585">1.4.3. Guassian Radial Basis Function, RBF Kernel</a></li>
-<li><a href="#orga9e4564">1.4.4. Laplace Kernel</a></li>
-<li><a href="#org225a419">1.4.5. Obvervations</a></li>
+<li><a href="#orgf0dfd16">1.4.1. Linear Kernel</a></li>
+<li><a href="#org9eec43e">1.4.2. Polynomial Kernel</a></li>
+<li><a href="#org616acf3">1.4.3. Guassian Radial Basis Function, RBF Kernel</a></li>
+<li><a href="#orgdd8ac75">1.4.4. Laplace Kernel</a></li>
+<li><a href="#orgc1aebe7">1.4.5. Obvervations</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org03feb4e">2. Gaussian Process</a>
+<li><a href="#org93160f5">2. Gaussian Process</a>
 <ul>
-<li><a href="#org229b75f">2.1. 方差、协方差：使用核函数定义的协方差</a></li>
-<li><a href="#org6014bbf">2.2. 高斯过程</a></li>
-<li><a href="#org8b55c72">2.3. Neural Network Guassian Process (NNGP) 基于中心极限定理推导得到"无限宽神经网络等同于高斯过程"</a></li>
-<li><a href="#org7a7e644">2.4. 总结</a></li>
+<li><a href="#org5e2dd1c">2.1. 方差、协方差：使用核函数定义的协方差</a></li>
+<li><a href="#org6c98300">2.2. 高斯过程</a></li>
+<li><a href="#orgb607995">2.3. Neural Network Guassian Process (NNGP) 基于中心极限定理推导得到"无限宽神经网络等同于高斯过程"</a></li>
+<li><a href="#org3ec8c5e">2.4. 总结</a></li>
 </ul>
 </li>
-<li><a href="#orgd63ea68">3. Neural Tangent Kernel</a>
+<li><a href="#org4fb5552">3. Neural Tangent Kernel</a>
 <ul>
-<li><a href="#org66262ec">3.1. 一些泛函分析的内容</a></li>
-<li><a href="#org46cf00c">3.2. Neural Tangent Kernel是什么： 从一个偏导开始说起</a></li>
-<li><a href="#org55c4283">3.3. 有关NTK的两个结论与衍生出的问题</a>
+<li><a href="#orgdfd16a8">3.1. 一些泛函分析的内容</a></li>
+<li><a href="#org68cf7d8">3.2. Neural Tangent Kernel是什么： 从一个偏导开始说起</a></li>
+<li><a href="#orgf0c71bf">3.3. 有关NTK的两个结论与衍生出的问题</a>
 <ul>
-<li><a href="#orge282b1e">3.3.1. 关于NTK的非随机性</a></li>
-<li><a href="#org6b34f4b">3.3.2. 关于NTK在训练过程中的不变性</a></li>
+<li><a href="#org0d89a4a">3.3.1. 关于NTK的非随机性</a></li>
+<li><a href="#org0e6acb3">3.3.2. 关于NTK在训练过程中的不变性</a></li>
 </ul>
 </li>
 </ul>
@@ -278,12 +278,12 @@
 最近在阅读一些对神经网络进行理论分析的工作，这些工作常常会用到NTK（Neural Tangent Kernel）等的工具，因此笔者在学习时写下了这篇文字。这篇文章将会刻意省略一些众所周知的内容，同时对核方法以及NTK的原理给出较为深入的理解和解释，并加入近期的一些在LLM上的发现。
 </p>
 
-<div id="outline-container-orga2a9203" class="outline-2">
-<h2 id="orga2a9203"><span class="section-number-2">1.</span> Kernel Method</h2>
+<div id="outline-container-org7d22589" class="outline-2">
+<h2 id="org7d22589"><span class="section-number-2">1.</span> Kernel Method</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org8360cfe" class="outline-3">
-<h3 id="org8360cfe"><span class="section-number-3">1.1.</span> Motivation for proposing Kernel Methods</h3>
+<div id="outline-container-orge14b0b7" class="outline-3">
+<h3 id="orge14b0b7"><span class="section-number-3">1.1.</span> Motivation for proposing Kernel Methods</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 核函数与核方法的介绍在ML领域主要同早期的SVM等技术结合起来。该类方法的提出旨在解决“非线性可分的机器学习问题”，也就是通过线性空间的仿射变换以及通过特征值筛选等方式在理论上无法良好解决的复杂问题。很多书籍与文章里常见的“大环套小环”的分类或者对“异或”问题的分类都属于这种线性不可分的问题。
@@ -295,8 +295,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgf080567" class="outline-3">
-<h3 id="orgf080567"><span class="section-number-3">1.2.</span> 核方法的核心思路：基于当前的线性无关组通过非线性组合构建一组维度更高的“基”以使得在过去线性无关组上无法线性可分的数据在新的基上存在线性可分的可能</h3>
+<div id="outline-container-org55babb7" class="outline-3">
+<h3 id="org55babb7"><span class="section-number-3">1.2.</span> 核方法的核心思路：基于当前的线性无关组通过非线性组合构建一组维度更高的“基”以使得在过去线性无关组上无法线性可分的数据在新的基上存在线性可分的可能</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 我尝试用一句话总结什么是核方法，并把它写在了本小节的标题里。
@@ -326,8 +326,8 @@
 </div>
 </div>
 
-<div id="outline-container-orgc10b50d" class="outline-3">
-<h3 id="orgc10b50d"><span class="section-number-3">1.3.</span> 核技巧（Kernel Trick）：在新基上的线性操作（尤其是点积）可以借助核函数直接在原空间中计算</h3>
+<div id="outline-container-org38cde3c" class="outline-3">
+<h3 id="org38cde3c"><span class="section-number-3">1.3.</span> 核技巧（Kernel Trick）：在新基上的线性操作（尤其是点积）可以借助核函数直接在原空间中计算</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 kernel trick既然是一个trick，其实就是说的一个取巧的东西。它的core idea其实就是题目中所说的：对于原空间的俩点：\(x_{1}\)，\(x_2\)，我通过一个相似度函数 \(k(x_{1},x_{2})\) 所计算的结果就可以认为是这两个点在通过一个未知的非线性映射 \(\phi(x)\) 映射到高维空间后所计算的内积 \(\phi(x_{1})\cdot\phi(x_{2})\) . 换句话说：我不需要求取 \(x_{1}\) 在映射到高维空间之后的新向量 \(\hat{x}_{1}\)，我甚至不需要显式地定义一个非线性映射的函数 \(\phi(x)\)，我只需要找到一个非线性的度量函数 \(k(x_{1},x_{2}):\mathbb{R}^{d}\times\mathbb{R}^{d}\rightarrow R\) 并且保证这个函数k在某种程度上满足了“其所获得的值确实对应于某非线性升维映射的空间里的两个自变量的点积”就够了。
@@ -374,16 +374,16 @@ Mercer定理可以看作是对核函数的一个定义。
 </div>
 </div>
 
-<div id="outline-container-orga08c230" class="outline-3">
-<h3 id="orga08c230"><span class="section-number-3">1.4.</span> 几种常见的Kernel Function</h3>
+<div id="outline-container-org5ba9f81" class="outline-3">
+<h3 id="org5ba9f81"><span class="section-number-3">1.4.</span> 几种常见的Kernel Function</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 此处介绍四种常见的核函数，这一部分不是本文的重点。
 </p>
 </div>
 
-<div id="outline-container-org0b52a7d" class="outline-4">
-<h4 id="org0b52a7d"><span class="section-number-4">1.4.1.</span> Linear Kernel</h4>
+<div id="outline-container-orgf0dfd16" class="outline-4">
+<h4 id="orgf0dfd16"><span class="section-number-4">1.4.1.</span> Linear Kernel</h4>
 <div class="outline-text-4" id="text-1-4-1">
 \begin{equation}
 k(x_{1},x_{2})=x_{1}^{T}x_{2}
@@ -392,8 +392,8 @@ k(x_{1},x_{2})=x_{1}^{T}x_{2}
 </div>
 
 
-<div id="outline-container-org843e7dd" class="outline-4">
-<h4 id="org843e7dd"><span class="section-number-4">1.4.2.</span> Polynomial Kernel</h4>
+<div id="outline-container-org9eec43e" class="outline-4">
+<h4 id="org9eec43e"><span class="section-number-4">1.4.2.</span> Polynomial Kernel</h4>
 <div class="outline-text-4" id="text-1-4-2">
 \begin{equation}
 k(x_{1},x_{2})=(x_{1}^{T}x_{2}+c)^{p}
@@ -401,8 +401,8 @@ k(x_{1},x_{2})=(x_{1}^{T}x_{2}+c)^{p}
 </div>
 </div>
 
-<div id="outline-container-orgd8da585" class="outline-4">
-<h4 id="orgd8da585"><span class="section-number-4">1.4.3.</span> Guassian Radial Basis Function, RBF Kernel</h4>
+<div id="outline-container-org616acf3" class="outline-4">
+<h4 id="org616acf3"><span class="section-number-4">1.4.3.</span> Guassian Radial Basis Function, RBF Kernel</h4>
 <div class="outline-text-4" id="text-1-4-3">
 \begin{equation}
 k(x_{1},x_{2})=exp(- \frac{||x_{1}-x_{2}||_{2}}{2\sigma^{2}})
@@ -411,8 +411,8 @@ k(x_{1},x_{2})=exp(- \frac{||x_{1}-x_{2}||_{2}}{2\sigma^{2}})
 </div>
 
 
-<div id="outline-container-orga9e4564" class="outline-4">
-<h4 id="orga9e4564"><span class="section-number-4">1.4.4.</span> Laplace Kernel</h4>
+<div id="outline-container-orgdd8ac75" class="outline-4">
+<h4 id="orgdd8ac75"><span class="section-number-4">1.4.4.</span> Laplace Kernel</h4>
 <div class="outline-text-4" id="text-1-4-4">
 \begin{equation}
 k(x_{1},x_{2})=exp(- \frac{||x_{1}-x_{2}||_{1}}{\sigma})
@@ -420,8 +420,8 @@ k(x_{1},x_{2})=exp(- \frac{||x_{1}-x_{2}||_{1}}{\sigma})
 </div>
 </div>
 
-<div id="outline-container-org225a419" class="outline-4">
-<h4 id="org225a419"><span class="section-number-4">1.4.5.</span> Obvervations</h4>
+<div id="outline-container-orgc1aebe7" class="outline-4">
+<h4 id="orgc1aebe7"><span class="section-number-4">1.4.5.</span> Obvervations</h4>
 <div class="outline-text-4" id="text-1-4-5">
 <ul class="org-ul">
 <li>他们似乎都是根据相关分布的概率分布函数得来的。如高斯分布、拉普拉斯分布等。</li>
@@ -433,16 +433,16 @@ k(x_{1},x_{2})=exp(- \frac{||x_{1}-x_{2}||_{1}}{\sigma})
 </div>
 </div>
 
-<div id="outline-container-org03feb4e" class="outline-2">
-<h2 id="org03feb4e"><span class="section-number-2">2.</span> Gaussian Process</h2>
+<div id="outline-container-org93160f5" class="outline-2">
+<h2 id="org93160f5"><span class="section-number-2">2.</span> Gaussian Process</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 现在你已经对核函数拥有了一定的理解，下一步是去理解“高斯过程”。为什么要去理解高斯过程？因为高斯过程是一种非常经典且抽象的、学习模型高度抽象的对机器学习的建模方式。在本章节的最后，你甚至会意识到神经网络也是一种特殊的高斯过程。
 </p>
 </div>
 
-<div id="outline-container-org229b75f" class="outline-3">
-<h3 id="org229b75f"><span class="section-number-3">2.1.</span> 方差、协方差：使用核函数定义的协方差</h3>
+<div id="outline-container-org5e2dd1c" class="outline-3">
+<h3 id="org5e2dd1c"><span class="section-number-3">2.1.</span> 方差、协方差：使用核函数定义的协方差</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 一般而言，统计学上的方差可以定义为： \(\sigma^2=\sum_i {x_i-\mu}^2\).
@@ -474,8 +474,8 @@ k(x_{1},x_{2})=exp(- \frac{||x_{1}-x_{2}||_{1}}{\sigma})
 </div>
 </div>
 
-<div id="outline-container-org6014bbf" class="outline-3">
-<h3 id="org6014bbf"><span class="section-number-3">2.2.</span> 高斯过程</h3>
+<div id="outline-container-org6c98300" class="outline-3">
+<h3 id="org6c98300"><span class="section-number-3">2.2.</span> 高斯过程</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 现在我们可以开始思考高斯过程了。让我们代入一个最常见的机器学习场景：给定一批训练数据 \(X={x_1, x_2, ..., X_n}\) 以及这批训练数据的标签 \(Y={y_1, y_2, ..., y_n}\)。此处 \(x_i\) 和 \(y_i\) 都可以理解为输入空间和输出空间中的两个点。 现在给定一条测试集中的数据 \(x'\)，问: 这条数据所对应的标签应当是什么？
@@ -580,8 +580,8 @@ B | A \sim \mathcal{N}(\mu_B + \Sigma_{BA} \Sigma_{AA}^{-1}(A - \mu_A), \Sigma_{
 </div>
 </div>
 
-<div id="outline-container-org8b55c72" class="outline-3">
-<h3 id="org8b55c72"><span class="section-number-3">2.3.</span> Neural Network Guassian Process (NNGP) 基于中心极限定理推导得到"无限宽神经网络等同于高斯过程"</h3>
+<div id="outline-container-orgb607995" class="outline-3">
+<h3 id="orgb607995"><span class="section-number-3">2.3.</span> Neural Network Guassian Process (NNGP) 基于中心极限定理推导得到"无限宽神经网络等同于高斯过程"</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 参考论文: Deep Neural Networks as Gaussian Processes (ICLR'18)
@@ -649,7 +649,7 @@ f(X)=K^{l}(X, X^{r})\cdot \mathbf{r}
 </p>
 
 
-<div id="org35ab9c0" class="figure">
+<div id="org16370cd" class="figure">
 <p><img src="./images/screenshot_20240910_193359.png" alt="screenshot_20240910_193359.png">
 </p>
 </div>
@@ -659,7 +659,7 @@ f(X)=K^{l}(X, X^{r})\cdot \mathbf{r}
 </p>
 
 
-<div id="orgbb16152" class="figure">
+<div id="org413d739" class="figure">
 <p><img src="./images/screenshot_20240910_193541.png" alt="screenshot_20240910_193541.png">
 </p>
 </div>
@@ -684,8 +684,8 @@ f(X)=K^{l}(X, X^{r})\cdot \mathbf{r}
 </div>
 
 
-<div id="outline-container-org7a7e644" class="outline-3">
-<h3 id="org7a7e644"><span class="section-number-3">2.4.</span> 总结</h3>
+<div id="outline-container-org3ec8c5e" class="outline-3">
+<h3 id="org3ec8c5e"><span class="section-number-3">2.4.</span> 总结</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 现在我们或许已经对高斯过程有了一个直观的理解. 我们知道协方差矩阵描述的是随机变量之间的相关性, 且这种相关性可以通过设计核函数得到更合理的表达. 我们知道高斯过程本质上是对一组随机变量所对应的标签的分布的建模, 在这种基于条件分布的建模中, 我们可以通过先验分布的随机变量的相关性与所预测的随机变量与这些先验分布的随机变量的相关性来刻画所对应标签分布的期望值、确定程度、以及这些随机变量之间的相关性。 最后，我们意识到由于中心极限定理的作用，无穷宽的神经网络可以被看作是一个高斯过程，其中该高斯过程的核函数可以通过激活函数与该层之前的神经网络进行表达。
@@ -698,16 +698,16 @@ f(X)=K^{l}(X, X^{r})\cdot \mathbf{r}
 </div>
 </div>
 
-<div id="outline-container-orgd63ea68" class="outline-2">
-<h2 id="orgd63ea68"><span class="section-number-2">3.</span> Neural Tangent Kernel</h2>
+<div id="outline-container-org4fb5552" class="outline-2">
+<h2 id="org4fb5552"><span class="section-number-2">3.</span> Neural Tangent Kernel</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 为了解决上一小节最后所提出的问题，NTK及相关的探索出现了。本部分将首先介绍一下NTK是什么，然后介绍NTK的结论，最后给出一些使用NTK的方式的介绍。
 </p>
 </div>
 
-<div id="outline-container-org66262ec" class="outline-3">
-<h3 id="org66262ec"><span class="section-number-3">3.1.</span> 一些泛函分析的内容</h3>
+<div id="outline-container-orgdfd16a8" class="outline-3">
+<h3 id="orgdfd16a8"><span class="section-number-3">3.1.</span> 一些泛函分析的内容</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 NTK的论文是基于泛函分析的理论去写的。如果你只是追求了解NTK的大概，那么没有必要阅读这篇笔记。这篇笔记的目标是看完之后能够让人很容易地看懂NTK的论文，并使用类似的语言完成自己的任务。所以这里继续插入一些数学基础知识。
@@ -764,8 +764,8 @@ NTK的论文是基于泛函分析的理论去写的。如果你只是追求了�
 </div>
 </div>
 
-<div id="outline-container-org46cf00c" class="outline-3">
-<h3 id="org46cf00c"><span class="section-number-3">3.2.</span> Neural Tangent Kernel是什么： 从一个偏导开始说起</h3>
+<div id="outline-container-org68cf7d8" class="outline-3">
+<h3 id="org68cf7d8"><span class="section-number-3">3.2.</span> Neural Tangent Kernel是什么： 从一个偏导开始说起</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 首先考虑函数空间 \(\mathcal{F}\) 中的一个函数 \(f(x)\), 考虑它随着训练step \(t\) 的变化所产生的变化，即 微分\(\partial_{t} f(t)=-\nabla_{K}C|_{f(t)}\)。我们可以注意到，这样的一种变化同两个自变量相关：训练过程（引起参数变化），以及神经网络的输入（引起输出变化）。从第二个自变量的角度，该微分仍然属于函数空间，因此仍然可以用上一小节所描述的映射 \(\Phi_{K}(\partial^{in}_{f}C|_{f_{0}})\) 进行表示，即：该微分仍然可以看作是以“损失函数对于模型参数的微分 \(\partial^{in}_{f}C|_{f_{0}}\)”这样一个属于函数空间对偶空间的双线性形式为输入、基于一个核函数、最终所映射得到的有关于原函数的参数变化的这样一个函数。
@@ -809,7 +809,7 @@ NTK的论文是基于泛函分析的理论去写的。如果你只是追求了�
 </p>
 
 
-<div id="orga0187f4" class="figure">
+<div id="org24ca54e" class="figure">
 <p><img src="./images/screenshot_20240912_190958.png" alt="screenshot_20240912_190958.png">
 </p>
 </div>
@@ -819,7 +819,7 @@ NTK的论文是基于泛函分析的理论去写的。如果你只是追求了�
 </p>
 
 
-<div id="orgc5d8364" class="figure">
+<div id="org4dcdec0" class="figure">
 <p><img src="./images/screenshot_20240912_191312.png" alt="screenshot_20240912_191312.png">
 </p>
 </div>
@@ -829,7 +829,7 @@ NTK的论文是基于泛函分析的理论去写的。如果你只是追求了�
 </p>
 
 
-<div id="org7bca068" class="figure">
+<div id="org7603513" class="figure">
 <p><img src="./images/screenshot_20240912_191636.png" alt="screenshot_20240912_191636.png">
 </p>
 </div>
@@ -844,8 +844,8 @@ NTK的论文是基于泛函分析的理论去写的。如果你只是追求了�
 </div>
 </div>
 
-<div id="outline-container-org55c4283" class="outline-3">
-<h3 id="org55c4283"><span class="section-number-3">3.3.</span> 有关NTK的两个结论与衍生出的问题</h3>
+<div id="outline-container-orgf0c71bf" class="outline-3">
+<h3 id="orgf0c71bf"><span class="section-number-3">3.3.</span> 有关NTK的两个结论与衍生出的问题</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 NTK这篇论文提供了两个通用性的理论。此处先把理论挂上来，然后逐一介绍和证明。
@@ -857,21 +857,21 @@ NTK这篇论文提供了两个通用性的理论。此处先把理论挂上来�
 </div>
 
 
-<div id="outline-container-orge282b1e" class="outline-4">
-<h4 id="orge282b1e"><span class="section-number-4">3.3.1.</span> 关于NTK的非随机性</h4>
+<div id="outline-container-org0d89a4a" class="outline-4">
+<h4 id="org0d89a4a"><span class="section-number-4">3.3.1.</span> 关于NTK的非随机性</h4>
 <div class="outline-text-4" id="text-3-3-1">
 <p>
 先贴证明表示尊重：
 </p>
 
 
-<div id="org80acb83" class="figure">
+<div id="orgb64c9a1" class="figure">
 <p><img src="./images/screenshot_20240912_195012.png" alt="screenshot_20240912_195012.png">
 </p>
 </div>
 
 
-<div id="orgd60d7c9" class="figure">
+<div id="org87d7ec2" class="figure">
 <p><img src="./images/screenshot_20240912_195028.png" alt="screenshot_20240912_195028.png">
 </p>
 </div>
@@ -904,7 +904,7 @@ Lilian的证明我也有些没有完全看懂： 红蓝绿的部分作者似乎�
 </p>
 
 
-<div id="org44a7053" class="figure">
+<div id="orgd10b343" class="figure">
 <p><img src="./images/screenshot_20240912_201649.png" alt="screenshot_20240912_201649.png">
 </p>
 </div>
@@ -923,7 +923,7 @@ Lilian的证明我也有些没有完全看懂： 红蓝绿的部分作者似乎�
 </p>
 
 
-<div id="org19981a0" class="figure">
+<div id="orge3d2c57" class="figure">
 <p><img src="./images/screenshot_20240912_203545.png" alt="screenshot_20240912_203545.png">
 </p>
 </div>
@@ -933,7 +933,7 @@ Lilian的证明我也有些没有完全看懂： 红蓝绿的部分作者似乎�
 </p>
 
 
-<div id="org25c2d76" class="figure">
+<div id="org9dc8c2e" class="figure">
 <p><img src="./images/screenshot_20240912_203738.png" alt="screenshot_20240912_203738.png">
 </p>
 </div>
@@ -944,15 +944,15 @@ Lilian的证明我也有些没有完全看懂： 红蓝绿的部分作者似乎�
 </div>
 </div>
 
-<div id="outline-container-org6b34f4b" class="outline-4">
-<h4 id="org6b34f4b"><span class="section-number-4">3.3.2.</span> 关于NTK在训练过程中的不变性</h4>
+<div id="outline-container-org0e6acb3" class="outline-4">
+<h4 id="org0e6acb3"><span class="section-number-4">3.3.2.</span> 关于NTK在训练过程中的不变性</h4>
 <div class="outline-text-4" id="text-3-3-2">
 <p>
 有关于这个定理的详细描述如下：
 </p>
 
 
-<div id="org48dcdac" class="figure">
+<div id="orgf7ccfc6" class="figure">
 <p><img src="./images/screenshot_20240912_204713.png" alt="screenshot_20240912_204713.png">
 </p>
 </div>
@@ -963,25 +963,25 @@ Lilian的证明我也有些没有完全看懂： 红蓝绿的部分作者似乎�
 </p>
 
 
-<div id="orgec30d18" class="figure">
+<div id="org1631983" class="figure">
 <p><img src="./images/screenshot_20240912_213909.png" alt="screenshot_20240912_213909.png">
 </p>
 </div>
 
 
-<div id="org4258369" class="figure">
+<div id="org7909699" class="figure">
 <p><img src="./images/screenshot_20240912_213931.png" alt="screenshot_20240912_213931.png">
 </p>
 </div>
 
 
-<div id="orged70d22" class="figure">
+<div id="org580a170" class="figure">
 <p><img src="./images/screenshot_20240912_213946.png" alt="screenshot_20240912_213946.png">
 </p>
 </div>
 
 
-<div id="org3793441" class="figure">
+<div id="org3b0d8c8" class="figure">
 <p><img src="./images/screenshot_20240912_214005.png" alt="screenshot_20240912_214005.png">
 </p>
 </div>
@@ -995,7 +995,7 @@ Lilian的证明我也有些没有完全看懂： 红蓝绿的部分作者似乎�
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Sat Sep  7 09:29:43 2024</span> <span class="date">Last modified: 2024-09-12 Thu 22:01</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.28)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Sat Sep  7 09:29:43 2024</span> <span class="date">Last modified: 2025-02-01 Sat 17:21</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</span> </div>
 </div>
 </body>
 </html>

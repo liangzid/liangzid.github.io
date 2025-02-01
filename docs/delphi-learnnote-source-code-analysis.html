@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-03-09 Sat 21:04 -->
+<!-- 2025-02-01 Sat 17:45 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Delphi源码学习与分析</title>
@@ -189,13 +189,13 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
+  .org-svg { }
 </style>
 <link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
 </head>
 <body>
 <div id="preamble" class="status">
-<nav class="nav"> <a href="/index.html" class="button">Home</a>  </nav> <hr>
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
 </div>
 <div id="content" class="content">
 <h1 class="title">Delphi源码学习与分析</h1>
@@ -203,58 +203,58 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org2008c59">1. </a></li>
-<li><a href="#org9425e12">2. Rust部分代码分析</a>
+<li><a href="#org1871675">1. </a></li>
+<li><a href="#orga95b4f7">2. Rust部分代码分析</a>
 <ul>
-<li><a href="#org3c0eba1">2.1. algebra：</a>
+<li><a href="#org775a7fe">2.1. algebra：</a>
 <ul>
-<li><a href="#org1862019">2.1.1. Polynomial</a></li>
-<li><a href="#orgd7c2f2e">2.1.2. bytes</a></li>
-<li><a href="#org56359ee">2.1.3. biginteger</a></li>
-<li><a href="#org0db5b79">2.1.4. fixed_point</a></li>
-<li><a href="#org9879e24">2.1.5. fields</a></li>
-<li><a href="#org8cb4259">2.1.6. 其他</a></li>
+<li><a href="#org790cfa8">2.1.1. Polynomial</a></li>
+<li><a href="#orgfdc660d">2.1.2. bytes</a></li>
+<li><a href="#orgfcc7d57">2.1.3. biginteger</a></li>
+<li><a href="#org0eee84a">2.1.4. fixed_point</a></li>
+<li><a href="#orgad589e4">2.1.5. fields</a></li>
+<li><a href="#orgf78da36">2.1.6. 其他</a></li>
 </ul>
 </li>
-<li><a href="#org929d3de">2.2. crypto-primitives</a>
+<li><a href="#org593b525">2.2. crypto-primitives</a>
 <ul>
-<li><a href="#org8706c15">2.2.1. additive_share</a></li>
-<li><a href="#org68e5eb8">2.2.2. beavers_mul</a></li>
-<li><a href="#orgdf6c68f">2.2.3. gc (garbled circuits)</a></li>
+<li><a href="#org503bd0d">2.2.1. additive_share</a></li>
+<li><a href="#org5010dcc">2.2.2. beavers_mul</a></li>
+<li><a href="#orge6e72ab">2.2.3. gc (garbled circuits)</a></li>
 </ul>
 </li>
-<li><a href="#orgffc425f">2.3. neural-network</a>
+<li><a href="#org4e73f35">2.3. neural-network</a>
 <ul>
-<li><a href="#org12c8269">2.3.1. layers</a></li>
-<li><a href="#org80cd724">2.3.2. tensors</a></li>
-<li><a href="#orgb52adf0">2.3.3. others</a></li>
+<li><a href="#orgee0d6df">2.3.1. layers</a></li>
+<li><a href="#orga8954bc">2.3.2. tensors</a></li>
+<li><a href="#org1053096">2.3.3. others</a></li>
 </ul>
 </li>
-<li><a href="#org3242dba">2.4. protocols-sys</a>
+<li><a href="#org653090a">2.4. protocols-sys</a>
 <ul>
-<li><a href="#org1da42f2">2.4.1. client_cg</a></li>
-<li><a href="#org4c2a17d">2.4.2. client_gen</a></li>
-<li><a href="#org70806ac">2.4.3. key_share</a></li>
-<li><a href="#org10e1b62">2.4.4. server_cg</a></li>
-<li><a href="#orge6f80d3">2.4.5. server_gen</a></li>
-<li><a href="#orge9ab5a9">2.4.6. others</a></li>
+<li><a href="#orgd86cdc0">2.4.1. client_cg</a></li>
+<li><a href="#org9bf33dd">2.4.2. client_gen</a></li>
+<li><a href="#orga06da5d">2.4.3. key_share</a></li>
+<li><a href="#org35f8cef">2.4.4. server_cg</a></li>
+<li><a href="#org3bb217c">2.4.5. server_gen</a></li>
+<li><a href="#org4c99cf6">2.4.6. others</a></li>
 </ul>
 </li>
-<li><a href="#org06b37a9">2.5. protocols</a></li>
+<li><a href="#orgf9d4b0b">2.5. protocols</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org2008c59" class="outline-2">
-<h2 id="org2008c59"><span class="section-number-2">1.</span> </h2>
+<div id="outline-container-org1871675" class="outline-2">
+<h2 id="org1871675"><span class="section-number-2">1.</span> </h2>
 </div>
-<div id="outline-container-org9425e12" class="outline-2">
-<h2 id="org9425e12"><span class="section-number-2">2.</span> Rust部分代码分析</h2>
+<div id="outline-container-orga95b4f7" class="outline-2">
+<h2 id="orga95b4f7"><span class="section-number-2">2.</span> Rust部分代码分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org3c0eba1" class="outline-3">
-<h3 id="org3c0eba1"><span class="section-number-3">2.1.</span> algebra：</h3>
+<div id="outline-container-org775a7fe" class="outline-3">
+<h3 id="org775a7fe"><span class="section-number-3">2.1.</span> algebra：</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 algebra文件夹提供了基本的代数操作，主要包括：
@@ -272,8 +272,8 @@ algebra文件夹提供了基本的代数操作，主要包括：
 </p>
 </div>
 
-<div id="outline-container-org1862019" class="outline-4">
-<h4 id="org1862019"><span class="section-number-4">2.1.1.</span> Polynomial</h4>
+<div id="outline-container-org790cfa8" class="outline-4">
+<h4 id="org790cfa8"><span class="section-number-4">2.1.1.</span> Polynomial</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <ol class="org-ol">
 <li>struct
@@ -284,8 +284,8 @@ algebra文件夹提供了基本的代数操作，主要包括：
 </ol>
 </div>
 </div>
-<div id="outline-container-orgd7c2f2e" class="outline-4">
-<h4 id="orgd7c2f2e"><span class="section-number-4">2.1.2.</span> bytes</h4>
+<div id="outline-container-orgfdc660d" class="outline-4">
+<h4 id="orgfdc660d"><span class="section-number-4">2.1.2.</span> bytes</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <p>
 整数数据的二进制形式的读取与写入
@@ -302,8 +302,8 @@ algebra文件夹提供了基本的代数操作，主要包括：
 </ol>
 </div>
 </div>
-<div id="outline-container-org56359ee" class="outline-4">
-<h4 id="org56359ee"><span class="section-number-4">2.1.3.</span> biginteger</h4>
+<div id="outline-container-orgfcc7d57" class="outline-4">
+<h4 id="orgfcc7d57"><span class="section-number-4">2.1.3.</span> biginteger</h4>
 <div class="outline-text-4" id="text-2-1-3">
 <ol class="org-ol">
 <li>traits
@@ -322,8 +322,8 @@ algebra文件夹提供了基本的代数操作，主要包括：
 </ol>
 </div>
 </div>
-<div id="outline-container-org0db5b79" class="outline-4">
-<h4 id="org0db5b79"><span class="section-number-4">2.1.4.</span> fixed_point</h4>
+<div id="outline-container-org0eee84a" class="outline-4">
+<h4 id="org0eee84a"><span class="section-number-4">2.1.4.</span> fixed_point</h4>
 <div class="outline-text-4" id="text-2-1-4">
 <ol class="org-ol">
 <li>trait
@@ -358,8 +358,8 @@ algebra文件夹提供了基本的代数操作，主要包括：
 </ol>
 </div>
 </div>
-<div id="outline-container-org9879e24" class="outline-4">
-<h4 id="org9879e24"><span class="section-number-4">2.1.5.</span> fields</h4>
+<div id="outline-container-orgad589e4" class="outline-4">
+<h4 id="orgad589e4"><span class="section-number-4">2.1.5.</span> fields</h4>
 <div class="outline-text-4" id="text-2-1-5">
 <ol class="org-ol">
 <li>trait
@@ -402,8 +402,8 @@ algebra文件夹提供了基本的代数操作，主要包括：
 </div>
 </div>
 
-<div id="outline-container-org8cb4259" class="outline-4">
-<h4 id="org8cb4259"><span class="section-number-4">2.1.6.</span> 其他</h4>
+<div id="outline-container-orgf78da36" class="outline-4">
+<h4 id="orgf78da36"><span class="section-number-4">2.1.6.</span> 其他</h4>
 <div class="outline-text-4" id="text-2-1-6">
 <ol class="org-ol">
 <li>trait
@@ -419,8 +419,8 @@ algebra文件夹提供了基本的代数操作，主要包括：
 </div>
 
 
-<div id="outline-container-org929d3de" class="outline-3">
-<h3 id="org929d3de"><span class="section-number-3">2.2.</span> crypto-primitives</h3>
+<div id="outline-container-org593b525" class="outline-3">
+<h3 id="org593b525"><span class="section-number-3">2.2.</span> crypto-primitives</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 加密运算环节主要实现了三种简单的加密运算，分别是additive_share，beavers_mul以及garbled circuits。其中加法的共享主要用来进行线性的加密运算，beavers mul主要用来进行乘法同态运算，而gc则用来进行非线性激活函数的运算。
@@ -430,8 +430,8 @@ algebra文件夹提供了基本的代数操作，主要包括：
 TODO beavers_mul缺少介绍
 </p>
 </div>
-<div id="outline-container-org8706c15" class="outline-4">
-<h4 id="org8706c15"><span class="section-number-4">2.2.1.</span> additive_share</h4>
+<div id="outline-container-org503bd0d" class="outline-4">
+<h4 id="org503bd0d"><span class="section-number-4">2.2.1.</span> additive_share</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <ol class="org-ol">
 <li>trait
@@ -466,8 +466,8 @@ TODO beavers_mul缺少介绍
 </ol>
 </div>
 </div>
-<div id="outline-container-org68e5eb8" class="outline-4">
-<h4 id="org68e5eb8"><span class="section-number-4">2.2.2.</span> beavers_mul</h4>
+<div id="outline-container-org5010dcc" class="outline-4">
+<h4 id="org5010dcc"><span class="section-number-4">2.2.2.</span> beavers_mul</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <ol class="org-ol">
 <li>struct</li>
@@ -478,8 +478,8 @@ TODO beavers_mul缺少介绍
 </p>
 </div>
 </div>
-<div id="outline-container-orgdf6c68f" class="outline-4">
-<h4 id="orgdf6c68f"><span class="section-number-4">2.2.3.</span> gc (garbled circuits)</h4>
+<div id="outline-container-orge6e72ab" class="outline-4">
+<h4 id="orge6e72ab"><span class="section-number-4">2.2.3.</span> gc (garbled circuits)</h4>
 <div class="outline-text-4" id="text-2-2-3">
 <p>
 略
@@ -489,8 +489,8 @@ TODO beavers_mul缺少介绍
 </div>
 
 
-<div id="outline-container-orgffc425f" class="outline-3">
-<h3 id="orgffc425f"><span class="section-number-3">2.3.</span> neural-network</h3>
+<div id="outline-container-org4e73f35" class="outline-3">
+<h3 id="org4e73f35"><span class="section-number-3">2.3.</span> neural-network</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 neural-network主要封装了：
@@ -503,8 +503,8 @@ neural-network主要封装了：
 </ol>
 </div>
 
-<div id="outline-container-org12c8269" class="outline-4">
-<h4 id="org12c8269"><span class="section-number-4">2.3.1.</span> layers</h4>
+<div id="outline-container-orgee0d6df" class="outline-4">
+<h4 id="orgee0d6df"><span class="section-number-4">2.3.1.</span> layers</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <ol class="org-ol">
 <li>LayerDims, 包含inputdims和outputdims</li>
@@ -516,27 +516,27 @@ neural-network主要封装了：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #ff79c6;">pub</span> <span style="color: #ff79c6;">enum</span> <span style="color: #bd93f9;">LinearLayer</span><span style="color: #61bfff;">&lt;</span><span style="color: #bd93f9;">F</span>, <span style="color: #bd93f9;">C</span><span style="color: #61bfff;">&gt;</span> <span style="color: #61bfff;">{</span>
-    <span style="color: #bd93f9;">Conv2d</span> <span style="color: #ff79c6;">{</span>
-        <span style="color: #ffc9e8; background-color: #372E40;">dims</span>: <span style="color: #bd93f9;">LayerDims</span>,
-        <span style="color: #ffc9e8; background-color: #372E40;">params</span>: <span style="color: #bd93f9;">Conv2dParams</span><span style="color: #50fa7b;">&lt;</span><span style="color: #bd93f9;">F</span>, <span style="color: #bd93f9;">C</span><span style="color: #50fa7b;">&gt;</span>,
-    <span style="color: #ff79c6;">}</span>,
-    <span style="color: #bd93f9;">FullyConnected</span> <span style="color: #ff79c6;">{</span>
-        <span style="color: #ffc9e8; background-color: #372E40;">dims</span>: <span style="color: #bd93f9;">LayerDims</span>,
-        <span style="color: #ffc9e8; background-color: #372E40;">params</span>: <span style="color: #bd93f9;">FullyConnectedParams</span><span style="color: #50fa7b;">&lt;</span><span style="color: #bd93f9;">F</span>, <span style="color: #bd93f9;">C</span><span style="color: #50fa7b;">&gt;</span>,
-    <span style="color: #ff79c6;">}</span>,
-    <span style="color: #bd93f9;">FullyConnectedD</span> <span style="color: #ff79c6;">{</span>
-        <span style="color: #ffc9e8; background-color: #372E40;">dims</span>: <span style="color: #bd93f9;">LayerDims</span>,
-        <span style="color: #ffc9e8; background-color: #372E40;">params</span>: <span style="color: #bd93f9;">FullyConnectedParamsD</span><span style="color: #50fa7b;">&lt;</span><span style="color: #bd93f9;">F</span>, <span style="color: #bd93f9;">C</span><span style="color: #50fa7b;">&gt;</span>,
-    <span style="color: #ff79c6;">}</span>,
-    <span style="color: #bd93f9;">AvgPool</span> <span style="color: #ff79c6;">{</span>
-        <span style="color: #ffc9e8; background-color: #372E40;">dims</span>: <span style="color: #bd93f9;">LayerDims</span>,
-        <span style="color: #ffc9e8; background-color: #372E40;">params</span>: <span style="color: #bd93f9;">AvgPoolParams</span><span style="color: #50fa7b;">&lt;</span><span style="color: #bd93f9;">F</span>, <span style="color: #bd93f9;">C</span><span style="color: #50fa7b;">&gt;</span>,
-    <span style="color: #ff79c6;">}</span>,
-    <span style="color: #bd93f9;">Identity</span> <span style="color: #ff79c6;">{</span>
-        <span style="color: #ffc9e8; background-color: #372E40;">dims</span>: <span style="color: #bd93f9;">LayerDims</span>,
-    <span style="color: #ff79c6;">}</span>,
-<span style="color: #61bfff;">}</span>
+<pre class="src src-rust"><span style="color: #ff8080;">pub</span> <span style="color: #ff8080;">enum</span> <span style="color: #91ddff;">LinearLayer</span><span style="color: #c66; font-weight: bold;">&lt;</span><span style="color: #91ddff;">F</span>, <span style="color: #91ddff;">C</span><span style="color: #c66; font-weight: bold;">&gt;</span> <span style="color: #c66; font-weight: bold;">{</span>
+    <span style="color: #91ddff;">Conv2d</span> <span style="color: #6c6; font-weight: bold;">{</span>
+        <span style="color: #ffe9aa;">dims</span>: <span style="color: #91ddff;">LayerDims</span>,
+        <span style="color: #ffe9aa;">params</span>: <span style="color: #91ddff;">Conv2dParams</span><span style="color: #69f; font-weight: bold;">&lt;</span><span style="color: #91ddff;">F</span>, <span style="color: #91ddff;">C</span><span style="color: #69f; font-weight: bold;">&gt;</span>,
+    <span style="color: #6c6; font-weight: bold;">}</span>,
+    <span style="color: #91ddff;">FullyConnected</span> <span style="color: #6c6; font-weight: bold;">{</span>
+        <span style="color: #ffe9aa;">dims</span>: <span style="color: #91ddff;">LayerDims</span>,
+        <span style="color: #ffe9aa;">params</span>: <span style="color: #91ddff;">FullyConnectedParams</span><span style="color: #69f; font-weight: bold;">&lt;</span><span style="color: #91ddff;">F</span>, <span style="color: #91ddff;">C</span><span style="color: #69f; font-weight: bold;">&gt;</span>,
+    <span style="color: #6c6; font-weight: bold;">}</span>,
+    <span style="color: #91ddff;">FullyConnectedD</span> <span style="color: #6c6; font-weight: bold;">{</span>
+        <span style="color: #ffe9aa;">dims</span>: <span style="color: #91ddff;">LayerDims</span>,
+        <span style="color: #ffe9aa;">params</span>: <span style="color: #91ddff;">FullyConnectedParamsD</span><span style="color: #69f; font-weight: bold;">&lt;</span><span style="color: #91ddff;">F</span>, <span style="color: #91ddff;">C</span><span style="color: #69f; font-weight: bold;">&gt;</span>,
+    <span style="color: #6c6; font-weight: bold;">}</span>,
+    <span style="color: #91ddff;">AvgPool</span> <span style="color: #6c6; font-weight: bold;">{</span>
+        <span style="color: #ffe9aa;">dims</span>: <span style="color: #91ddff;">LayerDims</span>,
+        <span style="color: #ffe9aa;">params</span>: <span style="color: #91ddff;">AvgPoolParams</span><span style="color: #69f; font-weight: bold;">&lt;</span><span style="color: #91ddff;">F</span>, <span style="color: #91ddff;">C</span><span style="color: #69f; font-weight: bold;">&gt;</span>,
+    <span style="color: #6c6; font-weight: bold;">}</span>,
+    <span style="color: #91ddff;">Identity</span> <span style="color: #6c6; font-weight: bold;">{</span>
+        <span style="color: #ffe9aa;">dims</span>: <span style="color: #91ddff;">LayerDims</span>,
+    <span style="color: #6c6; font-weight: bold;">}</span>,
+<span style="color: #c66; font-weight: bold;">}</span>
 </pre>
 </div>
 
@@ -545,23 +545,23 @@ linear layer info包含如下：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #ff79c6;">pub</span> <span style="color: #ff79c6;">enum</span> <span style="color: #bd93f9;">LinearLayerInfo</span><span style="color: #61bfff;">&lt;</span><span style="color: #bd93f9;">F</span>, <span style="color: #bd93f9;">C</span><span style="color: #61bfff;">&gt;</span> <span style="color: #61bfff;">{</span>
-    <span style="color: #bd93f9;">Conv2d</span> <span style="color: #ff79c6;">{</span>
-        <span style="color: #ffc9e8; background-color: #372E40;">kernel</span>: <span style="color: #50fa7b;">(</span><span style="color: #bd93f9;">usize</span>, <span style="color: #bd93f9;">usize</span>, <span style="color: #bd93f9;">usize</span>, <span style="color: #bd93f9;">usize</span><span style="color: #50fa7b;">)</span>,
-        <span style="color: #ffc9e8; background-color: #372E40;">padding</span>: <span style="color: #bd93f9;">Padding</span>,
-        <span style="color: #ffc9e8; background-color: #372E40;">stride</span>: <span style="color: #bd93f9;">usize</span>,
-    <span style="color: #ff79c6;">}</span>,
-    <span style="color: #bd93f9;">FullyConnected</span>,
-    <span style="color: #bd93f9;">FullyConnectedD</span>,
-    <span style="color: #bd93f9;">AvgPool</span> <span style="color: #ff79c6;">{</span>
-        <span style="color: #ffc9e8; background-color: #372E40;">pool_h</span>: <span style="color: #bd93f9;">usize</span>,
-        <span style="color: #ffc9e8; background-color: #372E40;">pool_w</span>: <span style="color: #bd93f9;">usize</span>,
-        <span style="color: #ffc9e8; background-color: #372E40;">stride</span>: <span style="color: #bd93f9;">usize</span>,
-        <span style="color: #ffc9e8; background-color: #372E40;">normalizer</span>: <span style="color: #bd93f9;">C</span>,
-        <span style="color: #ffc9e8; background-color: #372E40;">_variable</span>: <span style="color: #bd93f9;">PhantomData</span><span style="color: #50fa7b;">&lt;</span><span style="color: #bd93f9;">F</span><span style="color: #50fa7b;">&gt;</span>,
-    <span style="color: #ff79c6;">}</span>,
-    <span style="color: #bd93f9;">Identity</span>,
-<span style="color: #61bfff;">}</span>
+<pre class="src src-rust"><span style="color: #ff8080;">pub</span> <span style="color: #ff8080;">enum</span> <span style="color: #91ddff;">LinearLayerInfo</span><span style="color: #c66; font-weight: bold;">&lt;</span><span style="color: #91ddff;">F</span>, <span style="color: #91ddff;">C</span><span style="color: #c66; font-weight: bold;">&gt;</span> <span style="color: #c66; font-weight: bold;">{</span>
+    <span style="color: #91ddff;">Conv2d</span> <span style="color: #6c6; font-weight: bold;">{</span>
+        <span style="color: #ffe9aa;">kernel</span>: <span style="color: #69f; font-weight: bold;">(</span><span style="color: #91ddff;">usize</span>, <span style="color: #91ddff;">usize</span>, <span style="color: #91ddff;">usize</span>, <span style="color: #91ddff;">usize</span><span style="color: #69f; font-weight: bold;">)</span>,
+        <span style="color: #ffe9aa;">padding</span>: <span style="color: #91ddff;">Padding</span>,
+        <span style="color: #ffe9aa;">stride</span>: <span style="color: #91ddff;">usize</span>,
+    <span style="color: #6c6; font-weight: bold;">}</span>,
+    <span style="color: #91ddff;">FullyConnected</span>,
+    <span style="color: #91ddff;">FullyConnectedD</span>,
+    <span style="color: #91ddff;">AvgPool</span> <span style="color: #6c6; font-weight: bold;">{</span>
+        <span style="color: #ffe9aa;">pool_h</span>: <span style="color: #91ddff;">usize</span>,
+        <span style="color: #ffe9aa;">pool_w</span>: <span style="color: #91ddff;">usize</span>,
+        <span style="color: #ffe9aa;">stride</span>: <span style="color: #91ddff;">usize</span>,
+        <span style="color: #ffe9aa;">normalizer</span>: <span style="color: #91ddff;">C</span>,
+        <span style="color: #ffe9aa;">_variable</span>: <span style="color: #91ddff;">PhantomData</span><span style="color: #69f; font-weight: bold;">&lt;</span><span style="color: #91ddff;">F</span><span style="color: #69f; font-weight: bold;">&gt;</span>,
+    <span style="color: #6c6; font-weight: bold;">}</span>,
+    <span style="color: #91ddff;">Identity</span>,
+<span style="color: #c66; font-weight: bold;">}</span>
 </pre>
 </div>
 
@@ -571,8 +571,8 @@ linear layer info包含如下：
 </div>
 </div>
 
-<div id="outline-container-org80cd724" class="outline-4">
-<h4 id="org80cd724"><span class="section-number-4">2.3.2.</span> tensors</h4>
+<div id="outline-container-orga8954bc" class="outline-4">
+<h4 id="orga8954bc"><span class="section-number-4">2.3.2.</span> tensors</h4>
 <div class="outline-text-4" id="text-2-3-2">
 <p>
 tensors主要包括Input&lt;T&gt;和Output&lt;T&gt;两种范型，二者都是四维张量。
@@ -584,8 +584,8 @@ T的实例化一般就是share和AdditiveShare。
 </p>
 </div>
 </div>
-<div id="outline-container-orgb52adf0" class="outline-4">
-<h4 id="orgb52adf0"><span class="section-number-4">2.3.3.</span> others</h4>
+<div id="outline-container-org1053096" class="outline-4">
+<h4 id="org1053096"><span class="section-number-4">2.3.3.</span> others</h4>
 <div class="outline-text-4" id="text-2-3-3">
 <ol class="org-ol">
 <li>enum
@@ -611,8 +611,8 @@ T的实例化一般就是share和AdditiveShare。
 </div>
 </div>
 
-<div id="outline-container-org3242dba" class="outline-3">
-<h3 id="org3242dba"><span class="section-number-3">2.4.</span> protocols-sys</h3>
+<div id="outline-container-org653090a" class="outline-3">
+<h3 id="org653090a"><span class="section-number-3">2.4.</span> protocols-sys</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 protocols-sys定义了完整的密钥交换协议系统。主要包括：
@@ -623,8 +623,8 @@ protocols-sys定义了完整的密钥交换协议系统。主要包括：
 </ol>
 </div>
 
-<div id="outline-container-org1da42f2" class="outline-4">
-<h4 id="org1da42f2"><span class="section-number-4">2.4.1.</span> client_cg</h4>
+<div id="outline-container-orgd86cdc0" class="outline-4">
+<h4 id="orgd86cdc0"><span class="section-number-4">2.4.1.</span> client_cg</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <ol class="org-ol">
 <li>struct &amp; enum
@@ -650,8 +650,8 @@ protocols-sys定义了完整的密钥交换协议系统。主要包括：
 </ol>
 </div>
 </div>
-<div id="outline-container-org4c2a17d" class="outline-4">
-<h4 id="org4c2a17d"><span class="section-number-4">2.4.2.</span> client_gen</h4>
+<div id="outline-container-org9bf33dd" class="outline-4">
+<h4 id="org9bf33dd"><span class="section-number-4">2.4.2.</span> client_gen</h4>
 <div class="outline-text-4" id="text-2-4-2">
 <ol class="org-ol">
 <li>struct
@@ -670,8 +670,8 @@ protocols-sys定义了完整的密钥交换协议系统。主要包括：
 </ol>
 </div>
 </div>
-<div id="outline-container-org70806ac" class="outline-4">
-<h4 id="org70806ac"><span class="section-number-4">2.4.3.</span> key_share</h4>
+<div id="outline-container-orga06da5d" class="outline-4">
+<h4 id="orga06da5d"><span class="section-number-4">2.4.3.</span> key_share</h4>
 <div class="outline-text-4" id="text-2-4-3">
 <ol class="org-ol">
 <li>struct
@@ -680,10 +680,10 @@ protocols-sys定义了完整的密钥交换协议系统。主要包括：
 KeyShare. KeyShare便是C++版里的SerialCT,其定义为：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust">    <span style="color: #ff79c6;">pub</span> <span style="color: #ff79c6;">struct</span> <span style="color: #bd93f9;">SerialCT</span> <span style="color: #61bfff;">{</span>
-    <span style="color: #ff79c6;">pub</span> <span style="color: #ffc9e8; background-color: #372E40;">inner</span>: *<span style="color: #ff79c6;">mut</span> ::<span style="color: #8be9fd;">std</span>::<span style="color: #8be9fd;">os</span>::<span style="color: #8be9fd;">raw</span>::c_char,
-    <span style="color: #ff79c6;">pub</span> <span style="color: #ffc9e8; background-color: #372E40;">size</span>: <span style="color: #bd93f9;">u64</span>,
-<span style="color: #61bfff;">}</span>
+<pre class="src src-rust">    <span style="color: #ff8080;">pub</span> <span style="color: #ff8080;">struct</span> <span style="color: #91ddff;">SerialCT</span> <span style="color: #c66; font-weight: bold;">{</span>
+    <span style="color: #ff8080;">pub</span> <span style="color: #ffe9aa;">inner</span>: *<span style="color: #ff8080;">mut</span> ::<span style="color: #aaffe4;">std</span>::<span style="color: #aaffe4;">os</span>::<span style="color: #aaffe4;">raw</span>::c_char,
+    <span style="color: #ff8080;">pub</span> <span style="color: #ffe9aa;">size</span>: <span style="color: #91ddff;">u64</span>,
+<span style="color: #c66; font-weight: bold;">}</span>
 </pre>
 </div></li>
 </ol></li>
@@ -694,24 +694,24 @@ KeyShare. KeyShare便是C++版里的SerialCT,其定义为：
 </ol>
 </div>
 </div>
-<div id="outline-container-org10e1b62" class="outline-4">
-<h4 id="org10e1b62"><span class="section-number-4">2.4.4.</span> server_cg</h4>
+<div id="outline-container-org35f8cef" class="outline-4">
+<h4 id="org35f8cef"><span class="section-number-4">2.4.4.</span> server_cg</h4>
 <div class="outline-text-4" id="text-2-4-4">
 <p>
 类似于client_cg,略
 </p>
 </div>
 </div>
-<div id="outline-container-orge6f80d3" class="outline-4">
-<h4 id="orge6f80d3"><span class="section-number-4">2.4.5.</span> server_gen</h4>
+<div id="outline-container-org3bb217c" class="outline-4">
+<h4 id="org3bb217c"><span class="section-number-4">2.4.5.</span> server_gen</h4>
 <div class="outline-text-4" id="text-2-4-5">
 <p>
 类似于client_gen,略
 </p>
 </div>
 </div>
-<div id="outline-container-orge9ab5a9" class="outline-4">
-<h4 id="orge9ab5a9"><span class="section-number-4">2.4.6.</span> others</h4>
+<div id="outline-container-org4c99cf6" class="outline-4">
+<h4 id="org4c99cf6"><span class="section-number-4">2.4.6.</span> others</h4>
 <div class="outline-text-4" id="text-2-4-6">
 <ol class="org-ol">
 <li>struct
@@ -720,10 +720,10 @@ KeyShare. KeyShare便是C++版里的SerialCT,其定义为：
 SealCT: SerialCT的rust封装，其格式类似于：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #ff79c6;">pub</span> <span style="color: #ff79c6;">struct</span> <span style="color: #bd93f9;">SerialCT</span> <span style="color: #61bfff;">{</span>
-    <span style="color: #ff79c6;">pub</span> <span style="color: #ffc9e8; background-color: #372E40;">inner</span>: *<span style="color: #ff79c6;">mut</span> ::<span style="color: #8be9fd;">std</span>::<span style="color: #8be9fd;">os</span>::<span style="color: #8be9fd;">raw</span>::c_char,
-    <span style="color: #ff79c6;">pub</span> <span style="color: #ffc9e8; background-color: #372E40;">size</span>: <span style="color: #bd93f9;">u64</span>,
-<span style="color: #61bfff;">}</span>
+<pre class="src src-rust"><span style="color: #ff8080;">pub</span> <span style="color: #ff8080;">struct</span> <span style="color: #91ddff;">SerialCT</span> <span style="color: #c66; font-weight: bold;">{</span>
+    <span style="color: #ff8080;">pub</span> <span style="color: #ffe9aa;">inner</span>: *<span style="color: #ff8080;">mut</span> ::<span style="color: #aaffe4;">std</span>::<span style="color: #aaffe4;">os</span>::<span style="color: #aaffe4;">raw</span>::c_char,
+    <span style="color: #ff8080;">pub</span> <span style="color: #ffe9aa;">size</span>: <span style="color: #91ddff;">u64</span>,
+<span style="color: #c66; font-weight: bold;">}</span>
 </pre>
 </div></li>
 <li>包含如下函数： en(de)crypt_vec，顾名思义，加解密一个向量</li>
@@ -733,8 +733,8 @@ SealCT: SerialCT的rust封装，其格式类似于：
 </div>
 </div>
 
-<div id="outline-container-org06b37a9" class="outline-3">
-<h3 id="org06b37a9"><span class="section-number-3">2.5.</span> protocols</h3>
+<div id="outline-container-orgf9d4b0b" class="outline-3">
+<h3 id="orgf9d4b0b"><span class="section-number-3">2.5.</span> protocols</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 关于通讯的一些东西，略
@@ -744,7 +744,7 @@ SealCT: SerialCT的rust封装，其格式类似于：
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Feb  3 14:59:27 2023</span> <span class="date">Last modified: 2024-03-09 Sat 20:56</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 28.1 (<a href="https://orgmode.org">Org</a> mode 9.5.2)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Feb  3 14:59:27 2023</span> <span class="date">Last modified: 2025-02-01 Sat 17:21</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</span> </div>
 </div>
 </body>
 </html>

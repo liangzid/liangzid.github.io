@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2024-03-09 Sat 21:04 -->
+<!-- 2025-02-01 Sat 17:45 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>为一台全新的服务器配置Nvidia GPU环境！</title>
@@ -189,13 +189,13 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
+  .org-svg { }
 </style>
 <link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
 </head>
 <body>
 <div id="preamble" class="status">
-<nav class="nav"> <a href="/index.html" class="button">Home</a>  </nav> <hr>
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
 </div>
 <div id="content" class="content">
 <h1 class="title">为一台全新的服务器配置Nvidia GPU环境！</h1>
@@ -203,12 +203,12 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge157a1a">0.1. 安装driver</a></li>
-<li><a href="#org716c50c">0.2. 安装cuda</a></li>
-<li><a href="#org0e01cbb">0.3. 安装失败</a></li>
+<li><a href="#org428d9ef">0.1. 安装driver</a></li>
+<li><a href="#org709430d">0.2. 安装cuda</a></li>
+<li><a href="#org57e343f">0.3. 安装失败</a></li>
 </ul>
 </li>
-<li><a href="#org7ae34f8">1. 参考文献：</a></div>
+<li><a href="#org7ee5cf4">1. 参考文献：</a></div>
 </div>
 <p>
 最近由我负责进行运维，现对Nvidia相关的GPU硬件的配置进行整理。
@@ -234,15 +234,15 @@ GPU: Tesla V100s
 <li>安装cuda环境。</li>
 </ol>
 
-<div id="outline-container-orge157a1a" class="outline-3">
-<h3 id="orge157a1a"><span class="section-number-3">0.1.</span> 安装driver</h3>
+<div id="outline-container-org428d9ef" class="outline-3">
+<h3 id="org428d9ef"><span class="section-number-3">0.1.</span> 安装driver</h3>
 <div class="outline-text-3" id="text-0-1">
 <p>
 从<a href="https://www.nvidia.com/Download/index.aspx">这里</a>查看合适的驱动版本号。保留以该服务器的配置，可查询如：
 </p>
 
 
-<div id="org512a794" class="figure">
+<div id="orga733b7f" class="figure">
 <p><img src="./images/screenshot_20220330_181327.png" alt="screenshot_20220330_181327.png"> 
 </p>
 </div>
@@ -252,7 +252,7 @@ GPU: Tesla V100s
 </p>
 
 
-<div id="org8dc1138" class="figure">
+<div id="orgf42299f" class="figure">
 <p><img src="./images/screenshot_20220330_181346.png" alt="screenshot_20220330_181346.png">
 </p>
 </div>
@@ -266,16 +266,16 @@ GPU: Tesla V100s
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">sudo add-apt-repository ppa:graphics-drivers  <span style="color: #6272a4; font-style: italic;">#</span><span style="color: #6272a4; font-style: italic;">&#28155;&#21152;NVIDA&#26174;&#21345;&#39537;&#21160;&#24211;</span>
+<pre class="src src-sh">sudo add-apt-repository ppa:graphics-drivers  <span style="color: #565575;">#</span><span style="color: #96a0aa;">&#28155;&#21152;NVIDA&#26174;&#21345;&#39537;&#21160;&#24211;</span>
 sudo apt update
-ubuntu-drivers devices  <span style="color: #6272a4; font-style: italic;">#</span><span style="color: #6272a4; font-style: italic;">&#26174;&#31034;&#21487;&#23433;&#35013;&#39537;&#21160;</span>
-<span style="color: #6272a4; font-style: italic;">## </span><span style="color: #6272a4; font-style: italic;">&#20063;&#21487;&#20197;&#29992;&#19979;&#38754;&#30340;&#21629;&#20196;&#26597;&#30475;&#25903;&#25345;&#30340;driver</span>
+ubuntu-drivers devices  <span style="color: #565575;">#</span><span style="color: #96a0aa;">&#26174;&#31034;&#21487;&#23433;&#35013;&#39537;&#21160;</span>
+<span style="color: #565575;">## </span><span style="color: #96a0aa;">&#20063;&#21487;&#20197;&#29992;&#19979;&#38754;&#30340;&#21629;&#20196;&#26597;&#30475;&#25903;&#25345;&#30340;driver</span>
 sudo apt list nvidia-driver*
 </pre>
 </div>
 
 
-<div id="orgf2413d7" class="figure">
+<div id="org411067b" class="figure">
 <p><img src="./images/screenshot_20220330_181643.png" alt="screenshot_20220330_181643.png">
 </p>
 </div>
@@ -299,8 +299,8 @@ sudo apt list nvidia-driver*
 </div>
 </div>
 
-<div id="outline-container-org716c50c" class="outline-3">
-<h3 id="org716c50c"><span class="section-number-3">0.2.</span> 安装cuda</h3>
+<div id="outline-container-org709430d" class="outline-3">
+<h3 id="org709430d"><span class="section-number-3">0.2.</span> 安装cuda</h3>
 <div class="outline-text-3" id="text-0-2">
 <p>
 然而，安装驱动后，虽然nvidia-smi弹出的框右上角显示有cuda版本，
@@ -318,7 +318,7 @@ sudo apt list nvidia-driver*
 <pre class="src src-sh">wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin
 sudomv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600
 sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
-sudo add-apt-repository <span style="color: #f1fa8c;">"deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /"</span>
+sudo add-apt-repository <span style="color: #ffe9aa;">"deb http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /"</span>
 sudo apt-get update
 sudo apt-get -y install cuda
 </pre>
@@ -346,8 +346,8 @@ sudo apt-get -y install cuda
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #ffb86c;">export</span> <span style="color: #ffc9e8; background-color: #372E40;">PATH</span>=$<span style="color: #ffc9e8; background-color: #372E40;">PATH</span>:/usr/local/cuda/bin  <span style="color: #6272a4; font-style: italic;">#</span><span style="color: #6272a4; font-style: italic;">&#28155;&#21152;&#29615;&#22659;&#21464;&#37327;</span>
-nvcc -V  <span style="color: #6272a4; font-style: italic;">#</span><span style="color: #6272a4; font-style: italic;">&#26816;&#26597;CUDA&#29256;&#26412;</span>
+<pre class="src src-sh"><span style="color: #c991e1;">export</span> <span style="color: #ffe9aa;">PATH</span>=$<span style="color: #ffe9aa;">PATH</span>:/usr/local/cuda/bin  <span style="color: #565575;">#</span><span style="color: #96a0aa;">&#28155;&#21152;&#29615;&#22659;&#21464;&#37327;</span>
+nvcc -V  <span style="color: #565575;">#</span><span style="color: #96a0aa;">&#26816;&#26597;CUDA&#29256;&#26412;</span>
 </pre>
 </div>
 
@@ -357,18 +357,18 @@ nvcc -V  <span style="color: #6272a4; font-style: italic;">#</span><span style="
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">cuda-install-samples-10.x.sh ~  <span style="color: #6272a4; font-style: italic;">#</span><span style="color: #6272a4; font-style: italic;">&#23433;&#35013;cuda 10.x&#30340;&#26679;&#26412;&#21040;~&#30446;&#24405;&#19979;&#65292;&#26367;&#25442;x&#20026;&#20320;&#30340;&#29256;&#26412;&#21495;</span>
-<span style="color: #ffb86c;">cd</span> ~/NVIDIA_CUDA-10.x_Samples  <span style="color: #6272a4; font-style: italic;">#</span><span style="color: #6272a4; font-style: italic;">&#36827;&#20837;Sample&#30446;&#24405;</span>
-make  <span style="color: #6272a4; font-style: italic;">#</span><span style="color: #6272a4; font-style: italic;">&#26377;&#28857;&#32791;&#26102;&#65292;&#22914;&#26524;&#31995;&#32479;&#29256;&#26412;&#19981;&#21305;&#37197;&#65292;gcc&#29256;&#26412;&#21487;&#33021;&#20250;&#23548;&#33268;&#25253;&#38169;&#12290;</span>
-./1_Utilities/deviceQuery/deviceQuery  <span style="color: #6272a4; font-style: italic;">#</span><span style="color: #6272a4; font-style: italic;">&#25191;&#34892;&#26816;&#26597;&#31243;&#24207;</span>
+<pre class="src src-sh">cuda-install-samples-10.x.sh ~  <span style="color: #565575;">#</span><span style="color: #96a0aa;">&#23433;&#35013;cuda 10.x&#30340;&#26679;&#26412;&#21040;~&#30446;&#24405;&#19979;&#65292;&#26367;&#25442;x&#20026;&#20320;&#30340;&#29256;&#26412;&#21495;</span>
+<span style="color: #c991e1;">cd</span> ~/NVIDIA_CUDA-10.x_Samples  <span style="color: #565575;">#</span><span style="color: #96a0aa;">&#36827;&#20837;Sample&#30446;&#24405;</span>
+make  <span style="color: #565575;">#</span><span style="color: #96a0aa;">&#26377;&#28857;&#32791;&#26102;&#65292;&#22914;&#26524;&#31995;&#32479;&#29256;&#26412;&#19981;&#21305;&#37197;&#65292;gcc&#29256;&#26412;&#21487;&#33021;&#20250;&#23548;&#33268;&#25253;&#38169;&#12290;</span>
+./1_Utilities/deviceQuery/deviceQuery  <span style="color: #565575;">#</span><span style="color: #96a0aa;">&#25191;&#34892;&#26816;&#26597;&#31243;&#24207;</span>
 </pre>
 </div>
 </div>
 </div>
 
 
-<div id="outline-container-org0e01cbb" class="outline-3">
-<h3 id="org0e01cbb"><span class="section-number-3">0.3.</span> 安装失败</h3>
+<div id="outline-container-org57e343f" class="outline-3">
+<h3 id="org57e343f"><span class="section-number-3">0.3.</span> 安装失败</h3>
 <div class="outline-text-3" id="text-0-3">
 <p>
 如果版本不兼容，需要卸载掉驱动和cuda从头再来。
@@ -379,8 +379,8 @@ make  <span style="color: #6272a4; font-style: italic;">#</span><span style="col
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">sudo apt-get --purge remove <span style="color: #f1fa8c;">"nvidia*"</span>  <span style="color: #6272a4; font-style: italic;">#</span><span style="color: #6272a4; font-style: italic;">&#21024;&#38500;&#39537;&#21160;&#65288;20.04&#29992;&#36807;&#36825;&#20010;&#20195;&#30721;&#36807;&#21518;&#21487;&#33021;&#20250;&#23548;&#33268;&#31616;&#20415;&#26041;&#27861;&#26080;&#27861;&#20351;&#29992;&#65289;</span>
-sudo apt-get --purge remove <span style="color: #f1fa8c;">"*cuda*"</span> <span style="color: #f1fa8c;">"*cublas*"</span>  <span style="color: #6272a4; font-style: italic;">#</span><span style="color: #6272a4; font-style: italic;">&#21024;&#38500;cuda</span>
+<pre class="src src-sh">sudo apt-get --purge remove <span style="color: #ffe9aa;">"nvidia*"</span>  <span style="color: #565575;">#</span><span style="color: #96a0aa;">&#21024;&#38500;&#39537;&#21160;&#65288;20.04&#29992;&#36807;&#36825;&#20010;&#20195;&#30721;&#36807;&#21518;&#21487;&#33021;&#20250;&#23548;&#33268;&#31616;&#20415;&#26041;&#27861;&#26080;&#27861;&#20351;&#29992;&#65289;</span>
+sudo apt-get --purge remove <span style="color: #ffe9aa;">"*cuda*"</span> <span style="color: #ffe9aa;">"*cublas*"</span>  <span style="color: #565575;">#</span><span style="color: #96a0aa;">&#21024;&#38500;cuda</span>
 </pre>
 </div>
 </div>
@@ -388,8 +388,8 @@ sudo apt-get --purge remove <span style="color: #f1fa8c;">"*cuda*"</span> <span 
 
 
 
-<div id="outline-container-org7ae34f8" class="outline-2">
-<h2 id="org7ae34f8"><span class="section-number-2">1.</span> 参考文献：</h2>
+<div id="outline-container-org7ee5cf4" class="outline-2">
+<h2 id="org7ee5cf4"><span class="section-number-2">1.</span> 参考文献：</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <a href="https://zhuanlan.zhihu.com/p/143429249">https://zhuanlan.zhihu.com/p/143429249</a>
@@ -398,7 +398,7 @@ sudo apt-get --purge remove <span style="color: #f1fa8c;">"*cuda*"</span> <span 
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: zi liang (<a href="mailto:2273067585@qq.com">2273067585@qq.com</a>)</span> <span class="date">Create Date: Wed Mar 30 18:00:57 2022</span> <span class="date">Last modified: 2024-03-09 Sat 20:56</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 28.1 (<a href="https://orgmode.org">Org</a> mode 9.5.2)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: zi liang (<a href="mailto:2273067585@qq.com">2273067585@qq.com</a>)</span> <span class="date">Create Date: Wed Mar 30 18:00:57 2022</span> <span class="date">Last modified: 2025-02-01 Sat 17:21</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</span> </div>
 </div>
 </body>
 </html>
