@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2025-02-16 Sun 13:01 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Thoughts of Deepseek R1</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">Thoughts of Deepseek R1</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org5c66dae">1. Overview</a></li>
+<li><a href="#org4ca7e83">2. Methodology</a>
+<ul>
+<li><a href="#orgfa40688">2.1. RL algorithm: GRPO (Group Relative Policy Optimization)</a></li>
+<li><a href="#org643b199">2.2. Reward Model</a></li>
+<li><a href="#org78d355c">2.3. Prompts during RL</a></li>
+<li><a href="#org0903086">2.4. Test-time Scaling can be Automatically Learned during RL; "Self-evolution Process"</a></li>
+<li><a href="#org141e0b1">2.5. "Aha Moment"</a></li>
+<li><a href="#org540d093">2.6. R1's training-stage I: cold start</a></li>
+<li><a href="#org766068a">2.7. R1's training-stage II: another SFT to enhance model's general-purpose abilities</a></li>
+<li><a href="#org7097490">2.8. R1's final further RL</a></li>
+<li><a href="#org19fb501">2.9. Distillation</a></li>
+</ul>
+</li>
+<li><a href="#org77c900b">3. Unsuccessful Attempts</a></li>
+<li><a href="#orge0da732">4. Source Code Reading: HF's Open R1</a>
+<ul>
+<li><a href="#org6fc469b">4.1. Accuracy Reward</a></li>
+<li><a href="#orgf7e94c1">4.2. Format Reward</a></li>
+<li><a href="#orgf0282bc">4.3. Step by Step reward. (NOT USED in the PAPER)</a></li>
+<li><a href="#orge7caf06">4.4. Len Reward (NOT USED in the PAPER, it is kimi 1.5's.)</a></li>
+<li><a href="#orgd7e5cc7">4.5. Cosine Scaled Reward (NOT USED in the PAPER)</a></li>
+<li><a href="#org3aaa5b1">4.6. Repetition Penalty Reward (NOT Used in the Paper, but promising)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org5c66dae" class="outline-2">
+<h2 id="org5c66dae"><span class="section-number-2">1.</span> Overview</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>R1-Zero: a model only with RL but <i>without</i> SFT.</li>
+<li>Deepseek R1: add <b>cold start</b> and <b>multi-stage training</b> before RL</li>
+<li>Distillation of small LLMs from R1
+<ul class="org-ul">
+<li>Qwen2.5-32B</li>
+<li>Llama3</li>
+<li>1.5B, 7B, 8B, 14B, 32B, 70B</li>
+</ul></li>
+</ul>
+
+<p>
+Evaluations on AIME2024, Codeforces, GPQA-Diamond, MATH-500, MMLU, and SWE-bench Verified, show that R1 can obtain comparable results with o1.
+</p>
+
+
+<p>
+Target of R1: to replicate the performance of o1, i.e., to "improve language model reasoning capabilities (inference-time scaling) via a pure RL."
+</p>
+
+<p>
+Inference-time scaling by o1: means that we can obtain better reasoning ability by increasing the length of the Chain-of-Tought reasoning process.
+</p>
+
+
+<p>
+Base pretrained model: Deepseek-V3-Base
+</p>
+
+<p>
+RL algorithm: GRPO.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org4ca7e83" class="outline-2">
+<h2 id="org4ca7e83"><span class="section-number-2">2.</span> Methodology</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgfa40688" class="outline-3">
+<h3 id="orgfa40688"><span class="section-number-3">2.1.</span> RL algorithm: GRPO (Group Relative Policy Optimization)</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Motivation:
+</p>
+<ol class="org-ol">
+<li>the critic model is unnecessary to own the same size as the policy model</li>
+<li>multiple sampled action, instead of only one sampled action.</li>
+</ol>
+
+
+<p>
+Objective Formula (to maximize):
+</p>
+
+
+<div id="orgc8782cd" class="figure">
+<p><img src="./images/screenshot_20250216_112842.png" alt="screenshot_20250216_112842.png">
+</p>
+</div>
+
+<p>
+where:
+</p>
+<ul class="org-ul">
+<li>Q: Question (Query) dataset</li>
+<li>q: query question text</li>
+<li>\(\pi\): policy</li>
+<li>O: output distribution</li>
+<li>o_i: i-th output set</li>
+<li>G: group number</li>
+<li>A_i: Normalized "debiased reward", also named as "supervise" or "advantage". (will shown later).</li>
+<li>D_{KL}: KL-divergence</li>
+</ul>
+
+<p>
+Meaning of this formula: for each question in the query dataset Q, collecting G outputs. For each output, compute its advantage, and scale it with the gain of probability proportion. Using KL divergence to constrain the training model with he reference model.
+</p>
+
+<p>
+A's formular:
+</p>
+
+
+<div id="org48de847" class="figure">
+<p><img src="./images/screenshot_20250216_113518.png" alt="screenshot_20250216_113518.png">
+</p>
+</div>
+
+
+<p>
+\(r\) denotes rewards.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org643b199" class="outline-3">
+<h3 id="org643b199"><span class="section-number-3">2.2.</span> Reward Model</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+There is no trained reward model for R1, with the following reasons:
+</p>
+<ul class="org-ul">
+<li>reward hacking problem (see lilian's blog)</li>
+<li>the additional training resources with corresponding complexities</li>
+</ul>
+
+
+<p>
+Reward model used here:
+</p>
+
+<ul class="org-ul">
+<li>Accuracy rewards: like the answer of math problem.</li>
+<li>Format rewards: check whether the model put its thinkign procedure into &lt;think&gt; &lt;/think&gt;, for example.</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org78d355c" class="outline-3">
+<h3 id="org78d355c"><span class="section-number-3">2.3.</span> Prompts during RL</h3>
+<div class="outline-text-3" id="text-2-3">
+<blockquote>
+<p>
+A conversation between User and Assistant. The user asks a question, and the Assistant solves it. The assistant first thinks about the reasoning process in the mind and then provides the user with the answer. The reasoning process and answer are enclosed within &lt;think&gt; &lt;/think&gt; and &lt;answer&gt; &lt;/answer&gt; tags, respectively, i.e., &lt;think&gt; reasoning process here &lt;/think&gt; &lt;answer&gt; answer here &lt;/answer&gt;. User: prompt. Assistant:
+</p>
+</blockquote>
+
+<p>
+where <code>prompt</code> where be replaced with corresponding reasoning prompts.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0903086" class="outline-3">
+<h3 id="org0903086"><span class="section-number-3">2.4.</span> Test-time Scaling can be Automatically Learned during RL; "Self-evolution Process"</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+During RL training, the increase of performance is consistent with the increase of average response length, as shown below:
+</p>
+
+
+<div id="org061f2e1" class="figure">
+<p><img src="./images/screenshot_20250216_114913.png" alt="screenshot_20250216_114913.png">
+</p>
+</div>
+
+
+<div id="org772714e" class="figure">
+<p><img src="./images/screenshot_20250216_114925.png" alt="screenshot_20250216_114925.png">
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org141e0b1" class="outline-3">
+<h3 id="org141e0b1"><span class="section-number-3">2.5.</span> "Aha Moment"</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+Aha Moment denotes the moment when "a LLM learns to re-evaluate its initial approach so that it will allocate more thinking time to a problem".
+</p>
+
+<p>
+An example here:
+</p>
+
+
+<div id="org54cc23d" class="figure">
+<p><img src="./images/screenshot_20250216_115420.png" alt="screenshot_20250216_115420.png">
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org540d093" class="outline-3">
+<h3 id="org540d093"><span class="section-number-3">2.6.</span> R1's training-stage I: cold start</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+method: collecting <b>thousands of</b> SFT samples.
+</p>
+
+<p>
+SFT dataset is collected from:
+</p>
+<ul class="org-ul">
+<li>fewshot prompting. I.e., in the prompt, there will be some long CoT examples that is very standard (e.g., with reflection, verification, readable format, etc).</li>
+<li>human refined training samples.</li>
+</ul>
+
+
+<p>
+Besides, during cold start:
+</p>
+<ul class="org-ul">
+<li>Readability: they use a readable pattern to ensure <b>the thinking procedure follows a markdown format</b>.</li>
+<li>Language Mixing: add a reward about the diversity of language during reasoning to reduce the language mixing phenomenon.  &#x2013;&gt; will result in a slight performance degradation.</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org766068a" class="outline-3">
+<h3 id="org766068a"><span class="section-number-3">2.7.</span> R1's training-stage II: another SFT to enhance model's general-purpose abilities</h3>
+<div class="outline-text-3" id="text-2-7">
+<p>
+For reasoning data:
+</p>
+<ul class="org-ul">
+<li>expanding the data that by incorporating additional data, some of which use a generative reward model (i.e., not only rule-based reward) by feeding the ground-truth and model predictions into Deepseek-V3 for judgment.</li>
+<li>filtering out CoT with mixed languages, long paragraphs, and code blocks</li>
+<li>600k samples.</li>
+</ul>
+
+
+<p>
+For non-reasoning data (e.g, writing, factual QA, self-cognition, translation, &#x2026;):
+</p>
+<ul class="org-ul">
+<li>the same as V3</li>
+<li>200k training samples</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org7097490" class="outline-3">
+<h3 id="org7097490"><span class="section-number-3">2.8.</span> R1's final further RL</h3>
+<div class="outline-text-3" id="text-2-8">
+<p>
+blablabla, to enable its diversity, and reduce risks.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org19fb501" class="outline-3">
+<h3 id="org19fb501"><span class="section-number-3">2.9.</span> Distillation</h3>
+<div class="outline-text-3" id="text-2-9">
+<p>
+They use the 800k high-quality SFT data (described in R1's two trianing-stage) to distill a series of open source models, leveraging RL on these models as future work.
+</p>
+
+<p>
+The results are impressive:
+</p>
+
+
+<div id="org663700b" class="figure">
+<p><img src="./images/screenshot_20250216_122632.png" alt="screenshot_20250216_122632.png">
+</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org77c900b" class="outline-2">
+<h2 id="org77c900b"><span class="section-number-2">3.</span> Unsuccessful Attempts</h2>
+<div class="outline-text-2" id="text-3">
+<ul class="org-ul">
+<li>Process reward model. This demonstrates that we cannot explicitly define the reward for the "thinking procedure".</li>
+<li>Monte Carlo Tree Search: Not suitable with token generation.</li>
+</ul>
+</div>
+</div>
+
+
+
+<div id="outline-container-orge0da732" class="outline-2">
+<h2 id="orge0da732"><span class="section-number-2">4.</span> Source Code Reading: HF's Open R1</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+GRPO: use <code>trl</code>'s standard implementation.
+</p>
+</div>
+
+<div id="outline-container-org6fc469b" class="outline-3">
+<h3 id="org6fc469b"><span class="section-number-3">4.1.</span> Accuracy Reward</h3>
+<div class="outline-text-3" id="text-4-1">
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ff8080;">def</span> <span style="color: #c991e1;">accuracy_reward</span><span style="color: #c66; font-weight: bold;">(</span>completions, solution, **kwargs<span style="color: #c66; font-weight: bold;">)</span>:
+    <span style="color: #62d196;">"""Reward function that checks if the completion is the same as the ground truth."""</span>
+    <span style="color: #ffe9aa;">contents</span> = <span style="color: #c66; font-weight: bold;">[</span>completion<span style="color: #6c6; font-weight: bold;">[</span>0<span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa;">"content"</span><span style="color: #6c6; font-weight: bold;">]</span> <span style="color: #ff8080;">for</span> completion <span style="color: #ff8080;">in</span> completions<span style="color: #c66; font-weight: bold;">]</span>
+    <span style="color: #ffe9aa;">rewards</span> = <span style="color: #c66; font-weight: bold;">[]</span>
+    <span style="color: #ff8080;">for</span> content, sol <span style="color: #ff8080;">in</span> <span style="color: #c991e1;">zip</span><span style="color: #c66; font-weight: bold;">(</span>contents, solution<span style="color: #c66; font-weight: bold;">)</span>:
+        <span style="color: #ffe9aa;">gold_parsed</span> = parse<span style="color: #c66; font-weight: bold;">(</span>
+            sol,
+            extraction_mode=<span style="color: #ffe9aa;">"first_match"</span>,
+            extraction_config=<span style="color: #6c6; font-weight: bold;">[</span>LatexExtractionConfig<span style="color: #69f; font-weight: bold;">()</span><span style="color: #6c6; font-weight: bold;">]</span>,
+        <span style="color: #c66; font-weight: bold;">)</span>
+        <span style="color: #ff8080;">if</span> <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>gold_parsed<span style="color: #c66; font-weight: bold;">)</span> != 0:
+            <span style="color: #565575;"># </span><span style="color: #96a0aa;">We require the answer to be provided in correct latex (no malformed operators)</span>
+            <span style="color: #ffe9aa;">answer_parsed</span> = parse<span style="color: #c66; font-weight: bold;">(</span>
+                content,
+                extraction_config=<span style="color: #6c6; font-weight: bold;">[</span>
+                    LatexExtractionConfig<span style="color: #69f; font-weight: bold;">(</span>
+                        normalization_config=NormalizationConfig<span style="color: #cc6; font-weight: bold;">(</span>
+                            nits=<span style="color: #aaffe4;">False</span>,
+                            malformed_operators=<span style="color: #aaffe4;">False</span>,
+                            basic_latex=<span style="color: #aaffe4;">True</span>,
+                            equations=<span style="color: #aaffe4;">True</span>,
+                            boxed=<span style="color: #ffe9aa;">"all"</span>,
+                            units=<span style="color: #aaffe4;">True</span>,
+                        <span style="color: #cc6; font-weight: bold;">)</span>,
+                        <span style="color: #565575;"># </span><span style="color: #96a0aa;">Ensures that boxed is tried first</span>
+                        boxed_match_priority=0,
+                        try_extract_without_anchor=<span style="color: #aaffe4;">False</span>,
+                    <span style="color: #69f; font-weight: bold;">)</span>
+                <span style="color: #6c6; font-weight: bold;">]</span>,
+                extraction_mode=<span style="color: #ffe9aa;">"first_match"</span>,
+            <span style="color: #c66; font-weight: bold;">)</span>
+            <span style="color: #565575;"># </span><span style="color: #96a0aa;">Reward 1 if the content is the same as the ground truth, 0 otherwise</span>
+            <span style="color: #ffe9aa;">reward</span> = <span style="color: #c991e1;">float</span><span style="color: #c66; font-weight: bold;">(</span>verify<span style="color: #6c6; font-weight: bold;">(</span>answer_parsed, gold_parsed<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
+        <span style="color: #ff8080;">else</span>:
+            <span style="color: #565575;"># </span><span style="color: #96a0aa;">If the gold solution is not parseable, we reward 1 to skip this example</span>
+            <span style="color: #ffe9aa;">reward</span> = 1.0
+            <span style="color: #c991e1;">print</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">"Failed to parse gold solution: "</span>, sol<span style="color: #c66; font-weight: bold;">)</span>
+        rewards.append<span style="color: #c66; font-weight: bold;">(</span>reward<span style="color: #c66; font-weight: bold;">)</span>
+
+    <span style="color: #ff8080;">return</span> rewards
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgf7e94c1" class="outline-3">
+<h3 id="orgf7e94c1"><span class="section-number-3">4.2.</span> Format Reward</h3>
+<div class="outline-text-3" id="text-4-2">
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ff8080;">def</span> <span style="color: #c991e1;">format_reward</span><span style="color: #c66; font-weight: bold;">(</span>completions, **kwargs<span style="color: #c66; font-weight: bold;">)</span>:
+    <span style="color: #62d196;">"""Reward function that checks if the completion has a specific format."""</span>
+    <span style="color: #ffe9aa;">pattern</span> = r<span style="color: #ffe9aa;">"^&lt;think&gt;.*?&lt;/think&gt;\s*&lt;answer&gt;.*?&lt;/answer&gt;$"</span>
+    <span style="color: #ffe9aa;">completion_contents</span> = <span style="color: #c66; font-weight: bold;">[</span>completion<span style="color: #6c6; font-weight: bold;">[</span>0<span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa;">"content"</span><span style="color: #6c6; font-weight: bold;">]</span> <span style="color: #ff8080;">for</span> completion <span style="color: #ff8080;">in</span> completions<span style="color: #c66; font-weight: bold;">]</span>
+    <span style="color: #ffe9aa;">matches</span> = <span style="color: #c66; font-weight: bold;">[</span>re.<span style="color: #ff8080;">match</span><span style="color: #6c6; font-weight: bold;">(</span>pattern, content, re.DOTALL | re.MULTILINE<span style="color: #6c6; font-weight: bold;">)</span> <span style="color: #ff8080;">for</span> content <span style="color: #ff8080;">in</span> completion_contents<span style="color: #c66; font-weight: bold;">]</span>
+    <span style="color: #ff8080;">return</span> <span style="color: #c66; font-weight: bold;">[</span>1.0 <span style="color: #ff8080;">if</span> <span style="color: #ff8080;">match</span> <span style="color: #ff8080;">else</span> 0.0 <span style="color: #ff8080;">for</span> <span style="color: #ff8080;">match</span> <span style="color: #ff8080;">in</span> matches<span style="color: #c66; font-weight: bold;">]</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgf0282bc" class="outline-3">
+<h3 id="orgf0282bc"><span class="section-number-3">4.3.</span> Step by Step reward. (NOT USED in the PAPER)</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+"whether the model can provide a clear thinking procedure or not".
+</p>
+
+
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ff8080;">def</span> <span style="color: #c991e1;">reasoning_steps_reward</span><span style="color: #c66; font-weight: bold;">(</span>completions, **kwargs<span style="color: #c66; font-weight: bold;">)</span>:
+    r<span style="color: #62d196;">"""Reward function that checks for clear step-by-step reasoning.</span>
+<span style="color: #62d196;">    Regex pattern:</span>
+<span style="color: #62d196;">        Step \d+: - matches "Step 1:", "Step 2:", etc.</span>
+<span style="color: #62d196;">        ^\d+\. - matches numbered lists like "1.", "2.", etc. at start of line</span>
+<span style="color: #62d196;">        \n- - matches bullet points with hyphens</span>
+<span style="color: #62d196;">        \n\* - matches bullet points with asterisks</span>
+<span style="color: #62d196;">        First,|Second,|Next,|Finally, - matches transition words</span>
+<span style="color: #62d196;">    """</span>
+    <span style="color: #ffe9aa;">pattern</span> = r<span style="color: #ffe9aa;">"(Step \d+:|^\d+\.|\n-|\n\*|First,|Second,|Next,|Finally,)"</span>
+    <span style="color: #ffe9aa;">completion_contents</span> = <span style="color: #c66; font-weight: bold;">[</span>completion<span style="color: #6c6; font-weight: bold;">[</span>0<span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa;">"content"</span><span style="color: #6c6; font-weight: bold;">]</span> <span style="color: #ff8080;">for</span> completion <span style="color: #ff8080;">in</span> completions<span style="color: #c66; font-weight: bold;">]</span>
+    <span style="color: #ffe9aa;">matches</span> = <span style="color: #c66; font-weight: bold;">[</span><span style="color: #c991e1;">len</span><span style="color: #6c6; font-weight: bold;">(</span>re.findall<span style="color: #69f; font-weight: bold;">(</span>pattern, content<span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span> <span style="color: #ff8080;">for</span> content <span style="color: #ff8080;">in</span> completion_contents<span style="color: #c66; font-weight: bold;">]</span>
+
+    <span style="color: #565575;"># </span><span style="color: #96a0aa;">Magic nubmer 3 to encourage 3 steps and more, otherwise partial reward</span>
+    <span style="color: #ff8080;">return</span> <span style="color: #c66; font-weight: bold;">[</span><span style="color: #c991e1;">min</span><span style="color: #6c6; font-weight: bold;">(</span>1.0, count / 3<span style="color: #6c6; font-weight: bold;">)</span> <span style="color: #ff8080;">for</span> count <span style="color: #ff8080;">in</span> matches<span style="color: #c66; font-weight: bold;">]</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orge7caf06" class="outline-3">
+<h3 id="orge7caf06"><span class="section-number-3">4.4.</span> Len Reward (NOT USED in the PAPER, it is kimi 1.5's.)</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+constrain the length of chain-of-thought.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ff8080;">def</span> <span style="color: #c991e1;">len_reward</span><span style="color: #c66; font-weight: bold;">(</span>completions: <span style="color: #c991e1;">list</span><span style="color: #6c6; font-weight: bold;">[</span>Dict<span style="color: #69f; font-weight: bold;">[</span><span style="color: #c991e1;">str</span>, <span style="color: #c991e1;">str</span><span style="color: #69f; font-weight: bold;">]</span><span style="color: #6c6; font-weight: bold;">]</span>, solutions: <span style="color: #c991e1;">list</span><span style="color: #6c6; font-weight: bold;">[</span><span style="color: #c991e1;">str</span><span style="color: #6c6; font-weight: bold;">]</span>, **kwargs<span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #c991e1;">float</span>:
+    <span style="color: #62d196;">"""Compute length-based rewards to discourage overthinking and promote token efficiency.</span>
+
+<span style="color: #62d196;">    Taken from from the Kimi 1.5 tech report: https://arxiv.org/abs/2501.12599</span>
+
+<span style="color: #62d196;">    Args:</span>
+<span style="color: #62d196;">        completions: List of model completions</span>
+<span style="color: #62d196;">        solutions: List of ground truth solutions</span>
+
+<span style="color: #62d196;">    Returns:</span>
+<span style="color: #62d196;">        List of rewards where:</span>
+<span style="color: #62d196;">        - For correct answers: reward = 0.5 - (len - min_len)/(max_len - min_len)</span>
+<span style="color: #62d196;">        - For incorrect answers: reward = min(0, 0.5 - (len - min_len)/(max_len - min_len))</span>
+<span style="color: #62d196;">    """</span>
+    <span style="color: #ffe9aa;">contents</span> = <span style="color: #c66; font-weight: bold;">[</span>completion<span style="color: #6c6; font-weight: bold;">[</span>0<span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa;">"content"</span><span style="color: #6c6; font-weight: bold;">]</span> <span style="color: #ff8080;">for</span> completion <span style="color: #ff8080;">in</span> completions<span style="color: #c66; font-weight: bold;">]</span>
+
+    <span style="color: #565575;"># </span><span style="color: #96a0aa;">First check correctness of answers</span>
+    <span style="color: #ffe9aa;">correctness</span> = <span style="color: #c66; font-weight: bold;">[]</span>
+    <span style="color: #ff8080;">for</span> content, sol <span style="color: #ff8080;">in</span> <span style="color: #c991e1;">zip</span><span style="color: #c66; font-weight: bold;">(</span>contents, solutions<span style="color: #c66; font-weight: bold;">)</span>:
+        <span style="color: #ffe9aa;">gold_parsed</span> = parse<span style="color: #c66; font-weight: bold;">(</span>
+            sol,
+            extraction_mode=<span style="color: #ffe9aa;">"first_match"</span>,
+            extraction_config=<span style="color: #6c6; font-weight: bold;">[</span>LatexExtractionConfig<span style="color: #69f; font-weight: bold;">()</span><span style="color: #6c6; font-weight: bold;">]</span>,
+        <span style="color: #c66; font-weight: bold;">)</span>
+        <span style="color: #ff8080;">if</span> <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>gold_parsed<span style="color: #c66; font-weight: bold;">)</span> == 0:
+            <span style="color: #565575;"># </span><span style="color: #96a0aa;">Skip unparseable examples</span>
+            correctness.append<span style="color: #c66; font-weight: bold;">(</span><span style="color: #aaffe4;">True</span><span style="color: #c66; font-weight: bold;">)</span>  <span style="color: #565575;"># </span><span style="color: #96a0aa;">Treat as correct to avoid penalizing</span>
+            <span style="color: #c991e1;">print</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">"Failed to parse gold solution: "</span>, sol<span style="color: #c66; font-weight: bold;">)</span>
+            <span style="color: #ff8080;">continue</span>
+
+        <span style="color: #ffe9aa;">answer_parsed</span> = parse<span style="color: #c66; font-weight: bold;">(</span>
+            content,
+            extraction_config=<span style="color: #6c6; font-weight: bold;">[</span>
+                LatexExtractionConfig<span style="color: #69f; font-weight: bold;">(</span>
+                    normalization_config=NormalizationConfig<span style="color: #cc6; font-weight: bold;">(</span>
+                        nits=<span style="color: #aaffe4;">False</span>,
+                        malformed_operators=<span style="color: #aaffe4;">False</span>,
+                        basic_latex=<span style="color: #aaffe4;">True</span>,
+                        equations=<span style="color: #aaffe4;">True</span>,
+                        boxed=<span style="color: #aaffe4;">True</span>,
+                        units=<span style="color: #aaffe4;">True</span>,
+                    <span style="color: #cc6; font-weight: bold;">)</span>,
+                    boxed_match_priority=0,
+                    try_extract_without_anchor=<span style="color: #aaffe4;">False</span>,
+                <span style="color: #69f; font-weight: bold;">)</span>
+            <span style="color: #6c6; font-weight: bold;">]</span>,
+            extraction_mode=<span style="color: #ffe9aa;">"first_match"</span>,
+        <span style="color: #c66; font-weight: bold;">)</span>
+        correctness.append<span style="color: #c66; font-weight: bold;">(</span>verify<span style="color: #6c6; font-weight: bold;">(</span>answer_parsed, gold_parsed<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
+
+    <span style="color: #565575;"># </span><span style="color: #96a0aa;">Calculate lengths</span>
+    <span style="color: #ffe9aa;">lengths</span> = <span style="color: #c66; font-weight: bold;">[</span><span style="color: #c991e1;">len</span><span style="color: #6c6; font-weight: bold;">(</span>content<span style="color: #6c6; font-weight: bold;">)</span> <span style="color: #ff8080;">for</span> content <span style="color: #ff8080;">in</span> contents<span style="color: #c66; font-weight: bold;">]</span>
+    <span style="color: #ffe9aa;">min_len</span> = <span style="color: #c991e1;">min</span><span style="color: #c66; font-weight: bold;">(</span>lengths<span style="color: #c66; font-weight: bold;">)</span>
+    <span style="color: #ffe9aa;">max_len</span> = <span style="color: #c991e1;">max</span><span style="color: #c66; font-weight: bold;">(</span>lengths<span style="color: #c66; font-weight: bold;">)</span>
+
+    <span style="color: #565575;"># </span><span style="color: #96a0aa;">If all responses have the same length, return zero rewards</span>
+    <span style="color: #ff8080;">if</span> max_len == min_len:
+        <span style="color: #ff8080;">return</span> <span style="color: #c66; font-weight: bold;">[</span>0.0<span style="color: #c66; font-weight: bold;">]</span> * <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>completions<span style="color: #c66; font-weight: bold;">)</span>
+
+    <span style="color: #ffe9aa;">rewards</span> = <span style="color: #c66; font-weight: bold;">[]</span>
+    <span style="color: #ff8080;">for</span> length, is_correct <span style="color: #ff8080;">in</span> <span style="color: #c991e1;">zip</span><span style="color: #c66; font-weight: bold;">(</span>lengths, correctness<span style="color: #c66; font-weight: bold;">)</span>:
+        <span style="color: #ffe9aa;">lambda_val</span> = 0.5 - <span style="color: #c66; font-weight: bold;">(</span>length - min_len<span style="color: #c66; font-weight: bold;">)</span> / <span style="color: #c66; font-weight: bold;">(</span>max_len - min_len<span style="color: #c66; font-weight: bold;">)</span>
+
+        <span style="color: #ff8080;">if</span> is_correct:
+            <span style="color: #ffe9aa;">reward</span> = lambda_val
+        <span style="color: #ff8080;">else</span>:
+            <span style="color: #ffe9aa;">reward</span> = <span style="color: #c991e1;">min</span><span style="color: #c66; font-weight: bold;">(</span>0, lambda_val<span style="color: #c66; font-weight: bold;">)</span>
+
+        rewards.append<span style="color: #c66; font-weight: bold;">(</span><span style="color: #c991e1;">float</span><span style="color: #6c6; font-weight: bold;">(</span>reward<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
+
+    <span style="color: #ff8080;">return</span> rewards
+</pre>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-orgd7e5cc7" class="outline-3">
+<h3 id="orgd7e5cc7"><span class="section-number-3">4.5.</span> Cosine Scaled Reward (NOT USED in the PAPER)</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+Reward function that scales based on completion length using a cosine schedule.
+Shorter correct solutions are rewarded more than longer ones.
+Longer incorrect solutions are penalized less than shorter ones.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">
+<span style="color: #ff8080;">def</span> <span style="color: #c991e1;">get_cosine_scaled_reward</span><span style="color: #c66; font-weight: bold;">(</span>
+    min_value_wrong: <span style="color: #c991e1;">float</span> = -1.0,
+    max_value_wrong: <span style="color: #c991e1;">float</span> = -0.5,
+    min_value_correct: <span style="color: #c991e1;">float</span> = 0.5,
+    max_value_correct: <span style="color: #c991e1;">float</span> = 1.0,
+    max_len: <span style="color: #c991e1;">int</span> = 1000,
+<span style="color: #c66; font-weight: bold;">)</span>:
+    <span style="color: #ff8080;">def</span> <span style="color: #c991e1;">cosine_scaled_reward</span><span style="color: #c66; font-weight: bold;">(</span>completions, solution, **kwargs<span style="color: #c66; font-weight: bold;">)</span>:
+        <span style="color: #62d196;">"""Reward function that scales based on completion length using a cosine schedule.</span>
+
+<span style="color: #62d196;">        Shorter correct solutions are rewarded more than longer ones.</span>
+<span style="color: #62d196;">        Longer incorrect solutions are penalized less than shorter ones.</span>
+
+<span style="color: #62d196;">        Args:</span>
+<span style="color: #62d196;">            completions: List of model completions</span>
+<span style="color: #62d196;">            solution: List of ground truth solutions</span>
+
+<span style="color: #62d196;">        This function is parameterized by the following arguments:</span>
+<span style="color: #62d196;">            min_value_wrong: Minimum reward for wrong answers</span>
+<span style="color: #62d196;">            max_value_wrong: Maximum reward for wrong answers</span>
+<span style="color: #62d196;">            min_value_correct: Minimum reward for correct answers</span>
+<span style="color: #62d196;">            max_value_correct: Maximum reward for correct answers</span>
+<span style="color: #62d196;">            max_len: Maximum length for scaling</span>
+<span style="color: #62d196;">        """</span>
+        <span style="color: #ffe9aa;">contents</span> = <span style="color: #c66; font-weight: bold;">[</span>completion<span style="color: #6c6; font-weight: bold;">[</span>0<span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa;">"content"</span><span style="color: #6c6; font-weight: bold;">]</span> <span style="color: #ff8080;">for</span> completion <span style="color: #ff8080;">in</span> completions<span style="color: #c66; font-weight: bold;">]</span>
+        <span style="color: #ffe9aa;">rewards</span> = <span style="color: #c66; font-weight: bold;">[]</span>
+
+        <span style="color: #ff8080;">for</span> content, sol <span style="color: #ff8080;">in</span> <span style="color: #c991e1;">zip</span><span style="color: #c66; font-weight: bold;">(</span>contents, solution<span style="color: #c66; font-weight: bold;">)</span>:
+            <span style="color: #ffe9aa;">gold_parsed</span> = parse<span style="color: #c66; font-weight: bold;">(</span>sol, extraction_mode=<span style="color: #ffe9aa;">"first_match"</span>, extraction_config=<span style="color: #6c6; font-weight: bold;">[</span>LatexExtractionConfig<span style="color: #69f; font-weight: bold;">()</span><span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span>
+            <span style="color: #ff8080;">if</span> <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>gold_parsed<span style="color: #c66; font-weight: bold;">)</span> == 0:
+                rewards.append<span style="color: #c66; font-weight: bold;">(</span>1.0<span style="color: #c66; font-weight: bold;">)</span>  <span style="color: #565575;"># </span><span style="color: #96a0aa;">Skip unparseable examples</span>
+                <span style="color: #c991e1;">print</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">"Failed to parse gold solution: "</span>, sol<span style="color: #c66; font-weight: bold;">)</span>
+                <span style="color: #ff8080;">continue</span>
+
+            <span style="color: #ffe9aa;">answer_parsed</span> = parse<span style="color: #c66; font-weight: bold;">(</span>
+                content,
+                extraction_config=<span style="color: #6c6; font-weight: bold;">[</span>
+                    LatexExtractionConfig<span style="color: #69f; font-weight: bold;">(</span>
+                        normalization_config=NormalizationConfig<span style="color: #cc6; font-weight: bold;">(</span>
+                            nits=<span style="color: #aaffe4;">False</span>,
+                            malformed_operators=<span style="color: #aaffe4;">False</span>,
+                            basic_latex=<span style="color: #aaffe4;">True</span>,
+                            equations=<span style="color: #aaffe4;">True</span>,
+                            boxed=<span style="color: #aaffe4;">True</span>,
+                            units=<span style="color: #aaffe4;">True</span>,
+                        <span style="color: #cc6; font-weight: bold;">)</span>,
+                        boxed_match_priority=0,
+                        try_extract_without_anchor=<span style="color: #aaffe4;">False</span>,
+                    <span style="color: #69f; font-weight: bold;">)</span>
+                <span style="color: #6c6; font-weight: bold;">]</span>,
+                extraction_mode=<span style="color: #ffe9aa;">"first_match"</span>,
+            <span style="color: #c66; font-weight: bold;">)</span>
+
+            <span style="color: #ffe9aa;">is_correct</span> = verify<span style="color: #c66; font-weight: bold;">(</span>answer_parsed, gold_parsed<span style="color: #c66; font-weight: bold;">)</span>
+            <span style="color: #ffe9aa;">gen_len</span> = <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>content<span style="color: #c66; font-weight: bold;">)</span>
+
+            <span style="color: #565575;"># </span><span style="color: #96a0aa;">Apply cosine scaling based on length</span>
+            <span style="color: #ffe9aa;">progress</span> = gen_len / max_len
+            <span style="color: #ffe9aa;">cosine</span> = math.cos<span style="color: #c66; font-weight: bold;">(</span>progress * math.pi<span style="color: #c66; font-weight: bold;">)</span>
+
+            <span style="color: #ff8080;">if</span> is_correct:
+                <span style="color: #ffe9aa;">min_value</span> = min_value_correct
+                <span style="color: #ffe9aa;">max_value</span> = max_value_correct
+            <span style="color: #ff8080;">else</span>:
+                <span style="color: #565575;"># </span><span style="color: #96a0aa;">Swap min/max for incorrect answers</span>
+                <span style="color: #ffe9aa;">min_value</span> = max_value_wrong
+                <span style="color: #ffe9aa;">max_value</span> = min_value_wrong
+
+            <span style="color: #ffe9aa;">reward</span> = min_value + 0.5 * <span style="color: #c66; font-weight: bold;">(</span>max_value - min_value<span style="color: #c66; font-weight: bold;">)</span> * <span style="color: #c66; font-weight: bold;">(</span>1.0 + cosine<span style="color: #c66; font-weight: bold;">)</span>
+            rewards.append<span style="color: #c66; font-weight: bold;">(</span><span style="color: #c991e1;">float</span><span style="color: #6c6; font-weight: bold;">(</span>reward<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
+
+        <span style="color: #ff8080;">return</span> rewards
+
+    <span style="color: #ff8080;">return</span> cosine_scaled_reward
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org3aaa5b1" class="outline-3">
+<h3 id="org3aaa5b1"><span class="section-number-3">4.6.</span> Repetition Penalty Reward (NOT Used in the Paper, but promising)</h3>
+<div class="outline-text-3" id="text-4-6">
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ff8080;">def</span> <span style="color: #c991e1;">get_repetition_penalty_reward</span><span style="color: #c66; font-weight: bold;">(</span>ngram_size: <span style="color: #c991e1;">int</span>, max_penalty: <span style="color: #c991e1;">float</span><span style="color: #c66; font-weight: bold;">)</span>:
+    <span style="color: #62d196;">"""</span>
+<span style="color: #62d196;">    Computes N-gram repetition penalty as described in Appendix C.2 of https://arxiv.org/abs/2502.03373.</span>
+<span style="color: #62d196;">    Reference implementation from: https://github.com/eddycmu/demystify-long-cot/blob/release/openrlhf/openrlhf/reward/repetition.py</span>
+
+<span style="color: #62d196;">    Args:</span>
+<span style="color: #62d196;">    ngram_size: size of the n-grams</span>
+<span style="color: #62d196;">    max_penalty: Maximum (negative) penalty for wrong answers</span>
+<span style="color: #62d196;">    """</span>
+    <span style="color: #ff8080;">if</span> max_penalty &gt; 0:
+        <span style="color: #ff8080;">raise</span> <span style="color: #91ddff;">ValueError</span><span style="color: #c66; font-weight: bold;">(</span>f<span style="color: #ffe9aa;">"max_penalty </span>{max_penalty}<span style="color: #ffe9aa;"> should not be positive"</span><span style="color: #c66; font-weight: bold;">)</span>
+
+    <span style="color: #ff8080;">def</span> <span style="color: #c991e1;">zipngram</span><span style="color: #c66; font-weight: bold;">(</span>text: <span style="color: #c991e1;">str</span>, ngram_size: <span style="color: #c991e1;">int</span><span style="color: #c66; font-weight: bold;">)</span>:
+        <span style="color: #ffe9aa;">words</span> = text.lower<span style="color: #c66; font-weight: bold;">()</span>.split<span style="color: #c66; font-weight: bold;">()</span>
+        <span style="color: #ff8080;">return</span> <span style="color: #c991e1;">zip</span><span style="color: #c66; font-weight: bold;">(</span>*<span style="color: #6c6; font-weight: bold;">[</span>words<span style="color: #69f; font-weight: bold;">[</span>i:<span style="color: #69f; font-weight: bold;">]</span> <span style="color: #ff8080;">for</span> i <span style="color: #ff8080;">in</span> <span style="color: #c991e1;">range</span><span style="color: #69f; font-weight: bold;">(</span>ngram_size<span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span>
+
+    <span style="color: #ff8080;">def</span> <span style="color: #c991e1;">repetition_penalty_reward</span><span style="color: #c66; font-weight: bold;">(</span>completions, **kwargs<span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #c991e1;">float</span>:
+        <span style="color: #62d196;">"""</span>
+<span style="color: #62d196;">        reward function the penalizes repetitions</span>
+<span style="color: #62d196;">        ref implementation: https://github.com/eddycmu/demystify-long-cot/blob/release/openrlhf/openrlhf/reward/repetition.py</span>
+
+<span style="color: #62d196;">        Args:</span>
+<span style="color: #62d196;">            completions: List of model completions</span>
+<span style="color: #62d196;">        """</span>
+
+        <span style="color: #ffe9aa;">contents</span> = <span style="color: #c66; font-weight: bold;">[</span>completion<span style="color: #6c6; font-weight: bold;">[</span>0<span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa;">"content"</span><span style="color: #6c6; font-weight: bold;">]</span> <span style="color: #ff8080;">for</span> completion <span style="color: #ff8080;">in</span> completions<span style="color: #c66; font-weight: bold;">]</span>
+        <span style="color: #ffe9aa;">rewards</span> = <span style="color: #c66; font-weight: bold;">[]</span>
+        <span style="color: #ff8080;">for</span> completion <span style="color: #ff8080;">in</span> contents:
+            <span style="color: #ff8080;">if</span> completion == <span style="color: #ffe9aa;">""</span>:
+                rewards.append<span style="color: #c66; font-weight: bold;">(</span>0.0<span style="color: #c66; font-weight: bold;">)</span>
+                <span style="color: #ff8080;">continue</span>
+            <span style="color: #ff8080;">if</span> <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>completion.split<span style="color: #6c6; font-weight: bold;">()</span><span style="color: #c66; font-weight: bold;">)</span> &lt; ngram_size:
+                rewards.append<span style="color: #c66; font-weight: bold;">(</span>0.0<span style="color: #c66; font-weight: bold;">)</span>
+                <span style="color: #ff8080;">continue</span>
+
+            <span style="color: #ffe9aa;">ngrams</span> = <span style="color: #c991e1;">set</span><span style="color: #c66; font-weight: bold;">()</span>
+            <span style="color: #ffe9aa;">total</span> = 0
+            <span style="color: #ff8080;">for</span> ng <span style="color: #ff8080;">in</span> zipngram<span style="color: #c66; font-weight: bold;">(</span>completion, ngram_size<span style="color: #c66; font-weight: bold;">)</span>:
+                ngrams.add<span style="color: #c66; font-weight: bold;">(</span>ng<span style="color: #c66; font-weight: bold;">)</span>
+                <span style="color: #ffe9aa;">total</span> += 1
+
+            <span style="color: #ffe9aa;">scaling</span> = 1 - <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>ngrams<span style="color: #c66; font-weight: bold;">)</span> / total
+            <span style="color: #ffe9aa;">reward</span> = scaling * max_penalty
+            rewards.append<span style="color: #c66; font-weight: bold;">(</span>reward<span style="color: #c66; font-weight: bold;">)</span>
+        <span style="color: #ff8080;">return</span> rewards
+
+    <span style="color: #ff8080;">return</span> repetition_penalty_reward
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Sun Feb 16 11:02:16 2025</span> <span class="date">Last modified: 2025-02-16 Sun 13:01</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.28)</span> </div>
+</div>
+</body>
+</html>
