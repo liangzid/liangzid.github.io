@@ -1,0 +1,90 @@
+#+title: The Hidden Risks of Large Reasoning Models: A Safety Assessment of R1
+#+date: Thu Feb 20 09:25:09 2025
+#+author: Zi Liang
+#+email: zi1415926.liang@connect.polyu.hk
+#+latex_class: elegantpaper
+#+filetags: ::
+
+
+This article is the note when reading the paper "The Hidden Risks of Large Reasoning Models: A Safety Assessment of R1".
+
+* Experimental Settings
+
+** Benchmarks
+
++ Safety against unsafe queries
+  + AirBench
+  + CyberSecEval
+  + Over-refusal behavior: XStest
++ Robustness against adversarial attacks (jailbreaking)
+  + WildGuard Jailbreaking
+  + CyberSecEval
+
+Overview:
+
+[[file:./images/screenshot_20250220_155522.png]]
+
+** Metrics
+
++ GPT-4o:  as a safety classifier
++ AirBench: Code Interpreter test, MITRE tests
+
+* Experiment Results
+
+Safety Score of LLMs:
+
+[[file:./images/screenshot_20250220_150111.png]]
+
+o3mini > R1 > V3   R170b-distillation < llama3.3-70B
+
+Safety Evaluation on AirBench and Code Interpreter test:
+
+
+[[file:./images/screenshot_20250220_155618.png]]
+
+o3 is still the best (the legend in the figure is not right)
+
+
+Defense agaisnt spear phishing test:
+
+[[file:./images/screenshot_20250220_160534.png]]
+
+*Over-refusal evaluation:*
+
+[[file:./images/screenshot_20250220_155806.png]]
+
+Harmfulness evaluation before and after the reasoning or distillation
+
+[[file:./images/screenshot_20250220_160438.png]]
+
+
+ASR of jailbreaking:
+
+[[file:./images/screenshot_20250220_160604.png]]
+
+
+Prompt Injection Jailbreaking:
+
+[[file:./images/screenshot_20250220_160645.png]]
+
+
+Comparison of safety within Answers or Thinking Procedures:
+
+[[file:./images/screenshot_20250220_160730.png]]
+
+
+** Case Study
+
+More detailed and structured responses provided after distillation:
+
+[[file:./images/screenshot_20250220_161027.png]]
+
+
+Jailbreak situations:
+
+[[file:./images/screenshot_20250220_160953.png]]
+
+
+Safety of the reasoning procedure:
+
+[[file:./images/screenshot_20250220_160934.png]]
