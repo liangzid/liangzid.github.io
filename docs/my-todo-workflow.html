@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2025-04-23 Wed 19:10 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>My Attempt of a Potentially New TODO Workflow: How to sync Mobile Phone with My Computer.</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">My Attempt of a Potentially New TODO Workflow: How to sync Mobile Phone with My Computer.</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org4020077">1. Configuration of My Phone</a>
+<ul>
+<li><a href="#org669a679">1.1. Configuration of termux</a>
+<ul>
+<li><a href="#orgdbf75c7">1.1.1. Basic <code>git</code> configuration in termux:</a></li>
+<li><a href="#orgf86b5e0">1.1.2. Config My TODOs</a></li>
+<li><a href="#org450355c">1.1.3. Config Cron in the Termux</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+<b>Basic idea:</b> I use my computer for most of the TODO plans, but make sure this
+changes can be obtained and edited by my phone. Besides, I need to ensure
+such a communication is free and has no extra requirements of OS, and so on.
+</p>
+
+<p>
+<b>Solution:</b> I use <code>termux</code> to manage my doc communication from my phone to the computer,
+and use <code>git</code> and corresponding hubs to play the role of "bridge".
+</p>
+
+<div id="outline-container-org4020077" class="outline-2">
+<h2 id="org4020077"><span class="section-number-2">1.</span> Configuration of My Phone</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org669a679" class="outline-3">
+<h3 id="org669a679"><span class="section-number-3">1.1.</span> Configuration of termux</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="outline-container-orgdbf75c7" class="outline-4">
+<h4 id="orgdbf75c7"><span class="section-number-4">1.1.1.</span> Basic <code>git</code> configuration in termux:</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<div class="org-src-container">
+<pre class="src src-sh">pkg update -y &amp;&amp; pkg upgrade -y
+pkg install termux-api
+
+pkg install git cronie openssh -y
+
+crond
+
+git config --global user.name <span style="color: #ffe9aa;">"liangzid"</span>
+git config --global user.email <span style="color: #ffe9aa;">"2273067585@qq.com"</span>
+
+ssh-keygen -t ed25519 -C <span style="color: #ffe9aa;">"GitHub Key"</span>
+<span style="color: #c991e1;">echo</span> <span style="color: #ffe9aa;">"--------------------------Key----------------------------------"</span>
+cat ~/.ssh/id_ed25519.pub
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf86b5e0" class="outline-4">
+<h4 id="orgf86b5e0"><span class="section-number-4">1.1.2.</span> Config My TODOs</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+Download it:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git clone git@github.com:liangzid/orgtodo.git ~/orgtodo
+<span style="color: #c991e1;">cd</span> ~/orgtodo
+</pre>
+</div>
+
+<p>
+Configuration the automatic shell script (<code>~/sync_orgtodo.sh</code>):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #565575;">#</span><span style="color: #96a0aa;">!/bin/</span><span style="color: #ff8080;">bash</span>
+
+<span style="color: #c991e1;">cd</span> ~/orgtodo || <span style="color: #ff8080;">exit</span> 1
+
+git add -A
+
+<span style="color: #ff8080;">if</span> git diff-index --quiet HEAD --; <span style="color: #ff8080;">then</span>
+    <span style="color: #c991e1;">echo</span> <span style="color: #ffe9aa;">"No Changes. Do not require to Upload."</span>
+<span style="color: #ff8080;">else</span>
+    git commit -m <span style="color: #ffe9aa;">"AutoCommit By TERMUX: $(date +'%Y-%m-%d %H:%M:%S')"</span>
+<span style="color: #ff8080;">fi</span>
+
+git pull --no-rebase || <span style="color: #c66; font-weight: bold;">{</span>
+    <span style="color: #565575;"># </span><span style="color: #96a0aa;">4. if pull conflict found&#65292;prefer the local version</span>
+    <span style="color: #c991e1;">echo</span> <span style="color: #ffe9aa;">"Conflict Found. We use the local version."</span>
+    git checkout --ours .   
+    git add -A             
+    git commit -m <span style="color: #ffe9aa;">"AutoMerge: Keep the mobile version. $(date +'%Y-%m-%d %H:%M:%S')"</span>
+<span style="color: #c66; font-weight: bold;">}</span>
+
+git push origin master
+
+<span style="color: #c991e1;">echo</span> <span style="color: #ffe9aa;">"[$(date)] Git sync executed."</span> &gt;&gt; ~/cron.log
+termux-notification --title <span style="color: #ffe9aa;">"OrgTODO Sync"</span> --content <span style="color: #ffe9aa;">"All Sync Done :)"</span> --icon <span style="color: #ffe9aa;">"check_circle"</span>
+</pre>
+</div>
+
+<p>
+Change mod:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">chmod +x ~/sync_orgtodo.sh
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org450355c" class="outline-4">
+<h4 id="org450355c"><span class="section-number-4">1.1.3.</span> Config Cron in the Termux</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+<code>crontab -e</code>
+</p>
+
+<p>
+add the following line:
+</p>
+
+<pre class="example">
+*/60 * * * * /data/data/com.termux/files/home/sync_orgtodo.sh
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Wed Apr 23 17:01:29 2025</span> <span class="date">Last modified: 2025-04-23 Wed 17:25</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.28)</span> </div>
+</div>
+</body>
+</html>

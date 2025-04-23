@@ -1,0 +1,96 @@
+#+title: My Attempt of a Potentially New TODO Workflow: How to sync Mobile Phone with My Computer.
+#+date: Wed Apr 23 17:01:29 2025
+#+author: Zi Liang
+#+email: zi1415926.liang@connect.polyu.hk
+#+latex_class: elegantpaper
+#+filetags: :tec:
+
+
+*Basic idea:* I use my computer for most of the TODO plans, but make sure this
+changes can be obtained and edited by my phone. Besides, I need to ensure
+such a communication is free and has no extra requirements of OS, and so on.
+
+*Solution:* I use =termux= to manage my doc communication from my phone to the computer,
+and use =git= and corresponding hubs to play the role of "bridge".
+
+* Configuration of My Phone
+
+** Configuration of termux
+
+*** Basic =git= configuration in termux:
+
+
+#+BEGIN_SRC sh
+  pkg update -y && pkg upgrade -y
+  pkg install termux-api
+
+  pkg install git cronie openssh -y
+
+  crond
+
+  git config --global user.name "liangzid"
+  git config --global user.email "2273067585@qq.com"
+
+  ssh-keygen -t ed25519 -C "GitHub Key"
+  echo "--------------------------Key----------------------------------"
+  cat ~/.ssh/id_ed25519.pub
+#+END_SRC
+
+*** Config My TODOs
+
+Download it:
+
+#+BEGIN_SRC sh
+  git clone git@github.com:liangzid/orgtodo.git ~/orgtodo
+  cd ~/orgtodo
+#+END_SRC
+
+Configuration the automatic shell script (=~/sync_orgtodo.sh=):
+
+#+begin_src sh
+  #!/bin/bash
+
+  cd ~/orgtodo || exit 1
+
+  git add -A
+
+  if git diff-index --quiet HEAD --; then
+      echo "No Changes. Do not require to Upload."
+  else
+      git commit -m "AutoCommit By TERMUX: $(date +'%Y-%m-%d %H:%M:%S')"
+  fi
+
+  git pull --no-rebase || {
+      # 4. if pull conflict found，prefer the local version
+      echo "Conflict Found. We use the local version."
+      git checkout --ours .   
+      git add -A             
+      git commit -m "AutoMerge: Keep the mobile version. $(date +'%Y-%m-%d %H:%M:%S')"
+  }
+
+  git push origin master
+
+  echo "[$(date)] Git sync executed." >> ~/cron.log
+  termux-notification --title "OrgTODO Sync" --content "All Sync Done :)" --icon "check_circle"
+#+end_src
+
+Change mod:
+
+#+begin_src  sh
+  chmod +x ~/sync_orgtodo.sh
+#+end_src
+
+*** Config Cron in the Termux
+
+=crontab -e=
+
+add the following line:
+
+#+begin_src 
+  */60 * * * * /data/data/com.termux/files/home/sync_orgtodo.sh
+#+end_src
+
+
+
+
+
