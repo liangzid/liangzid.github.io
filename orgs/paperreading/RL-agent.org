@@ -1,0 +1,135 @@
+#+title: LLM operates Computers: An Introduction and Framework of RL-driven Agent
+#+date: Mon Jun  2 10:54:48 2025
+#+author: Zi Liang
+#+email: zi1415926.liang@connect.polyu.hk
+#+latex_class: elegantpaper
+#+filetags: :paper:
+
+
+*  Proposer-Agent-Evaluator (PAE)
+
+Paper: [[https://arxiv.org/abs/2412.13194][Proposer-Agent-Evaluator(PAE): Autonomous Skill Discovery For Foundation Model Internet Agents]]
+
+** Observations (what a VLM can see)
+
+Domain-specific Observations and Actions
+
+[[file:./images/screenshot_20250602_150959.png]]
+
+Number Marks:
+
+ "To provide better
+ action grounding, we follow the practice from prior works (Zheng et al., 2024; He et al., 2024) to
+ augment the observation space with number marks on top of each interactive element such as web
+ links and text boxes."
+ 
+ 
+** Task Proposer (how to generate corpus)
+
+1. Prompt, and only use the =website name=
+ as the information
+2. Provide the context information of a website
+3. Provide some screenshots and user demos (usage cases)
+
+** Evaluator (How to provide the reward & How to evaluate)
+
+The reward is 0/1, purely result-oriented.
+
+1. the success of the final outcome
+2. Using VLMs as the annotator to provide the feedback
+
+
+** CoT Training (How to train with reasoning)
+
++ Using the Filtered Behavior Cloning (Filtered BC) as the RL algorithm.
+
+
+** Experiments
+
+*** Datasets or Environments
+
++ WebVoyager
+  + Desc: 15 websites, 643 tasks (Now 13 websites with 557 tasks are available)
+  + https://github.com/MinorJerry/WebVoyager
+  + https://arxiv.org/abs/2401.13919
++ WebArena
+  + Desc: 812 hand-crafted tasks on 5 websites
+  + https://arxiv.org/abs/2307.13854
+  + https://github.com/web-arena-x/webarena
+
+    
+*** Performances
+
+[[file:./images/screenshot_20250602_152337.png]]
+
+
+** TODO Source code Analysis
+
+TODO.
+
+
+* WebArena: A Realistic Web Environment for Building Autonomous Agents
+
+** Website Selection
+
+analyze 200 user's browser histories, and select 4 representative categories:
++ E-commerce (Amazon, eBay)
++ Social forum platforms (Reddit, StackExchange)
++ Collaborative development platforms (GitLab)
++ Content Management Systems (CMS)
+
+  And then they build a simulation version of these websites.
+
+
+** Observations
+
+A browser view, with tabs and web pages.
+
++ HTML file of the webpage & a DOM tree
++ screenshot of the current web page
++ accessibility tree of the web page. see: https://developer.mozilla.org/en-US/docs/Glossary/Accessibility_tree
+
+
+** Actions
+
+"emulates the keyboard and mouse operations"
+
+[[file:./images/screenshot_20250602_163305.png]]
+
+
+** Intents
+
+Some universal templates while difficult and unique for each task.
+
+[[file:./images/screenshot_20250602_163355.png]]
+
+
+** Evaluation Metrics
+
++ =exact_math=
++ =must_include=
++ =fuzzy_match=
+
+* WebVoyager: Building an End-to-End Web Agent with LMMs
+
+This work is based on *Selenium (https://www.selenium.dev/)*, a webdriver for automatically test websites on browsers.
+
+** Observations
+
+
+
+
+
+
+
+
+* Magentic-UI
+
+Wechat introduction: [[https://mp.weixin.qq.com/s/r2wuKg08X89u96bUtpwFyQ][Wechat Introduction]].
+
+
+
+
+
+
+

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2025-06-02 Mon 18:13 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LLM operates Computers: An Introduction and Framework of RL-driven Agent</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">LLM operates Computers: An Introduction and Framework of RL-driven Agent</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org1b0dd76">1. Proposer-Agent-Evaluator (PAE)</a>
+<ul>
+<li><a href="#org0aa18a0">1.1. Observations (what a VLM can see)</a></li>
+<li><a href="#org3c8048c">1.2. Task Proposer (how to generate corpus)</a></li>
+<li><a href="#org5185e2d">1.3. Evaluator (How to provide the reward &amp; How to evaluate)</a></li>
+<li><a href="#org2cc13f3">1.4. CoT Training (How to train with reasoning)</a></li>
+<li><a href="#org5418347">1.5. Experiments</a>
+<ul>
+<li><a href="#org9991f4d">1.5.1. Datasets or Environments</a></li>
+<li><a href="#org769a8e5">1.5.2. Performances</a></li>
+</ul>
+</li>
+<li><a href="#org1c0d79f">1.6. <span class="todo TODO">TODO</span> Source code Analysis</a></li>
+</ul>
+</li>
+<li><a href="#orgb547174">2. WebArena: A Realistic Web Environment for Building Autonomous Agents</a>
+<ul>
+<li><a href="#org6d4752d">2.1. Website Selection</a></li>
+<li><a href="#org9793065">2.2. Observations</a></li>
+<li><a href="#org11ee24e">2.3. Actions</a></li>
+<li><a href="#orgf8c283f">2.4. Intents</a></li>
+<li><a href="#org7b4fbfd">2.5. Evaluation Metrics</a></li>
+</ul>
+</li>
+<li><a href="#org5c64197">3. WebVoyager: Building an End-to-End Web Agent with LMMs</a>
+<ul>
+<li><a href="#org4973323">3.1. Observations</a></li>
+</ul>
+</li>
+<li><a href="#orgff53464">4. Magentic-UI</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org1b0dd76" class="outline-2">
+<h2 id="org1b0dd76"><span class="section-number-2">1.</span> Proposer-Agent-Evaluator (PAE)</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Paper: <a href="https://arxiv.org/abs/2412.13194">Proposer-Agent-Evaluator(PAE): Autonomous Skill Discovery For Foundation Model Internet Agents</a>
+</p>
+</div>
+<div id="outline-container-org0aa18a0" class="outline-3">
+<h3 id="org0aa18a0"><span class="section-number-3">1.1.</span> Observations (what a VLM can see)</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Domain-specific Observations and Actions
+</p>
+
+
+<div id="orgdcf3bd3" class="figure">
+<p><img src="./images/screenshot_20250602_150959.png" alt="screenshot_20250602_150959.png">
+</p>
+</div>
+
+<p>
+Number Marks:
+</p>
+
+<p>
+"To provide better
+action grounding, we follow the practice from prior works (Zheng et al., 2024; He et al., 2024) to
+augment the observation space with number marks on top of each interactive element such as web
+links and text boxes."
+</p>
+</div>
+</div>
+<div id="outline-container-org3c8048c" class="outline-3">
+<h3 id="org3c8048c"><span class="section-number-3">1.2.</span> Task Proposer (how to generate corpus)</h3>
+<div class="outline-text-3" id="text-1-2">
+<ol class="org-ol">
+<li>Prompt, and only use the <code>website name</code>
+as the information</li>
+<li>Provide the context information of a website</li>
+<li>Provide some screenshots and user demos (usage cases)</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org5185e2d" class="outline-3">
+<h3 id="org5185e2d"><span class="section-number-3">1.3.</span> Evaluator (How to provide the reward &amp; How to evaluate)</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+The reward is 0/1, purely result-oriented.
+</p>
+
+<ol class="org-ol">
+<li>the success of the final outcome</li>
+<li>Using VLMs as the annotator to provide the feedback</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org2cc13f3" class="outline-3">
+<h3 id="org2cc13f3"><span class="section-number-3">1.4.</span> CoT Training (How to train with reasoning)</h3>
+<div class="outline-text-3" id="text-1-4">
+<ul class="org-ul">
+<li>Using the Filtered Behavior Cloning (Filtered BC) as the RL algorithm.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org5418347" class="outline-3">
+<h3 id="org5418347"><span class="section-number-3">1.5.</span> Experiments</h3>
+<div class="outline-text-3" id="text-1-5">
+</div>
+<div id="outline-container-org9991f4d" class="outline-4">
+<h4 id="org9991f4d"><span class="section-number-4">1.5.1.</span> Datasets or Environments</h4>
+<div class="outline-text-4" id="text-1-5-1">
+<ul class="org-ul">
+<li>WebVoyager
+<ul class="org-ul">
+<li>Desc: 15 websites, 643 tasks (Now 13 websites with 557 tasks are available)</li>
+<li><a href="https://github.com/MinorJerry/WebVoyager">https://github.com/MinorJerry/WebVoyager</a></li>
+<li><a href="https://arxiv.org/abs/2401.13919">https://arxiv.org/abs/2401.13919</a></li>
+</ul></li>
+<li>WebArena
+<ul class="org-ul">
+<li>Desc: 812 hand-crafted tasks on 5 websites</li>
+<li><a href="https://arxiv.org/abs/2307.13854">https://arxiv.org/abs/2307.13854</a></li>
+<li><a href="https://github.com/web-arena-x/webarena">https://github.com/web-arena-x/webarena</a></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org769a8e5" class="outline-4">
+<h4 id="org769a8e5"><span class="section-number-4">1.5.2.</span> Performances</h4>
+<div class="outline-text-4" id="text-1-5-2">
+
+<div id="orgd9a1aee" class="figure">
+<p><img src="./images/screenshot_20250602_152337.png" alt="screenshot_20250602_152337.png">
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org1c0d79f" class="outline-3">
+<h3 id="org1c0d79f"><span class="section-number-3">1.6.</span> <span class="todo TODO">TODO</span> Source code Analysis</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+TODO.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb547174" class="outline-2">
+<h2 id="orgb547174"><span class="section-number-2">2.</span> WebArena: A Realistic Web Environment for Building Autonomous Agents</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org6d4752d" class="outline-3">
+<h3 id="org6d4752d"><span class="section-number-3">2.1.</span> Website Selection</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+analyze 200 user's browser histories, and select 4 representative categories:
+</p>
+<ul class="org-ul">
+<li>E-commerce (Amazon, eBay)</li>
+<li>Social forum platforms (Reddit, StackExchange)</li>
+<li>Collaborative development platforms (GitLab)</li>
+<li><p>
+Content Management Systems (CMS)
+</p>
+
+<p>
+And then they build a simulation version of these websites.
+</p></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org9793065" class="outline-3">
+<h3 id="org9793065"><span class="section-number-3">2.2.</span> Observations</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+A browser view, with tabs and web pages.
+</p>
+
+<ul class="org-ul">
+<li>HTML file of the webpage &amp; a DOM tree</li>
+<li>screenshot of the current web page</li>
+<li>accessibility tree of the web page. see: <a href="https://developer.mozilla.org/en-US/docs/Glossary/Accessibility_tree">https://developer.mozilla.org/en-US/docs/Glossary/Accessibility_tree</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org11ee24e" class="outline-3">
+<h3 id="org11ee24e"><span class="section-number-3">2.3.</span> Actions</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+"emulates the keyboard and mouse operations"
+</p>
+
+
+<div id="org0d1c132" class="figure">
+<p><img src="./images/screenshot_20250602_163305.png" alt="screenshot_20250602_163305.png">
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf8c283f" class="outline-3">
+<h3 id="orgf8c283f"><span class="section-number-3">2.4.</span> Intents</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Some universal templates while difficult and unique for each task.
+</p>
+
+
+<div id="org6321511" class="figure">
+<p><img src="./images/screenshot_20250602_163355.png" alt="screenshot_20250602_163355.png">
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org7b4fbfd" class="outline-3">
+<h3 id="org7b4fbfd"><span class="section-number-3">2.5.</span> Evaluation Metrics</h3>
+<div class="outline-text-3" id="text-2-5">
+<ul class="org-ul">
+<li><code>exact_math</code></li>
+<li><code>must_include</code></li>
+<li><code>fuzzy_match</code></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org5c64197" class="outline-2">
+<h2 id="org5c64197"><span class="section-number-2">3.</span> WebVoyager: Building an End-to-End Web Agent with LMMs</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+This work is based on <b>Selenium (<a href="https://www.selenium.dev/">https://www.selenium.dev/</a>)</b>, a webdriver for automatically test websites on browsers.
+</p>
+</div>
+<div id="outline-container-org4973323" class="outline-3">
+<h3 id="org4973323"><span class="section-number-3">3.1.</span> Observations</h3>
+</div>
+</div>
+<div id="outline-container-orgff53464" class="outline-2">
+<h2 id="orgff53464"><span class="section-number-2">4.</span> Magentic-UI</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Wechat introduction: <a href="https://mp.weixin.qq.com/s/r2wuKg08X89u96bUtpwFyQ">Wechat Introduction</a>.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Mon Jun  2 10:54:48 2025</span> <span class="date">Last modified: 2025-06-02 Mon 18:13</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+</div>
+</body>
+</html>
