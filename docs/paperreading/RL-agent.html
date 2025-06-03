@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-06-02 Mon 18:13 -->
+<!-- 2025-06-03 Tue 10:19 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>LLM operates Computers: An Introduction and Framework of RL-driven Agent</title>
@@ -221,7 +221,7 @@
 <li><a href="#orgb547174">2. WebArena: A Realistic Web Environment for Building Autonomous Agents</a>
 <ul>
 <li><a href="#org6d4752d">2.1. Website Selection</a></li>
-<li><a href="#org9793065">2.2. Observations</a></li>
+<li><a href="#org4973323">2.2. Observations</a></li>
 <li><a href="#org11ee24e">2.3. Actions</a></li>
 <li><a href="#orgf8c283f">2.4. Intents</a></li>
 <li><a href="#org7b4fbfd">2.5. Evaluation Metrics</a></li>
@@ -229,10 +229,23 @@
 </li>
 <li><a href="#org5c64197">3. WebVoyager: Building an End-to-End Web Agent with LMMs</a>
 <ul>
-<li><a href="#org4973323">3.1. Observations</a></li>
+<li><a href="#orgaa352f1">3.1. Observations</a></li>
+<li><a href="#org0c01480">3.2. Actions</a></li>
+<li><a href="#orgb684892">3.3. Datasets</a></li>
+<li><a href="#org493794b">3.4. Results</a></li>
 </ul>
 </li>
-<li><a href="#orgff53464">4. Magentic-UI</a></li>
+<li><a href="#org474db65">4. Ragen: Not What We Need</a></li>
+<li><a href="#org7c5f6d4">5. Tools May Take</a>
+<ul>
+<li><a href="#orgff53464">5.1. Magentic-UI</a>
+<ul>
+<li><a href="#org9c8a162">5.1.1. Roles</a></li>
+<li><a href="#org2d8db9f">5.1.2. Workflow</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -251,7 +264,7 @@ Domain-specific Observations and Actions
 </p>
 
 
-<div id="orgdcf3bd3" class="figure">
+<div id="org73efb29" class="figure">
 <p><img src="./images/screenshot_20250602_150959.png" alt="screenshot_20250602_150959.png">
 </p>
 </div>
@@ -327,7 +340,7 @@ The reward is 0/1, purely result-oriented.
 <h4 id="org769a8e5"><span class="section-number-4">1.5.2.</span> Performances</h4>
 <div class="outline-text-4" id="text-1-5-2">
 
-<div id="orgd9a1aee" class="figure">
+<div id="org6288744" class="figure">
 <p><img src="./images/screenshot_20250602_152337.png" alt="screenshot_20250602_152337.png">
 </p>
 </div>
@@ -367,8 +380,8 @@ And then they build a simulation version of these websites.
 </ul>
 </div>
 </div>
-<div id="outline-container-org9793065" class="outline-3">
-<h3 id="org9793065"><span class="section-number-3">2.2.</span> Observations</h3>
+<div id="outline-container-org4973323" class="outline-3">
+<h3 id="org4973323"><span class="section-number-3">2.2.</span> Observations</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 A browser view, with tabs and web pages.
@@ -389,7 +402,7 @@ A browser view, with tabs and web pages.
 </p>
 
 
-<div id="org0d1c132" class="figure">
+<div id="org5633760" class="figure">
 <p><img src="./images/screenshot_20250602_163305.png" alt="screenshot_20250602_163305.png">
 </p>
 </div>
@@ -403,7 +416,7 @@ Some universal templates while difficult and unique for each task.
 </p>
 
 
-<div id="org6321511" class="figure">
+<div id="org0b1f94f" class="figure">
 <p><img src="./images/screenshot_20250602_163355.png" alt="screenshot_20250602_163355.png">
 </p>
 </div>
@@ -427,21 +440,138 @@ Some universal templates while difficult and unique for each task.
 This work is based on <b>Selenium (<a href="https://www.selenium.dev/">https://www.selenium.dev/</a>)</b>, a webdriver for automatically test websites on browsers.
 </p>
 </div>
-<div id="outline-container-org4973323" class="outline-3">
-<h3 id="org4973323"><span class="section-number-3">3.1.</span> Observations</h3>
-</div>
-</div>
-<div id="outline-container-orgff53464" class="outline-2">
-<h2 id="orgff53464"><span class="section-number-2">4.</span> Magentic-UI</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-orgaa352f1" class="outline-3">
+<h3 id="orgaa352f1"><span class="section-number-3">3.1.</span> Observations</h3>
+<div class="outline-text-3" id="text-3-1">
 <p>
-Wechat introduction: <a href="https://mp.weixin.qq.com/s/r2wuKg08X89u96bUtpwFyQ">Wechat Introduction</a>.
+Same as PAE.
+</p>
+
+
+<div id="org4a62bc7" class="figure">
+<p><img src="./images/screenshot_20250603_095039.png" alt="screenshot_20250603_095039.png">
+</p>
+</div>
+
+<ul class="org-ul">
+<li>screenshots with labels of clicks</li>
+<li>Labels are provided by <a href="https://github.com/ddupont808/GPT-4V-Act">https://github.com/ddupont808/GPT-4V-Act</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org0c01480" class="outline-3">
+<h3 id="org0c01480"><span class="section-number-3">3.2.</span> Actions</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Similar to WebArena, i.e., mouse and keyboard actions.
+A simplified version of code, i.e., "click [39]".
+</p>
+
+
+<div id="org0103e6b" class="figure">
+<p><img src="./images/screenshot_20250603_095715.png" alt="screenshot_20250603_095715.png">
 </p>
 </div>
 </div>
 </div>
+<div id="outline-container-orgb684892" class="outline-3">
+<h3 id="orgb684892"><span class="section-number-3">3.3.</span> Datasets</h3>
+<div class="outline-text-3" id="text-3-3">
+<ul class="org-ul">
+<li>15 Realistic Websites</li>
+<li>Omit websites that requires login or CPTCHA</li>
+<li>Dataset Construction: Using LLM to generate tasks, and utilize human check to filter them.</li>
+<li>Evaluation: including <i>Golden</i> Answers and <i>Possible</i> Answers.
+<ul class="org-ul">
+<li>Golden: know all full list space of answers</li>
+<li>Possible: may not correct, or only know a partial list.</li>
+</ul></li>
+</ul>
+
+
+<div id="org7e01c58" class="figure">
+<p><img src="./images/screenshot_20250603_095537.png" alt="screenshot_20250603_095537.png">
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org493794b" class="outline-3">
+<h3 id="org493794b"><span class="section-number-3">3.4.</span> Results</h3>
+<div class="outline-text-3" id="text-3-4">
+
+<div id="org47bdf6e" class="figure">
+<p><img src="./images/screenshot_20250603_095757.png" alt="screenshot_20250603_095757.png">
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org474db65" class="outline-2">
+<h2 id="org474db65"><span class="section-number-2">4.</span> Ragen: Not What We Need</h2>
+<div class="outline-text-2" id="text-4">
+
+<div id="org700b6ab" class="figure">
+<p><img src="./images/screenshot_20250603_100439.png" alt="screenshot_20250603_100439.png">
+</p>
+</div>
+
+
+<p>
+Reasons:
+</p>
+<ul class="org-ul">
+<li>Trajectory-level is not what we need.</li>
+<li>This paper is still in gaming environments.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org7c5f6d4" class="outline-2">
+<h2 id="org7c5f6d4"><span class="section-number-2">5.</span> Tools May Take</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orgff53464" class="outline-3">
+<h3 id="orgff53464"><span class="section-number-3">5.1.</span> Magentic-UI</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+Wechat introduction: <a href="https://mp.weixin.qq.com/s/r2wuKg08X89u96bUtpwFyQ">Wechat Introduction</a>.
+</p>
+
+<p>
+Github Repository: <a href="https://github.com/microsoft/magentic-ui/">https://github.com/microsoft/magentic-ui/</a>
+</p>
+
+<ul class="org-ul">
+<li>No RL training.</li>
+<li>Human-AI interaction</li>
+</ul>
+</div>
+<div id="outline-container-org9c8a162" class="outline-4">
+<h4 id="org9c8a162"><span class="section-number-4">5.1.1.</span> Roles</h4>
+<div class="outline-text-4" id="text-5-1-1">
+<ul class="org-ul">
+<li>🧑‍💼 Orchestrator is the lead agent, powered by a large language model (LLM), that performs co-planning with the user, decides when to ask the user for feedback, and delegates sub-tasks to the remaining agents to complete.</li>
+<li>🌐 WebSurfer is an LLM agent equipped with a web browser that it can control. Given a request by the Orchestrator, it can click, type, scroll, and visit pages in multiple rounds to complete the request from the Orchestrator. This agent is a significant improvement over the AutoGen MultimodalWebSurfer in terms of the actions it can do (tab management, select options, file upload, multimodal queries).</li>
+<li>💻 Coder is an LLM agent equipped with a Docker code-execution container. It can write and execute Python and shell commands and provide a response back to the Orchestrator.</li>
+<li>📁 FileSurfer is an LLM agent equipped with a Docker code-execution container and file-conversion tools from the MarkItDown package. It can locate files in the directory controlled by Magentic-UI, convert files to markdown, and answer questions about them.</li>
+<li>🧑 UserProxy is an agent that represents the user interacting with Magentic-UI. The Orchestrator can delegate work to the user instead of the other agents.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org2d8db9f" class="outline-4">
+<h4 id="org2d8db9f"><span class="section-number-4">5.1.2.</span> Workflow</h4>
+<div class="outline-text-4" id="text-5-1-2">
+
+<div id="orgbeff2de" class="figure">
+<p><img src="./images/screenshot_20250603_101530.png" alt="screenshot_20250603_101530.png">
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Mon Jun  2 10:54:48 2025</span> <span class="date">Last modified: 2025-06-02 Mon 18:13</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Mon Jun  2 10:54:48 2025</span> <span class="date">Last modified: 2025-06-03 Tue 10:15</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>
