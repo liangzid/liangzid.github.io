@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-02-01 Sat 17:45 -->
+<!-- 2025-07-01 Tue 10:32 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>理解Kernel Trick、Gaussian Process以及Neural Tangent Kernel</title>
 <meta name="author" content="Zi Liang" />
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -235,38 +235,38 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org7d22589">1. Kernel Method</a>
+<li><a href="#org8acf755">1. Kernel Method</a>
 <ul>
-<li><a href="#orge14b0b7">1.1. Motivation for proposing Kernel Methods</a></li>
-<li><a href="#org55babb7">1.2. 核方法的核心思路：基于当前的线性无关组通过非线性组合构建一组维度更高的“基”以使得在过去线性无关组上无法线性可分的数据在新的基上存在线性可分的可能</a></li>
-<li><a href="#org38cde3c">1.3. 核技巧（Kernel Trick）：在新基上的线性操作（尤其是点积）可以借助核函数直接在原空间中计算</a></li>
-<li><a href="#org5ba9f81">1.4. 几种常见的Kernel Function</a>
+<li><a href="#orgf3a6076">1.1. Motivation for proposing Kernel Methods</a></li>
+<li><a href="#orgf080567">1.2. 核方法的核心思路：基于当前的线性无关组通过非线性组合构建一组维度更高的“基”以使得在过去线性无关组上无法线性可分的数据在新的基上存在线性可分的可能</a></li>
+<li><a href="#orgc687bd6">1.3. 核技巧（Kernel Trick）：在新基上的线性操作（尤其是点积）可以借助核函数直接在原空间中计算</a></li>
+<li><a href="#org383c1b0">1.4. 几种常见的Kernel Function</a>
 <ul>
-<li><a href="#orgf0dfd16">1.4.1. Linear Kernel</a></li>
-<li><a href="#org9eec43e">1.4.2. Polynomial Kernel</a></li>
-<li><a href="#org616acf3">1.4.3. Guassian Radial Basis Function, RBF Kernel</a></li>
-<li><a href="#orgdd8ac75">1.4.4. Laplace Kernel</a></li>
-<li><a href="#orgc1aebe7">1.4.5. Obvervations</a></li>
+<li><a href="#orge9afb06">1.4.1. Linear Kernel</a></li>
+<li><a href="#orgb18ceda">1.4.2. Polynomial Kernel</a></li>
+<li><a href="#orga1e7e62">1.4.3. Guassian Radial Basis Function, RBF Kernel</a></li>
+<li><a href="#org5fec8f5">1.4.4. Laplace Kernel</a></li>
+<li><a href="#orgbe3f086">1.4.5. Obvervations</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org93160f5">2. Gaussian Process</a>
+<li><a href="#org7813dc2">2. Gaussian Process</a>
 <ul>
-<li><a href="#org5e2dd1c">2.1. 方差、协方差：使用核函数定义的协方差</a></li>
-<li><a href="#org6c98300">2.2. 高斯过程</a></li>
-<li><a href="#orgb607995">2.3. Neural Network Guassian Process (NNGP) 基于中心极限定理推导得到"无限宽神经网络等同于高斯过程"</a></li>
-<li><a href="#org3ec8c5e">2.4. 总结</a></li>
+<li><a href="#org229b75f">2.1. 方差、协方差：使用核函数定义的协方差</a></li>
+<li><a href="#org6014bbf">2.2. 高斯过程</a></li>
+<li><a href="#org00e95f0">2.3. Neural Network Guassian Process (NNGP) 基于中心极限定理推导得到"无限宽神经网络等同于高斯过程"</a></li>
+<li><a href="#org7a7e644">2.4. 总结</a></li>
 </ul>
 </li>
-<li><a href="#org4fb5552">3. Neural Tangent Kernel</a>
+<li><a href="#orgc29a3dd">3. Neural Tangent Kernel</a>
 <ul>
-<li><a href="#orgdfd16a8">3.1. 一些泛函分析的内容</a></li>
-<li><a href="#org68cf7d8">3.2. Neural Tangent Kernel是什么： 从一个偏导开始说起</a></li>
-<li><a href="#orgf0c71bf">3.3. 有关NTK的两个结论与衍生出的问题</a>
+<li><a href="#org66262ec">3.1. 一些泛函分析的内容</a></li>
+<li><a href="#org8b3b07f">3.2. Neural Tangent Kernel是什么： 从一个偏导开始说起</a></li>
+<li><a href="#org55c4283">3.3. 有关NTK的两个结论与衍生出的问题</a>
 <ul>
-<li><a href="#org0d89a4a">3.3.1. 关于NTK的非随机性</a></li>
-<li><a href="#org0e6acb3">3.3.2. 关于NTK在训练过程中的不变性</a></li>
+<li><a href="#orge282b1e">3.3.1. 关于NTK的非随机性</a></li>
+<li><a href="#org6b34f4b">3.3.2. 关于NTK在训练过程中的不变性</a></li>
 </ul>
 </li>
 </ul>
@@ -277,13 +277,12 @@
 <p>
 最近在阅读一些对神经网络进行理论分析的工作，这些工作常常会用到NTK（Neural Tangent Kernel）等的工具，因此笔者在学习时写下了这篇文字。这篇文章将会刻意省略一些众所周知的内容，同时对核方法以及NTK的原理给出较为深入的理解和解释，并加入近期的一些在LLM上的发现。
 </p>
-
-<div id="outline-container-org7d22589" class="outline-2">
-<h2 id="org7d22589"><span class="section-number-2">1.</span> Kernel Method</h2>
+<div id="outline-container-org8acf755" class="outline-2">
+<h2 id="org8acf755"><span class="section-number-2">1.</span> Kernel Method</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orge14b0b7" class="outline-3">
-<h3 id="orge14b0b7"><span class="section-number-3">1.1.</span> Motivation for proposing Kernel Methods</h3>
+<div id="outline-container-orgf3a6076" class="outline-3">
+<h3 id="orgf3a6076"><span class="section-number-3">1.1.</span> Motivation for proposing Kernel Methods</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 核函数与核方法的介绍在ML领域主要同早期的SVM等技术结合起来。该类方法的提出旨在解决“非线性可分的机器学习问题”，也就是通过线性空间的仿射变换以及通过特征值筛选等方式在理论上无法良好解决的复杂问题。很多书籍与文章里常见的“大环套小环”的分类或者对“异或”问题的分类都属于这种线性不可分的问题。
@@ -294,9 +293,8 @@
 </p>
 </div>
 </div>
-
-<div id="outline-container-org55babb7" class="outline-3">
-<h3 id="org55babb7"><span class="section-number-3">1.2.</span> 核方法的核心思路：基于当前的线性无关组通过非线性组合构建一组维度更高的“基”以使得在过去线性无关组上无法线性可分的数据在新的基上存在线性可分的可能</h3>
+<div id="outline-container-orgf080567" class="outline-3">
+<h3 id="orgf080567"><span class="section-number-3">1.2.</span> 核方法的核心思路：基于当前的线性无关组通过非线性组合构建一组维度更高的“基”以使得在过去线性无关组上无法线性可分的数据在新的基上存在线性可分的可能</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 我尝试用一句话总结什么是核方法，并把它写在了本小节的标题里。
@@ -325,9 +323,8 @@
 </p>
 </div>
 </div>
-
-<div id="outline-container-org38cde3c" class="outline-3">
-<h3 id="org38cde3c"><span class="section-number-3">1.3.</span> 核技巧（Kernel Trick）：在新基上的线性操作（尤其是点积）可以借助核函数直接在原空间中计算</h3>
+<div id="outline-container-orgc687bd6" class="outline-3">
+<h3 id="orgc687bd6"><span class="section-number-3">1.3.</span> 核技巧（Kernel Trick）：在新基上的线性操作（尤其是点积）可以借助核函数直接在原空间中计算</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 kernel trick既然是一个trick，其实就是说的一个取巧的东西。它的core idea其实就是题目中所说的：对于原空间的俩点：\(x_{1}\)，\(x_2\)，我通过一个相似度函数 \(k(x_{1},x_{2})\) 所计算的结果就可以认为是这两个点在通过一个未知的非线性映射 \(\phi(x)\) 映射到高维空间后所计算的内积 \(\phi(x_{1})\cdot\phi(x_{2})\) . 换句话说：我不需要求取 \(x_{1}\) 在映射到高维空间之后的新向量 \(\hat{x}_{1}\)，我甚至不需要显式地定义一个非线性映射的函数 \(\phi(x)\)，我只需要找到一个非线性的度量函数 \(k(x_{1},x_{2}):\mathbb{R}^{d}\times\mathbb{R}^{d}\rightarrow R\) 并且保证这个函数k在某种程度上满足了“其所获得的值确实对应于某非线性升维映射的空间里的两个自变量的点积”就够了。
@@ -361,11 +358,11 @@ Mercer定理可以看作是对核函数的一个定义。
 </p>
 
 <p>
-倘若我们认为函数 \(k\) 在计算 $x_{1}$和 $x_{2}$时会通过 $n_{k}$未知的函数 \(\phi_{k}(x_{1}^{i},x_{2}^{j}):\mathbb{R}\times\mathbb{R}\rightarrow\mathbb{R}\) 先构建一个维度为 \(n_{k}\times n_{k}\) 的矩阵\(K\)，其中，其中$x_{1}^{j}$是$x_{1}$的第$i$个元素，那么，我们知道核函数真正做的事情是对 \(K\) 的对角线上的元素进行加和。简短来说就是：两个向量的内积就是两个向量的cronecker乘积的迹。从这个视角看，公式1似乎在谈论矩阵 \(K\) 的正定性，也就是说 \(g^{T}\cdot K\cdot g\rangle 0\) . 也就是说，矩阵K必须是半正定的。也就是说，矩阵K的特征值的模必须大于等于0 （？）。
+倘若我们认为函数 \(k\) 在计算 \(x_{1}\) 和 \(x_{2}\) 时会通过 $n_{k}$未知的函数 \(\phi_{k}(x_{1}^{i},x_{2}^{j}):\mathbb{R}\times\mathbb{R}\rightarrow\mathbb{R}\) 先构建一个维度为 \(n_{k}\times n_{k}\) 的矩阵\(K\)，其中，其中\(x_{1}^{j}\) 是 \(x_{1}\) 的第 \(i\) 个元素，那么，我们知道核函数真正做的事情是对 \(K\) 的对角线上的元素进行加和。简短来说就是：两个向量的内积就是两个向量的cronecker乘积的迹。从这个视角看，公式1似乎在谈论矩阵 \(K\) 的正定性，也就是说 \(g^{T}\cdot K\cdot g\rangle 0\) . 也就是说，矩阵K必须是半正定的。也就是说，矩阵K的特征值的模必须大于等于0 （？）。
 </p>
 
 <p>
-从这个视角来看，Mercer定理似乎是在说：在我们使用kernel trick时，假设\(k(x_{1},x_{2})\) 代表了非线性映射$&phi;$所对应的新空间上的内积，也就是\(\phi(x_{1})\cdot\phi(x_{2})=\sum_{i=1}^{N_{\phi}}{\lambda_{i}\phi_{i}(x_{1})\phi_{i}(x_{2})}\)，那么我们希望此处的\(\lambda_{i}\),也就是这个特征值，必须是大于等于0的。更进一步地说： <b>Mercer定理强调核函数必须能够使得映射后的空间上的元素积在方向上保持不变，以此使得这种内积可以作为一种类似于距离的度量使用。</b>
+从这个视角来看，Mercer定理似乎是在说：在我们使用kernel trick时，假设\(k(x_{1},x_{2})\) 代表了非线性映射 \(\phi\) 所对应的新空间上的内积，也就是 \(\phi(x_{1})\cdot\phi(x_{2})=\sum_{i=1}^{N_{\phi}}{\lambda_{i}\phi_{i}(x_{1})\phi_{i}(x_{2})}\) ，那么我们希望此处的\(\lambda_{i}\),也就是这个特征值，必须是大于等于0的。更进一步地说： <b>Mercer定理强调核函数必须能够使得映射后的空间上的元素积在方向上保持不变，以此使得这种内积可以作为一种类似于距离的度量使用。</b>
 </p>
 
 <p>
@@ -373,55 +370,47 @@ Mercer定理可以看作是对核函数的一个定义。
 </p>
 </div>
 </div>
-
-<div id="outline-container-org5ba9f81" class="outline-3">
-<h3 id="org5ba9f81"><span class="section-number-3">1.4.</span> 几种常见的Kernel Function</h3>
+<div id="outline-container-org383c1b0" class="outline-3">
+<h3 id="org383c1b0"><span class="section-number-3">1.4.</span> 几种常见的Kernel Function</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 此处介绍四种常见的核函数，这一部分不是本文的重点。
 </p>
 </div>
-
-<div id="outline-container-orgf0dfd16" class="outline-4">
-<h4 id="orgf0dfd16"><span class="section-number-4">1.4.1.</span> Linear Kernel</h4>
+<div id="outline-container-orge9afb06" class="outline-4">
+<h4 id="orge9afb06"><span class="section-number-4">1.4.1.</span> Linear Kernel</h4>
 <div class="outline-text-4" id="text-1-4-1">
 \begin{equation}
 k(x_{1},x_{2})=x_{1}^{T}x_{2}
 \end{equation}
 </div>
 </div>
-
-
-<div id="outline-container-org9eec43e" class="outline-4">
-<h4 id="org9eec43e"><span class="section-number-4">1.4.2.</span> Polynomial Kernel</h4>
+<div id="outline-container-orgb18ceda" class="outline-4">
+<h4 id="orgb18ceda"><span class="section-number-4">1.4.2.</span> Polynomial Kernel</h4>
 <div class="outline-text-4" id="text-1-4-2">
 \begin{equation}
 k(x_{1},x_{2})=(x_{1}^{T}x_{2}+c)^{p}
 \end{equation}
 </div>
 </div>
-
-<div id="outline-container-org616acf3" class="outline-4">
-<h4 id="org616acf3"><span class="section-number-4">1.4.3.</span> Guassian Radial Basis Function, RBF Kernel</h4>
+<div id="outline-container-orga1e7e62" class="outline-4">
+<h4 id="orga1e7e62"><span class="section-number-4">1.4.3.</span> Guassian Radial Basis Function, RBF Kernel</h4>
 <div class="outline-text-4" id="text-1-4-3">
 \begin{equation}
 k(x_{1},x_{2})=exp(- \frac{||x_{1}-x_{2}||_{2}}{2\sigma^{2}})
 \end{equation}
 </div>
 </div>
-
-
-<div id="outline-container-orgdd8ac75" class="outline-4">
-<h4 id="orgdd8ac75"><span class="section-number-4">1.4.4.</span> Laplace Kernel</h4>
+<div id="outline-container-org5fec8f5" class="outline-4">
+<h4 id="org5fec8f5"><span class="section-number-4">1.4.4.</span> Laplace Kernel</h4>
 <div class="outline-text-4" id="text-1-4-4">
 \begin{equation}
 k(x_{1},x_{2})=exp(- \frac{||x_{1}-x_{2}||_{1}}{\sigma})
 \end{equation}
 </div>
 </div>
-
-<div id="outline-container-orgc1aebe7" class="outline-4">
-<h4 id="orgc1aebe7"><span class="section-number-4">1.4.5.</span> Obvervations</h4>
+<div id="outline-container-orgbe3f086" class="outline-4">
+<h4 id="orgbe3f086"><span class="section-number-4">1.4.5.</span> Obvervations</h4>
 <div class="outline-text-4" id="text-1-4-5">
 <ul class="org-ul">
 <li>他们似乎都是根据相关分布的概率分布函数得来的。如高斯分布、拉普拉斯分布等。</li>
@@ -432,20 +421,18 @@ k(x_{1},x_{2})=exp(- \frac{||x_{1}-x_{2}||_{1}}{\sigma})
 </div>
 </div>
 </div>
-
-<div id="outline-container-org93160f5" class="outline-2">
-<h2 id="org93160f5"><span class="section-number-2">2.</span> Gaussian Process</h2>
+<div id="outline-container-org7813dc2" class="outline-2">
+<h2 id="org7813dc2"><span class="section-number-2">2.</span> Gaussian Process</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 现在你已经对核函数拥有了一定的理解，下一步是去理解“高斯过程”。为什么要去理解高斯过程？因为高斯过程是一种非常经典且抽象的、学习模型高度抽象的对机器学习的建模方式。在本章节的最后，你甚至会意识到神经网络也是一种特殊的高斯过程。
 </p>
 </div>
-
-<div id="outline-container-org5e2dd1c" class="outline-3">
-<h3 id="org5e2dd1c"><span class="section-number-3">2.1.</span> 方差、协方差：使用核函数定义的协方差</h3>
+<div id="outline-container-org229b75f" class="outline-3">
+<h3 id="org229b75f"><span class="section-number-3">2.1.</span> 方差、协方差：使用核函数定义的协方差</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
-一般而言，统计学上的方差可以定义为： \(\sigma^2=\sum_i {x_i-\mu}^2\).
+一般而言，统计学上的方差可以定义为： \(\sigma^2=\sum_i \{x_i-\mu\}^2\).
 </p>
 
 <p>
@@ -473,12 +460,11 @@ k(x_{1},x_{2})=exp(- \frac{||x_{1}-x_{2}||_{1}}{\sigma})
 </p>
 </div>
 </div>
-
-<div id="outline-container-org6c98300" class="outline-3">
-<h3 id="org6c98300"><span class="section-number-3">2.2.</span> 高斯过程</h3>
+<div id="outline-container-org6014bbf" class="outline-3">
+<h3 id="org6014bbf"><span class="section-number-3">2.2.</span> 高斯过程</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
-现在我们可以开始思考高斯过程了。让我们代入一个最常见的机器学习场景：给定一批训练数据 \(X={x_1, x_2, ..., X_n}\) 以及这批训练数据的标签 \(Y={y_1, y_2, ..., y_n}\)。此处 \(x_i\) 和 \(y_i\) 都可以理解为输入空间和输出空间中的两个点。 现在给定一条测试集中的数据 \(x'\)，问: 这条数据所对应的标签应当是什么？
+现在我们可以开始思考高斯过程了。让我们代入一个最常见的机器学习场景：给定一批训练数据 \(X={x_1, x_2, ..., x_n}\) 以及这批训练数据的标签 \(Y={y_1, y_2, ..., y_n}\)。此处 \(x_i\) 和 \(y_i\) 都可以理解为输入空间和输出空间中的两个点。 现在给定一条测试集中的数据 \(x'\)，问: 这条数据所对应的标签应当是什么？
 </p>
 
 <p>
@@ -488,6 +474,14 @@ k(x_{1},x_{2})=exp(- \frac{||x_{1}-x_{2}||_{1}}{\sigma})
 <p>
 高斯过程则是采用分布的方式去理解.官方的思路是: 首先，我们假设这批训练数据的标签 \(Y\) 与所提供的测试数据 \(y'\) 其联合分布是一个 <b>多维高斯分布</b>, 而该分布的协方差矩阵可以通过训练数据 \(X\) 与测试数据 \(x'\) 的协方差来定义. 通过这种方式, 我们可以构造一个如下所示的多维高斯分布:
 </p>
+
+\begin{equation}
+\begin{aligned}
+y_* | X, Y, X_* \sim \mathcal{N}(\mu_*, \Sigma_*)\\
+\mu_* = K(X_*,X)[K(X,X) + \sigma_n^2 I]^{-1}Y\\
+\Sigma_* = K(X_*,X_*) - K(X_*,X)[K(X,X) + \sigma_n^2 I]^{-1}K(X,X_*)
+\end{aligned}
+\end{equation}
 
 <p>
 当然！在高斯过程回归中，预测值的均值 \( \mu_* \) 之所以采用这个形式，源自于多维高斯分布的条件分布性质。让我们一步步分析这个推导过程。
@@ -509,9 +503,11 @@ K(x_*, X) & K(x_*, x_*)
 \end{equation}
 
 <p>
-其中： - \( K(X, X) \) 是 \( n \times n \) 的协方差矩阵，描述了训练数据之间的协方差。
+其中：
 </p>
+
 <ul class="org-ul">
+<li>\( K(X, X) \) 是 \( n \times n \) 的协方差矩阵，描述了训练数据之间的协方差。</li>
 <li>\( K(X, x_*) \) 是 \( n \times 1 \) 的向量，描述了训练数据和新数据点之间的协方差。</li>
 <li><p>
 \( K(x_*, x_*) \) 是一个标量，表示新数据点自身的协方差。
@@ -522,13 +518,13 @@ K(x_*, X) & K(x_*, x_*)
 </p></li>
 
 <li><p>
-*条件均值*：
+<b>条件均值</b> ：
 </p>
 \begin{equation}
 \mu_* = \mathbb{E}[y_* | X, Y, x_*] = K(x_*, X)^\top K(X, X)^{-1} Y
 \end{equation}</li>
 <li><p>
-*条件方差*：
+<b>条件方差</b> ：
 </p>
 \begin{equation}
 \sigma_*^2 = \text{Var}(y_* | X, Y, x_*) = K(x_*, x_*) - K(x_*, X)^\top K(X, X)^{-1} K(X, x_*)
@@ -554,7 +550,7 @@ B | A \sim \mathcal{N}(\mu_B + \Sigma_{BA} \Sigma_{AA}^{-1}(A - \mu_A), \Sigma_{
 </p>
 
 <p>
-以上是比较官方的一种理解高斯过程的方法. 另外一种思路则是通过输入数据的特征入手. 具体地,对于训练数据 \(X\) 和测试数据\(x_{*}\) ,  我们可以通过协方差矩阵来刻画他们二者之间的相关关系, 总体上看我们可以认为他们符合一个多维高斯分布, 其中均值为  \(K(x_{*}, X)^{T}\cdot K(X,X)^{-1}\), 其中\(K(x_{*},X)\) 代表了测试数据与训练数据的相似度(相关程度), 而$K(X,X)^{-1}$则代表了训练数据自身与自身的相关性的导数, 可以理解为是对前一项的一个归一化. 通过这种方式, 我们实际上所获得的结果其实是测试数据与训练数据的相似度所构成的向量,换而言之,该向量的每一个元素表达了该条测试数据以多大的置信度相似于某一条训练数据. 将这一项与训练数据的标签 \(Y\) 做内积,实际上就是以该相似度作为权重系数对训练数据的标签进行了线性组合, 以获得了最终的测试数据所对应的标签的数学期望.
+以上是比较官方的一种理解高斯过程的方法. 另外一种思路则是通过输入数据的特征入手. 具体地,对于训练数据 \(X\) 和测试数据\(x_{*}\) ,  我们可以通过协方差矩阵来刻画他们二者之间的相关关系, 总体上看我们可以认为他们符合一个多维高斯分布, 其中均值为  \(K(x_{*}, X)^{T}\cdot K(X,X)^{-1}\), 其中\(K(x_{*},X)\) 代表了测试数据与训练数据的相似度(相关程度), 而\(K(X,X)^{-1}\) 则代表了训练数据自身与自身的相关性的倒数, 可以理解为是对前一项的一个归一化. 通过这种方式, 我们实际上所获得的结果其实是测试数据与训练数据的相似度所构成的向量,换而言之,该向量的每一个元素表达了该条测试数据以多大的置信度相似于某一条训练数据. 将这一项与训练数据的标签 \(Y\) 做内积,实际上就是以该相似度作为权重系数对训练数据的标签进行了线性组合, 以获得了最终的测试数据所对应的标签的数学期望.
 </p>
 
 <p>
@@ -563,7 +559,7 @@ B | A \sim \mathcal{N}(\mu_B + \Sigma_{BA} \Sigma_{AA}^{-1}(A - \mu_A), \Sigma_{
 </p>
 
 <p>
-同样根据高斯分布的性质,我们把条件分布 \(x_{*}|X\) 所获得的方差记为 \(K(x_{*}, x_{*})-K(X, x_{*})^{T}K(X,X)^{-1}K(X, X_{*})\) . 我们可以很明显地意识到这其实是分布\(x_{*}\) 的方差与该条件概率所对应的协方差的一个差值. 最基本的, 我们清楚方差(或者说协方差矩阵)总是大于等于零的(半正定的), 因为它本质上描述的是一个类似于长度的带有物理意义的东西. 所以, 直观上理解该方差, 可以说: \(K(x_{*}, x_{*})\) 代表了测试数据自身的方差(或者说协方差矩阵), 这是一个在没有引入额外信息的前提下的纯粹根据测试数据自身所得到的经验. 相对应的,后面的二次型\(K(X, x_{*})^{T}K(X,X)^{-1}K(X, X_{*})\) 则通过引入训练数据降低了这种估测的不确定性. 具体地说, 我们通过计算测试集数据与训练集数据的相似性(通过核函数来衡量)间接地得到了测试集数据与训练集数据相关性的方差(该二次型对角线上的元素)与测试集中不同数据与训练集的数据的相关性之间的相关性(协方差矩阵中的非对角线元素,即协方差), 因此, 该二次型实际上表达了如下的物理含义: 测试集数据与训练集数据之间的相关性究竟是弱的(协方差矩阵中的元素较小)还是强的(较大), 如果该相关性是强的, 那么我就可以以更大的自信通过已知的condition \(X\) 降低测试集数据的不确定性 (即减掉一个大的数值), 反之则反之. 二次型的中间项 \(K(X,X)^{-1}\) 同样起到了在估测测试集标签的数学期望中所起到的相同的作用:它通过合同变换里的特征值(大于等于0的特征值)隐晦地对测试集数据与训练集数据之间的相关性所构造的协方差矩阵进行了 <i>归一化</i> , 即它使得通过引入训练数据的分布以降低不确定性的过程里充分考虑了训练数据的不确定性本身. 具体地, 如果训练数据集的数据彼此之间十分相似(协方差矩阵三角元素相对于对角线元素较大),那么说明训练数据所对应的是一个方差比较小的分布, 该分布的逆矩阵的特征值将会非常大, 意味着该二次型会以更大的自信去降低不确定性; 反之,对于从某一分布中采样所得到的训练数据, 倘若他们彼此之间较为分散, 则说明该分布其实是一个较为松散宽阔(方差较大)的分布, 这样的分布的逆矩阵会提供更低的权重系数应用在二次型的内积过程中, 也就代表所能够通过训练数据消除的不确定性其实十分可怜.
+同样根据高斯分布的性质,我们把条件分布 \(x_{*}|X\) 所获得的方差记为 \(K(x_{*}, x_{*})-K(X, x_{*})^{T}K(X,X)^{-1}K(X, x_{*})\) . 我们可以很明显地意识到这其实是分布\(x_{*}\) 的方差与该条件概率所对应的协方差的一个差值. 最基本的, 我们清楚方差(或者说协方差矩阵)总是大于等于零的(半正定的), 因为它本质上描述的是一个类似于长度的带有物理意义的东西. 所以, 直观上理解该方差, 可以说: \(K(x_{*}, x_{*})\) 代表了测试数据自身的方差(或者说协方差矩阵), 这是一个在没有引入额外信息的前提下的纯粹根据测试数据自身所得到的经验. 相对应的,后面的二次型\(K(X, x_{*})^{T}K(X,X)^{-1}K(X, x_{*})\) 则通过引入训练数据降低了这种估测的不确定性. 具体地说, 我们通过计算测试集数据与训练集数据的相似性(通过核函数来衡量)间接地得到了测试集数据与训练集数据相关性的方差(该二次型对角线上的元素)与测试集中不同数据与训练集的数据的相关性之间的相关性(协方差矩阵中的非对角线元素,即协方差), 因此, 该二次型实际上表达了如下的物理含义: 测试集数据与训练集数据之间的相关性究竟是弱的(协方差矩阵中的元素较小)还是强的(较大), 如果该相关性是强的, 那么我就可以以更大的自信通过已知的condition \(X\) 降低测试集数据的不确定性 (即减掉一个大的数值), 反之则反之. 二次型的中间项 \(K(X,X)^{-1}\) 同样起到了在估测测试集标签的数学期望中所起到的相同的作用:它通过合同变换里的特征值(大于等于0的特征值)隐晦地对测试集数据与训练集数据之间的相关性所构造的协方差矩阵进行了 <i>归一化</i> , 即它使得通过引入训练数据的分布以降低不确定性的过程里充分考虑了训练数据的不确定性本身. 具体地, 如果训练数据集的数据彼此之间十分相似(协方差矩阵三角元素相对于对角线元素较大),那么说明训练数据所对应的是一个方差比较小的分布, 该分布的逆矩阵的特征值将会非常大, 意味着该二次型会以更大的自信去降低不确定性; 反之,对于从某一分布中采样所得到的训练数据, 倘若他们彼此之间较为分散, 则说明该分布其实是一个较为松散宽阔(方差较大)的分布, 这样的分布的逆矩阵会提供更低的权重系数应用在二次型的内积过程中, 也就代表所能够通过训练数据消除的不确定性其实十分可怜.
 </p>
 
 <p>
@@ -579,9 +575,8 @@ B | A \sim \mathcal{N}(\mu_B + \Sigma_{BA} \Sigma_{AA}^{-1}(A - \mu_A), \Sigma_{
 </p>
 </div>
 </div>
-
-<div id="outline-container-orgb607995" class="outline-3">
-<h3 id="orgb607995"><span class="section-number-3">2.3.</span> Neural Network Guassian Process (NNGP) 基于中心极限定理推导得到"无限宽神经网络等同于高斯过程"</h3>
+<div id="outline-container-org00e95f0" class="outline-3">
+<h3 id="org00e95f0"><span class="section-number-3">2.3.</span> Neural Network Guassian Process (NNGP) 基于中心极限定理推导得到"无限宽神经网络等同于高斯过程"</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 参考论文: Deep Neural Networks as Gaussian Processes (ICLR'18)
@@ -592,7 +587,7 @@ B | A \sim \mathcal{N}(\mu_B + \Sigma_{BA} \Sigma_{AA}^{-1}(A - \mu_A), \Sigma_{
 </p>
 
 <p>
-这篇论文的结论是: 对于一个L层的神经网络(每层表示为 \(f_{i}^{l}(x;\theta)\), 该结果是在激活函数之前. 其中$i$是输出的第i个维度,每层的特征维度为 \(n_{l}\)), 当参数 $&theta;$所产生的维度(即神经网络的hidden state的维度,或者说权重矩阵与bias向量的输入输出的维度)趋向无穷大时, 该神经网络的输出都服从于一个均值为0方差可表示的多维高斯过程.
+这篇论文的结论是: 对于一个L层的神经网络(每层表示为 \(f_{i}^{l}(x;\theta)\), 该结果是在激活函数之前. 其中\(i\) 是输出的第i个维度,每层的特征维度为 \(n_{l}\)), 当参数 \(\theta\) 所产生的维度(即神经网络的hidden state的维度,或者说权重矩阵与bias向量的输入输出的维度)趋向无穷大时, 该神经网络的输出都服从于一个均值为0方差可表示的多维高斯过程.
 </p>
 
 <p>
@@ -600,17 +595,17 @@ B | A \sim \mathcal{N}(\mu_B + \Sigma_{BA} \Sigma_{AA}^{-1}(A - \mu_A), \Sigma_{
 </p>
 
 \begin{equation}
-
+\begin{aligned}
 \Sigma^{1}(X, X')=\frac{1}{n_{0}}X^{T}X'+\beta^{2}\\
 
-\lambda^{(l+1)}(\mathbf{x}, \mathbf{x}') = 
+\lambda^{(l)}(\mathbf{x}, \mathbf{x}') = 
 \begin{bmatrix}
 \Sigma^{(l)}(\mathbf{x}, \mathbf{x}) & \Sigma^{(l)}(\mathbf{x}, \mathbf{x}') \\
 \Sigma^{(l)}(\mathbf{x}', \mathbf{x}) & \Sigma^{(l)}(\mathbf{x}', \mathbf{x}')
 \end{bmatrix} \\
 
 \Sigma^{(l+1)}(\mathbf{x}, \mathbf{x}') = \mathbb{E}_{f \sim \mathcal{N}(0, \lambda^{(l)})} \left[\sigma(f(\mathbf{x}))\sigma(f(\mathbf{x}'))\right] + \beta^2 \\
-
+\end{aligned}
 \end{equation}
 
 <p>
@@ -626,14 +621,14 @@ B | A \sim \mathcal{N}(\mu_B + \Sigma_{BA} \Sigma_{AA}^{-1}(A - \mu_A), \Sigma_{
 </p>
 
 <p>
-首先, 我们能够理解 \(\lambda^{l}\) 其实代表了一个联合 $X$与 $X'$的分布的协方差, 对以这个协方差矩阵为基础的多维高斯过程做采样并且求期望值,说明了所采样的对象其实在遍历整个联合分布的空间. 于是这里出现了第二个疑惑: 什么是从高斯过程里所采样得到的函数?  我目前的理解是: 考虑一种理想情况, 我们获得了一个高斯过程的均值和协方差矩阵. 此时如果随机生成一些输入数据\(\mathbf{x}_{r}\in\mathbb{R}^{N_{r}}\), 那么我们就可以得到这些数据通过该高斯过程所得到的结果. 现在把这群结果记作是\(\mathbf{r}\) , 那么所采样得到的函数可以表达为:
+首先, 我们能够理解 \(\lambda^{l}\) 其实代表了一个联合 \(X\) 与 \(X'\) 的分布的协方差, 对以这个协方差矩阵为基础的多维高斯过程做采样并且求期望值,说明了所采样的对象其实在遍历整个联合分布的空间. 于是这里出现了第二个疑惑: 什么是从高斯过程里所采样得到的函数?  我目前的理解是: 考虑一种理想情况, 我们获得了一个高斯过程的均值和协方差矩阵. 此时如果随机生成一些输入数据\(\mathbf{x}_{r}\in\mathbb{R}^{N_{r}}\), 那么我们就可以得到这些数据通过该高斯过程所得到的结果. 现在把这群结果记作是\(\mathbf{r}\) , 那么所采样得到的函数可以表达为:
 </p>
 
 \begin{equation}
 f(X)=K^{l}(X, X^{r})\cdot \mathbf{r}
 \end{equation}
 <p>
-其中$K^{l}$所表达的是第$l$层的核函数.
+其中\(K^{l}\) 所表达的是第\(l\) 层的核函数.
 </p>
 
 <p>
@@ -645,21 +640,21 @@ f(X)=K^{l}(X, X^{r})\cdot \mathbf{r}
 </p>
 
 <p>
-初始值: 首先计算第一层神经网络的卷积核的形式: 
+初始值: 首先计算第一层神经网络的核的形式: 
 </p>
 
 
-<div id="org16370cd" class="figure">
+<div id="orgb4d1f7d" class="figure">
 <p><img src="./images/screenshot_20240910_193359.png" alt="screenshot_20240910_193359.png">
 </p>
 </div>
 
 <p>
-使用递推公式,证明当第$l$层的输出是一个高斯过程时,第 $l+1$的结果也是:
+使用递推公式,证明当第\(l\) 层的输出是一个高斯过程时,第 \(l+1\) 的结果也是:
 </p>
 
 
-<div id="org413d739" class="figure">
+<div id="org9ec23a5" class="figure">
 <p><img src="./images/screenshot_20240910_193541.png" alt="screenshot_20240910_193541.png">
 </p>
 </div>
@@ -682,10 +677,8 @@ f(X)=K^{l}(X, X^{r})\cdot \mathbf{r}
 </ol>
 </div>
 </div>
-
-
-<div id="outline-container-org3ec8c5e" class="outline-3">
-<h3 id="org3ec8c5e"><span class="section-number-3">2.4.</span> 总结</h3>
+<div id="outline-container-org7a7e644" class="outline-3">
+<h3 id="org7a7e644"><span class="section-number-3">2.4.</span> 总结</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 现在我们或许已经对高斯过程有了一个直观的理解. 我们知道协方差矩阵描述的是随机变量之间的相关性, 且这种相关性可以通过设计核函数得到更合理的表达. 我们知道高斯过程本质上是对一组随机变量所对应的标签的分布的建模, 在这种基于条件分布的建模中, 我们可以通过先验分布的随机变量的相关性与所预测的随机变量与这些先验分布的随机变量的相关性来刻画所对应标签分布的期望值、确定程度、以及这些随机变量之间的相关性。 最后，我们意识到由于中心极限定理的作用，无穷宽的神经网络可以被看作是一个高斯过程，其中该高斯过程的核函数可以通过激活函数与该层之前的神经网络进行表达。
@@ -697,17 +690,15 @@ f(X)=K^{l}(X, X^{r})\cdot \mathbf{r}
 </div>
 </div>
 </div>
-
-<div id="outline-container-org4fb5552" class="outline-2">
-<h2 id="org4fb5552"><span class="section-number-2">3.</span> Neural Tangent Kernel</h2>
+<div id="outline-container-orgc29a3dd" class="outline-2">
+<h2 id="orgc29a3dd"><span class="section-number-2">3.</span> Neural Tangent Kernel</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 为了解决上一小节最后所提出的问题，NTK及相关的探索出现了。本部分将首先介绍一下NTK是什么，然后介绍NTK的结论，最后给出一些使用NTK的方式的介绍。
 </p>
 </div>
-
-<div id="outline-container-orgdfd16a8" class="outline-3">
-<h3 id="orgdfd16a8"><span class="section-number-3">3.1.</span> 一些泛函分析的内容</h3>
+<div id="outline-container-org66262ec" class="outline-3">
+<h3 id="org66262ec"><span class="section-number-3">3.1.</span> 一些泛函分析的内容</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 NTK的论文是基于泛函分析的理论去写的。如果你只是追求了解NTK的大概，那么没有必要阅读这篇笔记。这篇笔记的目标是看完之后能够让人很容易地看懂NTK的论文，并使用类似的语言完成自己的任务。所以这里继续插入一些数学基础知识。
@@ -763,9 +754,8 @@ NTK的论文是基于泛函分析的理论去写的。如果你只是追求了�
 </p>
 </div>
 </div>
-
-<div id="outline-container-org68cf7d8" class="outline-3">
-<h3 id="org68cf7d8"><span class="section-number-3">3.2.</span> Neural Tangent Kernel是什么： 从一个偏导开始说起</h3>
+<div id="outline-container-org8b3b07f" class="outline-3">
+<h3 id="org8b3b07f"><span class="section-number-3">3.2.</span> Neural Tangent Kernel是什么： 从一个偏导开始说起</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 首先考虑函数空间 \(\mathcal{F}\) 中的一个函数 \(f(x)\), 考虑它随着训练step \(t\) 的变化所产生的变化，即 微分\(\partial_{t} f(t)=-\nabla_{K}C|_{f(t)}\)。我们可以注意到，这样的一种变化同两个自变量相关：训练过程（引起参数变化），以及神经网络的输入（引起输出变化）。从第二个自变量的角度，该微分仍然属于函数空间，因此仍然可以用上一小节所描述的映射 \(\Phi_{K}(\partial^{in}_{f}C|_{f_{0}})\) 进行表示，即：该微分仍然可以看作是以“损失函数对于模型参数的微分 \(\partial^{in}_{f}C|_{f_{0}}\)”这样一个属于函数空间对偶空间的双线性形式为输入、基于一个核函数、最终所映射得到的有关于原函数的参数变化的这样一个函数。
@@ -809,7 +799,7 @@ NTK的论文是基于泛函分析的理论去写的。如果你只是追求了�
 </p>
 
 
-<div id="org24ca54e" class="figure">
+<div id="org9f950e8" class="figure">
 <p><img src="./images/screenshot_20240912_190958.png" alt="screenshot_20240912_190958.png">
 </p>
 </div>
@@ -819,7 +809,7 @@ NTK的论文是基于泛函分析的理论去写的。如果你只是追求了�
 </p>
 
 
-<div id="org4dcdec0" class="figure">
+<div id="orgea410b7" class="figure">
 <p><img src="./images/screenshot_20240912_191312.png" alt="screenshot_20240912_191312.png">
 </p>
 </div>
@@ -829,7 +819,7 @@ NTK的论文是基于泛函分析的理论去写的。如果你只是追求了�
 </p>
 
 
-<div id="org7603513" class="figure">
+<div id="orgc1e5d4b" class="figure">
 <p><img src="./images/screenshot_20240912_191636.png" alt="screenshot_20240912_191636.png">
 </p>
 </div>
@@ -843,9 +833,8 @@ NTK的论文是基于泛函分析的理论去写的。如果你只是追求了�
 </p>
 </div>
 </div>
-
-<div id="outline-container-orgf0c71bf" class="outline-3">
-<h3 id="orgf0c71bf"><span class="section-number-3">3.3.</span> 有关NTK的两个结论与衍生出的问题</h3>
+<div id="outline-container-org55c4283" class="outline-3">
+<h3 id="org55c4283"><span class="section-number-3">3.3.</span> 有关NTK的两个结论与衍生出的问题</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 NTK这篇论文提供了两个通用性的理论。此处先把理论挂上来，然后逐一介绍和证明。
@@ -855,23 +844,21 @@ NTK这篇论文提供了两个通用性的理论。此处先把理论挂上来�
 <li>在神经网络进行参数更新的过程中，核函数保持不变。</li>
 </ol>
 </div>
-
-
-<div id="outline-container-org0d89a4a" class="outline-4">
-<h4 id="org0d89a4a"><span class="section-number-4">3.3.1.</span> 关于NTK的非随机性</h4>
+<div id="outline-container-orge282b1e" class="outline-4">
+<h4 id="orge282b1e"><span class="section-number-4">3.3.1.</span> 关于NTK的非随机性</h4>
 <div class="outline-text-4" id="text-3-3-1">
 <p>
 先贴证明表示尊重：
 </p>
 
 
-<div id="orgb64c9a1" class="figure">
+<div id="org766d151" class="figure">
 <p><img src="./images/screenshot_20240912_195012.png" alt="screenshot_20240912_195012.png">
 </p>
 </div>
 
 
-<div id="org87d7ec2" class="figure">
+<div id="orgb779bad" class="figure">
 <p><img src="./images/screenshot_20240912_195028.png" alt="screenshot_20240912_195028.png">
 </p>
 </div>
@@ -904,7 +891,7 @@ Lilian的证明我也有些没有完全看懂： 红蓝绿的部分作者似乎�
 </p>
 
 
-<div id="orgd10b343" class="figure">
+<div id="orga7bb62b" class="figure">
 <p><img src="./images/screenshot_20240912_201649.png" alt="screenshot_20240912_201649.png">
 </p>
 </div>
@@ -923,7 +910,7 @@ Lilian的证明我也有些没有完全看懂： 红蓝绿的部分作者似乎�
 </p>
 
 
-<div id="orge3d2c57" class="figure">
+<div id="orgff7d264" class="figure">
 <p><img src="./images/screenshot_20240912_203545.png" alt="screenshot_20240912_203545.png">
 </p>
 </div>
@@ -933,7 +920,7 @@ Lilian的证明我也有些没有完全看懂： 红蓝绿的部分作者似乎�
 </p>
 
 
-<div id="org9dc8c2e" class="figure">
+<div id="orgc14c679" class="figure">
 <p><img src="./images/screenshot_20240912_203738.png" alt="screenshot_20240912_203738.png">
 </p>
 </div>
@@ -943,16 +930,15 @@ Lilian的证明我也有些没有完全看懂： 红蓝绿的部分作者似乎�
 </p>
 </div>
 </div>
-
-<div id="outline-container-org0e6acb3" class="outline-4">
-<h4 id="org0e6acb3"><span class="section-number-4">3.3.2.</span> 关于NTK在训练过程中的不变性</h4>
+<div id="outline-container-org6b34f4b" class="outline-4">
+<h4 id="org6b34f4b"><span class="section-number-4">3.3.2.</span> 关于NTK在训练过程中的不变性</h4>
 <div class="outline-text-4" id="text-3-3-2">
 <p>
 有关于这个定理的详细描述如下：
 </p>
 
 
-<div id="orgf7ccfc6" class="figure">
+<div id="org3d07ab5" class="figure">
 <p><img src="./images/screenshot_20240912_204713.png" alt="screenshot_20240912_204713.png">
 </p>
 </div>
@@ -963,25 +949,25 @@ Lilian的证明我也有些没有完全看懂： 红蓝绿的部分作者似乎�
 </p>
 
 
-<div id="org1631983" class="figure">
+<div id="org2852826" class="figure">
 <p><img src="./images/screenshot_20240912_213909.png" alt="screenshot_20240912_213909.png">
 </p>
 </div>
 
 
-<div id="org7909699" class="figure">
+<div id="org32e2406" class="figure">
 <p><img src="./images/screenshot_20240912_213931.png" alt="screenshot_20240912_213931.png">
 </p>
 </div>
 
 
-<div id="org580a170" class="figure">
+<div id="orgeea258c" class="figure">
 <p><img src="./images/screenshot_20240912_213946.png" alt="screenshot_20240912_213946.png">
 </p>
 </div>
 
 
-<div id="org3b0d8c8" class="figure">
+<div id="org2898de0" class="figure">
 <p><img src="./images/screenshot_20240912_214005.png" alt="screenshot_20240912_214005.png">
 </p>
 </div>
@@ -995,7 +981,7 @@ Lilian的证明我也有些没有完全看懂： 红蓝绿的部分作者似乎�
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Sat Sep  7 09:29:43 2024</span> <span class="date">Last modified: 2025-02-01 Sat 17:21</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Sat Sep  7 09:29:43 2024</span> <span class="date">Last modified: 2025-07-01 Tue 10:31</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>
