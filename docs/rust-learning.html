@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-02-01 Sat 17:45 -->
+<!-- 2025-08-02 六 12:43 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>学习rust之所有权的学习</title>
@@ -19,28 +19,27 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd0dbdd6">1. 所有权（ownership）是什么？</a>
+<li><a href="#orgb3871cc">1. 所有权（ownership）是什么？</a>
 <ul>
-<li><a href="#orgb04e4ad">1.1. stack vs heap?</a></li>
-<li><a href="#orge99ea2a">1.2. 已有的内存管理风格</a></li>
-<li><a href="#org0f9c0c3">1.3. 所有权（ownership）是什么？</a></li>
-<li><a href="#orgf1bd914">1.4. 不是指向数据，而是指向指针————引用就是一个指向指针的指针</a></li>
-<li><a href="#org53440be">1.5. 总结</a></li>
+<li><a href="#org4604af8">1.1. stack vs heap?</a></li>
+<li><a href="#org3e0b3a6">1.2. 已有的内存管理风格</a></li>
+<li><a href="#orgb141730">1.3. 所有权（ownership）是什么？</a></li>
+<li><a href="#orgfaf827d">1.4. 不是指向数据，而是指向指针————引用就是一个指向指针的指针</a></li>
+<li><a href="#org81517ed">1.5. 总结</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-
-<div id="outline-container-orgd0dbdd6" class="outline-2">
-<h2 id="orgd0dbdd6"><span class="section-number-2">1.</span> 所有权（ownership）是什么？</h2>
+<div id="outline-container-orgb3871cc" class="outline-2">
+<h2 id="orgb3871cc"><span class="section-number-2">1.</span> 所有权（ownership）是什么？</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 在理解所有权之前，我们稍微接触一点硬件知识。
 </p>
 </div>
-<div id="outline-container-orgb04e4ad" class="outline-3">
-<h3 id="orgb04e4ad"><span class="section-number-3">1.1.</span> stack vs heap?</h3>
+<div id="outline-container-org4604af8" class="outline-3">
+<h3 id="org4604af8"><span class="section-number-3">1.1.</span> stack vs heap?</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 首先的一个问题是栈和堆的的区别。
@@ -105,8 +104,8 @@
 </p>
 </div>
 </div>
-<div id="outline-container-orge99ea2a" class="outline-3">
-<h3 id="orge99ea2a"><span class="section-number-3">1.2.</span> 已有的内存管理风格</h3>
+<div id="outline-container-org3e0b3a6" class="outline-3">
+<h3 id="org3e0b3a6"><span class="section-number-3">1.2.</span> 已有的内存管理风格</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 在理解所有权之前，先来看看目前的编程语言中已有的内存管理方式：
@@ -126,8 +125,8 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org0f9c0c3" class="outline-3">
-<h3 id="org0f9c0c3"><span class="section-number-3">1.3.</span> 所有权（ownership）是什么？</h3>
+<div id="outline-container-orgb141730" class="outline-3">
+<h3 id="orgb141730"><span class="section-number-3">1.3.</span> 所有权（ownership）是什么？</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 笔者看来，所有权就是约束了 <b>变量名（也就是指向内存空间的index）</b> 与 <b>变量数值（也就是内存空间所存储的数据）</b> 的一种描述。 
@@ -183,13 +182,13 @@ The ownership for a object is the authority that there exists one and only one o
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust">  <span style="color: #ff8080;">let</span> s1=<span style="color: #91ddff;">String</span>::from<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">"lalalaaaaaaaa"</span><span style="color: #c66; font-weight: bold;">)</span>;
-  <span style="color: #ff8080;">let</span> s2=in_and_out<span style="color: #c66; font-weight: bold;">(</span>s1<span style="color: #c66; font-weight: bold;">)</span>;
-  <span style="color: #c991e1;">println!</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">"</span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa;">"</span>,s1<span style="color: #c66; font-weight: bold;">)</span>; <span style="color: #565575;">// </span><span style="color: #96a0aa;">error</span>
-
-<span style="color: #ff8080;">fn</span> <span style="color: #c991e1;">takes_and_gives_back</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">a_string</span>: <span style="color: #91ddff;">String</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #91ddff;">String</span> <span style="color: #c66; font-weight: bold;">{</span> 
-    <span style="color: #ff8080;">let</span> new_stirng=some_transform<span style="color: #6c6; font-weight: bold;">(</span>a_string<span style="color: #6c6; font-weight: bold;">)</span> <span style="color: #565575;">// </span><span style="color: #96a0aa;">some_transform&#26159;&#25105;&#30606;&#20889;&#30340;&#20989;&#25968;,&#27880;&#24847;&#27809;&#20998;&#21495;&#65292;&#20195;&#34920;&#36820;&#22238;&#20043;</span>
-<span style="color: #c66; font-weight: bold;">}</span>
+<pre class="src src-rust">  <span style="color: #ff8080; font-weight: bold;">let</span> s1=<span style="color: #91ddff;">String</span>::from<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"lalalaaaaaaaa"</span><span style="color: #c66; font-weight: bold;">)</span>;
+  <span style="color: #ff8080; font-weight: bold;">let</span> s2=in_and_out<span style="color: #c66; font-weight: bold;">(</span>s1<span style="color: #c66; font-weight: bold;">)</span>;
+  <span style="color: #c991e1;">println!</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa; font-style: italic;">"</span>,s1<span style="color: #c66; font-weight: bold;">)</span>; <span style="color: #565575;">// </span><span style="color: #565575;">error
+</span>
+<span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">takes_and_gives_back</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">a_string</span>: <span style="color: #91ddff;">String</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #91ddff;">String</span> <span style="color: #c66; font-weight: bold;">{</span> 
+    <span style="color: #ff8080; font-weight: bold;">let</span> new_stirng=some_transform<span style="color: #6c6; font-weight: bold;">(</span>a_string<span style="color: #6c6; font-weight: bold;">)</span> <span style="color: #565575;">// </span><span style="color: #565575;">some_transform&#26159;&#25105;&#30606;&#20889;&#30340;&#20989;&#25968;,&#27880;&#24847;&#27809;&#20998;&#21495;&#65292;&#20195;&#34920;&#36820;&#22238;&#20043;
+</span><span style="color: #c66; font-weight: bold;">}</span>
 </pre>
 </div>
 
@@ -197,8 +196,8 @@ The ownership for a object is the authority that there exists one and only one o
 上述情况是较为繁琐的，因为如果我们还想接着使用s1，那么针对以上问题，我们还要接着把函数里的a_string返回回来，即
 </p>
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #ff8080;">fn</span> <span style="color: #c991e1;">takes_and_gives_back</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">a_string</span>: <span style="color: #91ddff;">String</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #91ddff;">String</span> <span style="color: #c66; font-weight: bold;">{</span> 
-    <span style="color: #ff8080;">let</span> new_stirng=some_transform<span style="color: #6c6; font-weight: bold;">(</span>a_string<span style="color: #6c6; font-weight: bold;">)</span>;
+<pre class="src src-rust"><span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">takes_and_gives_back</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">a_string</span>: <span style="color: #91ddff;">String</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #91ddff;">String</span> <span style="color: #c66; font-weight: bold;">{</span> 
+    <span style="color: #ff8080; font-weight: bold;">let</span> new_stirng=some_transform<span style="color: #6c6; font-weight: bold;">(</span>a_string<span style="color: #6c6; font-weight: bold;">)</span>;
     <span style="color: #6c6; font-weight: bold;">(</span>a_string, new_string<span style="color: #6c6; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">}</span>
 </pre>
@@ -210,23 +209,22 @@ The ownership for a object is the authority that there exists one and only one o
 </p>
 </div>
 </div>
-
-<div id="outline-container-orgf1bd914" class="outline-3">
-<h3 id="orgf1bd914"><span class="section-number-3">1.4.</span> 不是指向数据，而是指向指针————引用就是一个指向指针的指针</h3>
+<div id="outline-container-orgfaf827d" class="outline-3">
+<h3 id="orgfaf827d"><span class="section-number-3">1.4.</span> 不是指向数据，而是指向指针————引用就是一个指向指针的指针</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 我们来看看引用，一种C++里也用烂了的方式。
 </p>
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #ff8080;">fn</span> <span style="color: #c991e1;">main</span><span style="color: #c66; font-weight: bold;">()</span> <span style="color: #c66; font-weight: bold;">{</span>
-    <span style="color: #ff8080;">let</span> <span style="color: #ffe9aa;">s1</span> = <span style="color: #91ddff;">String</span>::from<span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ffe9aa;">"hello"</span><span style="color: #6c6; font-weight: bold;">)</span>;
+<pre class="src src-rust"><span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">main</span><span style="color: #c66; font-weight: bold;">()</span> <span style="color: #c66; font-weight: bold;">{</span>
+    <span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #ffe9aa;">s1</span> = <span style="color: #91ddff;">String</span>::from<span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"hello"</span><span style="color: #6c6; font-weight: bold;">)</span>;
 
-    <span style="color: #ff8080;">let</span> <span style="color: #ffe9aa;">len</span> = calculate_length<span style="color: #6c6; font-weight: bold;">(</span><span style="color: #96a0aa; background-color: #1b182c;">&amp;</span>s1<span style="color: #6c6; font-weight: bold;">)</span>;
+    <span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #ffe9aa;">len</span> = calculate_length<span style="color: #6c6; font-weight: bold;">(</span><span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>s1<span style="color: #6c6; font-weight: bold;">)</span>;
 
-    <span style="color: #c991e1;">println!</span><span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ffe9aa;">"The length of '</span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa;">' is </span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa;">."</span>, s1, len<span style="color: #6c6; font-weight: bold;">)</span>;
+    <span style="color: #c991e1;">println!</span><span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"The length of '</span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa; font-style: italic;">' is </span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa; font-style: italic;">."</span>, s1, len<span style="color: #6c6; font-weight: bold;">)</span>;
 <span style="color: #c66; font-weight: bold;">}</span>
 
-<span style="color: #ff8080;">fn</span> <span style="color: #c991e1;">calculate_length</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">s</span>: <span style="color: #96a0aa; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">String</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #91ddff;">usize</span> <span style="color: #c66; font-weight: bold;">{</span>
+<span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">calculate_length</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">s</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">String</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #91ddff;">usize</span> <span style="color: #c66; font-weight: bold;">{</span>
     s.len<span style="color: #6c6; font-weight: bold;">()</span>
 <span style="color: #c66; font-weight: bold;">}</span>
 </pre>
@@ -243,22 +241,22 @@ rust在此基础上又进了一步，对于上述代码中的s1，你可以使�
 是这样的：rust默认定义的变量不具有写权限（即初始化完，就是最终状态了），如果你想定义一个变量，还可以改变，就要加关键词mut。所以：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #565575;">// </span><span style="color: #96a0aa;">case1: &#21487;&#20197;&#32534;&#35793;&#36890;&#36807;&#30340;&#29256;&#26412;</span>
-<span style="color: #ff8080;">let</span> <span style="color: #ffe9aa;">s</span> = <span style="color: #91ddff;">String</span>::from<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">"hello"</span><span style="color: #c66; font-weight: bold;">)</span>;
-<span style="color: #ff8080;">let</span> r1=&amp; s;
-<span style="color: #ff8080;">let</span> r2=&amp; s;
-<span style="color: #c991e1;">println!</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">"</span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa;">, </span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa;">"</span>, r1, r2<span style="color: #c66; font-weight: bold;">)</span>;
+<pre class="src src-rust"><span style="color: #565575;">// </span><span style="color: #565575;">case1: &#21487;&#20197;&#32534;&#35793;&#36890;&#36807;&#30340;&#29256;&#26412;
+</span><span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #ffe9aa;">s</span> = <span style="color: #91ddff;">String</span>::from<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"hello"</span><span style="color: #c66; font-weight: bold;">)</span>;
+<span style="color: #ff8080; font-weight: bold;">let</span> r1=&amp; s;
+<span style="color: #ff8080; font-weight: bold;">let</span> r2=&amp; s;
+<span style="color: #c991e1;">println!</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa; font-style: italic;">, </span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa; font-style: italic;">"</span>, r1, r2<span style="color: #c66; font-weight: bold;">)</span>;
 
-<span style="color: #565575;">//</span><span style="color: #96a0aa;">------&#32534;&#35793;&#36890;&#36807;</span>
-<span style="color: #ff8080;">let</span> <span style="color: #ff8080;">mut</span> <span style="color: #ffe9aa;">s</span> = <span style="color: #91ddff;">String</span>::from<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">"hello"</span><span style="color: #c66; font-weight: bold;">)</span>;
-<span style="color: #ff8080;">let</span> <span style="color: #ffe9aa;">r1</span> = <span style="color: #96a0aa; background-color: #1b182c;">&amp;</span><span style="color: #ff8080;">mut</span> s;
-<span style="color: #c991e1;">println!</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">"</span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa;">, </span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa;">"</span>, r1, r1<span style="color: #c66; font-weight: bold;">)</span>;
+<span style="color: #565575;">//</span><span style="color: #565575;">------&#32534;&#35793;&#36890;&#36807;
+</span><span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #ff8080; font-weight: bold;">mut</span> <span style="color: #ffe9aa;">s</span> = <span style="color: #91ddff;">String</span>::from<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"hello"</span><span style="color: #c66; font-weight: bold;">)</span>;
+<span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #ffe9aa;">r1</span> = <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #ff8080; font-weight: bold;">mut</span> s;
+<span style="color: #c991e1;">println!</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa; font-style: italic;">, </span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa; font-style: italic;">"</span>, r1, r1<span style="color: #c66; font-weight: bold;">)</span>;
 
-<span style="color: #565575;">//</span><span style="color: #96a0aa;">------&#32534;&#35793;&#19981;&#36890;&#36807;</span>
-<span style="color: #ff8080;">let</span> <span style="color: #ff8080;">mut</span> <span style="color: #ffe9aa;">s</span> = <span style="color: #91ddff;">String</span>::from<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">"hello"</span><span style="color: #c66; font-weight: bold;">)</span>;
-<span style="color: #ff8080;">let</span> <span style="color: #ffe9aa;">r1</span> = <span style="color: #96a0aa; background-color: #1b182c;">&amp;</span><span style="color: #ff8080;">mut</span> s;
-<span style="color: #ff8080;">let</span> <span style="color: #ffe9aa;">r2</span> = <span style="color: #96a0aa; background-color: #1b182c;">&amp;</span><span style="color: #ff8080;">mut</span> s;
-<span style="color: #c991e1;">println!</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">"</span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa;">, </span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa;">"</span>, r1, r2<span style="color: #c66; font-weight: bold;">)</span>;
+<span style="color: #565575;">//</span><span style="color: #565575;">------&#32534;&#35793;&#19981;&#36890;&#36807;
+</span><span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #ff8080; font-weight: bold;">mut</span> <span style="color: #ffe9aa;">s</span> = <span style="color: #91ddff;">String</span>::from<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"hello"</span><span style="color: #c66; font-weight: bold;">)</span>;
+<span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #ffe9aa;">r1</span> = <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #ff8080; font-weight: bold;">mut</span> s;
+<span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #ffe9aa;">r2</span> = <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #ff8080; font-weight: bold;">mut</span> s;
+<span style="color: #c991e1;">println!</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa; font-style: italic;">, </span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa; font-style: italic;">"</span>, r1, r2<span style="color: #c66; font-weight: bold;">)</span>;
 </pre>
 </div>
 
@@ -268,16 +266,16 @@ rust在此基础上又进了一步，对于上述代码中的s1，你可以使�
 
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #ff8080;">let</span> <span style="color: #ff8080;">mut</span> <span style="color: #ffe9aa;">s</span> = <span style="color: #91ddff;">String</span>::from<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">"hello"</span><span style="color: #c66; font-weight: bold;">)</span>;
+<pre class="src src-rust"><span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #ff8080; font-weight: bold;">mut</span> <span style="color: #ffe9aa;">s</span> = <span style="color: #91ddff;">String</span>::from<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"hello"</span><span style="color: #c66; font-weight: bold;">)</span>;
 
-<span style="color: #ff8080;">let</span> <span style="color: #ffe9aa;">r1</span> = <span style="color: #96a0aa; background-color: #1b182c;">&amp;</span>s; <span style="color: #565575;">// </span><span style="color: #96a0aa;">&#27809;&#38382;&#39064;</span>
-<span style="color: #ff8080;">let</span> <span style="color: #ffe9aa;">r2</span> = <span style="color: #96a0aa; background-color: #1b182c;">&amp;</span>s; <span style="color: #565575;">// </span><span style="color: #96a0aa;">&#27809;&#38382;&#39064;</span>
-<span style="color: #c991e1;">println!</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">"</span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa;"> and </span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa;">"</span>, r1, r2<span style="color: #c66; font-weight: bold;">)</span>;
-<span style="color: #565575;">// </span><span style="color: #96a0aa;">r1 r2&#26159;&#20540;&#20256;&#20837;&#65292;&#32780;&#36890;&#36807;&#20316;&#29992;&#22495;println!()&#65292;&#25152;&#26377;&#26435;&#34987;&#36716;&#21040;&#20989;&#25968;&#37324;&#20102;&#65292;&#25152;&#20197;r1,r2&#28040;&#22833;&#12290;</span>
-<span style="color: #565575;">// </span><span style="color: #96a0aa;">&#27492;&#20301;&#32622;&#20043;&#21518; r1 &#21644; r2 &#19981;&#20877;&#20351;&#29992;</span>
-
-<span style="color: #ff8080;">let</span> <span style="color: #ffe9aa;">r3</span> = <span style="color: #96a0aa; background-color: #1b182c;">&amp;</span><span style="color: #ff8080;">mut</span> s; <span style="color: #565575;">// </span><span style="color: #96a0aa;">&#27809;&#38382;&#39064;</span>
-<span style="color: #c991e1;">println!</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">"</span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa;">"</span>, r3<span style="color: #c66; font-weight: bold;">)</span>;
+<span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #ffe9aa;">r1</span> = <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>s; <span style="color: #565575;">// </span><span style="color: #565575;">&#27809;&#38382;&#39064;
+</span><span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #ffe9aa;">r2</span> = <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>s; <span style="color: #565575;">// </span><span style="color: #565575;">&#27809;&#38382;&#39064;
+</span><span style="color: #c991e1;">println!</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa; font-style: italic;"> and </span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa; font-style: italic;">"</span>, r1, r2<span style="color: #c66; font-weight: bold;">)</span>;
+<span style="color: #565575;">// </span><span style="color: #565575;">r1 r2&#26159;&#20540;&#20256;&#20837;&#65292;&#32780;&#36890;&#36807;&#20316;&#29992;&#22495;println!()&#65292;&#25152;&#26377;&#26435;&#34987;&#36716;&#21040;&#20989;&#25968;&#37324;&#20102;&#65292;&#25152;&#20197;r1,r2&#28040;&#22833;&#12290;
+</span><span style="color: #565575;">// </span><span style="color: #565575;">&#27492;&#20301;&#32622;&#20043;&#21518; r1 &#21644; r2 &#19981;&#20877;&#20351;&#29992;
+</span>
+<span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #ffe9aa;">r3</span> = <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #ff8080; font-weight: bold;">mut</span> s; <span style="color: #565575;">// </span><span style="color: #565575;">&#27809;&#38382;&#39064;
+</span><span style="color: #c991e1;">println!</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa; font-style: italic;">"</span>, r3<span style="color: #c66; font-weight: bold;">)</span>;
 </pre>
 </div>
 
@@ -296,9 +294,8 @@ rust编译器规定:
 </p>
 </div>
 </div>
-
-<div id="outline-container-org53440be" class="outline-3">
-<h3 id="org53440be"><span class="section-number-3">1.5.</span> 总结</h3>
+<div id="outline-container-org81517ed" class="outline-3">
+<h3 id="org81517ed"><span class="section-number-3">1.5.</span> 总结</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 关于ownership的介绍就是这么多。总结下来就是：拥有权独一份，过期就删除；只读的引用拥有权有很多份，过期就删除；可写的引用拥有权有且只有一份。以及：rust不可能会让你同时拥有两个可以执行写操作的指针。
@@ -308,7 +305,7 @@ rust编译器规定:
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Wed Nov 17 20:18:15 2021</span> <span class="date">Last modified: 2025-02-01 Sat 17:21</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Wed Nov 17 20:18:15 2021</span> <span class="date">Last modified: 2025-07-18 五 13:48</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>

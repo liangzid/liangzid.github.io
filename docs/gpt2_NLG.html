@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-02-01 Sat 17:45 -->
+<!-- 2025-08-02 六 12:43 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>关于huggingface transformers NLG模块实现的基本思路</title>
 <meta name="author" content="liangzid" />
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -203,20 +203,20 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org2ae871b">1. 标题1</a></li>
-<li><a href="#org95c6a2d">2. 关于huggingface transformers NLG 模块实现的基本思路</a>
+<li><a href="#org4130498">1. 标题1</a></li>
+<li><a href="#orgb9d3cc5">2. 关于huggingface transformers NLG 模块实现的基本思路</a>
 <ul>
-<li><a href="#org7d2f40c">2.1. 语言模型的训练与测试的不同之处</a></li>
-<li><a href="#org20727e2">2.2. 训练环节</a>
+<li><a href="#org30ff13d">2.1. 语言模型的训练与测试的不同之处</a></li>
+<li><a href="#org497030f">2.2. 训练环节</a>
 <ul>
-<li><a href="#org4af68f2">2.2.1. 数据集封装形式</a></li>
-<li><a href="#orga9eb8da">2.2.2. 微不足道的模型训练细节</a></li>
+<li><a href="#org7a2bc6e">2.2.1. 数据集封装形式</a></li>
+<li><a href="#orge34117c">2.2.2. 微不足道的模型训练细节</a></li>
 </ul>
 </li>
-<li><a href="#orgc58fa24">2.3. 测试环节</a>
+<li><a href="#org2c27d7b">2.3. 测试环节</a>
 <ul>
-<li><a href="#orgbe05533">2.3.1. 数据集封装形式</a></li>
-<li><a href="#org2c39c9d">2.3.2. NLG生成细节</a></li>
+<li><a href="#orgf480495">2.3.1. 数据集封装形式</a></li>
+<li><a href="#orgcaf2b17">2.3.2. NLG生成细节</a></li>
 </ul>
 </li>
 </ul>
@@ -224,15 +224,15 @@
 </ul>
 </div>
 </div>
-<div id="outline-container-org2ae871b" class="outline-2">
-<h2 id="org2ae871b"><span class="section-number-2">1.</span> 标题1</h2>
+<div id="outline-container-org4130498" class="outline-2">
+<h2 id="org4130498"><span class="section-number-2">1.</span> 标题1</h2>
 </div>
-<div id="outline-container-org95c6a2d" class="outline-2">
-<h2 id="org95c6a2d"><span class="section-number-2">2.</span> 关于huggingface transformers NLG 模块实现的基本思路</h2>
+<div id="outline-container-orgb9d3cc5" class="outline-2">
+<h2 id="orgb9d3cc5"><span class="section-number-2">2.</span> 关于huggingface transformers NLG 模块实现的基本思路</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org7d2f40c" class="outline-3">
-<h3 id="org7d2f40c"><span class="section-number-3">2.1.</span> 语言模型的训练与测试的不同之处</h3>
+<div id="outline-container-org30ff13d" class="outline-3">
+<h3 id="org30ff13d"><span class="section-number-3">2.1.</span> 语言模型的训练与测试的不同之处</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预测下一个token时，基于的是前面的token全都正确的似然假设；
@@ -245,28 +245,27 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </p>
 </div>
 </div>
-
-<div id="outline-container-org20727e2" class="outline-3">
-<h3 id="org20727e2"><span class="section-number-3">2.2.</span> 训练环节</h3>
+<div id="outline-container-org497030f" class="outline-3">
+<h3 id="org497030f"><span class="section-number-3">2.2.</span> 训练环节</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-org4af68f2" class="outline-4">
-<h4 id="org4af68f2"><span class="section-number-4">2.2.1.</span> 数据集封装形式</h4>
+<div id="outline-container-org7a2bc6e" class="outline-4">
+<h4 id="org7a2bc6e"><span class="section-number-4">2.2.1.</span> 数据集封装形式</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 一般而言，是数据等于标签的格式。以对话为例，可能就是"Q+[SEP]+A"这种。
 </p>
 </div>
 </div>
-<div id="outline-container-orga9eb8da" class="outline-4">
-<h4 id="orga9eb8da"><span class="section-number-4">2.2.2.</span> 微不足道的模型训练细节</h4>
+<div id="outline-container-orge34117c" class="outline-4">
+<h4 id="orge34117c"><span class="section-number-4">2.2.2.</span> 微不足道的模型训练细节</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <p>
 由于是token预测问题，所以本质上属于一个分类问题，一般而言，会使用交叉熵，除了使用transformers库之外，还可以自己用以下的方式进行损失的定义和传播：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ffe9aa;">loss_func_cls</span> = CrossEntropyLoss<span style="color: #c66; font-weight: bold;">(</span>ignore_index=PAD_ID, reduction=<span style="color: #ffe9aa;">'sum'</span><span style="color: #c66; font-weight: bold;">)</span>
+<pre class="src src-python"><span style="color: #ffe9aa;">loss_func_cls</span> = CrossEntropyLoss<span style="color: #c66; font-weight: bold;">(</span>ignore_index=PAD_ID, reduction=<span style="color: #ffe9aa; font-style: italic;">'sum'</span><span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #ffe9aa;">output_distributions</span>=Decoder<span style="color: #c66; font-weight: bold;">(</span>utterance_input<span style="color: #c66; font-weight: bold;">)[</span>0<span style="color: #c66; font-weight: bold;">]</span>
 <span style="color: #ffe9aa;">output_prediction</span>=output_distributions.permute<span style="color: #c66; font-weight: bold;">(</span><span style="color: #6c6; font-weight: bold;">[</span>0,2,1<span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #ffe9aa;">loss_autoencoder</span>=loss_func_cls<span style="color: #c66; font-weight: bold;">(</span>output_prediction,utterance_input<span style="color: #c66; font-weight: bold;">)</span>
@@ -278,12 +277,12 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </div>
 </div>
 </div>
-<div id="outline-container-orgc58fa24" class="outline-3">
-<h3 id="orgc58fa24"><span class="section-number-3">2.3.</span> 测试环节</h3>
+<div id="outline-container-org2c27d7b" class="outline-3">
+<h3 id="org2c27d7b"><span class="section-number-3">2.3.</span> 测试环节</h3>
 <div class="outline-text-3" id="text-2-3">
 </div>
-<div id="outline-container-orgbe05533" class="outline-4">
-<h4 id="orgbe05533"><span class="section-number-4">2.3.1.</span> 数据集封装形式</h4>
+<div id="outline-container-orgf480495" class="outline-4">
+<h4 id="orgf480495"><span class="section-number-4">2.3.1.</span> 数据集封装形式</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <p>
 测试环节的数据集同训练环节有所不同，因为在测试环节，相当于是基于一个prefix去生成后面的话。
@@ -291,15 +290,15 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </p>
 </div>
 </div>
-<div id="outline-container-org2c39c9d" class="outline-4">
-<h4 id="org2c39c9d"><span class="section-number-4">2.3.2.</span> NLG生成细节</h4>
+<div id="outline-container-orgcaf2b17" class="outline-4">
+<h4 id="orgcaf2b17"><span class="section-number-4">2.3.2.</span> NLG生成细节</h4>
 <div class="outline-text-4" id="text-2-3-2">
 <p>
 下面给出几种较为常见的NLG的具体实现，方便日后炼丹之用。
 </p>
 </div>
 <ol class="org-ol">
-<li><a id="orga7d3238"></a>贪婪生成方案<br>
+<li><a id="org41e7816"></a>贪婪生成方案<br>
 <div class="outline-text-5" id="text-2-3-2-1">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #ffe9aa;">beam_outputs</span>=Decoder.generate<span style="color: #c66; font-weight: bold;">(</span>input_ids=utterance_input, max_length=64<span style="color: #c66; font-weight: bold;">)</span>
@@ -310,19 +309,17 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </p>
 </div>
 </li>
-
-<li><a id="org15a66ed"></a>beam search 方案<br>
+<li><a id="orga146343"></a>beam search 方案<br>
 <div class="outline-text-5" id="text-2-3-2-2">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #ffe9aa;">outputs</span>=Decoder.generate<span style="color: #c66; font-weight: bold;">(</span>input_ids=utterance_input, max_length=64,
-                                                num_beams=5,
-                                                num_return_sequences=5, early_stopping=<span style="color: #aaffe4;">True</span><span style="color: #c66; font-weight: bold;">)</span>
+                                                       num_beams=5,
+                                                       num_return_sequences=5, early_stopping=<span style="color: #aaffe4;">True</span><span style="color: #c66; font-weight: bold;">)</span>
 </pre>
 </div>
 </div>
 </li>
-
-<li><a id="orgcc1bc72"></a>其他方案<br>
+<li><a id="org4c28259"></a>其他方案<br>
 <div class="outline-text-5" id="text-2-3-2-3">
 <p>
 参考这里： <a href="https://huggingface.co/blog/how-to-generate">https://huggingface.co/blog/how-to-generate</a>
@@ -335,7 +332,7 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: liangzid (<a href="mailto:2273067585@qq.com">2273067585@qq.com</a>)</span> <span class="date">Create Date: Wed Nov 17 19:40:30 2021</span> <span class="date">Last modified: 2025-02-01 Sat 17:21</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: liangzid (<a href="mailto:2273067585@qq.com">2273067585@qq.com</a>)</span> <span class="date">Create Date: Wed Nov 17 19:40:30 2021</span> <span class="date">Last modified: 2025-07-18 五 13:48</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>
