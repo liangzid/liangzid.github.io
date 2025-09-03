@@ -1,0 +1,284 @@
+#+title: Slurm's Configuration and Usage
+#+date: Wed Sep  3 16:34:48 2025
+#+author: Zi Liang
+#+email: zi1415926.liang@connect.polyu.hk
+#+latex_class: elegantpaper
+#+filetags: ::
+
+
+
+* Configuration
+
+#+begin_src sh
+
+## 1. Install
+sudo apt install -y munge libmunge-dev gcc make perl \
+sqlite3 libsqlite3-dev libssl-dev
+
+sudo apt install -y slurm-wlm slurm-wlm-doc
+
+slurmd --version   
+
+## 2. Config Munge
+# gen key
+sudo /usr/sbin/create-munge-key -r
+sudo chown munge:munge /etc/munge/munge.key
+sudo chmod 400 /etc/munge/munge.key
+sudo systemctl enable --now munge
+
+## 3. Config slurm.conf
+sudo mkdir -p /etc/slurm
+sudo vim /etc/slurm/slurm.conf
+#+end_src
+Add the configuration of slurm.conf:
+
+#+begin_src 
+# ===GLOBAL ===
+ClusterName=gs14
+ControlMachine=gs14
+MpiDefault=none
+# === NODES DEF===
+NodeName=gs14 CPUs=192 Boards=1 SocketsPerBoard=2 CoresPerSocket=48 ThreadsPerCore=2 RealMemory=501000 Gres=gpu:6 State=UNKNOWN
+# ===QUEUE===
+PartitionName=gpu Nodes=gs14 Default=YES MaxTime=7-00:00:00 State=UP
+# === ACCOUNT==
+AccountingStorageType=accounting_storage/none
+SelectType=select/cons_res
+SelectTypeParameters=CR_Core_Memory
+TaskPlugin=task/none
+ProctrackType=proctrack/linuxproc
+GresTypes=gpu
+#+end_src
+Add the conf for GPU resources:
+
+#+begin_src sh
+  sudo vim /etc/slurm/gres.conf
+#+end_src fill in:
+#+begin_src 
+NodeName=gs14 Name=gpu File=/dev/nvidia0
+NodeName=gs14 Name=gpu File=/dev/nvidia1
+NodeName=gs14 Name=gpu File=/dev/nvidia2
+NodeName=gs14 Name=gpu File=/dev/nvidia3
+NodeName=gs14 Name=gpu File=/dev/nvidia4
+NodeName=gs14 Name=gpu File=/dev/nvidia5
+#+end_src
+Restart Service:
+
+#+begin_src bash
+sudo systemctl enable --now slurmctld
+sudo systemctl enable --now slurmd
+sinfo
+#+end_src
+
+* Usage
+
+** Introduction to Slurm for AI Model Training
+This document provides a comprehensive guide to Slurm, a popular workload manager used in high-performance computing (HPC) environments. It is particularly useful for training AI models on clusters with multiple nodes and GPUs. We'll cover what Slurm is, its key concepts, basic usage, and advanced features tailored for AI workloads like deep learning training with frameworks such as PyTorch or TensorFlow.
+
+The guide assumes you have access to a Linux-based HPC cluster where Slurm is installed (common in universities, research labs, or cloud providers like AWS ParallelCluster). If you're new to HPC, start with the basics and work your way up.
+
+** What is Slurm?
+Slurm (Simple Linux Utility for Resource Management) is an open-source job scheduler and workload manager designed for Linux clusters. It manages the allocation of resources (e.g., CPUs, GPUs, memory) across multiple nodes in a cluster, ensuring efficient use of hardware for compute-intensive tasks.
+
+*** Key Features of Slurm
+- *Job Scheduling*: Queues and schedules jobs based on priorities, resource availability, and user limits.
+- *Resource Allocation*: Handles requests for specific hardware like GPUs, which is crucial for AI training.
+- *Fault Tolerance*: Manages node failures and job restarts.
+- *Scalability*: Supports clusters from a few nodes to thousands, making it ideal for distributed AI training (e.g., data parallelism or model parallelism).
+- *Plugins and Extensibility*: Integrates with tools like MPI for multi-node jobs.
+
+Slurm is widely used in supercomputing centers (e.g., on the Top500 list) and is free under the GPL license. It's maintained by SchedMD.
+
+*** Why Use Slurm for AI Training?
+AI models, especially large language models or computer vision tasks, require significant computational resources. Slurm allows you to:
+- Request multiple GPUs across nodes.
+- Run jobs non-interactively (batch mode) for long training sessions.
+- Monitor and manage resource usage to avoid overloading the cluster.
+- Scale training with distributed frameworks like Horovod or PyTorch Distributed.
+
+Without Slurm, you'd manually manage resources, which is inefficient on shared clusters.
+
+** Getting Started with Slurm
+Before using Slurm, ensure you're logged into the cluster via SSH. Slurm commands are run from the terminal.
+
+*** Checking if Slurm is Available
+Run ~sinfo~ to view cluster information. If it's not found, Slurm isn't installed or not in your PATH.
+
+Example output:
+#+begin_example
+PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
+gpu          up   infinite      4   idle gpu[1-4]
+cpu          up   infinite     10   idle cpu[1-10]
+#+end_example
+
+This shows partitions (queues) like "gpu" for GPU jobs.
+
+*** Basic Slurm Concepts
+- *Job*: A unit of work, like running a Python script for model training.
+- *Partition*: A queue where jobs are submitted (e.g., "gpu" for GPU-enabled nodes).
+- *Node*: A physical or virtual machine in the cluster.
+- *Task*: A process within a job (e.g., one task per GPU).
+- *Allocation*: The resources granted to your job (e.g., 2 GPUs for 4 hours).
+- *Account and QoS*: User groups and quality-of-service levels for fair sharing.
+
+** Basic Slurm Commands
+Slurm provides CLI tools for job management. Here's a quick reference:
+
+*** Viewing Cluster Status
+- ~sinfo~: Shows partitions, nodes, and their states.
+  Example: ~sinfo -p gpu~ (view only GPU partition).
+
+- ~squeue~: Lists running and queued jobs.
+  Example: ~squeue -u yourusername~ (your jobs only).
+  Output columns: JOBID, PARTITION, NAME, USER, ST (state: R=running, PD=pending), TIME, NODES, NODELIST.
+
+*** Submitting Jobs
+There are two main ways: interactive (~srun~) for testing, and batch (~sbatch~) for production.
+
+- *Interactive Job*: ~srun~
+  Useful for quick tests or debugging AI code.
+  Example: ~srun --partition=gpu --gres=gpu:1 python train.py~
+  This requests 1 GPU and runs ~train.py~ interactively.
+
+- *Batch Job*: ~sbatch~
+  Submit a script for non-interactive execution.
+  Example: ~sbatch myslurmscript.slurm~
+  Returns a JOBID for tracking.
+
+*** Canceling Jobs
+- ~scancel JOBID~: Cancel a specific job.
+  Example: ~scancel 12345~
+
+*** Other Useful Commands
+- ~sacct~: View accounting info for completed jobs (e.g., ~sacct -j JOBID~ for CPU/GPU usage).
+- ~scontrol~: Advanced control, like ~scontrol show job JOBID~ for details.
+- ~salloc~: Allocate resources for an interactive session (similar to ~srun~ but without running a command immediately).
+
+*** Writing a Slurm Batch Script
+Batch scripts are shell scripts with #SBATCH directives at the top. These specify resource requests.
+
+*** Structure of a Slurm Script
+Scripts typically start with ~#!/bin/bash~, followed by #SBATCH lines, then your commands.
+
+Example for AI training (save as ~train.slurm~):
+#+begin_src bash
+#!/bin/bash
+#SBATCH --job-name=AI_Training     # Job name
+#SBATCH --partition=gpu            # Partition (queue)
+#SBATCH --nodes=1                  # Number of nodes
+#SBATCH --ntasks=1                 # Number of tasks (processes)
+#SBATCH --cpus-per-task=4          # CPUs per task
+#SBATCH --gres=gpu:2               # GPUs per node (e.g., 2 GPUs)
+#SBATCH --mem=16G                  # Memory per node
+#SBATCH --time=04:00:00            # Time limit (HH:MM:SS)
+#SBATCH --output=train_%j.out      # Stdout file (%j = JOBID)
+#SBATCH --error=train_%j.err       # Stderr file
+#SBATCH --mail-type=END,FAIL       # Email notifications
+#SBATCH --mail-user=your@email.com # Your email
+
+# Load environment (e.g., modules for Python/PyTorch)
+module load python/3.10
+module load cuda/11.8
+module load pytorch/2.0
+
+# Activate virtual environment if needed
+source ~/venv/bin/activate
+
+# Run your AI training script
+python train_model.py --epochs 50 --batch-size 32
+
+# Optional: Post-processing
+echo "Training complete!"
+#+end_src
+
+*** Key #SBATCH Directives for AI Training
+- *--gres=gpu:N*: Request N GPUs per node. Check available with ~sinfo~.
+- *--nodes=M*: For multi-node training (e.g., distributed data parallel).
+- *--ntasks-per-node=K*: Tasks (e.g., one per GPU).
+- *--time*: Max runtime; jobs are killed if exceeded.
+- *--mem*: Total memory; use --mem-per-cpu for per-CPU.
+- *--account*: If your cluster uses accounts for billing.
+- *--constraint*: Specify hardware features, e.g., --constraint="volta" for GPU type.
+
+For AI, ensure your script handles GPU visibility (e.g., via CUDA_VISIBLE_DEVICES, but Slurm sets it automatically with --gres).
+
+*** Submitting and Monitoring
+- Submit: ~sbatch train.slurm~
+- Monitor: ~squeue -j JOBID~
+- View logs: Check ~train_JOBID.out~ and ~.err~ files.
+
+** AI-Specific Usage: Training Models with Slurm
+AI training often involves GPUs and parallelism.
+
+*** Single-Node Multi-GPU Training
+Use ~--gres=gpu:4~ for 4 GPUs. In PyTorch, use ~torch.nn.DataParallel~ or ~DistributedDataParallel~.
+
+Example addition to script:
+#+begin_src bash
+srun python train.py --num_gpus 4
+#+end_src
+(Use ~srun~ inside batch scripts for MPI-like launching.)
+
+*** Multi-Node Distributed Training
+For large models:
+- Request ~--nodes=2 --ntasks-per-node=1 --gres=gpu:4~ (8 GPUs total).
+- Use MPI or PyTorch DDP.
+- Launch with ~srun --mpi=pmix python train.py~ (assuming MPI module loaded).
+
+*** Environment Setup
+- Use modules: ~module load~ for software like CUDA, PyTorch.
+- Containers: Slurm supports Singularity/Apptainer for Docker-like images.
+  Example: ~srun singularity exec --nv myimage.sif python train.py~ (--nv for GPU).
+
+*** Handling Data
+- Mount shared storage (e.g., /scratch) for datasets.
+- Use ~--chdir=/path/to/data~ to set working directory.
+
+** Monitoring and Debugging Jobs
+- *Real-Time Monitoring*: ~sstat JOBID~ for resource usage (CPU, memory, GPU).
+- *GPU Usage*: Install nvidia-smi and run it in your script: ~nvidia-smi > gpu_usage.log~.
+- *Debugging*: Use ~--verbose~ in scripts or interactive ~srun~ for tests.
+- *Job Arrays*: For hyperparameter tuning.
+  Example: ~#SBATCH --array=1-10~
+  Run: ~python train.py --seed $SLURM_ARRAY_TASK_ID~
+
+** Advanced Features
+*** Job Dependencies
+- Submit dependent jobs: ~sbatch --dependency=afterok:JOBID nextjob.slurm~
+
+*** Job Arrays for Parameter Sweeps
+Ideal for AI hyperparameter search.
+Example script:
+#+begin_src bash
+#SBATCH --array=0-9
+PARAMS=(0.001 0.01 0.1 ...)  # Array of learning rates
+python train.py --lr ${PARAMS[$SLURM_ARRAY_TASK_ID]}
+#+end_src
+
+*** Reservations and Priorities
+- Check with ~sacctmgr~ or admin for QoS.
+- Fairshare: Jobs from heavy users may have lower priority.
+
+*** Slurm with Containers
+For reproducible AI environments:
+- Build a Singularity image from Docker: ~singularity build myimage.sif docker://pytorch/pytorch~
+- Run: ~sbatch~ with ~singularity exec --nv~.
+
+** Common Pitfalls and Tips
+- *Over-requesting Resources*: Request only what you need to avoid queue delays.
+- *Time Limits*: Estimate runtime; use checkpoints in AI code (e.g., PyTorch save/resume).
+- *GPU Compatibility*: Ensure your code matches CUDA version.
+- *Error Handling*: Check logs for OOM (out-of-memory) errors; reduce batch size.
+- *Best Practices*: Use version control for scripts; document experiments.
+- *Learning More*: Read official docs at https://slurm.schedmd.com/. Use ~man sbatch~ for command help.
+
+** Conclusion
+Slurm streamlines AI training on clusters by managing resources efficiently. Start with simple batch scripts, then scale to distributed setups. Practice on small jobs to avoid wasting allocations. If you encounter issues, consult your cluster admin or Slurm mailing lists. Happy training!
+
+
+
+
+
+
+
+

@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2025-09-03 三 16:38 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Slurm's Configuration and Usage</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">Slurm's Configuration and Usage</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org184d17e">1. Configuration</a></li>
+<li><a href="#org1658419">2. Usage</a>
+<ul>
+<li><a href="#org9421879">2.1. Introduction to Slurm for AI Model Training</a></li>
+<li><a href="#org212e4a5">2.2. What is Slurm?</a>
+<ul>
+<li><a href="#org1310678">2.2.1. Key Features of Slurm</a></li>
+<li><a href="#org57b5695">2.2.2. Why Use Slurm for AI Training?</a></li>
+</ul>
+</li>
+<li><a href="#org63176f6">2.3. Getting Started with Slurm</a>
+<ul>
+<li><a href="#org03def42">2.3.1. Checking if Slurm is Available</a></li>
+<li><a href="#org260ccdd">2.3.2. Basic Slurm Concepts</a></li>
+</ul>
+</li>
+<li><a href="#org3d456ac">2.4. Basic Slurm Commands</a>
+<ul>
+<li><a href="#org5958db1">2.4.1. Viewing Cluster Status</a></li>
+<li><a href="#orgdd25489">2.4.2. Submitting Jobs</a></li>
+<li><a href="#org4c1fee6">2.4.3. Canceling Jobs</a></li>
+<li><a href="#orga06fbbf">2.4.4. Other Useful Commands</a></li>
+<li><a href="#orgf4ef32c">2.4.5. Writing a Slurm Batch Script</a></li>
+<li><a href="#org977c039">2.4.6. Structure of a Slurm Script</a></li>
+<li><a href="#org5477e88">2.4.7. Key #SBATCH Directives for AI Training</a></li>
+<li><a href="#orgb6d4334">2.4.8. Submitting and Monitoring</a></li>
+</ul>
+</li>
+<li><a href="#org7d08d81">2.5. AI-Specific Usage: Training Models with Slurm</a>
+<ul>
+<li><a href="#orgec54160">2.5.1. Single-Node Multi-GPU Training</a></li>
+<li><a href="#orgfb9577e">2.5.2. Multi-Node Distributed Training</a></li>
+<li><a href="#orgdb45719">2.5.3. Environment Setup</a></li>
+<li><a href="#orgfa1adf3">2.5.4. Handling Data</a></li>
+</ul>
+</li>
+<li><a href="#org35f4b4d">2.6. Monitoring and Debugging Jobs</a></li>
+<li><a href="#orgee5b377">2.7. Advanced Features</a>
+<ul>
+<li><a href="#orge6b9057">2.7.1. Job Dependencies</a></li>
+<li><a href="#org38692f9">2.7.2. Job Arrays for Parameter Sweeps</a></li>
+<li><a href="#org6074072">2.7.3. Reservations and Priorities</a></li>
+<li><a href="#org5d3a84e">2.7.4. Slurm with Containers</a></li>
+</ul>
+</li>
+<li><a href="#orgbaae61e">2.8. Common Pitfalls and Tips</a></li>
+<li><a href="#org272b5b8">2.9. Conclusion</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org184d17e" class="outline-2">
+<h2 id="org184d17e"><span class="section-number-2">1.</span> Configuration</h2>
+<div class="outline-text-2" id="text-1">
+<div class="org-src-container">
+<pre class="src src-sh">
+<span style="color: #565575;">## </span><span style="color: #565575;">1. Install
+</span>sudo apt install -y munge libmunge-dev gcc make perl <span style="color: #ffe9aa; font-style: italic;">\</span>
+sqlite3 libsqlite3-dev libssl-dev
+
+sudo apt install -y slurm-wlm slurm-wlm-doc
+
+slurmd --version   
+
+<span style="color: #565575;">## </span><span style="color: #565575;">2. Config Munge
+</span><span style="color: #565575;"># </span><span style="color: #565575;">gen key
+</span>sudo /usr/sbin/create-munge-key -r
+sudo chown munge:munge /etc/munge/munge.key
+sudo chmod 400 /etc/munge/munge.key
+sudo systemctl enable --now munge
+
+<span style="color: #565575;">## </span><span style="color: #565575;">3. Config slurm.conf
+</span>sudo mkdir -p /etc/slurm
+sudo vim /etc/slurm/slurm.conf
+</pre>
+</div>
+<p>
+Add the configuration of slurm.conf:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nil"># ===GLOBAL ===
+ClusterName=gs14
+ControlMachine=gs14
+MpiDefault=none
+# === NODES DEF===
+NodeName=gs14 CPUs=192 Boards=1 SocketsPerBoard=2 CoresPerSocket=48 ThreadsPerCore=2 RealMemory=501000 Gres=gpu:6 State=UNKNOWN
+# ===QUEUE===
+PartitionName=gpu Nodes=gs14 Default=YES MaxTime=7-00:00:00 State=UP
+# === ACCOUNT==
+AccountingStorageType=accounting_storage/none
+SelectType=select/cons_res
+SelectTypeParameters=CR_Core_Memory
+TaskPlugin=task/none
+ProctrackType=proctrack/linuxproc
+GresTypes=gpu
+</pre>
+</div>
+<p>
+Add the conf for GPU resources:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">  sudo vim /etc/slurm/gres.conf
+<span style="color: #565575;">#</span><span style="color: #565575;">+end_src fill in:
+</span><span style="color: #565575;">#</span><span style="color: #565575;">+begin_src 
+</span><span style="color: #ffe9aa;">NodeName</span>=gs14 <span style="color: #ffe9aa;">Name</span>=gpu <span style="color: #ffe9aa;">File</span>=/dev/nvidia0
+<span style="color: #ffe9aa;">NodeName</span>=gs14 <span style="color: #ffe9aa;">Name</span>=gpu <span style="color: #ffe9aa;">File</span>=/dev/nvidia1
+<span style="color: #ffe9aa;">NodeName</span>=gs14 <span style="color: #ffe9aa;">Name</span>=gpu <span style="color: #ffe9aa;">File</span>=/dev/nvidia2
+<span style="color: #ffe9aa;">NodeName</span>=gs14 <span style="color: #ffe9aa;">Name</span>=gpu <span style="color: #ffe9aa;">File</span>=/dev/nvidia3
+<span style="color: #ffe9aa;">NodeName</span>=gs14 <span style="color: #ffe9aa;">Name</span>=gpu <span style="color: #ffe9aa;">File</span>=/dev/nvidia4
+<span style="color: #ffe9aa;">NodeName</span>=gs14 <span style="color: #ffe9aa;">Name</span>=gpu <span style="color: #ffe9aa;">File</span>=/dev/nvidia5
+</pre>
+</div>
+<p>
+Restart Service:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash">sudo systemctl enable --now slurmctld
+sudo systemctl enable --now slurmd
+sinfo
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org1658419" class="outline-2">
+<h2 id="org1658419"><span class="section-number-2">2.</span> Usage</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org9421879" class="outline-3">
+<h3 id="org9421879"><span class="section-number-3">2.1.</span> Introduction to Slurm for AI Model Training</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+This document provides a comprehensive guide to Slurm, a popular workload manager used in high-performance computing (HPC) environments. It is particularly useful for training AI models on clusters with multiple nodes and GPUs. We'll cover what Slurm is, its key concepts, basic usage, and advanced features tailored for AI workloads like deep learning training with frameworks such as PyTorch or TensorFlow.
+</p>
+
+<p>
+The guide assumes you have access to a Linux-based HPC cluster where Slurm is installed (common in universities, research labs, or cloud providers like AWS ParallelCluster). If you're new to HPC, start with the basics and work your way up.
+</p>
+</div>
+</div>
+<div id="outline-container-org212e4a5" class="outline-3">
+<h3 id="org212e4a5"><span class="section-number-3">2.2.</span> What is Slurm?</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Slurm (Simple Linux Utility for Resource Management) is an open-source job scheduler and workload manager designed for Linux clusters. It manages the allocation of resources (e.g., CPUs, GPUs, memory) across multiple nodes in a cluster, ensuring efficient use of hardware for compute-intensive tasks.
+</p>
+</div>
+<div id="outline-container-org1310678" class="outline-4">
+<h4 id="org1310678"><span class="section-number-4">2.2.1.</span> Key Features of Slurm</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<ul class="org-ul">
+<li><b>Job Scheduling</b>: Queues and schedules jobs based on priorities, resource availability, and user limits.</li>
+<li><b>Resource Allocation</b>: Handles requests for specific hardware like GPUs, which is crucial for AI training.</li>
+<li><b>Fault Tolerance</b>: Manages node failures and job restarts.</li>
+<li><b>Scalability</b>: Supports clusters from a few nodes to thousands, making it ideal for distributed AI training (e.g., data parallelism or model parallelism).</li>
+<li><b>Plugins and Extensibility</b>: Integrates with tools like MPI for multi-node jobs.</li>
+</ul>
+
+<p>
+Slurm is widely used in supercomputing centers (e.g., on the Top500 list) and is free under the GPL license. It's maintained by SchedMD.
+</p>
+</div>
+</div>
+<div id="outline-container-org57b5695" class="outline-4">
+<h4 id="org57b5695"><span class="section-number-4">2.2.2.</span> Why Use Slurm for AI Training?</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<p>
+AI models, especially large language models or computer vision tasks, require significant computational resources. Slurm allows you to:
+</p>
+<ul class="org-ul">
+<li>Request multiple GPUs across nodes.</li>
+<li>Run jobs non-interactively (batch mode) for long training sessions.</li>
+<li>Monitor and manage resource usage to avoid overloading the cluster.</li>
+<li>Scale training with distributed frameworks like Horovod or PyTorch Distributed.</li>
+</ul>
+
+<p>
+Without Slurm, you'd manually manage resources, which is inefficient on shared clusters.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org63176f6" class="outline-3">
+<h3 id="org63176f6"><span class="section-number-3">2.3.</span> Getting Started with Slurm</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Before using Slurm, ensure you're logged into the cluster via SSH. Slurm commands are run from the terminal.
+</p>
+</div>
+<div id="outline-container-org03def42" class="outline-4">
+<h4 id="org03def42"><span class="section-number-4">2.3.1.</span> Checking if Slurm is Available</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<p>
+Run <code>sinfo</code> to view cluster information. If it's not found, Slurm isn't installed or not in your PATH.
+</p>
+
+<p>
+Example output:
+</p>
+<pre class="example" id="org40ae3f7">
+PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
+gpu          up   infinite      4   idle gpu[1-4]
+cpu          up   infinite     10   idle cpu[1-10]
+</pre>
+
+<p>
+This shows partitions (queues) like "gpu" for GPU jobs.
+</p>
+</div>
+</div>
+<div id="outline-container-org260ccdd" class="outline-4">
+<h4 id="org260ccdd"><span class="section-number-4">2.3.2.</span> Basic Slurm Concepts</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<ul class="org-ul">
+<li><b>Job</b>: A unit of work, like running a Python script for model training.</li>
+<li><b>Partition</b>: A queue where jobs are submitted (e.g., "gpu" for GPU-enabled nodes).</li>
+<li><b>Node</b>: A physical or virtual machine in the cluster.</li>
+<li><b>Task</b>: A process within a job (e.g., one task per GPU).</li>
+<li><b>Allocation</b>: The resources granted to your job (e.g., 2 GPUs for 4 hours).</li>
+<li><b>Account and QoS</b>: User groups and quality-of-service levels for fair sharing.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org3d456ac" class="outline-3">
+<h3 id="org3d456ac"><span class="section-number-3">2.4.</span> Basic Slurm Commands</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Slurm provides CLI tools for job management. Here's a quick reference:
+</p>
+</div>
+<div id="outline-container-org5958db1" class="outline-4">
+<h4 id="org5958db1"><span class="section-number-4">2.4.1.</span> Viewing Cluster Status</h4>
+<div class="outline-text-4" id="text-2-4-1">
+<ul class="org-ul">
+<li><code>sinfo</code>: Shows partitions, nodes, and their states.
+Example: <code>sinfo -p gpu</code> (view only GPU partition).</li>
+
+<li><code>squeue</code>: Lists running and queued jobs.
+Example: <code>squeue -u yourusername</code> (your jobs only).
+Output columns: JOBID, PARTITION, NAME, USER, ST (state: R=running, PD=pending), TIME, NODES, NODELIST.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgdd25489" class="outline-4">
+<h4 id="orgdd25489"><span class="section-number-4">2.4.2.</span> Submitting Jobs</h4>
+<div class="outline-text-4" id="text-2-4-2">
+<p>
+There are two main ways: interactive (<code>srun</code>) for testing, and batch (<code>sbatch</code>) for production.
+</p>
+
+<ul class="org-ul">
+<li><b>Interactive Job</b>: <code>srun</code>
+Useful for quick tests or debugging AI code.
+Example: <code>srun --partition=gpu --gres=gpu:1 python train.py</code>
+This requests 1 GPU and runs <code>train.py</code> interactively.</li>
+
+<li><b>Batch Job</b>: <code>sbatch</code>
+Submit a script for non-interactive execution.
+Example: <code>sbatch myslurmscript.slurm</code>
+Returns a JOBID for tracking.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org4c1fee6" class="outline-4">
+<h4 id="org4c1fee6"><span class="section-number-4">2.4.3.</span> Canceling Jobs</h4>
+<div class="outline-text-4" id="text-2-4-3">
+<ul class="org-ul">
+<li><code>scancel JOBID</code>: Cancel a specific job.
+Example: <code>scancel 12345</code></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orga06fbbf" class="outline-4">
+<h4 id="orga06fbbf"><span class="section-number-4">2.4.4.</span> Other Useful Commands</h4>
+<div class="outline-text-4" id="text-2-4-4">
+<ul class="org-ul">
+<li><code>sacct</code>: View accounting info for completed jobs (e.g., <code>sacct -j JOBID</code> for CPU/GPU usage).</li>
+<li><code>scontrol</code>: Advanced control, like <code>scontrol show job JOBID</code> for details.</li>
+<li><code>salloc</code>: Allocate resources for an interactive session (similar to <code>srun</code> but without running a command immediately).</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgf4ef32c" class="outline-4">
+<h4 id="orgf4ef32c"><span class="section-number-4">2.4.5.</span> Writing a Slurm Batch Script</h4>
+<div class="outline-text-4" id="text-2-4-5">
+<p>
+Batch scripts are shell scripts with #SBATCH directives at the top. These specify resource requests.
+</p>
+</div>
+</div>
+<div id="outline-container-org977c039" class="outline-4">
+<h4 id="org977c039"><span class="section-number-4">2.4.6.</span> Structure of a Slurm Script</h4>
+<div class="outline-text-4" id="text-2-4-6">
+<p>
+Scripts typically start with <code>#!/bin/bash</code>, followed by #SBATCH lines, then your commands.
+</p>
+
+<p>
+Example for AI training (save as <code>train.slurm</code>):
+</p>
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #565575;">#</span><span style="color: #565575;">!/bin/</span><span style="color: #ff8080; font-weight: bold;">bash</span><span style="color: #565575;">
+</span><span style="color: #565575;">#</span><span style="color: #565575;">SBATCH --job-name=AI_Training     # Job name
+</span><span style="color: #565575;">#</span><span style="color: #565575;">SBATCH --partition=gpu            # Partition (queue)
+</span><span style="color: #565575;">#</span><span style="color: #565575;">SBATCH --nodes=1                  # Number of nodes
+</span><span style="color: #565575;">#</span><span style="color: #565575;">SBATCH --ntasks=1                 # Number of tasks (processes)
+</span><span style="color: #565575;">#</span><span style="color: #565575;">SBATCH --cpus-per-task=4          # CPUs per task
+</span><span style="color: #565575;">#</span><span style="color: #565575;">SBATCH --gres=gpu:2               # GPUs per node (e.g., 2 GPUs)
+</span><span style="color: #565575;">#</span><span style="color: #565575;">SBATCH --mem=16G                  # Memory per node
+</span><span style="color: #565575;">#</span><span style="color: #565575;">SBATCH --time=04:00:00            # Time limit (HH:MM:SS)
+</span><span style="color: #565575;">#</span><span style="color: #565575;">SBATCH --output=train_%j.out      # Stdout file (%j = JOBID)
+</span><span style="color: #565575;">#</span><span style="color: #565575;">SBATCH --error=train_%j.err       # Stderr file
+</span><span style="color: #565575;">#</span><span style="color: #565575;">SBATCH --mail-type=END,FAIL       # Email notifications
+</span><span style="color: #565575;">#</span><span style="color: #565575;">SBATCH --mail-user=your@email.com # Your email
+</span>
+<span style="color: #565575;"># </span><span style="color: #565575;">Load environment (e.g., modules for Python/PyTorch)
+</span>module load python/3.10
+module load cuda/11.8
+module load pytorch/2.0
+
+<span style="color: #565575;"># </span><span style="color: #565575;">Activate virtual environment if needed
+</span><span style="color: #c991e1;">source</span> ~/venv/bin/activate
+
+<span style="color: #565575;"># </span><span style="color: #565575;">Run your AI training script
+</span>python train_model.py --epochs 50 --batch-size 32
+
+<span style="color: #565575;"># </span><span style="color: #565575;">Optional: Post-processing
+</span><span style="color: #c991e1;">echo</span> <span style="color: #ffe9aa; font-style: italic;">"Training complete!"</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org5477e88" class="outline-4">
+<h4 id="org5477e88"><span class="section-number-4">2.4.7.</span> Key #SBATCH Directives for AI Training</h4>
+<div class="outline-text-4" id="text-2-4-7">
+<ul class="org-ul">
+<li><b>&#x2013;gres=gpu:N</b>: Request N GPUs per node. Check available with <code>sinfo</code>.</li>
+<li><b>&#x2013;nodes=M</b>: For multi-node training (e.g., distributed data parallel).</li>
+<li><b>&#x2013;ntasks-per-node=K</b>: Tasks (e.g., one per GPU).</li>
+<li><b>&#x2013;time</b>: Max runtime; jobs are killed if exceeded.</li>
+<li><b>&#x2013;mem</b>: Total memory; use &#x2013;mem-per-cpu for per-CPU.</li>
+<li><b>&#x2013;account</b>: If your cluster uses accounts for billing.</li>
+<li><b>&#x2013;constraint</b>: Specify hardware features, e.g., &#x2013;constraint="volta" for GPU type.</li>
+</ul>
+
+<p>
+For AI, ensure your script handles GPU visibility (e.g., via CUDA_VISIBLE_DEVICES, but Slurm sets it automatically with &#x2013;gres).
+</p>
+</div>
+</div>
+<div id="outline-container-orgb6d4334" class="outline-4">
+<h4 id="orgb6d4334"><span class="section-number-4">2.4.8.</span> Submitting and Monitoring</h4>
+<div class="outline-text-4" id="text-2-4-8">
+<ul class="org-ul">
+<li>Submit: <code>sbatch train.slurm</code></li>
+<li>Monitor: <code>squeue -j JOBID</code></li>
+<li>View logs: Check <code>train_JOBID.out</code> and <code>.err</code> files.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org7d08d81" class="outline-3">
+<h3 id="org7d08d81"><span class="section-number-3">2.5.</span> AI-Specific Usage: Training Models with Slurm</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+AI training often involves GPUs and parallelism.
+</p>
+</div>
+<div id="outline-container-orgec54160" class="outline-4">
+<h4 id="orgec54160"><span class="section-number-4">2.5.1.</span> Single-Node Multi-GPU Training</h4>
+<div class="outline-text-4" id="text-2-5-1">
+<p>
+Use <code>--gres=gpu:4</code> for 4 GPUs. In PyTorch, use <code>torch.nn.DataParallel</code> or <code>DistributedDataParallel</code>.
+</p>
+
+<p>
+Example addition to script:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">srun python train.py --num_gpus 4
+</pre>
+</div>
+<p>
+(Use <code>srun</code> inside batch scripts for MPI-like launching.)
+</p>
+</div>
+</div>
+<div id="outline-container-orgfb9577e" class="outline-4">
+<h4 id="orgfb9577e"><span class="section-number-4">2.5.2.</span> Multi-Node Distributed Training</h4>
+<div class="outline-text-4" id="text-2-5-2">
+<p>
+For large models:
+</p>
+<ul class="org-ul">
+<li>Request <code>--nodes=2 --ntasks-per-node=1 --gres=gpu:4</code> (8 GPUs total).</li>
+<li>Use MPI or PyTorch DDP.</li>
+<li>Launch with <code>srun --mpi=pmix python train.py</code> (assuming MPI module loaded).</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgdb45719" class="outline-4">
+<h4 id="orgdb45719"><span class="section-number-4">2.5.3.</span> Environment Setup</h4>
+<div class="outline-text-4" id="text-2-5-3">
+<ul class="org-ul">
+<li>Use modules: <code>module load</code> for software like CUDA, PyTorch.</li>
+<li>Containers: Slurm supports Singularity/Apptainer for Docker-like images.
+Example: <code>srun singularity exec --nv myimage.sif python train.py</code> (&#x2013;nv for GPU).</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgfa1adf3" class="outline-4">
+<h4 id="orgfa1adf3"><span class="section-number-4">2.5.4.</span> Handling Data</h4>
+<div class="outline-text-4" id="text-2-5-4">
+<ul class="org-ul">
+<li>Mount shared storage (e.g., /scratch) for datasets.</li>
+<li>Use <code>--chdir=/path/to/data</code> to set working directory.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org35f4b4d" class="outline-3">
+<h3 id="org35f4b4d"><span class="section-number-3">2.6.</span> Monitoring and Debugging Jobs</h3>
+<div class="outline-text-3" id="text-2-6">
+<ul class="org-ul">
+<li><b>Real-Time Monitoring</b>: <code>sstat JOBID</code> for resource usage (CPU, memory, GPU).</li>
+<li><b>GPU Usage</b>: Install nvidia-smi and run it in your script: <code>nvidia-smi &gt; gpu_usage.log</code>.</li>
+<li><b>Debugging</b>: Use <code>--verbose</code> in scripts or interactive <code>srun</code> for tests.</li>
+<li><b>Job Arrays</b>: For hyperparameter tuning.
+Example: <code>#SBATCH --array=1-10</code>
+Run: <code>python train.py --seed $SLURM_ARRAY_TASK_ID</code></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgee5b377" class="outline-3">
+<h3 id="orgee5b377"><span class="section-number-3">2.7.</span> Advanced Features</h3>
+<div class="outline-text-3" id="text-2-7">
+</div>
+<div id="outline-container-orge6b9057" class="outline-4">
+<h4 id="orge6b9057"><span class="section-number-4">2.7.1.</span> Job Dependencies</h4>
+<div class="outline-text-4" id="text-2-7-1">
+<ul class="org-ul">
+<li>Submit dependent jobs: <code>sbatch --dependency=afterok:JOBID nextjob.slurm</code></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org38692f9" class="outline-4">
+<h4 id="org38692f9"><span class="section-number-4">2.7.2.</span> Job Arrays for Parameter Sweeps</h4>
+<div class="outline-text-4" id="text-2-7-2">
+<p>
+Ideal for AI hyperparameter search.
+Example script:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #565575;">#</span><span style="color: #565575;">SBATCH --array=0-9
+</span><span style="color: #ffe9aa;">PARAMS</span>=<span style="color: #c66; font-weight: bold;">(</span>0.001 0.01 0.1 ...<span style="color: #c66; font-weight: bold;">)</span>  <span style="color: #565575;"># </span><span style="color: #565575;">Array of learning rates
+</span>python train.py --lr $<span style="color: #c66; font-weight: bold;">{</span><span style="color: #ffe9aa;">PARAMS</span><span style="color: #6c6; font-weight: bold;">[</span>$<span style="color: #ffe9aa;">SLURM_ARRAY_TASK_ID</span><span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">}</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org6074072" class="outline-4">
+<h4 id="org6074072"><span class="section-number-4">2.7.3.</span> Reservations and Priorities</h4>
+<div class="outline-text-4" id="text-2-7-3">
+<ul class="org-ul">
+<li>Check with <code>sacctmgr</code> or admin for QoS.</li>
+<li>Fairshare: Jobs from heavy users may have lower priority.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org5d3a84e" class="outline-4">
+<h4 id="org5d3a84e"><span class="section-number-4">2.7.4.</span> Slurm with Containers</h4>
+<div class="outline-text-4" id="text-2-7-4">
+<p>
+For reproducible AI environments:
+</p>
+<ul class="org-ul">
+<li>Build a Singularity image from Docker: <code>singularity build myimage.sif docker://pytorch/pytorch</code></li>
+<li>Run: <code>sbatch</code> with <code>singularity exec --nv</code>.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orgbaae61e" class="outline-3">
+<h3 id="orgbaae61e"><span class="section-number-3">2.8.</span> Common Pitfalls and Tips</h3>
+<div class="outline-text-3" id="text-2-8">
+<ul class="org-ul">
+<li><b>Over-requesting Resources</b>: Request only what you need to avoid queue delays.</li>
+<li><b>Time Limits</b>: Estimate runtime; use checkpoints in AI code (e.g., PyTorch save/resume).</li>
+<li><b>GPU Compatibility</b>: Ensure your code matches CUDA version.</li>
+<li><b>Error Handling</b>: Check logs for OOM (out-of-memory) errors; reduce batch size.</li>
+<li><b>Best Practices</b>: Use version control for scripts; document experiments.</li>
+<li><b>Learning More</b>: Read official docs at <a href="https://slurm.schedmd.com/">https://slurm.schedmd.com/</a>. Use <code>man sbatch</code> for command help.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org272b5b8" class="outline-3">
+<h3 id="org272b5b8"><span class="section-number-3">2.9.</span> Conclusion</h3>
+<div class="outline-text-3" id="text-2-9">
+<p>
+Slurm streamlines AI training on clusters by managing resources efficiently. Start with simple batch scripts, then scale to distributed setups. Practice on small jobs to avoid wasting allocations. If you encounter issues, consult your cluster admin or Slurm mailing lists. Happy training!
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Wed Sep  3 16:34:48 2025</span> <span class="date">Last modified: 2025-09-03 三 16:37</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+</div>
+</body>
+</html>
