@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-09-03 三 16:38 -->
+<!-- 2025-09-03 三 16:47 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Slurm's Configuration and Usage</title>
@@ -280,37 +280,45 @@ sudo systemctl enable --now munge
 sudo vim /etc/slurm/slurm.conf
 </pre>
 </div>
+
 <p>
 Add the configuration of slurm.conf:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-nil"># ===GLOBAL ===
-ClusterName=gs14
-ControlMachine=gs14
-MpiDefault=none
-# === NODES DEF===
-NodeName=gs14 CPUs=192 Boards=1 SocketsPerBoard=2 CoresPerSocket=48 ThreadsPerCore=2 RealMemory=501000 Gres=gpu:6 State=UNKNOWN
-# ===QUEUE===
-PartitionName=gpu Nodes=gs14 Default=YES MaxTime=7-00:00:00 State=UP
-# === ACCOUNT==
-AccountingStorageType=accounting_storage/none
-SelectType=select/cons_res
-SelectTypeParameters=CR_Core_Memory
-TaskPlugin=task/none
-ProctrackType=proctrack/linuxproc
-GresTypes=gpu
+<pre class="src src-bash"><span style="color: #565575;"># </span><span style="color: #565575;">===GLOBAL ===
+</span><span style="color: #ffe9aa;">ClusterName</span>=gs14
+<span style="color: #ffe9aa;">ControlMachine</span>=gs14
+<span style="color: #ffe9aa;">MpiDefault</span>=none
+<span style="color: #565575;"># </span><span style="color: #565575;">=== NODES DEF===
+</span><span style="color: #ffe9aa;">NodeName</span>=gs14 <span style="color: #ffe9aa;">CPUs</span>=192 <span style="color: #ffe9aa;">Boards</span>=1 <span style="color: #ffe9aa;">SocketsPerBoard</span>=2 <span style="color: #ffe9aa;">CoresPerSocket</span>=48 <span style="color: #ffe9aa;">ThreadsPerCore</span>=2 <span style="color: #ffe9aa;">RealMemory</span>=501000 <span style="color: #ffe9aa;">Gres</span>=gpu:6 <span style="color: #ffe9aa;">State</span>=UNKNOWN
+<span style="color: #565575;"># </span><span style="color: #565575;">===QUEUE===
+</span><span style="color: #ffe9aa;">PartitionName</span>=gpu <span style="color: #ffe9aa;">Nodes</span>=gs14 <span style="color: #ffe9aa;">Default</span>=YES <span style="color: #ffe9aa;">MaxTime</span>=7-00:00:00 <span style="color: #ffe9aa;">State</span>=UP
+<span style="color: #565575;"># </span><span style="color: #565575;">=== ACCOUNT==
+</span><span style="color: #ffe9aa;">AccountingStorageType</span>=accounting_storage/none
+<span style="color: #ffe9aa;">SelectType</span>=select/cons_res
+<span style="color: #ffe9aa;">SelectTypeParameters</span>=CR_Core_Memory
+<span style="color: #ffe9aa;">TaskPlugin</span>=task/none
+<span style="color: #ffe9aa;">ProctrackType</span>=proctrack/linuxproc
+<span style="color: #ffe9aa;">GresTypes</span>=gpu
 </pre>
 </div>
+
 <p>
 Add the conf for GPU resources:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">  sudo vim /etc/slurm/gres.conf
-<span style="color: #565575;">#</span><span style="color: #565575;">+end_src fill in:
-</span><span style="color: #565575;">#</span><span style="color: #565575;">+begin_src 
-</span><span style="color: #ffe9aa;">NodeName</span>=gs14 <span style="color: #ffe9aa;">Name</span>=gpu <span style="color: #ffe9aa;">File</span>=/dev/nvidia0
+<pre class="src src-sh">sudo vim /etc/slurm/gres.conf
+</pre>
+</div>
+
+<p>
+fill in:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #ffe9aa;">NodeName</span>=gs14 <span style="color: #ffe9aa;">Name</span>=gpu <span style="color: #ffe9aa;">File</span>=/dev/nvidia0
 <span style="color: #ffe9aa;">NodeName</span>=gs14 <span style="color: #ffe9aa;">Name</span>=gpu <span style="color: #ffe9aa;">File</span>=/dev/nvidia1
 <span style="color: #ffe9aa;">NodeName</span>=gs14 <span style="color: #ffe9aa;">Name</span>=gpu <span style="color: #ffe9aa;">File</span>=/dev/nvidia2
 <span style="color: #ffe9aa;">NodeName</span>=gs14 <span style="color: #ffe9aa;">Name</span>=gpu <span style="color: #ffe9aa;">File</span>=/dev/nvidia3
@@ -405,7 +413,7 @@ Run <code>sinfo</code> to view cluster information. If it's not found, Slurm isn
 <p>
 Example output:
 </p>
-<pre class="example" id="org40ae3f7">
+<pre class="example" id="org191ea80">
 PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
 gpu          up   infinite      4   idle gpu[1-4]
 cpu          up   infinite     10   idle cpu[1-10]
@@ -713,7 +721,7 @@ Slurm streamlines AI training on clusters by managing resources efficiently. Sta
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Wed Sep  3 16:34:48 2025</span> <span class="date">Last modified: 2025-09-03 三 16:37</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Wed Sep  3 16:34:48 2025</span> <span class="date">Last modified: 2025-09-03 三 16:46</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>

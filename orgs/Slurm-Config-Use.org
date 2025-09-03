@@ -7,6 +7,7 @@
 
 
 
+
 * Configuration
 
 #+begin_src sh
@@ -30,9 +31,10 @@ sudo systemctl enable --now munge
 sudo mkdir -p /etc/slurm
 sudo vim /etc/slurm/slurm.conf
 #+end_src
+
 Add the configuration of slurm.conf:
 
-#+begin_src 
+#+begin_src bash
 # ===GLOBAL ===
 ClusterName=gs14
 ControlMachine=gs14
@@ -49,12 +51,16 @@ TaskPlugin=task/none
 ProctrackType=proctrack/linuxproc
 GresTypes=gpu
 #+end_src
+
 Add the conf for GPU resources:
 
 #+begin_src sh
   sudo vim /etc/slurm/gres.conf
-#+end_src fill in:
-#+begin_src 
+#+end_src
+
+  fill in:
+
+#+begin_src bash
 NodeName=gs14 Name=gpu File=/dev/nvidia0
 NodeName=gs14 Name=gpu File=/dev/nvidia1
 NodeName=gs14 Name=gpu File=/dev/nvidia2
@@ -274,8 +280,6 @@ For reproducible AI environments:
 
 ** Conclusion
 Slurm streamlines AI training on clusters by managing resources efficiently. Start with simple batch scripts, then scale to distributed setups. Practice on small jobs to avoid wasting allocations. If you encounter issues, consult your cluster admin or Slurm mailing lists. Happy training!
-
-
 
 
 
