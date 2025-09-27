@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-08-02 六 12:43 -->
+<!-- 2025-09-27 Sat 21:01 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Thoughts of Deepseek R1</title>
@@ -235,36 +235,36 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd5cbe91">1. Overview</a></li>
-<li><a href="#org437e262">2. Methodology</a>
+<li><a href="#org658f328">1. Overview</a></li>
+<li><a href="#org490829a">2. Methodology</a>
 <ul>
-<li><a href="#orgc9c3a9d">2.1. RL algorithm: GRPO (Group Relative Policy Optimization)</a></li>
-<li><a href="#org1de8d43">2.2. Reward Model</a></li>
-<li><a href="#org388c430">2.3. Prompts during RL</a></li>
-<li><a href="#orgc821ddc">2.4. Test-time Scaling can be Automatically Learned during RL; "Self-evolution Process"</a></li>
-<li><a href="#org75d275a">2.5. "Aha Moment"</a></li>
-<li><a href="#orgc4732ad">2.6. R1's training-stage I: cold start</a></li>
-<li><a href="#org49f6559">2.7. R1's training-stage II: another SFT to enhance model's general-purpose abilities</a></li>
-<li><a href="#org0dc7cc4">2.8. R1's final further RL</a></li>
-<li><a href="#org38e6937">2.9. Distillation</a></li>
+<li><a href="#org43b0453">2.1. RL algorithm: GRPO (Group Relative Policy Optimization)</a></li>
+<li><a href="#org3cdf36b">2.2. Reward Model</a></li>
+<li><a href="#orgf3e6ffc">2.3. Prompts during RL</a></li>
+<li><a href="#org50adde0">2.4. Test-time Scaling can be Automatically Learned during RL; "Self-evolution Process"</a></li>
+<li><a href="#org5386491">2.5. "Aha Moment"</a></li>
+<li><a href="#org64dfc42">2.6. R1's training-stage I: cold start</a></li>
+<li><a href="#org0d39ed7">2.7. R1's training-stage II: another SFT to enhance model's general-purpose abilities</a></li>
+<li><a href="#orgbef7056">2.8. R1's final further RL</a></li>
+<li><a href="#orgcd3bc70">2.9. Distillation</a></li>
 </ul>
 </li>
-<li><a href="#orgfd5cd8c">3. Unsuccessful Attempts</a></li>
-<li><a href="#org25a31ef">4. Source Code Reading: HF's Open R1</a>
+<li><a href="#org3c00dd1">3. Unsuccessful Attempts</a></li>
+<li><a href="#org51b0b93">4. Source Code Reading: HF's Open R1</a>
 <ul>
-<li><a href="#org10f8732">4.1. Accuracy Reward</a></li>
-<li><a href="#org54f5e6b">4.2. Format Reward</a></li>
-<li><a href="#org3cb70a7">4.3. Step by Step reward. (NOT USED in the PAPER)</a></li>
-<li><a href="#orgb5fb120">4.4. Len Reward (NOT USED in the PAPER, it is kimi 1.5's.)</a></li>
-<li><a href="#org76ee2ee">4.5. Cosine Scaled Reward (NOT USED in the PAPER)</a></li>
-<li><a href="#org1306776">4.6. Repetition Penalty Reward (NOT Used in the Paper, but promising)</a></li>
+<li><a href="#org6b88feb">4.1. Accuracy Reward</a></li>
+<li><a href="#org771d160">4.2. Format Reward</a></li>
+<li><a href="#org557527c">4.3. Step by Step reward. (NOT USED in the PAPER)</a></li>
+<li><a href="#orgeb16bc8">4.4. Len Reward (NOT USED in the PAPER, it is kimi 1.5's.)</a></li>
+<li><a href="#orgacaf5c4">4.5. Cosine Scaled Reward (NOT USED in the PAPER)</a></li>
+<li><a href="#orgf76c8c8">4.6. Repetition Penalty Reward (NOT Used in the Paper, but promising)</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd5cbe91" class="outline-2">
-<h2 id="orgd5cbe91"><span class="section-number-2">1.</span> Overview</h2>
+<div id="outline-container-org658f328" class="outline-2">
+<h2 id="org658f328"><span class="section-number-2">1.</span> Overview</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>R1-Zero: a model only with RL but <i>without</i> SFT.</li>
@@ -300,12 +300,12 @@ RL algorithm: GRPO.
 </p>
 </div>
 </div>
-<div id="outline-container-org437e262" class="outline-2">
-<h2 id="org437e262"><span class="section-number-2">2.</span> Methodology</h2>
+<div id="outline-container-org490829a" class="outline-2">
+<h2 id="org490829a"><span class="section-number-2">2.</span> Methodology</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgc9c3a9d" class="outline-3">
-<h3 id="orgc9c3a9d"><span class="section-number-3">2.1.</span> RL algorithm: GRPO (Group Relative Policy Optimization)</h3>
+<div id="outline-container-org43b0453" class="outline-3">
+<h3 id="org43b0453"><span class="section-number-3">2.1.</span> RL algorithm: GRPO (Group Relative Policy Optimization)</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Motivation:
@@ -321,7 +321,7 @@ Objective Formula (to maximize):
 </p>
 
 
-<div id="orgd7261b4" class="figure">
+<div id="org1dc1ca4" class="figure">
 <p><img src="./images/screenshot_20250216_112842.png" alt="screenshot_20250216_112842.png">
 </p>
 </div>
@@ -349,7 +349,7 @@ A's formular:
 </p>
 
 
-<div id="org04bb9d6" class="figure">
+<div id="orgd36b43e" class="figure">
 <p><img src="./images/screenshot_20250216_113518.png" alt="screenshot_20250216_113518.png">
 </p>
 </div>
@@ -360,8 +360,8 @@ A's formular:
 </p>
 </div>
 </div>
-<div id="outline-container-org1de8d43" class="outline-3">
-<h3 id="org1de8d43"><span class="section-number-3">2.2.</span> Reward Model</h3>
+<div id="outline-container-org3cdf36b" class="outline-3">
+<h3 id="org3cdf36b"><span class="section-number-3">2.2.</span> Reward Model</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 There is no trained reward model for R1, with the following reasons:
@@ -382,8 +382,8 @@ Reward model used here:
 </ul>
 </div>
 </div>
-<div id="outline-container-org388c430" class="outline-3">
-<h3 id="org388c430"><span class="section-number-3">2.3.</span> Prompts during RL</h3>
+<div id="outline-container-orgf3e6ffc" class="outline-3">
+<h3 id="orgf3e6ffc"><span class="section-number-3">2.3.</span> Prompts during RL</h3>
 <div class="outline-text-3" id="text-2-3">
 <blockquote>
 <p>
@@ -396,28 +396,28 @@ where <code>prompt</code> where be replaced with corresponding reasoning prompts
 </p>
 </div>
 </div>
-<div id="outline-container-orgc821ddc" class="outline-3">
-<h3 id="orgc821ddc"><span class="section-number-3">2.4.</span> Test-time Scaling can be Automatically Learned during RL; "Self-evolution Process"</h3>
+<div id="outline-container-org50adde0" class="outline-3">
+<h3 id="org50adde0"><span class="section-number-3">2.4.</span> Test-time Scaling can be Automatically Learned during RL; "Self-evolution Process"</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 During RL training, the increase of performance is consistent with the increase of average response length, as shown below:
 </p>
 
 
-<div id="orgcf29dc2" class="figure">
+<div id="org17e5f60" class="figure">
 <p><img src="./images/screenshot_20250216_114913.png" alt="screenshot_20250216_114913.png">
 </p>
 </div>
 
 
-<div id="org3b8f9dd" class="figure">
+<div id="org1a443ea" class="figure">
 <p><img src="./images/screenshot_20250216_114925.png" alt="screenshot_20250216_114925.png">
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org75d275a" class="outline-3">
-<h3 id="org75d275a"><span class="section-number-3">2.5.</span> "Aha Moment"</h3>
+<div id="outline-container-org5386491" class="outline-3">
+<h3 id="org5386491"><span class="section-number-3">2.5.</span> "Aha Moment"</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 Aha Moment denotes the moment when "a LLM learns to re-evaluate its initial approach so that it will allocate more thinking time to a problem".
@@ -428,14 +428,14 @@ An example here:
 </p>
 
 
-<div id="org1c78cc4" class="figure">
+<div id="orgb77a1ef" class="figure">
 <p><img src="./images/screenshot_20250216_115420.png" alt="screenshot_20250216_115420.png">
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-orgc4732ad" class="outline-3">
-<h3 id="orgc4732ad"><span class="section-number-3">2.6.</span> R1's training-stage I: cold start</h3>
+<div id="outline-container-org64dfc42" class="outline-3">
+<h3 id="org64dfc42"><span class="section-number-3">2.6.</span> R1's training-stage I: cold start</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 method: collecting <b>thousands of</b> SFT samples.
@@ -459,8 +459,8 @@ Besides, during cold start:
 </ul>
 </div>
 </div>
-<div id="outline-container-org49f6559" class="outline-3">
-<h3 id="org49f6559"><span class="section-number-3">2.7.</span> R1's training-stage II: another SFT to enhance model's general-purpose abilities</h3>
+<div id="outline-container-org0d39ed7" class="outline-3">
+<h3 id="org0d39ed7"><span class="section-number-3">2.7.</span> R1's training-stage II: another SFT to enhance model's general-purpose abilities</h3>
 <div class="outline-text-3" id="text-2-7">
 <p>
 For reasoning data:
@@ -481,16 +481,16 @@ For non-reasoning data (e.g, writing, factual QA, self-cognition, translation, &
 </ul>
 </div>
 </div>
-<div id="outline-container-org0dc7cc4" class="outline-3">
-<h3 id="org0dc7cc4"><span class="section-number-3">2.8.</span> R1's final further RL</h3>
+<div id="outline-container-orgbef7056" class="outline-3">
+<h3 id="orgbef7056"><span class="section-number-3">2.8.</span> R1's final further RL</h3>
 <div class="outline-text-3" id="text-2-8">
 <p>
 blablabla, to enable its diversity, and reduce risks.
 </p>
 </div>
 </div>
-<div id="outline-container-org38e6937" class="outline-3">
-<h3 id="org38e6937"><span class="section-number-3">2.9.</span> Distillation</h3>
+<div id="outline-container-orgcd3bc70" class="outline-3">
+<h3 id="orgcd3bc70"><span class="section-number-3">2.9.</span> Distillation</h3>
 <div class="outline-text-3" id="text-2-9">
 <p>
 They use the 800k high-quality SFT data (described in R1's two trianing-stage) to distill a series of open source models, leveraging RL on these models as future work.
@@ -501,15 +501,15 @@ The results are impressive:
 </p>
 
 
-<div id="org257cb5a" class="figure">
+<div id="orgf60b2ed" class="figure">
 <p><img src="./images/screenshot_20250216_122632.png" alt="screenshot_20250216_122632.png">
 </p>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgfd5cd8c" class="outline-2">
-<h2 id="orgfd5cd8c"><span class="section-number-2">3.</span> Unsuccessful Attempts</h2>
+<div id="outline-container-org3c00dd1" class="outline-2">
+<h2 id="org3c00dd1"><span class="section-number-2">3.</span> Unsuccessful Attempts</h2>
 <div class="outline-text-2" id="text-3">
 <ul class="org-ul">
 <li>Process reward model. This demonstrates that we cannot explicitly define the reward for the "thinking procedure".</li>
@@ -517,15 +517,15 @@ The results are impressive:
 </ul>
 </div>
 </div>
-<div id="outline-container-org25a31ef" class="outline-2">
-<h2 id="org25a31ef"><span class="section-number-2">4.</span> Source Code Reading: HF's Open R1</h2>
+<div id="outline-container-org51b0b93" class="outline-2">
+<h2 id="org51b0b93"><span class="section-number-2">4.</span> Source Code Reading: HF's Open R1</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 GRPO: use <code>trl</code>'s standard implementation.
 </p>
 </div>
-<div id="outline-container-org10f8732" class="outline-3">
-<h3 id="org10f8732"><span class="section-number-3">4.1.</span> Accuracy Reward</h3>
+<div id="outline-container-org6b88feb" class="outline-3">
+<h3 id="org6b88feb"><span class="section-number-3">4.1.</span> Accuracy Reward</h3>
 <div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">accuracy_reward</span><span style="color: #c66; font-weight: bold;">(</span>completions, solution, **kwargs<span style="color: #c66; font-weight: bold;">)</span>:
@@ -539,7 +539,7 @@ GRPO: use <code>trl</code>'s standard implementation.
             extraction_config=<span style="color: #6c6; font-weight: bold;">[</span>LatexExtractionConfig<span style="color: #69f; font-weight: bold;">()</span><span style="color: #6c6; font-weight: bold;">]</span>,
         <span style="color: #c66; font-weight: bold;">)</span>
         <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>gold_parsed<span style="color: #c66; font-weight: bold;">)</span> != 0:
-            <span style="color: #565575;"># </span><span style="color: #565575;">We require the answer to be provided in correct latex (no malformed operators)
+            <span style="color: #565575;"># </span><span style="color: #96a0aa;">We require the answer to be provided in correct latex (no malformed operators)
 </span>            <span style="color: #ffe9aa;">answer_parsed</span> = parse<span style="color: #c66; font-weight: bold;">(</span>
                 content,
                 extraction_config=<span style="color: #6c6; font-weight: bold;">[</span>
@@ -552,17 +552,17 @@ GRPO: use <code>trl</code>'s standard implementation.
                             boxed=<span style="color: #ffe9aa; font-style: italic;">"all"</span>,
                             units=<span style="color: #aaffe4;">True</span>,
                         <span style="color: #cc6; font-weight: bold;">)</span>,
-                        <span style="color: #565575;"># </span><span style="color: #565575;">Ensures that boxed is tried first
+                        <span style="color: #565575;"># </span><span style="color: #96a0aa;">Ensures that boxed is tried first
 </span>                        boxed_match_priority=0,
                         try_extract_without_anchor=<span style="color: #aaffe4;">False</span>,
                     <span style="color: #69f; font-weight: bold;">)</span>
                 <span style="color: #6c6; font-weight: bold;">]</span>,
                 extraction_mode=<span style="color: #ffe9aa; font-style: italic;">"first_match"</span>,
             <span style="color: #c66; font-weight: bold;">)</span>
-            <span style="color: #565575;"># </span><span style="color: #565575;">Reward 1 if the content is the same as the ground truth, 0 otherwise
+            <span style="color: #565575;"># </span><span style="color: #96a0aa;">Reward 1 if the content is the same as the ground truth, 0 otherwise
 </span>            <span style="color: #ffe9aa;">reward</span> = <span style="color: #c991e1;">float</span><span style="color: #c66; font-weight: bold;">(</span>verify<span style="color: #6c6; font-weight: bold;">(</span>answer_parsed, gold_parsed<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
         <span style="color: #ff8080; font-weight: bold;">else</span>:
-            <span style="color: #565575;"># </span><span style="color: #565575;">If the gold solution is not parseable, we reward 1 to skip this example
+            <span style="color: #565575;"># </span><span style="color: #96a0aa;">If the gold solution is not parseable, we reward 1 to skip this example
 </span>            <span style="color: #ffe9aa;">reward</span> = 1.0
             <span style="color: #c991e1;">print</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"Failed to parse gold solution: "</span>, sol<span style="color: #c66; font-weight: bold;">)</span>
         rewards.append<span style="color: #c66; font-weight: bold;">(</span>reward<span style="color: #c66; font-weight: bold;">)</span>
@@ -572,8 +572,8 @@ GRPO: use <code>trl</code>'s standard implementation.
 </div>
 </div>
 </div>
-<div id="outline-container-org54f5e6b" class="outline-3">
-<h3 id="org54f5e6b"><span class="section-number-3">4.2.</span> Format Reward</h3>
+<div id="outline-container-org771d160" class="outline-3">
+<h3 id="org771d160"><span class="section-number-3">4.2.</span> Format Reward</h3>
 <div class="outline-text-3" id="text-4-2">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">format_reward</span><span style="color: #c66; font-weight: bold;">(</span>completions, **kwargs<span style="color: #c66; font-weight: bold;">)</span>:
@@ -586,8 +586,8 @@ GRPO: use <code>trl</code>'s standard implementation.
 </div>
 </div>
 </div>
-<div id="outline-container-org3cb70a7" class="outline-3">
-<h3 id="org3cb70a7"><span class="section-number-3">4.3.</span> Step by Step reward. (NOT USED in the PAPER)</h3>
+<div id="outline-container-org557527c" class="outline-3">
+<h3 id="org557527c"><span class="section-number-3">4.3.</span> Step by Step reward. (NOT USED in the PAPER)</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 "whether the model can provide a clear thinking procedure or not".
@@ -609,14 +609,14 @@ GRPO: use <code>trl</code>'s standard implementation.
     <span style="color: #ffe9aa;">completion_contents</span> = <span style="color: #c66; font-weight: bold;">[</span>completion<span style="color: #6c6; font-weight: bold;">[</span>0<span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">"content"</span><span style="color: #6c6; font-weight: bold;">]</span> <span style="color: #ff8080; font-weight: bold;">for</span> completion <span style="color: #ff8080; font-weight: bold;">in</span> completions<span style="color: #c66; font-weight: bold;">]</span>
     <span style="color: #ffe9aa;">matches</span> = <span style="color: #c66; font-weight: bold;">[</span><span style="color: #c991e1;">len</span><span style="color: #6c6; font-weight: bold;">(</span>re.findall<span style="color: #69f; font-weight: bold;">(</span>pattern, content<span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">for</span> content <span style="color: #ff8080; font-weight: bold;">in</span> completion_contents<span style="color: #c66; font-weight: bold;">]</span>
 
-    <span style="color: #565575;"># </span><span style="color: #565575;">Magic nubmer 3 to encourage 3 steps and more, otherwise partial reward
+    <span style="color: #565575;"># </span><span style="color: #96a0aa;">Magic nubmer 3 to encourage 3 steps and more, otherwise partial reward
 </span>    <span style="color: #ff8080; font-weight: bold;">return</span> <span style="color: #c66; font-weight: bold;">[</span><span style="color: #c991e1;">min</span><span style="color: #6c6; font-weight: bold;">(</span>1.0, count / 3<span style="color: #6c6; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">for</span> count <span style="color: #ff8080; font-weight: bold;">in</span> matches<span style="color: #c66; font-weight: bold;">]</span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgb5fb120" class="outline-3">
-<h3 id="orgb5fb120"><span class="section-number-3">4.4.</span> Len Reward (NOT USED in the PAPER, it is kimi 1.5's.)</h3>
+<div id="outline-container-orgeb16bc8" class="outline-3">
+<h3 id="orgeb16bc8"><span class="section-number-3">4.4.</span> Len Reward (NOT USED in the PAPER, it is kimi 1.5's.)</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 constrain the length of chain-of-thought.
@@ -639,7 +639,7 @@ constrain the length of chain-of-thought.
     """</span>
     <span style="color: #ffe9aa;">contents</span> = <span style="color: #c66; font-weight: bold;">[</span>completion<span style="color: #6c6; font-weight: bold;">[</span>0<span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">"content"</span><span style="color: #6c6; font-weight: bold;">]</span> <span style="color: #ff8080; font-weight: bold;">for</span> completion <span style="color: #ff8080; font-weight: bold;">in</span> completions<span style="color: #c66; font-weight: bold;">]</span>
 
-    <span style="color: #565575;"># </span><span style="color: #565575;">First check correctness of answers
+    <span style="color: #565575;"># </span><span style="color: #96a0aa;">First check correctness of answers
 </span>    <span style="color: #ffe9aa;">correctness</span> = <span style="color: #c66; font-weight: bold;">[]</span>
     <span style="color: #ff8080; font-weight: bold;">for</span> content, sol <span style="color: #ff8080; font-weight: bold;">in</span> <span style="color: #c991e1;">zip</span><span style="color: #c66; font-weight: bold;">(</span>contents, solutions<span style="color: #c66; font-weight: bold;">)</span>:
         <span style="color: #ffe9aa;">gold_parsed</span> = parse<span style="color: #c66; font-weight: bold;">(</span>
@@ -648,8 +648,8 @@ constrain the length of chain-of-thought.
             extraction_config=<span style="color: #6c6; font-weight: bold;">[</span>LatexExtractionConfig<span style="color: #69f; font-weight: bold;">()</span><span style="color: #6c6; font-weight: bold;">]</span>,
         <span style="color: #c66; font-weight: bold;">)</span>
         <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>gold_parsed<span style="color: #c66; font-weight: bold;">)</span> == 0:
-            <span style="color: #565575;"># </span><span style="color: #565575;">Skip unparseable examples
-</span>            correctness.append<span style="color: #c66; font-weight: bold;">(</span><span style="color: #aaffe4;">True</span><span style="color: #c66; font-weight: bold;">)</span>  <span style="color: #565575;"># </span><span style="color: #565575;">Treat as correct to avoid penalizing
+            <span style="color: #565575;"># </span><span style="color: #96a0aa;">Skip unparseable examples
+</span>            correctness.append<span style="color: #c66; font-weight: bold;">(</span><span style="color: #aaffe4;">True</span><span style="color: #c66; font-weight: bold;">)</span>  <span style="color: #565575;"># </span><span style="color: #96a0aa;">Treat as correct to avoid penalizing
 </span>            <span style="color: #c991e1;">print</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"Failed to parse gold solution: "</span>, sol<span style="color: #c66; font-weight: bold;">)</span>
             <span style="color: #ff8080; font-weight: bold;">continue</span>
 
@@ -673,12 +673,12 @@ constrain the length of chain-of-thought.
         <span style="color: #c66; font-weight: bold;">)</span>
         correctness.append<span style="color: #c66; font-weight: bold;">(</span>verify<span style="color: #6c6; font-weight: bold;">(</span>answer_parsed, gold_parsed<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
 
-    <span style="color: #565575;"># </span><span style="color: #565575;">Calculate lengths
+    <span style="color: #565575;"># </span><span style="color: #96a0aa;">Calculate lengths
 </span>    <span style="color: #ffe9aa;">lengths</span> = <span style="color: #c66; font-weight: bold;">[</span><span style="color: #c991e1;">len</span><span style="color: #6c6; font-weight: bold;">(</span>content<span style="color: #6c6; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">for</span> content <span style="color: #ff8080; font-weight: bold;">in</span> contents<span style="color: #c66; font-weight: bold;">]</span>
     <span style="color: #ffe9aa;">min_len</span> = <span style="color: #c991e1;">min</span><span style="color: #c66; font-weight: bold;">(</span>lengths<span style="color: #c66; font-weight: bold;">)</span>
     <span style="color: #ffe9aa;">max_len</span> = <span style="color: #c991e1;">max</span><span style="color: #c66; font-weight: bold;">(</span>lengths<span style="color: #c66; font-weight: bold;">)</span>
 
-    <span style="color: #565575;"># </span><span style="color: #565575;">If all responses have the same length, return zero rewards
+    <span style="color: #565575;"># </span><span style="color: #96a0aa;">If all responses have the same length, return zero rewards
 </span>    <span style="color: #ff8080; font-weight: bold;">if</span> max_len == min_len:
         <span style="color: #ff8080; font-weight: bold;">return</span> <span style="color: #c66; font-weight: bold;">[</span>0.0<span style="color: #c66; font-weight: bold;">]</span> * <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>completions<span style="color: #c66; font-weight: bold;">)</span>
 
@@ -698,8 +698,8 @@ constrain the length of chain-of-thought.
 </div>
 </div>
 </div>
-<div id="outline-container-org76ee2ee" class="outline-3">
-<h3 id="org76ee2ee"><span class="section-number-3">4.5.</span> Cosine Scaled Reward (NOT USED in the PAPER)</h3>
+<div id="outline-container-orgacaf5c4" class="outline-3">
+<h3 id="orgacaf5c4"><span class="section-number-3">4.5.</span> Cosine Scaled Reward (NOT USED in the PAPER)</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 Reward function that scales based on completion length using a cosine schedule.
@@ -739,7 +739,7 @@ Longer incorrect solutions are penalized less than shorter ones.
         <span style="color: #ff8080; font-weight: bold;">for</span> content, sol <span style="color: #ff8080; font-weight: bold;">in</span> <span style="color: #c991e1;">zip</span><span style="color: #c66; font-weight: bold;">(</span>contents, solution<span style="color: #c66; font-weight: bold;">)</span>:
             <span style="color: #ffe9aa;">gold_parsed</span> = parse<span style="color: #c66; font-weight: bold;">(</span>sol, extraction_mode=<span style="color: #ffe9aa; font-style: italic;">"first_match"</span>, extraction_config=<span style="color: #6c6; font-weight: bold;">[</span>LatexExtractionConfig<span style="color: #69f; font-weight: bold;">()</span><span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span>
             <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>gold_parsed<span style="color: #c66; font-weight: bold;">)</span> == 0:
-                rewards.append<span style="color: #c66; font-weight: bold;">(</span>1.0<span style="color: #c66; font-weight: bold;">)</span>  <span style="color: #565575;"># </span><span style="color: #565575;">Skip unparseable examples
+                rewards.append<span style="color: #c66; font-weight: bold;">(</span>1.0<span style="color: #c66; font-weight: bold;">)</span>  <span style="color: #565575;"># </span><span style="color: #96a0aa;">Skip unparseable examples
 </span>                <span style="color: #c991e1;">print</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"Failed to parse gold solution: "</span>, sol<span style="color: #c66; font-weight: bold;">)</span>
                 <span style="color: #ff8080; font-weight: bold;">continue</span>
 
@@ -765,7 +765,7 @@ Longer incorrect solutions are penalized less than shorter ones.
             <span style="color: #ffe9aa;">is_correct</span> = verify<span style="color: #c66; font-weight: bold;">(</span>answer_parsed, gold_parsed<span style="color: #c66; font-weight: bold;">)</span>
             <span style="color: #ffe9aa;">gen_len</span> = <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>content<span style="color: #c66; font-weight: bold;">)</span>
 
-            <span style="color: #565575;"># </span><span style="color: #565575;">Apply cosine scaling based on length
+            <span style="color: #565575;"># </span><span style="color: #96a0aa;">Apply cosine scaling based on length
 </span>            <span style="color: #ffe9aa;">progress</span> = gen_len / max_len
             <span style="color: #ffe9aa;">cosine</span> = math.cos<span style="color: #c66; font-weight: bold;">(</span>progress * math.pi<span style="color: #c66; font-weight: bold;">)</span>
 
@@ -773,7 +773,7 @@ Longer incorrect solutions are penalized less than shorter ones.
                 <span style="color: #ffe9aa;">min_value</span> = min_value_correct
                 <span style="color: #ffe9aa;">max_value</span> = max_value_correct
             <span style="color: #ff8080; font-weight: bold;">else</span>:
-                <span style="color: #565575;"># </span><span style="color: #565575;">Swap min/max for incorrect answers
+                <span style="color: #565575;"># </span><span style="color: #96a0aa;">Swap min/max for incorrect answers
 </span>                <span style="color: #ffe9aa;">min_value</span> = max_value_wrong
                 <span style="color: #ffe9aa;">max_value</span> = min_value_wrong
 
@@ -787,8 +787,8 @@ Longer incorrect solutions are penalized less than shorter ones.
 </div>
 </div>
 </div>
-<div id="outline-container-org1306776" class="outline-3">
-<h3 id="org1306776"><span class="section-number-3">4.6.</span> Repetition Penalty Reward (NOT Used in the Paper, but promising)</h3>
+<div id="outline-container-orgf76c8c8" class="outline-3">
+<h3 id="orgf76c8c8"><span class="section-number-3">4.6.</span> Repetition Penalty Reward (NOT Used in the Paper, but promising)</h3>
 <div class="outline-text-3" id="text-4-6">
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">get_repetition_penalty_reward</span><span style="color: #c66; font-weight: bold;">(</span>ngram_size: <span style="color: #c991e1;">int</span>, max_penalty: <span style="color: #c991e1;">float</span><span style="color: #c66; font-weight: bold;">)</span>:
@@ -845,7 +845,7 @@ Longer incorrect solutions are penalized less than shorter ones.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Sun Feb 16 11:02:16 2025</span> <span class="date">Last modified: 2025-07-18 五 13:48</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Sun Feb 16 11:02:16 2025</span> <span class="date">Last modified: 2025-09-27 Sat 19:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>

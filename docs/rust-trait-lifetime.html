@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-08-02 六 12:43 -->
+<!-- 2025-09-27 Sat 21:01 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>为什么rust是安全的？从泛型的角度进一步解析</title>
@@ -19,14 +19,14 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgf3a7e7b">1. 泛型——和C++没有区别</a></li>
-<li><a href="#org5e2cb65">2. trait-直译就是：个性</a>
+<li><a href="#orgc833bd8">1. 泛型——和C++没有区别</a></li>
+<li><a href="#org9ca9927">2. trait-直译就是：个性</a>
 <ul>
-<li><a href="#orgcb35ee5">2.1. 我们为什么需要trait？</a></li>
-<li><a href="#org2ae71eb">2.2. 使用trait约束函数或结构体</a></li>
-<li><a href="#org754a320">2.3. 把trait当作一种高级类型，以约束函数和泛型</a>
+<li><a href="#org2c3da12">2.1. 我们为什么需要trait？</a></li>
+<li><a href="#orgb2f9734">2.2. 使用trait约束函数或结构体</a></li>
+<li><a href="#org92e83c8">2.3. 把trait当作一种高级类型，以约束函数和泛型</a>
 <ul>
-<li><a href="#org0034165">2.3.1. 用trait约束函数</a></li>
+<li><a href="#org7a39326">2.3.1. 用trait约束函数</a></li>
 </ul>
 </li>
 </ul>
@@ -37,8 +37,8 @@
 <p>
 如果我没有读过之前的<a href="rust-learning.html">这篇</a>介绍，那么最好还是先学习一下所有权（ownership）吧！
 </p>
-<div id="outline-container-orgf3a7e7b" class="outline-2">
-<h2 id="orgf3a7e7b"><span class="section-number-2">1.</span> 泛型——和C++没有区别</h2>
+<div id="outline-container-orgc833bd8" class="outline-2">
+<h2 id="orgc833bd8"><span class="section-number-2">1.</span> 泛型——和C++没有区别</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 如果我忘记C++的了，推荐阅读： <a href="template-C++.html">C++的泛型笔记</a> 
@@ -59,7 +59,7 @@
                 <span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #ffe9aa;">float</span> = <span style="color: #91ddff;">Point</span> <span style="color: #6c6; font-weight: bold;">{</span> <span style="color: #ffe9aa;">x</span>: 1.0, <span style="color: #ffe9aa;">y</span>: 4.0 <span style="color: #6c6; font-weight: bold;">}</span>;
             <span style="color: #c66; font-weight: bold;">}</span>
 
-          <span style="color: #565575;">//</span><span style="color: #565575;">============================================
+          <span style="color: #565575;">//</span><span style="color: #96a0aa;">============================================
 </span>
         <span style="color: #ff8080; font-weight: bold;">struct</span> <span style="color: #91ddff;">Point</span><span style="color: #c66; font-weight: bold;">&lt;</span><span style="color: #91ddff;">T</span>, <span style="color: #91ddff;">U</span><span style="color: #c66; font-weight: bold;">&gt;</span> <span style="color: #c66; font-weight: bold;">{</span>
             <span style="color: #ffe9aa;">x</span>: <span style="color: #91ddff;">T</span>,
@@ -72,20 +72,20 @@
             <span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #ffe9aa;">integer_and_float</span> = <span style="color: #91ddff;">Point</span> <span style="color: #6c6; font-weight: bold;">{</span> <span style="color: #ffe9aa;">x</span>: 5, <span style="color: #ffe9aa;">y</span>: 4.0 <span style="color: #6c6; font-weight: bold;">}</span>;
         <span style="color: #c66; font-weight: bold;">}</span>
 
-          <span style="color: #565575;">//</span><span style="color: #565575;">============================================
+          <span style="color: #565575;">//</span><span style="color: #96a0aa;">============================================
 </span>
       <span style="color: #ff8080; font-weight: bold;">enum</span> <span style="color: #91ddff;">Option</span><span style="color: #c66; font-weight: bold;">&lt;</span><span style="color: #91ddff;">T</span><span style="color: #c66; font-weight: bold;">&gt;</span> <span style="color: #c66; font-weight: bold;">{</span>
           <span style="color: #91ddff;">Some</span><span style="color: #6c6; font-weight: bold;">(</span><span style="color: #91ddff;">T</span><span style="color: #6c6; font-weight: bold;">)</span>,
           <span style="color: #91ddff;">None</span>,
       <span style="color: #c66; font-weight: bold;">}</span>
 
-          <span style="color: #565575;">//</span><span style="color: #565575;">============================================
+          <span style="color: #565575;">//</span><span style="color: #96a0aa;">============================================
 </span>
     <span style="color: #ff8080; font-weight: bold;">enum</span> <span style="color: #91ddff;">Result</span><span style="color: #c66; font-weight: bold;">&lt;</span><span style="color: #91ddff;">T</span>, <span style="color: #91ddff;">E</span><span style="color: #c66; font-weight: bold;">&gt;</span> <span style="color: #c66; font-weight: bold;">{</span>
         <span style="color: #91ddff;">Ok</span><span style="color: #6c6; font-weight: bold;">(</span><span style="color: #91ddff;">T</span><span style="color: #6c6; font-weight: bold;">)</span>,
         <span style="color: #91ddff;">Err</span><span style="color: #6c6; font-weight: bold;">(</span><span style="color: #91ddff;">E</span><span style="color: #6c6; font-weight: bold;">)</span>,
     <span style="color: #c66; font-weight: bold;">}</span>
-          <span style="color: #565575;">//</span><span style="color: #565575;">============================================
+          <span style="color: #565575;">//</span><span style="color: #96a0aa;">============================================
 </span>
   <span style="color: #ff8080; font-weight: bold;">struct</span> <span style="color: #91ddff;">Point</span><span style="color: #c66; font-weight: bold;">&lt;</span><span style="color: #91ddff;">T</span><span style="color: #c66; font-weight: bold;">&gt;</span> <span style="color: #c66; font-weight: bold;">{</span>
       <span style="color: #ffe9aa;">x</span>: <span style="color: #91ddff;">T</span>,
@@ -103,7 +103,7 @@
 
       <span style="color: #c991e1;">println!</span><span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"p.x = </span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa; font-style: italic;">"</span>, p.x<span style="color: #69f; font-weight: bold;">()</span><span style="color: #6c6; font-weight: bold;">)</span>;
   <span style="color: #c66; font-weight: bold;">}</span>
-  <span style="color: #565575;">//</span><span style="color: #565575;">==========&#26368;&#22797;&#26434;&#30340;&#20363;&#23376;=====================================
+  <span style="color: #565575;">//</span><span style="color: #96a0aa;">==========&#26368;&#22797;&#26434;&#30340;&#20363;&#23376;=====================================
 </span><span style="color: #ff8080; font-weight: bold;">struct</span> <span style="color: #91ddff;">Point</span><span style="color: #c66; font-weight: bold;">&lt;</span><span style="color: #91ddff;">T</span>, <span style="color: #91ddff;">U</span><span style="color: #c66; font-weight: bold;">&gt;</span> <span style="color: #c66; font-weight: bold;">{</span>
     <span style="color: #ffe9aa;">x</span>: <span style="color: #91ddff;">T</span>,
     <span style="color: #ffe9aa;">y</span>: <span style="color: #91ddff;">U</span>,
@@ -135,12 +135,12 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org5e2cb65" class="outline-2">
-<h2 id="org5e2cb65"><span class="section-number-2">2.</span> trait-直译就是：个性</h2>
+<div id="outline-container-org9ca9927" class="outline-2">
+<h2 id="org9ca9927"><span class="section-number-2">2.</span> trait-直译就是：个性</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgcb35ee5" class="outline-3">
-<h3 id="orgcb35ee5"><span class="section-number-3">2.1.</span> 我们为什么需要trait？</h3>
+<div id="outline-container-org2c3da12" class="outline-3">
+<h3 id="org2c3da12"><span class="section-number-3">2.1.</span> 我们为什么需要trait？</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 泛型可能看起来是一个很好的东西，但是这个东西有一个问题： <b>如果我实例化的类型符合我的泛型，那么泛型代码就可以很好地被执行。如果我实例化的类型里，缺少了某些操作，泛型就会出问题。</b> 上述问题最可怕的地方是： <b>编译时：我们并不知道我们的泛型适不适合这个类型</b> 。
@@ -169,8 +169,8 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 </p>
 </div>
 </div>
-<div id="outline-container-org2ae71eb" class="outline-3">
-<h3 id="org2ae71eb"><span class="section-number-3">2.2.</span> 使用trait约束函数或结构体</h3>
+<div id="outline-container-orgb2f9734" class="outline-3">
+<h3 id="orgb2f9734"><span class="section-number-3">2.2.</span> 使用trait约束函数或结构体</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 先定义一个trait。
@@ -264,12 +264,12 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 </div>
 </div>
 </div>
-<div id="outline-container-org754a320" class="outline-3">
-<h3 id="org754a320"><span class="section-number-3">2.3.</span> 把trait当作一种高级类型，以约束函数和泛型</h3>
+<div id="outline-container-org92e83c8" class="outline-3">
+<h3 id="org92e83c8"><span class="section-number-3">2.3.</span> 把trait当作一种高级类型，以约束函数和泛型</h3>
 <div class="outline-text-3" id="text-2-3">
 </div>
-<div id="outline-container-org0034165" class="outline-4">
-<h4 id="org0034165"><span class="section-number-4">2.3.1.</span> 用trait约束函数</h4>
+<div id="outline-container-org7a39326" class="outline-4">
+<h4 id="org7a39326"><span class="section-number-4">2.3.1.</span> 用trait约束函数</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <p>
 我们的函数过去通过数值的类型去判断输入是否合适，这当然是为了编译的检查。
@@ -323,7 +323,7 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 <div class="org-src-container">
 <pre class="src src-rust">      <span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">some_function</span><span style="color: #c66; font-weight: bold;">&lt;</span><span style="color: #ffe9aa;">T</span>: <span style="color: #91ddff;">Display</span> + <span style="color: #91ddff;">Clone</span>, <span style="color: #ffe9aa;">U</span>: <span style="color: #91ddff;">Clone</span> + <span style="color: #91ddff;">Debug</span><span style="color: #c66; font-weight: bold;">&gt;(</span><span style="color: #ffe9aa;">t</span>: <span style="color: #91ddff;">T</span>, <span style="color: #ffe9aa;">u</span>: <span style="color: #91ddff;">U</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #91ddff;">i32</span> <span style="color: #c66; font-weight: bold;">{</span>
 <span style="color: #c66; font-weight: bold;">}</span>
-<span style="color: #565575;">//</span><span style="color: #565575;">&#31532;&#20108;&#31181;&#20889;&#27861;
+<span style="color: #565575;">//</span><span style="color: #96a0aa;">&#31532;&#20108;&#31181;&#20889;&#27861;
 </span><span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">some_function</span><span style="color: #c66; font-weight: bold;">&lt;</span><span style="color: #91ddff;">T</span>, <span style="color: #91ddff;">U</span><span style="color: #c66; font-weight: bold;">&gt;(</span><span style="color: #ffe9aa;">t</span>: <span style="color: #91ddff;">T</span>, <span style="color: #ffe9aa;">u</span>: <span style="color: #91ddff;">U</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #91ddff;">i32</span>
     <span style="color: #ff8080; font-weight: bold;">where</span> <span style="color: #ffe9aa;">T</span>: <span style="color: #91ddff;">Display</span> + <span style="color: #91ddff;">Clone</span>,
           <span style="color: #ffe9aa;">U</span>: <span style="color: #91ddff;">Clone</span> + <span style="color: #91ddff;">Debug</span>
@@ -354,7 +354,7 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Thu Nov 18 21:36:05 2021</span> <span class="date">Last modified: 2025-07-18 五 13:48</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Thu Nov 18 21:36:05 2021</span> <span class="date">Last modified: 2025-09-27 Sat 19:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>

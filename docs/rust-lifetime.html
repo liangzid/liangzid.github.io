@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-08-02 六 12:43 -->
+<!-- 2025-09-27 Sat 21:01 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>rust 生命周期（lifetime）解析</title>
@@ -19,12 +19,12 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org9ea8147">1. 回顾ownership和reference。</a></li>
-<li><a href="#org86ded6b">2. rust设计哲学</a></li>
-<li><a href="#org1c21619">3. 生命周期解析</a>
+<li><a href="#orgdebdeb3">1. 回顾ownership和reference。</a></li>
+<li><a href="#org8531415">2. rust设计哲学</a></li>
+<li><a href="#orgae331e6">3. 生命周期解析</a>
 <ul>
-<li><a href="#orgfa57435">3.1. 先复杂化：引入生命周期</a></li>
-<li><a href="#org71ffd67">3.2. 简化生命周期的描述</a></li>
+<li><a href="#org9f9005c">3.1. 先复杂化：引入生命周期</a></li>
+<li><a href="#orgee9da26">3.2. 简化生命周期的描述</a></li>
 </ul>
 </li>
 </ul>
@@ -37,8 +37,8 @@
 <p>
 如果我之前学过所有权相关的知识，那么就不用去看了。
 </p>
-<div id="outline-container-org9ea8147" class="outline-2">
-<h2 id="org9ea8147"><span class="section-number-2">1.</span> 回顾ownership和reference。</h2>
+<div id="outline-container-orgdebdeb3" class="outline-2">
+<h2 id="orgdebdeb3"><span class="section-number-2">1.</span> 回顾ownership和reference。</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 首先试图回顾一下关于所有权和引用的一些问题。
@@ -55,8 +55,8 @@
 </ol>
 </div>
 </div>
-<div id="outline-container-org86ded6b" class="outline-2">
-<h2 id="org86ded6b"><span class="section-number-2">2.</span> rust设计哲学</h2>
+<div id="outline-container-org8531415" class="outline-2">
+<h2 id="org8531415"><span class="section-number-2">2.</span> rust设计哲学</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 在介绍什么是生命周期之前，可能还需要简单介绍一下rust的设计哲学。我理解rust的设计哲学是：
@@ -73,12 +73,12 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org1c21619" class="outline-2">
-<h2 id="org1c21619"><span class="section-number-2">3.</span> 生命周期解析</h2>
+<div id="outline-container-orgae331e6" class="outline-2">
+<h2 id="orgae331e6"><span class="section-number-2">3.</span> 生命周期解析</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgfa57435" class="outline-3">
-<h3 id="orgfa57435"><span class="section-number-3">3.1.</span> 先复杂化：引入生命周期</h3>
+<div id="outline-container-org9f9005c" class="outline-3">
+<h3 id="org9f9005c"><span class="section-number-3">3.1.</span> 先复杂化：引入生命周期</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 我们先以一个返回两个字符串中最长的一个的函数，来引入生命周期的概念。
@@ -180,8 +180,8 @@
 </div>
 </div>
 </div>
-<div id="outline-container-org71ffd67" class="outline-3">
-<h3 id="org71ffd67"><span class="section-number-3">3.2.</span> 简化生命周期的描述</h3>
+<div id="outline-container-orgee9da26" class="outline-3">
+<h3 id="orgee9da26"><span class="section-number-3">3.2.</span> 简化生命周期的描述</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 下面来试着简化生命周期的描述。如果一直写生命周期，就显得有些繁琐，因此rust也设计了简化生命周期描述的方式。主要包括三条规则：
@@ -198,7 +198,7 @@
 
 <div class="org-src-container">
 <pre class="src src-rust"><span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">first_word</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">s</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span> <span style="color: #c66; font-weight: bold;">{}</span>
-<span style="color: #565575;">//</span><span style="color: #565575;">&#31561;&#20215;&#20110;
+<span style="color: #565575;">//</span><span style="color: #96a0aa;">&#31561;&#20215;&#20110;
 </span><span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">first_word</span><span style="color: #c66; font-weight: bold;">&lt;</span>'<span style="color: #ffe9aa;">a</span><span style="color: #c66; font-weight: bold;">&gt;(</span><span style="color: #ffe9aa;">s</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>'<span style="color: #ffe9aa;">a</span> <span style="color: #91ddff;">str</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>'<span style="color: #ffe9aa;">a</span> <span style="color: #91ddff;">str</span> <span style="color: #c66; font-weight: bold;">{}</span>
 </pre>
 </div>
@@ -231,7 +231,7 @@
 </p>
 <div class="org-src-container">
 <pre class="src src-rust">  <span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">longest</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">x</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span>, <span style="color: #ffe9aa;">y</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span> <span style="color: #c66; font-weight: bold;">{}</span>
-    <span style="color: #565575;">//</span><span style="color: #565575;">&#31561;&#20215;&#20110;
+    <span style="color: #565575;">//</span><span style="color: #96a0aa;">&#31561;&#20215;&#20110;
 </span><span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">longest</span><span style="color: #c66; font-weight: bold;">&lt;</span>'<span style="color: #ffe9aa;">a</span>, '<span style="color: #ffe9aa;">b</span><span style="color: #c66; font-weight: bold;">&gt;(</span><span style="color: #ffe9aa;">x</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>'<span style="color: #ffe9aa;">a</span> <span style="color: #91ddff;">str</span>, <span style="color: #ffe9aa;">y</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>'<span style="color: #ffe9aa;">b</span> <span style="color: #91ddff;">str</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span> <span style="color: #c66; font-weight: bold;">{}</span>
 </pre>
 </div>
@@ -245,7 +245,7 @@
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Nov 19 09:36:11 2021</span> <span class="date">Last modified: 2025-07-18 五 13:48</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Nov 19 09:36:11 2021</span> <span class="date">Last modified: 2025-09-27 Sat 19:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>

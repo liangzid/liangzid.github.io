@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-08-02 六 12:43 -->
+<!-- 2025-09-27 Sat 21:01 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>任务型对话系统中Neural Pipeline系列源码剖析</title>
@@ -19,33 +19,33 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org16bc682">1. 总体结构</a></li>
-<li><a href="#orga61a6c2">2. Data部分</a>
+<li><a href="#org6b99b50">1. 总体结构</a></li>
+<li><a href="#org4d0c5c0">2. Data部分</a>
 <ul>
-<li><a href="#org311f795">2.1. GPT-2的输入形态</a></li>
-<li><a href="#org2656ba8">2.2. Neural Pipeline中的文本输入与输出</a></li>
-<li><a href="#orgf5ad30f">2.3. neural pipline与GPT-2的结合</a></li>
-<li><a href="#orgb0a68c6">2.4. 再坚持一下: 为什么说一个TOD很复杂?</a>
+<li><a href="#org8d720c9">2.1. GPT-2的输入形态</a></li>
+<li><a href="#orgc1b2454">2.2. Neural Pipeline中的文本输入与输出</a></li>
+<li><a href="#org36fc049">2.3. neural pipline与GPT-2的结合</a></li>
+<li><a href="#org73bf962">2.4. 再坚持一下: 为什么说一个TOD很复杂?</a>
 <ul>
-<li><a href="#org3eb825d">2.4.1. 如何预处理任务型对话系统数据集?</a></li>
-<li><a href="#org8e29462">2.4.2. TOD的层级结构以及各个常见的数据对象</a></li>
-<li><a href="#org87663f9">2.4.3. 如何解析tod数据集?</a></li>
+<li><a href="#orgd438ace">2.4.1. 如何预处理任务型对话系统数据集?</a></li>
+<li><a href="#orgab40baa">2.4.2. TOD的层级结构以及各个常见的数据对象</a></li>
+<li><a href="#orgbb6bec4">2.4.3. 如何解析tod数据集?</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgcf858b6">3. Model的设计</a>
+<li><a href="#orgd0b331b">3. Model的设计</a>
 <ul>
-<li><a href="#org891d870">3.1. train- forward</a></li>
+<li><a href="#org16660c6">3.1. train- forward</a></li>
 </ul>
 </li>
-<li><a href="#org16b749d">4. 训练流程</a></li>
-<li><a href="#orgeac35b9">5. 推理流程</a></li>
+<li><a href="#orga6eabbe">4. 训练流程</a></li>
+<li><a href="#org14f10d6">5. 推理流程</a></li>
 </ul>
 </div>
 </div>
 <p>
-本文于<span class="timestamp-wrapper"><span class="timestamp">&lt;2022-03-26 六&gt;</span></span>进行了修改.
+本文于<span class="timestamp-wrapper"><span class="timestamp">&lt;2022-03-26 Sat&gt;</span></span>进行了修改.
 </p>
 
 <p>
@@ -59,8 +59,8 @@
 <p>
 然后,这篇文章就着重于描述上述模型的代码实现了!
 </p>
-<div id="outline-container-org16bc682" class="outline-2">
-<h2 id="org16bc682"><span class="section-number-2">1.</span> 总体结构</h2>
+<div id="outline-container-org6b99b50" class="outline-2">
+<h2 id="org6b99b50"><span class="section-number-2">1.</span> 总体结构</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 总体上而言, 任何一个深度学习的代码无外乎以下几个主要部分:
@@ -73,8 +73,8 @@
 </ul>
 </div>
 </div>
-<div id="outline-container-orga61a6c2" class="outline-2">
-<h2 id="orga61a6c2"><span class="section-number-2">2.</span> Data部分</h2>
+<div id="outline-container-org4d0c5c0" class="outline-2">
+<h2 id="org4d0c5c0"><span class="section-number-2">2.</span> Data部分</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 对于深度学习,尤其是transformer时代的深度学习而言, 当下的创新多从训练任务和整理数据入手,而非模型的结构. 笔者的同学甚至因为在面向某个NLP任务时自己设计了特殊的结构而被审稿人质疑. neural pipeline的方法, 其核心思路是将TOD中的各个基本组件都统一地放在单一的一个NLG模型中,所以, 对数据的编排就不得不算是重中之重了.
@@ -84,8 +84,8 @@
 下文将先介绍GPT-2的输入输出具体是什么风格, 之后介绍TOD的各基本模块的输入输出为什么, 最后在上述二者的基础上, 探究怎么用GPT-2做基本模块的输入. 当然,这里的问题是:为什么一定要用GPT-2 ? 其实不用GPT-2也是完全可以的, T5, BART等模型一样可以解决该问题, 此处单以GPT-2为示例,其他情况灵活变通.
 </p>
 </div>
-<div id="outline-container-org311f795" class="outline-3">
-<h3 id="org311f795"><span class="section-number-3">2.1.</span> GPT-2的输入形态</h3>
+<div id="outline-container-org8d720c9" class="outline-3">
+<h3 id="org8d720c9"><span class="section-number-3">2.1.</span> GPT-2的输入形态</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 GPT-2的输入严格而言主要包括三部分:
@@ -104,11 +104,11 @@ GPT-2的输入严格而言主要包括三部分:
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">forward</span><span style="color: #c66; font-weight: bold;">(</span>
          <span style="color: #ff8080; font-weight: bold;">self</span>,
-         input_ids=<span style="color: #aaffe4;">None</span>, <span style="color: #565575;"># </span><span style="color: #565575;">token encoding
+         input_ids=<span style="color: #aaffe4;">None</span>, <span style="color: #565575;"># </span><span style="color: #96a0aa;">token encoding
 </span>         past=<span style="color: #aaffe4;">None</span>,
          attention_mask=<span style="color: #aaffe4;">None</span>,
-         token_type_ids=<span style="color: #aaffe4;">None</span>, <span style="color: #565575;"># </span><span style="color: #565575;">type encoding
-</span>         position_ids=<span style="color: #aaffe4;">None</span>, <span style="color: #565575;"># </span><span style="color: #565575;">position encoding
+         token_type_ids=<span style="color: #aaffe4;">None</span>, <span style="color: #565575;"># </span><span style="color: #96a0aa;">type encoding
+</span>         position_ids=<span style="color: #aaffe4;">None</span>, <span style="color: #565575;"># </span><span style="color: #96a0aa;">position encoding
 </span>         head_mask=<span style="color: #aaffe4;">None</span>,
          inputs_embeds=<span style="color: #aaffe4;">None</span>,
          labels=<span style="color: #aaffe4;">None</span>,
@@ -133,8 +133,8 @@ GPT-2的输入严格而言主要包括三部分:
          <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">__init__</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>, config<span style="color: #c66; font-weight: bold;">)</span>:
              <span style="color: #c991e1;">super</span><span style="color: #c66; font-weight: bold;">()</span>.__init__<span style="color: #c66; font-weight: bold;">(</span>config<span style="color: #c66; font-weight: bold;">)</span>
 
-             <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">wte</span> = nn.Embedding<span style="color: #c66; font-weight: bold;">(</span>config.vocab_size, config.n_embd<span style="color: #c66; font-weight: bold;">)</span>   <span style="color: #565575;"># </span><span style="color: #565575;">token encoding--&gt;token embedding layer
-</span>             <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">wpe</span> = nn.Embedding<span style="color: #c66; font-weight: bold;">(</span>config.n_positions, config.n_embd<span style="color: #c66; font-weight: bold;">)</span><span style="color: #565575;"># </span><span style="color: #565575;">position encoding--&gt;position embedding layer
+             <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">wte</span> = nn.Embedding<span style="color: #c66; font-weight: bold;">(</span>config.vocab_size, config.n_embd<span style="color: #c66; font-weight: bold;">)</span>   <span style="color: #565575;"># </span><span style="color: #96a0aa;">token encoding--&gt;token embedding layer
+</span>             <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">wpe</span> = nn.Embedding<span style="color: #c66; font-weight: bold;">(</span>config.n_positions, config.n_embd<span style="color: #c66; font-weight: bold;">)</span><span style="color: #565575;"># </span><span style="color: #96a0aa;">position encoding--&gt;position embedding layer
 </span>             <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">drop</span> = nn.Dropout<span style="color: #c66; font-weight: bold;">(</span>config.embd_pdrop<span style="color: #c66; font-weight: bold;">)</span>
              <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">h</span> = nn.ModuleList<span style="color: #c66; font-weight: bold;">(</span><span style="color: #6c6; font-weight: bold;">[</span>Block<span style="color: #69f; font-weight: bold;">(</span>config.n_ctx, config, scale=<span style="color: #aaffe4;">True</span><span style="color: #69f; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">for</span> _ <span style="color: #ff8080; font-weight: bold;">in</span> <span style="color: #c991e1;">range</span><span style="color: #69f; font-weight: bold;">(</span>config.n_layer<span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span>
              <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">ln_f</span> = nn.LayerNorm<span style="color: #c66; font-weight: bold;">(</span>config.n_embd, eps=config.layer_norm_epsilon<span style="color: #c66; font-weight: bold;">)</span>
@@ -159,8 +159,8 @@ GPT-2的输入严格而言主要包括三部分:
 </p>
 </div>
 </div>
-<div id="outline-container-org2656ba8" class="outline-3">
-<h3 id="org2656ba8"><span class="section-number-3">2.2.</span> Neural Pipeline中的文本输入与输出</h3>
+<div id="outline-container-orgc1b2454" class="outline-3">
+<h3 id="orgc1b2454"><span class="section-number-3">2.2.</span> Neural Pipeline中的文本输入与输出</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 下面来看任务型对话系统Neural Pipeline的输入与输出形态.
@@ -285,8 +285,8 @@ GPT-2的输入严格而言主要包括三部分:
 </p>
 </div>
 </div>
-<div id="outline-container-orgf5ad30f" class="outline-3">
-<h3 id="orgf5ad30f"><span class="section-number-3">2.3.</span> neural pipline与GPT-2的结合</h3>
+<div id="outline-container-org36fc049" class="outline-3">
+<h3 id="org36fc049"><span class="section-number-3">2.3.</span> neural pipline与GPT-2的结合</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 我们最终的目标是用GPT-2来完成一个pipeline, 所以相当于用history做输出输出belief state, 之后检索数据库得到datbase matching result, 用三者做输入去产生actions, 最终产生delexicalized response.
@@ -297,7 +297,7 @@ GPT-2的输入严格而言主要包括三部分:
 </p>
 
 
-<div id="org959678e" class="figure">
+<div id="org34f0ea1" class="figure">
 <p><img src="./images/screenshot_20220326_173041.png" alt="screenshot_20220326_173041.png">
 </p>
 </div>
@@ -335,13 +335,13 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">format_dialogue_act</span><span style="color: #c66; font-weight: bold;">(</span>acts<span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #c991e1;">str</span>:
-    <span style="color: #565575;"># </span><span style="color: #565575;">assert isinstance(acts, List[List[str]])
+    <span style="color: #565575;"># </span><span style="color: #96a0aa;">assert isinstance(acts, List[List[str]])
 </span>    <span style="color: #ffe9aa;">str_da</span> = <span style="color: #c66; font-weight: bold;">[]</span>
-    <span style="color: #565575;"># </span><span style="color: #565575;">intent-domain-slot-value
+    <span style="color: #565575;"># </span><span style="color: #96a0aa;">intent-domain-slot-value
 </span>    <span style="color: #ffe9aa;">str_acts</span>=<span style="color: #ffe9aa; font-style: italic;">""</span>
     <span style="color: #ff8080; font-weight: bold;">for</span> act <span style="color: #ff8080; font-weight: bold;">in</span> acts:
           <span style="color: #ffe9aa;">intent</span>,<span style="color: #ffe9aa;">domain</span>,<span style="color: #ffe9aa;">slot</span>,<span style="color: #ffe9aa;">value</span>=act
-          <span style="color: #565575;"># </span><span style="color: #565575;">str_acts+=f"{intent}, {domain}, {slot}, {value}; "
+          <span style="color: #565575;"># </span><span style="color: #96a0aa;">str_acts+=f"{intent}, {domain}, {slot}, {value}; "
 </span>          <span style="color: #ffe9aa;">str_acts</span>+=f<span style="color: #ffe9aa; font-style: italic;">"</span>{intent}<span style="color: #ffe9aa; font-style: italic;">, </span>{domain}<span style="color: #ffe9aa; font-style: italic;">, </span>{slot}<span style="color: #ffe9aa; font-style: italic;">; "</span>
     <span style="color: #ff8080; font-weight: bold;">return</span> str_acts<span style="color: #c66; font-weight: bold;">[</span>:-2<span style="color: #c66; font-weight: bold;">]</span>
 </pre>
@@ -372,13 +372,13 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
         <span style="color: #ffe9aa;">database_label</span>: <span style="color: #c991e1;">str</span> = <span style="color: #ffe9aa; font-style: italic;">'DB :'</span>
         <span style="color: #ffe9aa;">belief_label</span>: <span style="color: #c991e1;">str</span> = <span style="color: #ffe9aa; font-style: italic;">'Belief state :'</span>
         <span style="color: #ffe9aa;">dialogue_act_label</span>: <span style="color: #c991e1;">str</span> = <span style="color: #ffe9aa; font-style: italic;">'Action :'</span>
-        <span style="color: #565575;"># </span><span style="color: #565575;">template_label: str = "Template :"
+        <span style="color: #565575;"># </span><span style="color: #96a0aa;">template_label: str = "Template :"
 </span>
         <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">__call__</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>, sample: DialogDatasetItem<span style="color: #c66; font-weight: bold;">)</span> -&gt; DialogDatasetItem:
             <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #c991e1;">isinstance</span><span style="color: #c66; font-weight: bold;">(</span>sample, <span style="color: #c991e1;">tuple</span><span style="color: #c66; font-weight: bold;">)</span>:
                 <span style="color: #ffe9aa;">sample</span> = DialogDatasetItem<span style="color: #c66; font-weight: bold;">(</span>*sample<span style="color: #c66; font-weight: bold;">)</span>
-            <span style="color: #565575;"># </span><span style="color: #565575;">Transform context
-</span><span style="color: #565575;">#######################################################################</span><span style="color: #565575;">
+            <span style="color: #565575;"># </span><span style="color: #96a0aa;">Transform context
+</span><span style="color: #565575;">#######################################################################</span><span style="color: #96a0aa;">
 </span>            <span style="color: #ffe9aa;">context</span> = sample.context
             <span style="color: #ffe9aa;">context</span> = <span style="color: #c991e1;">list</span><span style="color: #c66; font-weight: bold;">(</span>context<span style="color: #c66; font-weight: bold;">)</span>
             <span style="color: #ffe9aa;">labels</span> = <span style="color: #ff8080; font-weight: bold;">self</span>.user_label, <span style="color: #ff8080; font-weight: bold;">self</span>.sys_label
@@ -387,9 +387,9 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
                 <span style="color: #ffe9aa;">context</span><span style="color: #c66; font-weight: bold;">[</span>i<span style="color: #c66; font-weight: bold;">]</span> = label + <span style="color: #ffe9aa; font-style: italic;">' '</span> + context<span style="color: #c66; font-weight: bold;">[</span>i<span style="color: #c66; font-weight: bold;">]</span>
                 <span style="color: #ffe9aa;">labels</span> = other, label
             <span style="color: #ffe9aa;">context</span> = <span style="color: #ffe9aa; font-style: italic;">' '</span>.join<span style="color: #c66; font-weight: bold;">(</span>context<span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">#######################################################################</span><span style="color: #565575;">
+<span style="color: #565575;">#######################################################################</span><span style="color: #96a0aa;">
 </span>
-            <span style="color: #565575;"># </span><span style="color: #565575;">Database
+            <span style="color: #565575;"># </span><span style="color: #96a0aa;">Database
 </span>            <span style="color: #ffe9aa;">database</span> = sample.database
             <span style="color: #ff8080; font-weight: bold;">if</span> database <span style="color: #ff8080; font-weight: bold;">is</span> <span style="color: #ff8080; font-weight: bold;">not</span> <span style="color: #aaffe4;">None</span>:
                 <span style="color: #ffe9aa;">database_str</span> = <span style="color: #c66; font-weight: bold;">[]</span>
@@ -398,24 +398,24 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
                                         default_translate_match<span style="color: #6c6; font-weight: bold;">(</span>database_count<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
                 <span style="color: #ffe9aa;">database</span> = <span style="color: #ff8080; font-weight: bold;">self</span>.database_label + <span style="color: #ffe9aa; font-style: italic;">' '</span> + <span style="color: #ffe9aa; font-style: italic;">' , '</span>.join<span style="color: #c66; font-weight: bold;">(</span>database_str<span style="color: #c66; font-weight: bold;">)</span>
 
-            <span style="color: #565575;"># </span><span style="color: #565575;">Belief state
+            <span style="color: #565575;"># </span><span style="color: #96a0aa;">Belief state
 </span>            <span style="color: #ffe9aa;">belief</span> = sample.belief
             <span style="color: #ff8080; font-weight: bold;">if</span> belief <span style="color: #ff8080; font-weight: bold;">is</span> <span style="color: #ff8080; font-weight: bold;">not</span> <span style="color: #aaffe4;">None</span>:
                 <span style="color: #ffe9aa;">belief</span> = <span style="color: #ff8080; font-weight: bold;">self</span>.belief_label + <span style="color: #ffe9aa; font-style: italic;">' '</span> + belief
 
-            <span style="color: #565575;"># </span><span style="color: #565575;">dialogue act
+            <span style="color: #565575;"># </span><span style="color: #96a0aa;">dialogue act
 </span>            <span style="color: #ff8080; font-weight: bold;">if</span> sample.dialogue_act <span style="color: #ff8080; font-weight: bold;">is</span> <span style="color: #ff8080; font-weight: bold;">not</span> <span style="color: #aaffe4;">None</span>:
                 <span style="color: #ffe9aa;">dialogue_act</span>=sample.dialogue_act
                 <span style="color: #ffe9aa;">dialogue_act</span>=<span style="color: #ff8080; font-weight: bold;">self</span>.dialogue_act_label+<span style="color: #ffe9aa; font-style: italic;">" "</span>+dialogue_act
             <span style="color: #ff8080; font-weight: bold;">else</span>:
                 <span style="color: #ffe9aa;">dialogue_act</span>=<span style="color: #aaffe4;">None</span>
 
-            <span style="color: #565575;"># </span><span style="color: #565575;"># template
-</span>            <span style="color: #565575;"># </span><span style="color: #565575;">template=sample.template
-</span>            <span style="color: #565575;"># </span><span style="color: #565575;">if template is not None:
-</span>            <span style="color: #565575;">#     </span><span style="color: #565575;">template=self.template_label+" "+ str()
-</span>            <span style="color: #565575;"># </span><span style="color: #565575;">return dataclasses.replace(sample, belief=belief,
-</span>                                       <span style="color: #565575;"># </span><span style="color: #565575;">database=database, context=context,template=template)
+            <span style="color: #565575;"># </span><span style="color: #96a0aa;"># template
+</span>            <span style="color: #565575;"># </span><span style="color: #96a0aa;">template=sample.template
+</span>            <span style="color: #565575;"># </span><span style="color: #96a0aa;">if template is not None:
+</span>            <span style="color: #565575;">#     </span><span style="color: #96a0aa;">template=self.template_label+" "+ str()
+</span>            <span style="color: #565575;"># </span><span style="color: #96a0aa;">return dataclasses.replace(sample, belief=belief,
+</span>                                       <span style="color: #565575;"># </span><span style="color: #96a0aa;">database=database, context=context,template=template)
 </span>
             <span style="color: #ff8080; font-weight: bold;">return</span> dataclasses.replace<span style="color: #c66; font-weight: bold;">(</span>sample, belief=belief,
                                        database=database,
@@ -474,13 +474,13 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
           <span style="color: #ffe9aa;">history</span>, <span style="color: #ffe9aa;">belief</span>, <span style="color: #ffe9aa;">database</span> = data.context, data.belief, data.database
           <span style="color: #ffe9aa;">response</span>, <span style="color: #ffe9aa;">positive</span> = data.response, data.positive
 
-          <span style="color: #565575;"># </span><span style="color: #565575;">Add history
+          <span style="color: #565575;"># </span><span style="color: #96a0aa;">Add history
 </span>          <span style="color: #ffe9aa;">history</span> = <span style="color: #ff8080; font-weight: bold;">self</span>.tokenizer.encode<span style="color: #c66; font-weight: bold;">(</span>history<span style="color: #c66; font-weight: bold;">)</span>
           <span style="color: #ffe9aa;">inp</span> = history
           <span style="color: #ffe9aa;">labels</span> = <span style="color: #c66; font-weight: bold;">[</span>-100 <span style="color: #ff8080; font-weight: bold;">for</span> _ <span style="color: #ff8080; font-weight: bold;">in</span> history<span style="color: #c66; font-weight: bold;">]</span>
           <span style="color: #ffe9aa;">context_end</span> = <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>labels<span style="color: #c66; font-weight: bold;">)</span>
 
-          <span style="color: #565575;"># </span><span style="color: #565575;">Add belief states
+          <span style="color: #565575;"># </span><span style="color: #96a0aa;">Add belief states
 </span>          <span style="color: #ff8080; font-weight: bold;">if</span> belief <span style="color: #ff8080; font-weight: bold;">is</span> <span style="color: #ff8080; font-weight: bold;">not</span> <span style="color: #aaffe4;">None</span>:
               <span style="color: #ffe9aa;">belief</span> = <span style="color: #c66; font-weight: bold;">[</span><span style="color: #ff8080; font-weight: bold;">self</span>.bob<span style="color: #c66; font-weight: bold;">]</span> + <span style="color: #ff8080; font-weight: bold;">self</span>.tokenizer.encode<span style="color: #c66; font-weight: bold;">(</span>belief<span style="color: #c66; font-weight: bold;">)</span> + <span style="color: #c66; font-weight: bold;">[</span><span style="color: #ff8080; font-weight: bold;">self</span>.eob<span style="color: #c66; font-weight: bold;">]</span>
               <span style="color: #ffe9aa;">inp</span> += belief
@@ -488,7 +488,7 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 
           <span style="color: #ffe9aa;">belief_end</span> = <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>labels<span style="color: #c66; font-weight: bold;">)</span>
 
-          <span style="color: #565575;"># </span><span style="color: #565575;">Add database
+          <span style="color: #565575;"># </span><span style="color: #96a0aa;">Add database
 </span>          <span style="color: #ff8080; font-weight: bold;">if</span> database <span style="color: #ff8080; font-weight: bold;">is</span> <span style="color: #ff8080; font-weight: bold;">not</span> <span style="color: #aaffe4;">None</span>:
               <span style="color: #ffe9aa;">database</span> = <span style="color: #ff8080; font-weight: bold;">self</span>.tokenizer.encode<span style="color: #c66; font-weight: bold;">(</span>database<span style="color: #c66; font-weight: bold;">)</span> + <span style="color: #c66; font-weight: bold;">[</span><span style="color: #ff8080; font-weight: bold;">self</span>.eokb<span style="color: #c66; font-weight: bold;">]</span>
               <span style="color: #ffe9aa;">inp</span> += database
@@ -496,7 +496,7 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 
           <span style="color: #ffe9aa;">database_end</span> = <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>labels<span style="color: #c66; font-weight: bold;">)</span>
 
-          <span style="color: #565575;"># </span><span style="color: #565575;">Add response
+          <span style="color: #565575;"># </span><span style="color: #96a0aa;">Add response
 </span>          <span style="color: #ff8080; font-weight: bold;">if</span> response <span style="color: #ff8080; font-weight: bold;">is</span> <span style="color: #ff8080; font-weight: bold;">not</span> <span style="color: #aaffe4;">None</span>:
               <span style="color: #ffe9aa;">response</span> = <span style="color: #ff8080; font-weight: bold;">self</span>.tokenizer.encode<span style="color: #c66; font-weight: bold;">(</span>response<span style="color: #c66; font-weight: bold;">)</span> + <span style="color: #c66; font-weight: bold;">[</span><span style="color: #ff8080; font-weight: bold;">self</span>.eos<span style="color: #c66; font-weight: bold;">]</span>
               <span style="color: #ffe9aa;">inp</span> += response
@@ -517,9 +517,9 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 
           <span style="color: #ff8080; font-weight: bold;">return</span> inp, labels, positive, belief_end, context_end, database_end
 
-    <span style="color: #565575;"># </span><span style="color: #565575;">-100 is mask token for LM
-</span>    <span style="color: #565575;"># </span><span style="color: #565575;">transforms into dict {"input_ids", "labels", "binary_labels", "binary_token_ids" }
-</span>    <span style="color: #565575;"># </span><span style="color: #565575;">binary_labels are used for task 3
+    <span style="color: #565575;"># </span><span style="color: #96a0aa;">-100 is mask token for LM
+</span>    <span style="color: #565575;"># </span><span style="color: #96a0aa;">transforms into dict {"input_ids", "labels", "binary_labels", "binary_token_ids" }
+</span>    <span style="color: #565575;"># </span><span style="color: #96a0aa;">binary_labels are used for task 3
 </span>    <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">__call__</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>, data<span style="color: #c66; font-weight: bold;">)</span>:
           <span style="color: #ffe9aa;">inp</span>, <span style="color: #ffe9aa;">labels</span>, <span style="color: #ffe9aa;">positive</span>, <span style="color: #ffe9aa;">belief_end</span>, <span style="color: #ffe9aa;">context_end</span>, <span style="color: #ffe9aa;">database_end</span> = <span style="color: #ff8080; font-weight: bold;">self</span>.get_tokens<span style="color: #c66; font-weight: bold;">(</span>data<span style="color: #c66; font-weight: bold;">)</span>
           <span style="color: #ffe9aa;">belief_labels</span> = <span style="color: #c66; font-weight: bold;">[</span>x <span style="color: #ff8080; font-weight: bold;">if</span> i &lt; belief_end <span style="color: #ff8080; font-weight: bold;">else</span> -100 <span style="color: #ff8080; font-weight: bold;">for</span> i, x <span style="color: #ff8080; font-weight: bold;">in</span> <span style="color: #c991e1;">enumerate</span><span style="color: #6c6; font-weight: bold;">(</span>labels<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">]</span>
@@ -559,11 +559,11 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 
     <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">__call__</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>, features: List<span style="color: #6c6; font-weight: bold;">[</span>Dict<span style="color: #69f; font-weight: bold;">[</span><span style="color: #c991e1;">str</span>, Union<span style="color: #cc6; font-weight: bold;">[</span>List<span style="color: #6cc; font-weight: bold;">[</span><span style="color: #c991e1;">int</span><span style="color: #6cc; font-weight: bold;">]</span>, torch.Tensor,<span style="color: #c991e1;">float</span><span style="color: #cc6; font-weight: bold;">]</span><span style="color: #69f; font-weight: bold;">]</span><span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; Dict<span style="color: #c66; font-weight: bold;">[</span><span style="color: #c991e1;">str</span>, torch.Tensor<span style="color: #c66; font-weight: bold;">]</span>:
           <span style="color: #ffe9aa;">batch</span> = <span style="color: #c66; font-weight: bold;">{</span>
-              <span style="color: #565575;"># </span><span style="color: #565575;">"attention_mask":torch.tensor([x["attention_mask"].numpy() for x in features]),
+              <span style="color: #565575;"># </span><span style="color: #96a0aa;">"attention_mask":torch.tensor([x["attention_mask"].numpy() for x in features]),
 </span>              <span style="color: #ffe9aa; font-style: italic;">'consistency_labels'</span>: torch.tensor<span style="color: #6c6; font-weight: bold;">(</span><span style="color: #69f; font-weight: bold;">[</span>x<span style="color: #cc6; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'consistency_labels'</span><span style="color: #cc6; font-weight: bold;">]</span> <span style="color: #ff8080; font-weight: bold;">for</span> x <span style="color: #ff8080; font-weight: bold;">in</span> features<span style="color: #69f; font-weight: bold;">]</span>, dtype=torch.float32<span style="color: #6c6; font-weight: bold;">)</span>,
               <span style="color: #ffe9aa; font-style: italic;">'consistency_token_ids'</span>: torch.tensor<span style="color: #6c6; font-weight: bold;">(</span><span style="color: #69f; font-weight: bold;">[</span>x<span style="color: #cc6; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'consistency_token_ids'</span><span style="color: #cc6; font-weight: bold;">]</span> <span style="color: #ff8080; font-weight: bold;">for</span> x <span style="color: #ff8080; font-weight: bold;">in</span> features<span style="color: #69f; font-weight: bold;">]</span>, dtype=torch.int64<span style="color: #6c6; font-weight: bold;">)</span>,
-              <span style="color: #565575;"># </span><span style="color: #565575;">'input_ids': pad_sequence([torch.tensor(x['input_ids'], dtype=torch.int64) for x in features],
-</span>                                        <span style="color: #565575;"># </span><span style="color: #565575;">batch_first=True, padding_value=self.tokenizer.pad_token_id),
+              <span style="color: #565575;"># </span><span style="color: #96a0aa;">'input_ids': pad_sequence([torch.tensor(x['input_ids'], dtype=torch.int64) for x in features],
+</span>                                        <span style="color: #565575;"># </span><span style="color: #96a0aa;">batch_first=True, padding_value=self.tokenizer.pad_token_id),
 </span>              <span style="color: #ffe9aa; font-style: italic;">'belief_labels'</span>: pad_sequence<span style="color: #6c6; font-weight: bold;">(</span><span style="color: #69f; font-weight: bold;">[</span>torch.tensor<span style="color: #cc6; font-weight: bold;">(</span>x<span style="color: #6cc; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'belief_labels'</span><span style="color: #6cc; font-weight: bold;">]</span>, dtype=torch.int64<span style="color: #cc6; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">for</span> x <span style="color: #ff8080; font-weight: bold;">in</span> features<span style="color: #69f; font-weight: bold;">]</span>,
                                             batch_first=<span style="color: #aaffe4;">True</span>, padding_value=-100<span style="color: #6c6; font-weight: bold;">)</span>,
           <span style="color: #c66; font-weight: bold;">}</span>
@@ -571,9 +571,9 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
           <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">"position_ids"</span> <span style="color: #ff8080; font-weight: bold;">in</span> features<span style="color: #c66; font-weight: bold;">[</span>0<span style="color: #c66; font-weight: bold;">]</span>:
               <span style="color: #ff8080; font-weight: bold;">if</span> features<span style="color: #c66; font-weight: bold;">[</span>0<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">"position_ids"</span><span style="color: #c66; font-weight: bold;">]</span> <span style="color: #ff8080; font-weight: bold;">is</span> <span style="color: #ff8080; font-weight: bold;">not</span> <span style="color: #aaffe4;">None</span>:
                   <span style="color: #ffe9aa;">batch</span><span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">"position_ids"</span><span style="color: #c66; font-weight: bold;">]</span>=pad_sequence<span style="color: #c66; font-weight: bold;">(</span><span style="color: #6c6; font-weight: bold;">[</span>x<span style="color: #69f; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">"position_ids"</span><span style="color: #69f; font-weight: bold;">]</span> <span style="color: #ff8080; font-weight: bold;">for</span> x <span style="color: #ff8080; font-weight: bold;">in</span> features<span style="color: #6c6; font-weight: bold;">]</span>,batch_first=<span style="color: #aaffe4;">True</span>,padding_value=0<span style="color: #c66; font-weight: bold;">)</span>
-                  <span style="color: #565575;"># </span><span style="color: #565575;">print(batch["position_ids"].shape)
-</span>                  <span style="color: #565575;"># </span><span style="color: #565575;">print(batch["input_ids"].shape)
-</span>                  <span style="color: #565575;"># </span><span style="color: #565575;">print("=============")
+                  <span style="color: #565575;"># </span><span style="color: #96a0aa;">print(batch["position_ids"].shape)
+</span>                  <span style="color: #565575;"># </span><span style="color: #96a0aa;">print(batch["input_ids"].shape)
+</span>                  <span style="color: #565575;"># </span><span style="color: #96a0aa;">print("=============")
 </span>
           <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">"states_ids"</span> <span style="color: #ff8080; font-weight: bold;">in</span> features<span style="color: #c66; font-weight: bold;">[</span>0<span style="color: #c66; font-weight: bold;">]</span>:
               <span style="color: #ff8080; font-weight: bold;">if</span> features<span style="color: #c66; font-weight: bold;">[</span>0<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">"states_ids"</span><span style="color: #c66; font-weight: bold;">]</span> <span style="color: #ff8080; font-weight: bold;">is</span> <span style="color: #ff8080; font-weight: bold;">not</span> <span style="color: #aaffe4;">None</span>:
@@ -585,8 +585,8 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 
           <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">"response_labels"</span> <span style="color: #ff8080; font-weight: bold;">in</span> features<span style="color: #c66; font-weight: bold;">[</span>0<span style="color: #c66; font-weight: bold;">]</span>:
               <span style="color: #ffe9aa;">batch</span><span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">"response_labels"</span><span style="color: #c66; font-weight: bold;">]</span>= pad_sequence<span style="color: #c66; font-weight: bold;">(</span><span style="color: #6c6; font-weight: bold;">[</span>torch.tensor<span style="color: #69f; font-weight: bold;">(</span>x<span style="color: #cc6; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'response_labels'</span><span style="color: #cc6; font-weight: bold;">]</span>, dtype=torch.int64<span style="color: #69f; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">for</span> x <span style="color: #ff8080; font-weight: bold;">in</span> features<span style="color: #6c6; font-weight: bold;">]</span>,batch_first=<span style="color: #aaffe4;">True</span>, padding_value=-100<span style="color: #c66; font-weight: bold;">)</span>
-          <span style="color: #565575;"># </span><span style="color: #565575;">else:
-</span>          <span style="color: #565575;">#     </span><span style="color: #565575;">batch["response_labels"]=None 
+          <span style="color: #565575;"># </span><span style="color: #96a0aa;">else:
+</span>          <span style="color: #565575;">#     </span><span style="color: #96a0aa;">batch["response_labels"]=None 
 </span>
           <span style="color: #ff8080; font-weight: bold;">return</span> batch
 </pre>
@@ -597,22 +597,22 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 </p>
 </div>
 </div>
-<div id="outline-container-orgb0a68c6" class="outline-3">
-<h3 id="orgb0a68c6"><span class="section-number-3">2.4.</span> 再坚持一下: 为什么说一个TOD很复杂?</h3>
+<div id="outline-container-org73bf962" class="outline-3">
+<h3 id="org73bf962"><span class="section-number-3">2.4.</span> 再坚持一下: 为什么说一个TOD很复杂?</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 如果你认为上述部分就是TOD data部分源码的核心, 未免有点小看任务型对话系统的复杂度了. 因为我们其实还没有正式开始介绍全部的流程. 
 </p>
 </div>
-<div id="outline-container-org3eb825d" class="outline-4">
-<h4 id="org3eb825d"><span class="section-number-4">2.4.1.</span> 如何预处理任务型对话系统数据集?</h4>
+<div id="outline-container-orgd438ace" class="outline-4">
+<h4 id="orgd438ace"><span class="section-number-4">2.4.1.</span> 如何预处理任务型对话系统数据集?</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <p>
 略.
 这部分代码我还没开始看,后续补充.
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #565575;">#</span><span style="color: #565575;">!/usr/bin/env python
+<pre class="src src-python"><span style="color: #565575;">#</span><span style="color: #96a0aa;">!/usr/bin/env python
 </span><span style="color: #ff8080; font-weight: bold;">import</span> sqlite3
 <span style="color: #ff8080; font-weight: bold;">import</span> json
 <span style="color: #ff8080; font-weight: bold;">import</span> os
@@ -633,7 +633,7 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 <span style="color: #ff8080; font-weight: bold;">import</span> numpy <span style="color: #ff8080; font-weight: bold;">as</span> np
 
 sys.path.append<span style="color: #c66; font-weight: bold;">(</span>os.path.dirname<span style="color: #6c6; font-weight: bold;">(</span>os.path.dirname<span style="color: #69f; font-weight: bold;">(</span>os.path.abspath<span style="color: #cc6; font-weight: bold;">(</span>__file__<span style="color: #cc6; font-weight: bold;">)</span><span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #ff8080; font-weight: bold;">from</span> utils <span style="color: #ff8080; font-weight: bold;">import</span> setup_logging  <span style="color: #565575;"># </span><span style="color: #565575;">noqa: E402
+<span style="color: #ff8080; font-weight: bold;">from</span> utils <span style="color: #ff8080; font-weight: bold;">import</span> setup_logging  <span style="color: #565575;"># </span><span style="color: #96a0aa;">noqa: E402
 </span>
 
 np.set_printoptions<span style="color: #c66; font-weight: bold;">(</span>precision=3<span style="color: #c66; font-weight: bold;">)</span>
@@ -641,7 +641,7 @@ np.random.seed<span style="color: #c66; font-weight: bold;">(</span>2<span style
 setup_logging<span style="color: #c66; font-weight: bold;">()</span>
 <span style="color: #ffe9aa;">logger</span> = logging.getLogger<span style="color: #c66; font-weight: bold;">()</span>
 
-<span style="color: #565575;"># </span><span style="color: #565575;">GLOBAL VARIABLES
+<span style="color: #565575;"># </span><span style="color: #96a0aa;">GLOBAL VARIABLES
 </span><span style="color: #ffe9aa;">DATASETS_PATH</span> = os.path.join<span style="color: #c66; font-weight: bold;">(</span>os.path.expanduser<span style="color: #6c6; font-weight: bold;">(</span>os.environ.get<span style="color: #69f; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'DATASETS_PATH'</span>, <span style="color: #ffe9aa; font-style: italic;">'~/datasets'</span><span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span>, <span style="color: #ffe9aa; font-style: italic;">'soloist'</span><span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #ffe9aa;">DICT_SIZE</span> = 400
 <span style="color: #ffe9aa;">MAX_LENGTH</span> = 50
@@ -674,7 +674,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
 
            @<span style="color: #c991e1;">staticmethod</span>
            <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">extend_database_results</span><span style="color: #c66; font-weight: bold;">(</span>database_results, belief<span style="color: #c66; font-weight: bold;">)</span>:
-               <span style="color: #565575;"># </span><span style="color: #565575;">Augment database results from the belief state
+               <span style="color: #565575;"># </span><span style="color: #96a0aa;">Augment database results from the belief state
 </span>               <span style="color: #ffe9aa;">database_results</span> = OrderedDict<span style="color: #c66; font-weight: bold;">(</span>database_results<span style="color: #c66; font-weight: bold;">)</span>
                <span style="color: #ff8080; font-weight: bold;">if</span> belief <span style="color: #ff8080; font-weight: bold;">is</span> <span style="color: #ff8080; font-weight: bold;">not</span> <span style="color: #aaffe4;">None</span>:
                    <span style="color: #ff8080; font-weight: bold;">for</span> i, <span style="color: #c66; font-weight: bold;">(</span>domain, <span style="color: #6c6; font-weight: bold;">(</span>num_results, results<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">in</span> <span style="color: #c991e1;">enumerate</span><span style="color: #c66; font-weight: bold;">(</span>database_results.items<span style="color: #6c6; font-weight: bold;">()</span><span style="color: #c66; font-weight: bold;">)</span>:
@@ -709,7 +709,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                    <span style="color: #ff8080; font-weight: bold;">if</span> label == <span style="color: #ffe9aa; font-style: italic;">'postcode'</span>:
                        <span style="color: #ffe9aa;">label</span> = <span style="color: #ffe9aa; font-style: italic;">'post code'</span>
 
-                   <span style="color: #565575;"># </span><span style="color: #565575;">No references in the MW 2.0 database
+                   <span style="color: #565575;"># </span><span style="color: #96a0aa;">No references in the MW 2.0 database
 </span>                   <span style="color: #ff8080; font-weight: bold;">if</span> label == <span style="color: #ffe9aa; font-style: italic;">'reference'</span>:
                        <span style="color: #ff8080; font-weight: bold;">return</span> <span style="color: #ffe9aa; font-style: italic;">'YF86GE4J'</span>
 
@@ -735,9 +735,9 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                        <span style="color: #ff8080; font-weight: bold;">if</span> label == <span style="color: #ffe9aa; font-style: italic;">'time'</span> <span style="color: #ff8080; font-weight: bold;">and</span> <span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'[leave at]'</span> <span style="color: #ff8080; font-weight: bold;">in</span> text <span style="color: #ff8080; font-weight: bold;">or</span> <span style="color: #ffe9aa; font-style: italic;">'[arrive by]'</span> <span style="color: #ff8080; font-weight: bold;">in</span> text<span style="color: #c66; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">and</span> \
                            belief <span style="color: #ff8080; font-weight: bold;">is</span> <span style="color: #ff8080; font-weight: bold;">not</span> <span style="color: #aaffe4;">None</span> <span style="color: #ff8080; font-weight: bold;">and</span> <span style="color: #ffe9aa; font-style: italic;">'train'</span> <span style="color: #ff8080; font-weight: bold;">in</span> belief <span style="color: #ff8080; font-weight: bold;">and</span> \
                                <span style="color: #c991e1;">any</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #6c6; font-weight: bold;">[</span>k <span style="color: #ff8080; font-weight: bold;">in</span> belief<span style="color: #69f; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'train'</span><span style="color: #69f; font-weight: bold;">]</span> <span style="color: #ff8080; font-weight: bold;">for</span> k <span style="color: #ff8080; font-weight: bold;">in</span> <span style="color: #69f; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'leave at'</span>, <span style="color: #ffe9aa; font-style: italic;">'arrive by'</span><span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span>:
-                           <span style="color: #565575;"># </span><span style="color: #565575;">this is a specific case in which additional [time] slot needs to be lexicalised
-</span>                           <span style="color: #565575;"># </span><span style="color: #565575;">directly from the belief state
-</span>                           <span style="color: #565575;"># </span><span style="color: #565575;">"The earliest train after [time] leaves at ... and arrives by ..."
+                           <span style="color: #565575;"># </span><span style="color: #96a0aa;">this is a specific case in which additional [time] slot needs to be lexicalised
+</span>                           <span style="color: #565575;"># </span><span style="color: #96a0aa;">directly from the belief state
+</span>                           <span style="color: #565575;"># </span><span style="color: #96a0aa;">"The earliest train after [time] leaves at ... and arrives by ..."
 </span>                           <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">'leave at'</span> <span style="color: #ff8080; font-weight: bold;">in</span> belief<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'train'</span><span style="color: #c66; font-weight: bold;">]</span>:
                                <span style="color: #ffe9aa;">result_str</span> = belief<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'train'</span><span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'leave at'</span><span style="color: #c66; font-weight: bold;">]</span>
                            <span style="color: #ff8080; font-weight: bold;">else</span>:
@@ -811,17 +811,17 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
 
 
 <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">normalize</span><span style="color: #c66; font-weight: bold;">(</span>text<span style="color: #c66; font-weight: bold;">)</span>:
-           <span style="color: #565575;"># </span><span style="color: #565575;">lower case every word
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">lower case every word
 </span>           <span style="color: #ffe9aa;">text</span> = text.lower<span style="color: #c66; font-weight: bold;">()</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">replace white spaces in front and end
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">replace white spaces in front and end
 </span>           <span style="color: #ffe9aa;">text</span> = re.sub<span style="color: #c66; font-weight: bold;">(</span>r<span style="color: #ffe9aa; font-style: italic;">'^\s*|\s*$'</span>, <span style="color: #ffe9aa; font-style: italic;">''</span>, text<span style="color: #c66; font-weight: bold;">)</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">hotel domain pfb30
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">hotel domain pfb30
 </span>           <span style="color: #ffe9aa;">text</span> = re.sub<span style="color: #c66; font-weight: bold;">(</span>r<span style="color: #ffe9aa; font-style: italic;">"b&amp;b"</span>, <span style="color: #ffe9aa; font-style: italic;">"bed and breakfast"</span>, text<span style="color: #c66; font-weight: bold;">)</span>
            <span style="color: #ffe9aa;">text</span> = re.sub<span style="color: #c66; font-weight: bold;">(</span>r<span style="color: #ffe9aa; font-style: italic;">"b and b"</span>, <span style="color: #ffe9aa; font-style: italic;">"bed and breakfast"</span>, text<span style="color: #c66; font-weight: bold;">)</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">normalize phone number
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">normalize phone number
 </span>           <span style="color: #ffe9aa;">ms</span> = re.findall<span style="color: #c66; font-weight: bold;">(</span>r<span style="color: #ffe9aa; font-style: italic;">'\(?(\d{3})\)?[-.\s]?(\d{3})[-.\s]?(\d{4,5})'</span>, text<span style="color: #c66; font-weight: bold;">)</span>
            <span style="color: #ff8080; font-weight: bold;">if</span> ms:
                <span style="color: #ffe9aa;">sidx</span> = 0
@@ -832,7 +832,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                    <span style="color: #ffe9aa;">eidx</span> = text.find<span style="color: #c66; font-weight: bold;">(</span>m<span style="color: #6c6; font-weight: bold;">[</span>-1<span style="color: #6c6; font-weight: bold;">]</span>, sidx<span style="color: #c66; font-weight: bold;">)</span> + <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>m<span style="color: #6c6; font-weight: bold;">[</span>-1<span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span>
                    <span style="color: #ffe9aa;">text</span> = text.replace<span style="color: #c66; font-weight: bold;">(</span>text<span style="color: #6c6; font-weight: bold;">[</span>sidx:eidx<span style="color: #6c6; font-weight: bold;">]</span>, <span style="color: #ffe9aa; font-style: italic;">''</span>.join<span style="color: #6c6; font-weight: bold;">(</span>m<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">normalize postcode
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">normalize postcode
 </span>           <span style="color: #ffe9aa;">ms</span> = re.findall<span style="color: #c66; font-weight: bold;">(</span>
                r<span style="color: #ffe9aa; font-style: italic;">'([a-z]{1}[\. ]?[a-z]{1}[\. ]?\d{1,2}[, ]+\d{1}[\. ]?[a-z]{1}[\. ]?[a-z]{1}|[a-z]{2}\d{2}[a-z]{2})'</span>,
                text<span style="color: #c66; font-weight: bold;">)</span>
@@ -843,31 +843,31 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                    <span style="color: #ffe9aa;">eidx</span> = sidx + <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>m<span style="color: #c66; font-weight: bold;">)</span>
                    <span style="color: #ffe9aa;">text</span> = text<span style="color: #c66; font-weight: bold;">[</span>:sidx<span style="color: #c66; font-weight: bold;">]</span> + re.sub<span style="color: #c66; font-weight: bold;">(</span>r<span style="color: #ffe9aa; font-style: italic;">'[,\. ]'</span>, <span style="color: #ffe9aa; font-style: italic;">''</span>, m<span style="color: #c66; font-weight: bold;">)</span> + text<span style="color: #c66; font-weight: bold;">[</span>eidx:<span style="color: #c66; font-weight: bold;">]</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">weird unicode bug
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">weird unicode bug
 </span>           <span style="color: #ffe9aa;">text</span> = re.sub<span style="color: #c66; font-weight: bold;">(</span>u<span style="color: #ffe9aa; font-style: italic;">"(</span><span style="color: #aaffe4;">\u2018</span><span style="color: #ffe9aa; font-style: italic;">|</span><span style="color: #aaffe4;">\u2019</span><span style="color: #ffe9aa; font-style: italic;">)"</span>, <span style="color: #ffe9aa; font-style: italic;">"'"</span>, text<span style="color: #c66; font-weight: bold;">)</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">replace time and and price
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">replace time and and price
 </span>           <span style="color: #ffe9aa;">text</span> = re.sub<span style="color: #c66; font-weight: bold;">(</span>timepat, <span style="color: #ffe9aa; font-style: italic;">' [value_time] '</span>, text<span style="color: #c66; font-weight: bold;">)</span>
            <span style="color: #ffe9aa;">text</span> = re.sub<span style="color: #c66; font-weight: bold;">(</span>pricepat, <span style="color: #ffe9aa; font-style: italic;">' [value_price] '</span>, text<span style="color: #c66; font-weight: bold;">)</span>
-           <span style="color: #565575;"># </span><span style="color: #565575;">text = re.sub(pricepat2, '[value_price]', text)
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">text = re.sub(pricepat2, '[value_price]', text)
 </span>
-           <span style="color: #565575;"># </span><span style="color: #565575;">replace st.
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">replace st.
 </span>           <span style="color: #ffe9aa;">text</span> = text.replace<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">';'</span>, <span style="color: #ffe9aa; font-style: italic;">','</span><span style="color: #c66; font-weight: bold;">)</span>
            <span style="color: #ffe9aa;">text</span> = re.sub<span style="color: #c66; font-weight: bold;">(</span>r<span style="color: #ffe9aa; font-style: italic;">'$\/'</span>, <span style="color: #ffe9aa; font-style: italic;">''</span>, text<span style="color: #c66; font-weight: bold;">)</span>
            <span style="color: #ffe9aa;">text</span> = text.replace<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'/'</span>, <span style="color: #ffe9aa; font-style: italic;">' and '</span><span style="color: #c66; font-weight: bold;">)</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">replace other special characters
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">replace other special characters
 </span>           <span style="color: #ffe9aa;">text</span> = text.replace<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'-'</span>, <span style="color: #ffe9aa; font-style: italic;">' '</span><span style="color: #c66; font-weight: bold;">)</span>
            <span style="color: #ffe9aa;">text</span> = re.sub<span style="color: #c66; font-weight: bold;">(</span>r<span style="color: #ffe9aa; font-style: italic;">'[\":\&lt;&gt;@\(\)]'</span>, <span style="color: #ffe9aa; font-style: italic;">''</span>, text<span style="color: #c66; font-weight: bold;">)</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">insert white space before and after tokens:
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">insert white space before and after tokens:
 </span>           <span style="color: #ff8080; font-weight: bold;">for</span> token <span style="color: #ff8080; font-weight: bold;">in</span> <span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'?'</span>, <span style="color: #ffe9aa; font-style: italic;">'.'</span>, <span style="color: #ffe9aa; font-style: italic;">','</span>, <span style="color: #ffe9aa; font-style: italic;">'!'</span><span style="color: #c66; font-weight: bold;">]</span>:
                <span style="color: #ffe9aa;">text</span> = insertSpace<span style="color: #c66; font-weight: bold;">(</span>token, text<span style="color: #c66; font-weight: bold;">)</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">insert white space for 's
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">insert white space for 's
 </span>           <span style="color: #ffe9aa;">text</span> = insertSpace<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'</span><span style="color: #aaffe4;">\'</span><span style="color: #ffe9aa; font-style: italic;">s'</span>, text<span style="color: #c66; font-weight: bold;">)</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">replace it's, does't, you'd ... etc
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">replace it's, does't, you'd ... etc
 </span>           <span style="color: #ffe9aa;">text</span> = re.sub<span style="color: #c66; font-weight: bold;">(</span>r<span style="color: #ffe9aa; font-style: italic;">'^\''</span>, <span style="color: #ffe9aa; font-style: italic;">''</span>, text<span style="color: #c66; font-weight: bold;">)</span>
            <span style="color: #ffe9aa;">text</span> = re.sub<span style="color: #c66; font-weight: bold;">(</span>r<span style="color: #ffe9aa; font-style: italic;">'\'$'</span>, <span style="color: #ffe9aa; font-style: italic;">''</span>, text<span style="color: #c66; font-weight: bold;">)</span>
            <span style="color: #ffe9aa;">text</span> = re.sub<span style="color: #c66; font-weight: bold;">(</span>r<span style="color: #ffe9aa; font-style: italic;">'\'\s'</span>, <span style="color: #ffe9aa; font-style: italic;">' '</span>, text<span style="color: #c66; font-weight: bold;">)</span>
@@ -876,10 +876,10 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                <span style="color: #ffe9aa;">text</span> = <span style="color: #ffe9aa; font-style: italic;">' '</span> + text + <span style="color: #ffe9aa; font-style: italic;">' '</span>
                <span style="color: #ffe9aa;">text</span> = text.replace<span style="color: #c66; font-weight: bold;">(</span>fromx, tox<span style="color: #c66; font-weight: bold;">)[</span>1:-1<span style="color: #c66; font-weight: bold;">]</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">remove multiple spaces
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">remove multiple spaces
 </span>           <span style="color: #ffe9aa;">text</span> = re.sub<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">' +'</span>, <span style="color: #ffe9aa; font-style: italic;">' '</span>, text<span style="color: #c66; font-weight: bold;">)</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">concatenate numbers
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">concatenate numbers
 </span>           <span style="color: #ffe9aa;">tokens</span> = text.split<span style="color: #c66; font-weight: bold;">()</span>
            <span style="color: #ffe9aa;">i</span> = 1
            <span style="color: #ff8080; font-weight: bold;">while</span> i &lt; <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>tokens<span style="color: #c66; font-weight: bold;">)</span>:
@@ -936,7 +936,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
            <span style="color: #ffe9aa;">dic_food</span> = <span style="color: #c66; font-weight: bold;">[]</span>
            <span style="color: #ffe9aa;">dic_price</span> = <span style="color: #c66; font-weight: bold;">[]</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">read databases
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">read databases
 </span>           <span style="color: #ff8080; font-weight: bold;">for</span> domain <span style="color: #ff8080; font-weight: bold;">in</span> domains:
                <span style="color: #ff8080; font-weight: bold;">try</span>:
                    <span style="color: #ffe9aa;">fin</span> = dbzipf.<span style="color: #c991e1;">open</span><span style="color: #c66; font-weight: bold;">(</span>os.path.join<span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'db/'</span> + domain + <span style="color: #ffe9aa; font-style: italic;">'_db.json'</span><span style="color: #6c6; font-weight: bold;">)</span>, <span style="color: #ffe9aa; font-style: italic;">'r'</span><span style="color: #c66; font-weight: bold;">)</span>
@@ -984,7 +984,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                            <span style="color: #ff8080; font-weight: bold;">elif</span> key == <span style="color: #ffe9aa; font-style: italic;">'department'</span>:
                                dic.append<span style="color: #c66; font-weight: bold;">(</span><span style="color: #6c6; font-weight: bold;">(</span>normalize<span style="color: #69f; font-weight: bold;">(</span>val<span style="color: #69f; font-weight: bold;">)</span>, <span style="color: #ffe9aa; font-style: italic;">'['</span> + domain + <span style="color: #ffe9aa; font-style: italic;">'_'</span> + <span style="color: #ffe9aa; font-style: italic;">'department'</span> + <span style="color: #ffe9aa; font-style: italic;">']'</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
 
-                           <span style="color: #565575;"># </span><span style="color: #565575;">NORMAL DELEX
+                           <span style="color: #565575;"># </span><span style="color: #96a0aa;">NORMAL DELEX
 </span>                           <span style="color: #ff8080; font-weight: bold;">elif</span> key == <span style="color: #ffe9aa; font-style: italic;">'area'</span>:
                                dic_area.append<span style="color: #c66; font-weight: bold;">(</span><span style="color: #6c6; font-weight: bold;">(</span>normalize<span style="color: #69f; font-weight: bold;">(</span>val<span style="color: #69f; font-weight: bold;">)</span>, <span style="color: #ffe9aa; font-style: italic;">'['</span> + <span style="color: #ffe9aa; font-style: italic;">'value'</span> + <span style="color: #ffe9aa; font-style: italic;">'_'</span> + <span style="color: #ffe9aa; font-style: italic;">'area'</span> + <span style="color: #ffe9aa; font-style: italic;">']'</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
                            <span style="color: #ff8080; font-weight: bold;">elif</span> key == <span style="color: #ffe9aa; font-style: italic;">'food'</span>:
@@ -993,7 +993,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                                dic_price.append<span style="color: #c66; font-weight: bold;">(</span><span style="color: #6c6; font-weight: bold;">(</span>normalize<span style="color: #69f; font-weight: bold;">(</span>val<span style="color: #69f; font-weight: bold;">)</span>, <span style="color: #ffe9aa; font-style: italic;">'['</span> + <span style="color: #ffe9aa; font-style: italic;">'value'</span> + <span style="color: #ffe9aa; font-style: italic;">'_'</span> + <span style="color: #ffe9aa; font-style: italic;">'pricerange'</span> + <span style="color: #ffe9aa; font-style: italic;">']'</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
                            <span style="color: #ff8080; font-weight: bold;">else</span>:
                                <span style="color: #ff8080; font-weight: bold;">pass</span>
-                           <span style="color: #565575;"># </span><span style="color: #565575;">TODO car type?
+                           <span style="color: #565575;"># </span><span style="color: #96a0aa;">TODO car type?
 </span>               <span style="color: #ff8080; font-weight: bold;">except</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #91ddff;">Exception</span><span style="color: #c66; font-weight: bold;">)</span>:
                    <span style="color: #ff8080; font-weight: bold;">pass</span>
 
@@ -1013,7 +1013,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                    dic.append<span style="color: #c66; font-weight: bold;">(</span><span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'1223358966'</span>, <span style="color: #ffe9aa; font-style: italic;">'['</span> + domain + <span style="color: #ffe9aa; font-style: italic;">'_'</span> + <span style="color: #ffe9aa; font-style: italic;">'phone'</span> + <span style="color: #ffe9aa; font-style: italic;">']'</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
                    dic.append<span style="color: #c66; font-weight: bold;">(</span><span style="color: #6c6; font-weight: bold;">(</span>normalize<span style="color: #69f; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'Parkside Police Station'</span><span style="color: #69f; font-weight: bold;">)</span>, <span style="color: #ffe9aa; font-style: italic;">'['</span> + domain + <span style="color: #ffe9aa; font-style: italic;">'_'</span> + <span style="color: #ffe9aa; font-style: italic;">'name'</span> + <span style="color: #ffe9aa; font-style: italic;">']'</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">add at the end places from trains
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">add at the end places from trains
 </span>           <span style="color: #ffe9aa;">fin</span> = dbzipf.<span style="color: #c991e1;">open</span><span style="color: #c66; font-weight: bold;">(</span>os.path.join<span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'db/'</span> + <span style="color: #ffe9aa; font-style: italic;">'train'</span> + <span style="color: #ffe9aa; font-style: italic;">'_db.json'</span><span style="color: #6c6; font-weight: bold;">)</span>, <span style="color: #ffe9aa; font-style: italic;">'r'</span><span style="color: #c66; font-weight: bold;">)</span>
            <span style="color: #ffe9aa;">db_json</span> = json.load<span style="color: #c66; font-weight: bold;">(</span>fin<span style="color: #c66; font-weight: bold;">)</span>
            fin.close<span style="color: #c66; font-weight: bold;">()</span>
@@ -1023,11 +1023,11 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                    <span style="color: #ff8080; font-weight: bold;">if</span> key == <span style="color: #ffe9aa; font-style: italic;">'departure'</span> <span style="color: #ff8080; font-weight: bold;">or</span> key == <span style="color: #ffe9aa; font-style: italic;">'destination'</span>:
                        dic.append<span style="color: #c66; font-weight: bold;">(</span><span style="color: #6c6; font-weight: bold;">(</span>normalize<span style="color: #69f; font-weight: bold;">(</span>val<span style="color: #69f; font-weight: bold;">)</span>, <span style="color: #ffe9aa; font-style: italic;">'['</span> + <span style="color: #ffe9aa; font-style: italic;">'value'</span> + <span style="color: #ffe9aa; font-style: italic;">'_'</span> + <span style="color: #ffe9aa; font-style: italic;">'place'</span> + <span style="color: #ffe9aa; font-style: italic;">']'</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">add specific values:
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">add specific values:
 </span>           <span style="color: #ff8080; font-weight: bold;">for</span> key <span style="color: #ff8080; font-weight: bold;">in</span> <span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'monday'</span>, <span style="color: #ffe9aa; font-style: italic;">'tuesday'</span>, <span style="color: #ffe9aa; font-style: italic;">'wednesday'</span>, <span style="color: #ffe9aa; font-style: italic;">'thursday'</span>, <span style="color: #ffe9aa; font-style: italic;">'friday'</span>, <span style="color: #ffe9aa; font-style: italic;">'saturday'</span>, <span style="color: #ffe9aa; font-style: italic;">'sunday'</span><span style="color: #c66; font-weight: bold;">]</span>:
                dic.append<span style="color: #c66; font-weight: bold;">(</span><span style="color: #6c6; font-weight: bold;">(</span>normalize<span style="color: #69f; font-weight: bold;">(</span>key<span style="color: #69f; font-weight: bold;">)</span>, <span style="color: #ffe9aa; font-style: italic;">'['</span> + <span style="color: #ffe9aa; font-style: italic;">'value'</span> + <span style="color: #ffe9aa; font-style: italic;">'_'</span> + <span style="color: #ffe9aa; font-style: italic;">'day'</span> + <span style="color: #ffe9aa; font-style: italic;">']'</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">more general values add at the end
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">more general values add at the end
 </span>           dic.extend<span style="color: #c66; font-weight: bold;">(</span>dic_area<span style="color: #c66; font-weight: bold;">)</span>
            dic.extend<span style="color: #c66; font-weight: bold;">(</span>dic_food<span style="color: #c66; font-weight: bold;">)</span>
            dic.extend<span style="color: #c66; font-weight: bold;">(</span>dic_price<span style="color: #c66; font-weight: bold;">)</span>
@@ -1038,7 +1038,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
 <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">delexicalise</span><span style="color: #c66; font-weight: bold;">(</span>utt, dictionary<span style="color: #c66; font-weight: bold;">)</span>:
            <span style="color: #ff8080; font-weight: bold;">for</span> key, val <span style="color: #ff8080; font-weight: bold;">in</span> dictionary:
                <span style="color: #ffe9aa;">utt</span> = <span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">' '</span> + utt + <span style="color: #ffe9aa; font-style: italic;">' '</span><span style="color: #c66; font-weight: bold;">)</span>.replace<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">' '</span> + key + <span style="color: #ffe9aa; font-style: italic;">' '</span>, <span style="color: #ffe9aa; font-style: italic;">' '</span> + val + <span style="color: #ffe9aa; font-style: italic;">' '</span><span style="color: #c66; font-weight: bold;">)</span>
-               <span style="color: #ffe9aa;">utt</span> = utt<span style="color: #c66; font-weight: bold;">[</span>1:-1<span style="color: #c66; font-weight: bold;">]</span>  <span style="color: #565575;"># </span><span style="color: #565575;">why this?
+               <span style="color: #ffe9aa;">utt</span> = utt<span style="color: #c66; font-weight: bold;">[</span>1:-1<span style="color: #c66; font-weight: bold;">]</span>  <span style="color: #565575;"># </span><span style="color: #96a0aa;">why this?
 </span>
            <span style="color: #ff8080; font-weight: bold;">return</span> utt
 
@@ -1047,12 +1047,12 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
            <span style="color: #ff8080; font-weight: bold;">for</span> key, val <span style="color: #ff8080; font-weight: bold;">in</span> dictionary:
                <span style="color: #ff8080; font-weight: bold;">if</span> key == domain <span style="color: #ff8080; font-weight: bold;">or</span> key == <span style="color: #ffe9aa; font-style: italic;">'value'</span>:
                    <span style="color: #ffe9aa;">utt</span> = <span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">' '</span> + utt + <span style="color: #ffe9aa; font-style: italic;">' '</span><span style="color: #c66; font-weight: bold;">)</span>.replace<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">' '</span> + key + <span style="color: #ffe9aa; font-style: italic;">' '</span>, <span style="color: #ffe9aa; font-style: italic;">' '</span> + val + <span style="color: #ffe9aa; font-style: italic;">' '</span><span style="color: #c66; font-weight: bold;">)</span>
-                   <span style="color: #ffe9aa;">utt</span> = utt<span style="color: #c66; font-weight: bold;">[</span>1:-1<span style="color: #c66; font-weight: bold;">]</span>  <span style="color: #565575;"># </span><span style="color: #565575;">why this?
+                   <span style="color: #ffe9aa;">utt</span> = utt<span style="color: #c66; font-weight: bold;">[</span>1:-1<span style="color: #c66; font-weight: bold;">]</span>  <span style="color: #565575;"># </span><span style="color: #96a0aa;">why this?
 </span>
-           <span style="color: #565575;"># </span><span style="color: #565575;">go through rest of domain in case we are missing something out?
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">go through rest of domain in case we are missing something out?
 </span>           <span style="color: #ff8080; font-weight: bold;">for</span> key, val <span style="color: #ff8080; font-weight: bold;">in</span> dictionary:
                <span style="color: #ffe9aa;">utt</span> = <span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">' '</span> + utt + <span style="color: #ffe9aa; font-style: italic;">' '</span><span style="color: #c66; font-weight: bold;">)</span>.replace<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">' '</span> + key + <span style="color: #ffe9aa; font-style: italic;">' '</span>, <span style="color: #ffe9aa; font-style: italic;">' '</span> + val + <span style="color: #ffe9aa; font-style: italic;">' '</span><span style="color: #c66; font-weight: bold;">)</span>
-               <span style="color: #ffe9aa;">utt</span> = utt<span style="color: #c66; font-weight: bold;">[</span>1:-1<span style="color: #c66; font-weight: bold;">]</span>  <span style="color: #565575;"># </span><span style="color: #565575;">why this?
+               <span style="color: #ffe9aa;">utt</span> = utt<span style="color: #c66; font-weight: bold;">[</span>1:-1<span style="color: #c66; font-weight: bold;">]</span>  <span style="color: #565575;"># </span><span style="color: #96a0aa;">why this?
 </span>           <span style="color: #ff8080; font-weight: bold;">return</span> utt
 
 
@@ -1086,7 +1086,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                    <span style="color: #ffe9aa;">value</span> = <span style="color: #ffe9aa; font-style: italic;">'concert hall'</span>
                <span style="color: #ff8080; font-weight: bold;">if</span> value == <span style="color: #ffe9aa; font-style: italic;">'nightclub'</span>:
                    <span style="color: #ffe9aa;">value</span> = <span style="color: #ffe9aa; font-style: italic;">'night club'</span>
-               <span style="color: #565575;"># </span><span style="color: #565575;">BUG in MW2.0
+               <span style="color: #565575;"># </span><span style="color: #96a0aa;">BUG in MW2.0
 </span>               <span style="color: #ffe9aa;">value</span> = value.lstrip<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'`'</span><span style="color: #c66; font-weight: bold;">)</span>
                <span style="color: #ff8080; font-weight: bold;">return</span> value
 
@@ -1106,16 +1106,16 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                    <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>new_domain_bs<span style="color: #c66; font-weight: bold;">)</span> == 0:
                        <span style="color: #ff8080; font-weight: bold;">continue</span>
                    <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">'internet'</span> <span style="color: #ff8080; font-weight: bold;">in</span> new_domain_bs <span style="color: #ff8080; font-weight: bold;">and</span> new_domain_bs<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'internet'</span><span style="color: #c66; font-weight: bold;">]</span> == <span style="color: #ffe9aa; font-style: italic;">'no'</span>:
-                       <span style="color: #ff8080; font-weight: bold;">del</span> new_domain_bs<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'internet'</span><span style="color: #c66; font-weight: bold;">]</span>  <span style="color: #565575;"># </span><span style="color: #565575;">no internet by default
+                       <span style="color: #ff8080; font-weight: bold;">del</span> new_domain_bs<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'internet'</span><span style="color: #c66; font-weight: bold;">]</span>  <span style="color: #565575;"># </span><span style="color: #96a0aa;">no internet by default
 </span>                   <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">'parking'</span> <span style="color: #ff8080; font-weight: bold;">in</span> new_domain_bs <span style="color: #ff8080; font-weight: bold;">and</span> new_domain_bs<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'parking'</span><span style="color: #c66; font-weight: bold;">]</span> == <span style="color: #ffe9aa; font-style: italic;">'no'</span>:
-                       <span style="color: #ff8080; font-weight: bold;">del</span> new_domain_bs<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'parking'</span><span style="color: #c66; font-weight: bold;">]</span>  <span style="color: #565575;"># </span><span style="color: #565575;">no parking by default
+                       <span style="color: #ff8080; font-weight: bold;">del</span> new_domain_bs<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'parking'</span><span style="color: #c66; font-weight: bold;">]</span>  <span style="color: #565575;"># </span><span style="color: #96a0aa;">no parking by default
 </span>                   <span style="color: #ffe9aa;">clean_belief</span><span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">]</span> = new_domain_bs
 
                <span style="color: #ff8080; font-weight: bold;">for</span> domain <span style="color: #ff8080; font-weight: bold;">in</span> <span style="color: #c66; font-weight: bold;">{</span><span style="color: #ffe9aa; font-style: italic;">'Hospital'</span>, <span style="color: #ffe9aa; font-style: italic;">'Police'</span><span style="color: #c66; font-weight: bold;">}</span>:
                    <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #c991e1;">any</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #6c6; font-weight: bold;">[</span>da<span style="color: #69f; font-weight: bold;">[</span>1<span style="color: #69f; font-weight: bold;">]</span> == domain <span style="color: #ff8080; font-weight: bold;">for</span> da <span style="color: #ff8080; font-weight: bold;">in</span> dialogue_act<span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span>:
                        <span style="color: #ffe9aa;">clean_belief</span><span style="color: #c66; font-weight: bold;">[</span>domain.lower<span style="color: #6c6; font-weight: bold;">()</span><span style="color: #c66; font-weight: bold;">]</span> = <span style="color: #c66; font-weight: bold;">{}</span>
 
-               <span style="color: #565575;"># </span><span style="color: #565575;">Sort belief
+               <span style="color: #565575;"># </span><span style="color: #96a0aa;">Sort belief
 </span>               <span style="color: #ffe9aa;">clean_belief</span> = <span style="color: #c66; font-weight: bold;">{</span>k: OrderedDict<span style="color: #6c6; font-weight: bold;">(</span><span style="color: #c991e1;">sorted</span><span style="color: #69f; font-weight: bold;">(</span>v.items<span style="color: #cc6; font-weight: bold;">()</span>, key=<span style="color: #ff8080; font-weight: bold;">lambda</span> x: x<span style="color: #cc6; font-weight: bold;">[</span>0<span style="color: #cc6; font-weight: bold;">]</span><span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">for</span> k, v <span style="color: #ff8080; font-weight: bold;">in</span> clean_belief.items<span style="color: #6c6; font-weight: bold;">()</span><span style="color: #c66; font-weight: bold;">}</span>
                <span style="color: #ffe9aa;">active_bs</span> = <span style="color: #aaffe4;">None</span>
                <span style="color: #ff8080; font-weight: bold;">if</span> active_domain <span style="color: #ff8080; font-weight: bold;">is</span> <span style="color: #ff8080; font-weight: bold;">not</span> <span style="color: #aaffe4;">None</span>:
@@ -1151,7 +1151,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
 <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">delexicaliseReferenceNumber</span><span style="color: #c66; font-weight: bold;">(</span>sent, turn<span style="color: #c66; font-weight: bold;">)</span>:
            <span style="color: #62d196;">"""Based on the belief state, we can find reference number that
            during data gathering was created randomly."""</span>
-           <span style="color: #ffe9aa;">domains</span> = <span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'restaurant'</span>, <span style="color: #ffe9aa; font-style: italic;">'hotel'</span>, <span style="color: #ffe9aa; font-style: italic;">'attraction'</span>, <span style="color: #ffe9aa; font-style: italic;">'train'</span>, <span style="color: #ffe9aa; font-style: italic;">'taxi'</span>, <span style="color: #ffe9aa; font-style: italic;">'hospital'</span><span style="color: #c66; font-weight: bold;">]</span>  <span style="color: #565575;"># </span><span style="color: #565575;">, 'police']
+           <span style="color: #ffe9aa;">domains</span> = <span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'restaurant'</span>, <span style="color: #ffe9aa; font-style: italic;">'hotel'</span>, <span style="color: #ffe9aa; font-style: italic;">'attraction'</span>, <span style="color: #ffe9aa; font-style: italic;">'train'</span>, <span style="color: #ffe9aa; font-style: italic;">'taxi'</span>, <span style="color: #ffe9aa; font-style: italic;">'hospital'</span><span style="color: #c66; font-weight: bold;">]</span>  <span style="color: #565575;"># </span><span style="color: #96a0aa;">, 'police']
 </span>           <span style="color: #ff8080; font-weight: bold;">if</span> turn<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'metadata'</span><span style="color: #c66; font-weight: bold;">]</span>:
                <span style="color: #ff8080; font-weight: bold;">for</span> domain <span style="color: #ff8080; font-weight: bold;">in</span> domains:
                    <span style="color: #ff8080; font-weight: bold;">if</span> turn<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'metadata'</span><span style="color: #c66; font-weight: bold;">][</span>domain<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'book'</span><span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'booked'</span><span style="color: #c66; font-weight: bold;">]</span>:
@@ -1163,11 +1163,11 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                            <span style="color: #ffe9aa;">key</span> = normalize<span style="color: #c66; font-weight: bold;">(</span>turn<span style="color: #6c6; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'metadata'</span><span style="color: #6c6; font-weight: bold;">][</span>domain<span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'book'</span><span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'booked'</span><span style="color: #6c6; font-weight: bold;">][</span>0<span style="color: #6c6; font-weight: bold;">][</span>slot<span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span>
                            <span style="color: #ffe9aa;">sent</span> = <span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">' '</span> + sent + <span style="color: #ffe9aa; font-style: italic;">' '</span><span style="color: #c66; font-weight: bold;">)</span>.replace<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">' '</span> + key + <span style="color: #ffe9aa; font-style: italic;">' '</span>, <span style="color: #ffe9aa; font-style: italic;">' '</span> + val + <span style="color: #ffe9aa; font-style: italic;">' '</span><span style="color: #c66; font-weight: bold;">)</span>
 
-                           <span style="color: #565575;"># </span><span style="color: #565575;">try reference with hashtag
+                           <span style="color: #565575;"># </span><span style="color: #96a0aa;">try reference with hashtag
 </span>                           <span style="color: #ffe9aa;">key</span> = normalize<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"#"</span> + turn<span style="color: #6c6; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'metadata'</span><span style="color: #6c6; font-weight: bold;">][</span>domain<span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'book'</span><span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'booked'</span><span style="color: #6c6; font-weight: bold;">][</span>0<span style="color: #6c6; font-weight: bold;">][</span>slot<span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span>
                            <span style="color: #ffe9aa;">sent</span> = <span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">' '</span> + sent + <span style="color: #ffe9aa; font-style: italic;">' '</span><span style="color: #c66; font-weight: bold;">)</span>.replace<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">' '</span> + key + <span style="color: #ffe9aa; font-style: italic;">' '</span>, <span style="color: #ffe9aa; font-style: italic;">' '</span> + val + <span style="color: #ffe9aa; font-style: italic;">' '</span><span style="color: #c66; font-weight: bold;">)</span>
 
-                           <span style="color: #565575;"># </span><span style="color: #565575;">try reference with ref#
+                           <span style="color: #565575;"># </span><span style="color: #96a0aa;">try reference with ref#
 </span>                           <span style="color: #ffe9aa;">key</span> = normalize<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"ref#"</span> + turn<span style="color: #6c6; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'metadata'</span><span style="color: #6c6; font-weight: bold;">][</span>domain<span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'book'</span><span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'booked'</span><span style="color: #6c6; font-weight: bold;">][</span>0<span style="color: #6c6; font-weight: bold;">][</span>slot<span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span>
                            <span style="color: #ffe9aa;">sent</span> = <span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">' '</span> + sent + <span style="color: #ffe9aa; font-style: italic;">' '</span><span style="color: #c66; font-weight: bold;">)</span>.replace<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">' '</span> + key + <span style="color: #ffe9aa; font-style: italic;">' '</span>, <span style="color: #ffe9aa; font-style: italic;">' '</span> + val + <span style="color: #ffe9aa; font-style: italic;">' '</span><span style="color: #c66; font-weight: bold;">)</span>
            <span style="color: #ff8080; font-weight: bold;">return</span> sent
@@ -1176,25 +1176,25 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
 <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">analyze_dialogue</span><span style="color: #c66; font-weight: bold;">(</span>dialogue, maxlen<span style="color: #c66; font-weight: bold;">)</span>:
            <span style="color: #62d196;">"""Cleaning procedure for all kinds of errors in text and annotation."""</span>
            <span style="color: #ffe9aa;">d</span> = dialogue
-           <span style="color: #565575;"># </span><span style="color: #565575;">do all the necessary postprocessing
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">do all the necessary postprocessing
 </span>           <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>d<span style="color: #6c6; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'log'</span><span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span> % 2 != 0:
-               <span style="color: #565575;"># </span><span style="color: #565575;">print path
+               <span style="color: #565575;"># </span><span style="color: #96a0aa;">print path
 </span>               logger.warning<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'odd # of turns'</span><span style="color: #c66; font-weight: bold;">)</span>
-               <span style="color: #ff8080; font-weight: bold;">return</span> <span style="color: #aaffe4;">None</span>  <span style="color: #565575;"># </span><span style="color: #565575;">odd number of turns, wrong dialogue
+               <span style="color: #ff8080; font-weight: bold;">return</span> <span style="color: #aaffe4;">None</span>  <span style="color: #565575;"># </span><span style="color: #96a0aa;">odd number of turns, wrong dialogue
 </span>
            <span style="color: #ff8080; font-weight: bold;">for</span> i <span style="color: #ff8080; font-weight: bold;">in</span> <span style="color: #c991e1;">range</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #c991e1;">len</span><span style="color: #6c6; font-weight: bold;">(</span>d<span style="color: #69f; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'log'</span><span style="color: #69f; font-weight: bold;">]</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>:
                <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>d<span style="color: #6c6; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'log'</span><span style="color: #6c6; font-weight: bold;">][</span>i<span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'text'</span><span style="color: #6c6; font-weight: bold;">]</span>.split<span style="color: #6c6; font-weight: bold;">()</span><span style="color: #c66; font-weight: bold;">)</span> &gt; maxlen:
                    logger.warning<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'too long'</span><span style="color: #c66; font-weight: bold;">)</span>
-                   <span style="color: #ff8080; font-weight: bold;">return</span> <span style="color: #aaffe4;">None</span>  <span style="color: #565575;"># </span><span style="color: #565575;">too long sentence, wrong dialogue
-</span>               <span style="color: #ff8080; font-weight: bold;">if</span> i % 2 == 0:  <span style="color: #565575;"># </span><span style="color: #565575;">usr turn
+                   <span style="color: #ff8080; font-weight: bold;">return</span> <span style="color: #aaffe4;">None</span>  <span style="color: #565575;"># </span><span style="color: #96a0aa;">too long sentence, wrong dialogue
+</span>               <span style="color: #ff8080; font-weight: bold;">if</span> i % 2 == 0:  <span style="color: #565575;"># </span><span style="color: #96a0aa;">usr turn
 </span>                   <span style="color: #ffe9aa;">text</span> = d<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'log'</span><span style="color: #c66; font-weight: bold;">][</span>i<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'text'</span><span style="color: #c66; font-weight: bold;">]</span>
                    <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ff8080; font-weight: bold;">not</span> is_ascii<span style="color: #c66; font-weight: bold;">(</span>text<span style="color: #c66; font-weight: bold;">)</span>:
                        logger.warning<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'not ascii'</span><span style="color: #c66; font-weight: bold;">)</span>
                        <span style="color: #ff8080; font-weight: bold;">return</span> <span style="color: #aaffe4;">None</span>
-               <span style="color: #ff8080; font-weight: bold;">else</span>:  <span style="color: #565575;"># </span><span style="color: #565575;">sys turn
+               <span style="color: #ff8080; font-weight: bold;">else</span>:  <span style="color: #565575;"># </span><span style="color: #96a0aa;">sys turn
 </span>                   <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">'database'</span> <span style="color: #ff8080; font-weight: bold;">not</span> <span style="color: #ff8080; font-weight: bold;">in</span> d<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'log'</span><span style="color: #c66; font-weight: bold;">][</span>i<span style="color: #c66; font-weight: bold;">]</span>:
                        logger.warning<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'no db'</span><span style="color: #c66; font-weight: bold;">)</span>
-                       <span style="color: #ff8080; font-weight: bold;">return</span> <span style="color: #aaffe4;">None</span>  <span style="color: #565575;"># </span><span style="color: #565575;">no db_pointer, probably 2 usr turns in a row, wrong dialogue
+                       <span style="color: #ff8080; font-weight: bold;">return</span> <span style="color: #aaffe4;">None</span>  <span style="color: #565575;"># </span><span style="color: #96a0aa;">no db_pointer, probably 2 usr turns in a row, wrong dialogue
 </span>                   <span style="color: #ffe9aa;">text</span> = d<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'log'</span><span style="color: #c66; font-weight: bold;">][</span>i<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'text'</span><span style="color: #c66; font-weight: bold;">]</span>
                    <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ff8080; font-weight: bold;">not</span> is_ascii<span style="color: #c66; font-weight: bold;">(</span>text<span style="color: #c66; font-weight: bold;">)</span>:
                        logger.warning<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'not ascii'</span><span style="color: #c66; font-weight: bold;">)</span>
@@ -1204,7 +1204,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
 
 
 <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">get_dial</span><span style="color: #c66; font-weight: bold;">(</span>dialogue<span style="color: #c66; font-weight: bold;">)</span>:
-           <span style="color: #ffe9aa;">d_orig</span> = analyze_dialogue<span style="color: #c66; font-weight: bold;">(</span>dialogue, MAX_LENGTH<span style="color: #c66; font-weight: bold;">)</span>  <span style="color: #565575;"># </span><span style="color: #565575;">max turn len is 50 words
+           <span style="color: #ffe9aa;">d_orig</span> = analyze_dialogue<span style="color: #c66; font-weight: bold;">(</span>dialogue, MAX_LENGTH<span style="color: #c66; font-weight: bold;">)</span>  <span style="color: #565575;"># </span><span style="color: #96a0aa;">max turn len is 50 words
 </span>           <span style="color: #ff8080; font-weight: bold;">if</span> d_orig <span style="color: #ff8080; font-weight: bold;">is</span> <span style="color: #aaffe4;">None</span>:
                <span style="color: #ff8080; font-weight: bold;">return</span> <span style="color: #aaffe4;">None</span>
            <span style="color: #ff8080; font-weight: bold;">return</span> d_orig
@@ -1217,7 +1217,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
            <span style="color: #ffe9aa;">sorted_idx</span> = np.argsort<span style="color: #c66; font-weight: bold;">(</span>freqs<span style="color: #c66; font-weight: bold;">)</span>
            <span style="color: #ffe9aa;">sorted_words</span> = <span style="color: #c66; font-weight: bold;">[</span>words<span style="color: #6c6; font-weight: bold;">[</span>ii<span style="color: #6c6; font-weight: bold;">]</span> <span style="color: #ff8080; font-weight: bold;">for</span> ii <span style="color: #ff8080; font-weight: bold;">in</span> sorted_idx<span style="color: #6c6; font-weight: bold;">[</span>::-1<span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">]</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">Extra vocabulary symbols
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">Extra vocabulary symbols
 </span>           <span style="color: #ffe9aa;">_GO</span> = <span style="color: #ffe9aa; font-style: italic;">'_GO'</span>
            <span style="color: #ffe9aa;">EOS</span> = <span style="color: #ffe9aa; font-style: italic;">'_EOS'</span>
            <span style="color: #ffe9aa;">UNK</span> = <span style="color: #ffe9aa; font-style: italic;">'_UNK'</span>
@@ -1247,11 +1247,11 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
            """</span>
            <span style="color: #ffe9aa;">transform_belief</span> = BeliefStateTransformation<span style="color: #c66; font-weight: bold;">()</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">Load databases
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">Load databases
 </span>           <span style="color: #ff8080; font-weight: bold;">with</span> zipfile.ZipFile<span style="color: #c66; font-weight: bold;">(</span>os.path.join<span style="color: #6c6; font-weight: bold;">(</span>path, <span style="color: #ffe9aa; font-style: italic;">'database.zip'</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">as</span> dbzipf:
                <span style="color: #ffe9aa;">db</span> = Database<span style="color: #c66; font-weight: bold;">(</span>dbzipf<span style="color: #c66; font-weight: bold;">)</span>
 
-               <span style="color: #565575;"># </span><span style="color: #565575;">create dictionary of delexicalied values that then we will search against, order matters here!
+               <span style="color: #565575;"># </span><span style="color: #96a0aa;">create dictionary of delexicalied values that then we will search against, order matters here!
 </span>               <span style="color: #ffe9aa;">dic</span> = prepareSlotValuesIndependent<span style="color: #c66; font-weight: bold;">(</span>dbzipf, path<span style="color: #c66; font-weight: bold;">)</span>
            <span style="color: #ffe9aa;">delex_data</span> = OrderedDict<span style="color: #c66; font-weight: bold;">()</span>
            <span style="color: #ff8080; font-weight: bold;">with</span> zipfile.ZipFile<span style="color: #c66; font-weight: bold;">(</span>os.path.join<span style="color: #6c6; font-weight: bold;">(</span>path, <span style="color: #ffe9aa; font-style: italic;">'lexicalizer.zip'</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">as</span> lexzipf:
@@ -1267,7 +1267,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
 
            <span style="color: #ff8080; font-weight: bold;">for</span> dialogue_name <span style="color: #ff8080; font-weight: bold;">in</span> tqdm<span style="color: #c66; font-weight: bold;">(</span>data<span style="color: #c66; font-weight: bold;">)</span>:
                <span style="color: #ffe9aa;">dialogue</span> = data<span style="color: #c66; font-weight: bold;">[</span>dialogue_name<span style="color: #c66; font-weight: bold;">]</span>
-               <span style="color: #565575;"># </span><span style="color: #565575;">print dialogue_name
+               <span style="color: #565575;"># </span><span style="color: #96a0aa;">print dialogue_name
 </span>
                <span style="color: #ffe9aa;">idx_acts</span> = 1
                <span style="color: #ffe9aa;">active_domain</span> = <span style="color: #aaffe4;">None</span>
@@ -1279,28 +1279,28 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                                        <span style="color: #ff8080; font-weight: bold;">for</span> f, xs <span style="color: #ff8080; font-weight: bold;">in</span> data2<span style="color: #6c6; font-weight: bold;">[</span>dialogue_name.strip<span style="color: #69f; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'.json'</span><span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">][</span><span style="color: #c991e1;">str</span><span style="color: #69f; font-weight: bold;">(</span>idx_acts<span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">]</span>.items<span style="color: #6c6; font-weight: bold;">()</span> <span style="color: #ff8080; font-weight: bold;">for</span> x <span style="color: #ff8080; font-weight: bold;">in</span> xs<span style="color: #c66; font-weight: bold;">]</span>
                    <span style="color: #ff8080; font-weight: bold;">except</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #91ddff;">Exception</span><span style="color: #c66; font-weight: bold;">)</span>:
                        <span style="color: #ffe9aa;">dialogue_act</span> = <span style="color: #c66; font-weight: bold;">[]</span>
-                   <span style="color: #565575;"># </span><span style="color: #565575;">normalization, split and delexicalization of the sentence
+                   <span style="color: #565575;"># </span><span style="color: #96a0aa;">normalization, split and delexicalization of the sentence
 </span>                   <span style="color: #ffe9aa;">sent</span> = normalize<span style="color: #c66; font-weight: bold;">(</span>turn<span style="color: #6c6; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'text'</span><span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span>
                    <span style="color: #ffe9aa;">text</span> = sent
 
                    <span style="color: #ffe9aa;">words</span> = sent.split<span style="color: #c66; font-weight: bold;">()</span>
                    <span style="color: #ffe9aa;">sent</span> = delexicalise<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">' '</span>.join<span style="color: #6c6; font-weight: bold;">(</span>words<span style="color: #6c6; font-weight: bold;">)</span>, dic<span style="color: #c66; font-weight: bold;">)</span>
 
-                   <span style="color: #565575;"># </span><span style="color: #565575;">parsing reference number GIVEN belief state
+                   <span style="color: #565575;"># </span><span style="color: #96a0aa;">parsing reference number GIVEN belief state
 </span>                   <span style="color: #ffe9aa;">sent</span> = delexicaliseReferenceNumber<span style="color: #c66; font-weight: bold;">(</span>sent, turn<span style="color: #c66; font-weight: bold;">)</span>
 
-                   <span style="color: #565575;"># </span><span style="color: #565575;">changes to numbers only here
+                   <span style="color: #565575;"># </span><span style="color: #96a0aa;">changes to numbers only here
 </span>                   <span style="color: #ffe9aa;">digitpat</span> = re.<span style="color: #c991e1;">compile</span><span style="color: #c66; font-weight: bold;">(</span>r<span style="color: #ffe9aa; font-style: italic;">'\d+'</span><span style="color: #c66; font-weight: bold;">)</span>
                    <span style="color: #ffe9aa;">sent</span> = re.sub<span style="color: #c66; font-weight: bold;">(</span>digitpat, <span style="color: #ffe9aa; font-style: italic;">'[value_count]'</span>, sent<span style="color: #c66; font-weight: bold;">)</span>
 
                    dialogue<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'log'</span><span style="color: #c66; font-weight: bold;">][</span>idx<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'dialogue_act'</span><span style="color: #c66; font-weight: bold;">]</span> = dialogue_act
                    dialogue<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'log'</span><span style="color: #c66; font-weight: bold;">][</span>idx<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'speaker'</span><span style="color: #c66; font-weight: bold;">]</span> = <span style="color: #ffe9aa; font-style: italic;">'user'</span>
 
-                   <span style="color: #565575;"># </span><span style="color: #565575;">delexicalised sentence added to the dialogue
+                   <span style="color: #565575;"># </span><span style="color: #96a0aa;">delexicalised sentence added to the dialogue
 </span>                   <span style="color: #ffe9aa;">delex</span> = sent.strip<span style="color: #c66; font-weight: bold;">()</span>
                    <span style="color: #ffe9aa;">delex</span> = fixDelex<span style="color: #c66; font-weight: bold;">(</span>delex, dialogue_act<span style="color: #c66; font-weight: bold;">)</span>
 
-                   <span style="color: #ff8080; font-weight: bold;">if</span> idx % 2 == 1:  <span style="color: #565575;"># </span><span style="color: #565575;">if it's a system turn
+                   <span style="color: #ff8080; font-weight: bold;">if</span> idx % 2 == 1:  <span style="color: #565575;"># </span><span style="color: #96a0aa;">if it's a system turn
 </span>                       dialogue<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'log'</span><span style="color: #c66; font-weight: bold;">][</span>idx<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'speaker'</span><span style="color: #c66; font-weight: bold;">]</span> = <span style="color: #ffe9aa; font-style: italic;">'system'</span>
                        <span style="color: #ffe9aa;">belief</span> = dialogue<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'log'</span><span style="color: #c66; font-weight: bold;">][</span>idx<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'metadata'</span><span style="color: #c66; font-weight: bold;">]</span>
                        <span style="color: #ffe9aa;">active_domain</span>, <span style="color: #ffe9aa;">delex</span> = fix_active_domain_and_delex<span style="color: #c66; font-weight: bold;">(</span>active_domain, text, delex<span style="color: #c66; font-weight: bold;">)</span>
@@ -1309,17 +1309,17 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                        <span style="color: #ffe9aa;">belief</span> = transform_belief<span style="color: #c66; font-weight: bold;">(</span>belief, dialogue_act, active_domain<span style="color: #c66; font-weight: bold;">)</span>
                        dialogue<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'log'</span><span style="color: #c66; font-weight: bold;">][</span>idx<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'belief'</span><span style="color: #c66; font-weight: bold;">]</span> = belief
                        <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">'bus'</span> <span style="color: #ff8080; font-weight: bold;">in</span> belief:
-                           <span style="color: #565575;"># </span><span style="color: #565575;">We need to ignore this dialogue
-</span>                           <span style="color: #565575;"># </span><span style="color: #565575;">There is no data for the bus domain
+                           <span style="color: #565575;"># </span><span style="color: #96a0aa;">We need to ignore this dialogue
+</span>                           <span style="color: #565575;"># </span><span style="color: #96a0aa;">There is no data for the bus domain
 </span>                           <span style="color: #ffe9aa;">ignore_dialogue</span> = <span style="color: #aaffe4;">True</span>
                            <span style="color: #ff8080; font-weight: bold;">break</span>
 
                        dialogue<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'log'</span><span style="color: #c66; font-weight: bold;">][</span>idx<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'database'</span><span style="color: #c66; font-weight: bold;">]</span> = db<span style="color: #c66; font-weight: bold;">(</span>belief<span style="color: #c66; font-weight: bold;">)</span>
 
-                       <span style="color: #565575;"># </span><span style="color: #565575;">Add booked property
+                       <span style="color: #565575;"># </span><span style="color: #96a0aa;">Add booked property
 </span>                       dialogue<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'log'</span><span style="color: #c66; font-weight: bold;">][</span>idx<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'booked_domains'</span><span style="color: #c66; font-weight: bold;">]</span> = <span style="color: #c991e1;">sorted</span><span style="color: #c66; font-weight: bold;">(</span>get_booked_domains<span style="color: #6c6; font-weight: bold;">(</span>dialogue<span style="color: #69f; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'log'</span><span style="color: #69f; font-weight: bold;">][</span>idx<span style="color: #69f; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'metadata'</span><span style="color: #69f; font-weight: bold;">]</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
 
-                       <span style="color: #565575;"># </span><span style="color: #565575;">Test if lexicalizer works
+                       <span style="color: #565575;"># </span><span style="color: #96a0aa;">Test if lexicalizer works
 </span>                       lexicalizer<span style="color: #c66; font-weight: bold;">(</span>delex, db<span style="color: #6c6; font-weight: bold;">(</span>belief, return_results=<span style="color: #aaffe4;">True</span><span style="color: #6c6; font-weight: bold;">)</span>, belief<span style="color: #c66; font-weight: bold;">)</span>
 
                    dialogue<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'log'</span><span style="color: #c66; font-weight: bold;">][</span>idx<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'delexicalised_text'</span><span style="color: #c66; font-weight: bold;">]</span> = delex
@@ -1332,7 +1332,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                <span style="color: #ff8080; font-weight: bold;">else</span>:
                    <span style="color: #ffe9aa;">ignored_dialogues</span> += 1
            <span style="color: #ff8080; font-weight: bold;">if</span> ignored_dialogues &gt; 0:
-               logger.warning<span style="color: #c66; font-weight: bold;">(</span>f<span style="color: #ffe9aa; font-style: italic;">'dialogues were ignored </span>{100 * ignored_dialogues / (ignored_dialogues + <span style="color: #c991e1;">len</span>(delex_data)):.1f}<span style="color: #ffe9aa; font-style: italic;">% due to a missing domain "bus"'</span><span style="color: #c66; font-weight: bold;">)</span>  <span style="color: #565575;"># </span><span style="color: #565575;">noqa: E501
+               logger.warning<span style="color: #c66; font-weight: bold;">(</span>f<span style="color: #ffe9aa; font-style: italic;">'dialogues were ignored </span>{100 * ignored_dialogues / (ignored_dialogues + <span style="color: #c991e1;">len</span>(delex_data)):.1f}<span style="color: #ffe9aa; font-style: italic;">% due to a missing domain "bus"'</span><span style="color: #c66; font-weight: bold;">)</span>  <span style="color: #565575;"># </span><span style="color: #96a0aa;">noqa: E501
 </span>           <span style="color: #ff8080; font-weight: bold;">return</span> delex_data
 
 
@@ -1447,7 +1447,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                        <span style="color: #ffe9aa;">val</span> = val.get<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'single'</span>, val.get<span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'double'</span>, <span style="color: #c991e1;">next</span><span style="color: #69f; font-weight: bold;">(</span><span style="color: #c991e1;">iter</span><span style="color: #cc6; font-weight: bold;">(</span>val.values<span style="color: #6cc; font-weight: bold;">()</span><span style="color: #cc6; font-weight: bold;">)</span><span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
                        <span style="color: #ffe9aa;">val</span> = f<span style="color: #ffe9aa; font-style: italic;">'</span>{val}<span style="color: #ffe9aa; font-style: italic;"> pounds'</span>
                    <span style="color: #ff8080; font-weight: bold;">if</span> k2 == <span style="color: #ffe9aa; font-style: italic;">'people'</span>:
-                       <span style="color: #565575;"># </span><span style="color: #565575;">BUG in MW2.0
+                       <span style="color: #565575;"># </span><span style="color: #96a0aa;">BUG in MW2.0
 </span>                       <span style="color: #ffe9aa;">val</span> = val.lstrip<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'`'</span><span style="color: #c66; font-weight: bold;">)</span>
                    <span style="color: #ffe9aa;">results</span><span style="color: #c66; font-weight: bold;">[</span>k2<span style="color: #c66; font-weight: bold;">]</span> = val
                <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">'color'</span> <span style="color: #ff8080; font-weight: bold;">in</span> results <span style="color: #ff8080; font-weight: bold;">and</span> <span style="color: #ffe9aa; font-style: italic;">'brand'</span> <span style="color: #ff8080; font-weight: bold;">in</span> results:
@@ -1464,9 +1464,9 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                <span style="color: #ff8080; font-weight: bold;">return</span> results
 
            <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">query_domain</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>, domain, query<span style="color: #c66; font-weight: bold;">)</span>:
-               <span style="color: #565575;"># </span><span style="color: #565575;">Handle special domains not in sqlite databases
-</span>               <span style="color: #565575;"># </span><span style="color: #565575;">NOTE: this is not a part of multiwoz repo
-</span>               <span style="color: #565575;"># </span><span style="color: #565575;">Taken from convlab
+               <span style="color: #565575;"># </span><span style="color: #96a0aa;">Handle special domains not in sqlite databases
+</span>               <span style="color: #565575;"># </span><span style="color: #96a0aa;">NOTE: this is not a part of multiwoz repo
+</span>               <span style="color: #565575;"># </span><span style="color: #96a0aa;">Taken from convlab
 </span>               <span style="color: #ff8080; font-weight: bold;">if</span> domain == <span style="color: #ffe9aa; font-style: italic;">'taxi'</span>:
                    <span style="color: #ff8080; font-weight: bold;">return</span> <span style="color: #c66; font-weight: bold;">[</span><span style="color: #6c6; font-weight: bold;">{</span><span style="color: #ffe9aa; font-style: italic;">'color'</span>: <span style="color: #ff8080; font-weight: bold;">self</span>.rng.choice<span style="color: #69f; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>.dbs<span style="color: #cc6; font-weight: bold;">[</span>domain<span style="color: #cc6; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'taxi_colors'</span><span style="color: #cc6; font-weight: bold;">]</span><span style="color: #69f; font-weight: bold;">)</span>,
                             <span style="color: #ffe9aa; font-style: italic;">'brand'</span>: <span style="color: #ff8080; font-weight: bold;">self</span>.rng.choice<span style="color: #69f; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>.dbs<span style="color: #cc6; font-weight: bold;">[</span>domain<span style="color: #cc6; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'taxi_types'</span><span style="color: #cc6; font-weight: bold;">]</span><span style="color: #69f; font-weight: bold;">)</span>,
@@ -1494,7 +1494,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                        <span style="color: #ff8080; font-weight: bold;">if</span> flag:
                            <span style="color: #ffe9aa;">sql_query</span> += <span style="color: #ffe9aa; font-style: italic;">" where "</span>
                            <span style="color: #ffe9aa;">val2</span> = val.replace<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"'"</span>, <span style="color: #ffe9aa; font-style: italic;">"''"</span><span style="color: #c66; font-weight: bold;">)</span>
-                           <span style="color: #565575;"># </span><span style="color: #565575;">change query for trains
+                           <span style="color: #565575;"># </span><span style="color: #96a0aa;">change query for trains
 </span>                           <span style="color: #ff8080; font-weight: bold;">if</span> key == <span style="color: #ffe9aa; font-style: italic;">'leaveAt'</span>:
                                <span style="color: #ffe9aa;">sql_query</span> += r<span style="color: #ffe9aa; font-style: italic;">" "</span> + key + <span style="color: #ffe9aa; font-style: italic;">" &gt; "</span> + r<span style="color: #ffe9aa; font-style: italic;">"'"</span> + val2 + r<span style="color: #ffe9aa; font-style: italic;">"'"</span>
                            <span style="color: #ff8080; font-weight: bold;">elif</span> key == <span style="color: #ffe9aa; font-style: italic;">'arriveBy'</span>:
@@ -1558,30 +1558,30 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                <span style="color: #ffe9aa;">goal</span><span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">]</span> = <span style="color: #c66; font-weight: bold;">{}</span>
                <span style="color: #ffe9aa;">goal</span><span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">]</span> = <span style="color: #c66; font-weight: bold;">{</span><span style="color: #ffe9aa; font-style: italic;">'informable'</span>: <span style="color: #6c6; font-weight: bold;">[]</span>, <span style="color: #ffe9aa; font-style: italic;">'requestable'</span>: <span style="color: #6c6; font-weight: bold;">[]</span>, <span style="color: #ffe9aa; font-style: italic;">'booking'</span>: <span style="color: #6c6; font-weight: bold;">{}</span><span style="color: #c66; font-weight: bold;">}</span>
                <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">'info'</span> <span style="color: #ff8080; font-weight: bold;">in</span> dialog_goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">]</span>:
-                   <span style="color: #565575;"># </span><span style="color: #565575;">if d['goal'][domain].has_key('info'):
+                   <span style="color: #565575;"># </span><span style="color: #96a0aa;">if d['goal'][domain].has_key('info'):
 </span>                   <span style="color: #ff8080; font-weight: bold;">if</span> domain == <span style="color: #ffe9aa; font-style: italic;">'train'</span>:
-                       <span style="color: #565575;"># </span><span style="color: #565575;">we consider dialogues only where train had to be booked!
+                       <span style="color: #565575;"># </span><span style="color: #96a0aa;">we consider dialogues only where train had to be booked!
 </span>                       <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">'book'</span> <span style="color: #ff8080; font-weight: bold;">in</span> dialog_goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">]</span>:
-                           <span style="color: #565575;"># </span><span style="color: #565575;">if d['goal'][domain].has_key('book'):
+                           <span style="color: #565575;"># </span><span style="color: #96a0aa;">if d['goal'][domain].has_key('book'):
 </span>                           goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'requestable'</span><span style="color: #c66; font-weight: bold;">]</span>.append<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'reference'</span><span style="color: #c66; font-weight: bold;">)</span>
                        <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">'reqt'</span> <span style="color: #ff8080; font-weight: bold;">in</span> dialog_goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">]</span>:
-                           <span style="color: #565575;"># </span><span style="color: #565575;">if d['goal'][domain].has_key('reqt'):
+                           <span style="color: #565575;"># </span><span style="color: #96a0aa;">if d['goal'][domain].has_key('reqt'):
 </span>                           <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">'trainID'</span> <span style="color: #ff8080; font-weight: bold;">in</span> dialog_goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'reqt'</span><span style="color: #c66; font-weight: bold;">]</span>:
                                goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'requestable'</span><span style="color: #c66; font-weight: bold;">]</span>.append<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'id'</span><span style="color: #c66; font-weight: bold;">)</span>
                    <span style="color: #ff8080; font-weight: bold;">else</span>:
                        <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">'reqt'</span> <span style="color: #ff8080; font-weight: bold;">in</span> dialog_goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">]</span>:
-                           <span style="color: #565575;"># </span><span style="color: #565575;">if d['goal'][domain].has_key('reqt'):
-</span>                           <span style="color: #ff8080; font-weight: bold;">for</span> s <span style="color: #ff8080; font-weight: bold;">in</span> dialog_goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'reqt'</span><span style="color: #c66; font-weight: bold;">]</span>:  <span style="color: #565575;"># </span><span style="color: #565575;">addtional requests:
+                           <span style="color: #565575;"># </span><span style="color: #96a0aa;">if d['goal'][domain].has_key('reqt'):
+</span>                           <span style="color: #ff8080; font-weight: bold;">for</span> s <span style="color: #ff8080; font-weight: bold;">in</span> dialog_goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'reqt'</span><span style="color: #c66; font-weight: bold;">]</span>:  <span style="color: #565575;"># </span><span style="color: #96a0aa;">addtional requests:
 </span>                               <span style="color: #ff8080; font-weight: bold;">if</span> s <span style="color: #ff8080; font-weight: bold;">in</span> <span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'phone'</span>, <span style="color: #ffe9aa; font-style: italic;">'address'</span>, <span style="color: #ffe9aa; font-style: italic;">'postcode'</span>, <span style="color: #ffe9aa; font-style: italic;">'reference'</span>, <span style="color: #ffe9aa; font-style: italic;">'id'</span><span style="color: #c66; font-weight: bold;">]</span>:
-                                   <span style="color: #565575;"># </span><span style="color: #565575;">ones that can be easily delexicalised
+                                   <span style="color: #565575;"># </span><span style="color: #96a0aa;">ones that can be easily delexicalised
 </span>                                   goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'requestable'</span><span style="color: #c66; font-weight: bold;">]</span>.append<span style="color: #c66; font-weight: bold;">(</span>s<span style="color: #c66; font-weight: bold;">)</span>
                        <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">'book'</span> <span style="color: #ff8080; font-weight: bold;">in</span> dialog_goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">]</span>:
-                           <span style="color: #565575;"># </span><span style="color: #565575;">if d['goal'][domain].has_key('book'):
+                           <span style="color: #565575;"># </span><span style="color: #96a0aa;">if d['goal'][domain].has_key('book'):
 </span>                           goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'requestable'</span><span style="color: #c66; font-weight: bold;">]</span>.append<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"reference"</span><span style="color: #c66; font-weight: bold;">)</span>
 
                    goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">"informable"</span><span style="color: #c66; font-weight: bold;">]</span> = dialog_goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'info'</span><span style="color: #c66; font-weight: bold;">]</span>
                    <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">'book'</span> <span style="color: #ff8080; font-weight: bold;">in</span> dialog_goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">]</span>:
-                       <span style="color: #565575;"># </span><span style="color: #565575;">if d['goal'][domain].has_key('book'):
+                       <span style="color: #565575;"># </span><span style="color: #96a0aa;">if d['goal'][domain].has_key('book'):
 </span>                       goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">"booking"</span><span style="color: #c66; font-weight: bold;">]</span> = dialog_goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'book'</span><span style="color: #c66; font-weight: bold;">]</span>
 
                <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">'invalid'</span> <span style="color: #ff8080; font-weight: bold;">in</span> goal<span style="color: #c66; font-weight: bold;">[</span>domain<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'booking'</span><span style="color: #c66; font-weight: bold;">]</span>:
@@ -1623,7 +1623,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
            <span style="color: #ffe9aa;">train_dials</span> = <span style="color: #c66; font-weight: bold;">[]</span>
 
            <span style="color: #ff8080; font-weight: bold;">for</span> dialogue_name <span style="color: #ff8080; font-weight: bold;">in</span> tqdm<span style="color: #c66; font-weight: bold;">(</span>data<span style="color: #c66; font-weight: bold;">)</span>:
-               <span style="color: #565575;"># </span><span style="color: #565575;">print dialogue_name
+               <span style="color: #565575;"># </span><span style="color: #96a0aa;">print dialogue_name
 </span>               <span style="color: #ffe9aa;">dial</span> = get_dial<span style="color: #c66; font-weight: bold;">(</span>data<span style="color: #6c6; font-weight: bold;">[</span>dialogue_name<span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span>
                <span style="color: #ff8080; font-weight: bold;">if</span> dial:
                    <span style="color: #ffe9aa;">dialogue</span> = <span style="color: #c66; font-weight: bold;">{}</span>
@@ -1638,7 +1638,7 @@ setup_logging<span style="color: #c66; font-weight: bold;">()</span>
                    <span style="color: #ff8080; font-weight: bold;">else</span>:
                        train_dials.append<span style="color: #c66; font-weight: bold;">(</span>dialogue<span style="color: #c66; font-weight: bold;">)</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">save all dialogues
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">save all dialogues
 </span>           <span style="color: #ff8080; font-weight: bold;">with</span> <span style="color: #c991e1;">open</span><span style="color: #c66; font-weight: bold;">(</span>os.path.join<span style="color: #6c6; font-weight: bold;">(</span>path, <span style="color: #ffe9aa; font-style: italic;">'val.json'</span><span style="color: #6c6; font-weight: bold;">)</span>, <span style="color: #ffe9aa; font-style: italic;">'w'</span><span style="color: #c66; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">as</span> f:
                json.dump<span style="color: #c66; font-weight: bold;">(</span><span style="color: #c991e1;">dict</span><span style="color: #6c6; font-weight: bold;">(</span>domains=MW_DOMAINS, dialogues=val_dials<span style="color: #6c6; font-weight: bold;">)</span>, f, indent=4<span style="color: #c66; font-weight: bold;">)</span>
 
@@ -1728,14 +1728,14 @@ import re
                    <span style="color: #ff8080; font-weight: bold;">with</span> dbzipf.<span style="color: #c991e1;">open</span><span style="color: #c66; font-weight: bold;">(</span>db<span style="color: #c66; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">as</span> zf, dboutf.<span style="color: #c991e1;">open</span><span style="color: #c66; font-weight: bold;">(</span>os.path.join<span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'db'</span>, f<span style="color: #ffe9aa; font-style: italic;">'</span>{domain}<span style="color: #ffe9aa; font-style: italic;">-dbase.db'</span><span style="color: #6c6; font-weight: bold;">)</span>, <span style="color: #ffe9aa; font-style: italic;">'w'</span><span style="color: #c66; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">as</span> f:
                        shutil.copyfileobj<span style="color: #c66; font-weight: bold;">(</span>zf, f<span style="color: #c66; font-weight: bold;">)</span>
 
-               <span style="color: #565575;"># </span><span style="color: #565575;">Fix json databases
-</span>               <span style="color: #565575;"># </span><span style="color: #565575;">Download from convlab2
+               <span style="color: #565575;"># </span><span style="color: #96a0aa;">Fix json databases
+</span>               <span style="color: #565575;"># </span><span style="color: #96a0aa;">Download from convlab2
 </span>               <span style="color: #ff8080; font-weight: bold;">for</span> domain <span style="color: #ff8080; font-weight: bold;">in</span> MW_DOMAINS:
                    download_file<span style="color: #c66; font-weight: bold;">(</span>
-                           f<span style="color: #ffe9aa; font-style: italic;">'https://raw.githubusercontent.com/thu-coai/ConvLab-2/b82732eae951b3dc957136f40b992a1904c9cbe5/data/multiwoz/db/</span>{domain}<span style="color: #ffe9aa; font-style: italic;">_db.json'</span>,  <span style="color: #565575;"># </span><span style="color: #565575;">noqa: E501
+                           f<span style="color: #ffe9aa; font-style: italic;">'https://raw.githubusercontent.com/thu-coai/ConvLab-2/b82732eae951b3dc957136f40b992a1904c9cbe5/data/multiwoz/db/</span>{domain}<span style="color: #ffe9aa; font-style: italic;">_db.json'</span>,  <span style="color: #565575;"># </span><span style="color: #96a0aa;">noqa: E501
 </span>                           <span style="color: #6c6; font-weight: bold;">(</span>dboutf, os.path.join<span style="color: #69f; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'db'</span>, f<span style="color: #ffe9aa; font-style: italic;">'</span>{domain}<span style="color: #ffe9aa; font-style: italic;">_db.json'</span><span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
 
-               <span style="color: #565575;"># </span><span style="color: #565575;">Export database source
+               <span style="color: #565575;"># </span><span style="color: #96a0aa;">Export database source
 </span>               export_database_source<span style="color: #c66; font-weight: bold;">(</span>dboutf<span style="color: #c66; font-weight: bold;">)</span>
 
 
@@ -1757,7 +1757,7 @@ import re
                <span style="color: #ffe9aa;">delex_data</span> = createDelexData<span style="color: #c66; font-weight: bold;">(</span>zipf, path<span style="color: #c66; font-weight: bold;">)</span>
                divideData<span style="color: #c66; font-weight: bold;">(</span>delex_data, zipf, path<span style="color: #c66; font-weight: bold;">)</span>
 
-           <span style="color: #565575;"># </span><span style="color: #565575;">Generating blacklist
+           <span style="color: #565575;"># </span><span style="color: #96a0aa;">Generating blacklist
 </span>           logger.info<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'generating blacklist'</span><span style="color: #c66; font-weight: bold;">)</span>
            <span style="color: #ffe9aa;">cwd</span> = os.path.dirname<span style="color: #c66; font-weight: bold;">(</span>os.path.abspath<span style="color: #6c6; font-weight: bold;">(</span>__file__<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
            subprocess.run<span style="color: #c66; font-weight: bold;">(</span><span style="color: #6c6; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'python'</span>, os.path.join<span style="color: #69f; font-weight: bold;">(</span>cwd, <span style="color: #ffe9aa; font-style: italic;">'build_multiwoz_blacklist.py'</span><span style="color: #69f; font-weight: bold;">)</span>, <span style="color: #ffe9aa; font-style: italic;">'--dataset'</span>, <span style="color: #ffe9aa; font-style: italic;">'multiwoz-2.0'</span><span style="color: #6c6; font-weight: bold;">]</span>, cwd=cwd<span style="color: #c66; font-weight: bold;">)</span>
@@ -1769,8 +1769,8 @@ import re
 </div>
 </div>
 </div>
-<div id="outline-container-org8e29462" class="outline-4">
-<h4 id="org8e29462"><span class="section-number-4">2.4.2.</span> TOD的层级结构以及各个常见的数据对象</h4>
+<div id="outline-container-orgab40baa" class="outline-4">
+<h4 id="orgab40baa"><span class="section-number-4">2.4.2.</span> TOD的层级结构以及各个常见的数据对象</h4>
 <div class="outline-text-4" id="text-2-4-2">
 <p>
 对话系统的最小单元, 应该是什么? 是一个组件吗? 不, 组件是不统一的,多个组件才能形成一次输入. 那么是一个对话吗? 当然也不是,因为一个对话包含了多个轮. 对的, 对话系统的基本单元,是轮. 对话系统是以轮为单位进行展示的. 我们的每次训练, 所传入的每一条数据,都是1轮数据整理成了一条线状的输入.
@@ -1789,10 +1789,10 @@ import re
 
     <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">__init__</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>, dialogues<span style="color: #c66; font-weight: bold;">)</span>:
 
-        <span style="color: #565575;"># </span><span style="color: #565575;">length list, every elemnt is the length of one dialogue
+        <span style="color: #565575;"># </span><span style="color: #96a0aa;">length list, every elemnt is the length of one dialogue
 </span>        <span style="color: #ffe9aa;">lengths</span> = <span style="color: #c66; font-weight: bold;">[</span><span style="color: #c991e1;">len</span><span style="color: #6c6; font-weight: bold;">(</span>x<span style="color: #69f; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'items'</span><span style="color: #69f; font-weight: bold;">]</span><span style="color: #6c6; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">for</span> x <span style="color: #ff8080; font-weight: bold;">in</span> dialogues<span style="color: #c66; font-weight: bold;">]</span> 
 
-        <span style="color: #565575;"># </span><span style="color: #565575;">cumulative length list, every elemnt is the cumulative length of one dialogue
+        <span style="color: #565575;"># </span><span style="color: #96a0aa;">cumulative length list, every elemnt is the cumulative length of one dialogue
 </span>        <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">cumulative_sizes</span> = DialogueItems.cumsum<span style="color: #c66; font-weight: bold;">(</span>lengths<span style="color: #c66; font-weight: bold;">)</span>
         <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">dialogues</span> = dialogues
 
@@ -1810,7 +1810,7 @@ import re
         <span style="color: #ff8080; font-weight: bold;">else</span>:
             <span style="color: #ffe9aa;">sample_idx</span> = idx - <span style="color: #ff8080; font-weight: bold;">self</span>.cumulative_sizes<span style="color: #c66; font-weight: bold;">[</span>dialogue_idx - 1<span style="color: #c66; font-weight: bold;">]</span>
 
-        <span style="color: #565575;">## </span><span style="color: #565575;">dialogues needed; the index of sentences in this per_dialogues.
+        <span style="color: #565575;">## </span><span style="color: #96a0aa;">dialogues needed; the index of sentences in this per_dialogues.
 </span>        <span style="color: #ff8080; font-weight: bold;">return</span> <span style="color: #ff8080; font-weight: bold;">self</span>.dialogues<span style="color: #c66; font-weight: bold;">[</span>dialogue_idx<span style="color: #c66; font-weight: bold;">]</span>, <span style="color: #ff8080; font-weight: bold;">self</span>.dialogues<span style="color: #c66; font-weight: bold;">[</span>dialogue_idx<span style="color: #c66; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'items'</span><span style="color: #c66; font-weight: bold;">][</span>:sample_idx + 1<span style="color: #c66; font-weight: bold;">]</span>
 
     <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">__len__</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span><span style="color: #c66; font-weight: bold;">)</span>:
@@ -1938,8 +1938,8 @@ import re
 </p>
 </div>
 </div>
-<div id="outline-container-org87663f9" class="outline-4">
-<h4 id="org87663f9"><span class="section-number-4">2.4.3.</span> 如何解析tod数据集?</h4>
+<div id="outline-container-orgbb6bec4" class="outline-4">
+<h4 id="orgbb6bec4"><span class="section-number-4">2.4.3.</span> 如何解析tod数据集?</h4>
 <div class="outline-text-4" id="text-2-4-3">
 <p>
 该源码直接基于名字加载数据集,如下面函数所示 <code>loader.py -&gt; load_dataset</code>
@@ -1951,7 +1951,7 @@ import re
               <span style="color: #ff8080; font-weight: bold;">return</span> load_dataset<span style="color: #c66; font-weight: bold;">(</span>name, domains=RESTRICTED_DOMAINS, **kwargs<span style="color: #c66; font-weight: bold;">)</span>
 
           <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">'+'</span> <span style="color: #ff8080; font-weight: bold;">in</span> name:
-              <span style="color: #565575;"># </span><span style="color: #565575;">This is a concat dataset
+              <span style="color: #565575;"># </span><span style="color: #96a0aa;">This is a concat dataset
 </span>              <span style="color: #ffe9aa;">datasets</span> = name.split<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'+'</span><span style="color: #c66; font-weight: bold;">)</span>
               <span style="color: #ffe9aa;">_load_dataset</span> = functools.partial<span style="color: #c66; font-weight: bold;">(</span>load_dataset, **kwargs<span style="color: #c66; font-weight: bold;">)</span>
               <span style="color: #ffe9aa;">datasets</span> = <span style="color: #c991e1;">list</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #c991e1;">map</span><span style="color: #6c6; font-weight: bold;">(</span>_load_dataset, datasets<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
@@ -1980,8 +1980,8 @@ import re
           <span style="color: #ffe9aa;">path</span> = os.path.join<span style="color: #c66; font-weight: bold;">(</span>DATASETS_PATH, name<span style="color: #c66; font-weight: bold;">)</span>
           <span style="color: #ff8080; font-weight: bold;">with</span> <span style="color: #c991e1;">open</span><span style="color: #c66; font-weight: bold;">(</span>os.path.join<span style="color: #6c6; font-weight: bold;">(</span>path, f<span style="color: #ffe9aa; font-style: italic;">'</span>{split}<span style="color: #ffe9aa; font-style: italic;">.json'</span><span style="color: #6c6; font-weight: bold;">)</span>, <span style="color: #ffe9aa; font-style: italic;">'r'</span><span style="color: #c66; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">as</span> f:
               <span style="color: #ffe9aa;">data</span> = json.load<span style="color: #c66; font-weight: bold;">(</span>f, object_pairs_hook=OrderedDict<span style="color: #c66; font-weight: bold;">)</span>
-          <span style="color: #ffe9aa;">dialogues</span> = data<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'dialogues'</span><span style="color: #c66; font-weight: bold;">]</span> <span style="color: #565575;"># </span><span style="color: #565575;">load data done.
-</span>          <span style="color: #ffe9aa;">items</span> = DialogueItems<span style="color: #c66; font-weight: bold;">(</span>dialogues<span style="color: #c66; font-weight: bold;">)</span> <span style="color: #565575;"># </span><span style="color: #565575;">???
+          <span style="color: #ffe9aa;">dialogues</span> = data<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'dialogues'</span><span style="color: #c66; font-weight: bold;">]</span> <span style="color: #565575;"># </span><span style="color: #96a0aa;">load data done.
+</span>          <span style="color: #ffe9aa;">items</span> = DialogueItems<span style="color: #c66; font-weight: bold;">(</span>dialogues<span style="color: #c66; font-weight: bold;">)</span> <span style="color: #565575;"># </span><span style="color: #96a0aa;">???
 </span>          <span style="color: #ffe9aa;">items</span> = BlacklistItemsWrapper<span style="color: #c66; font-weight: bold;">(</span>items, <span style="color: #c991e1;">list</span><span style="color: #6c6; font-weight: bold;">(</span>build_blacklist<span style="color: #69f; font-weight: bold;">(</span>items, domains<span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
 
           <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">transform</span><span style="color: #c66; font-weight: bold;">(</span>x<span style="color: #c66; font-weight: bold;">)</span>:
@@ -2002,7 +2002,7 @@ import re
 
               <span style="color: #ff8080; font-weight: bold;">if</span> use_goal:
                   <span style="color: #c991e1;">setattr</span><span style="color: #c66; font-weight: bold;">(</span>item, <span style="color: #ffe9aa; font-style: italic;">'goal'</span>, dialogue<span style="color: #6c6; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">'goal'</span><span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span>
-                  <span style="color: #565575;"># </span><span style="color: #565575;">MultiWOZ evaluation uses booked domains property
+                  <span style="color: #565575;"># </span><span style="color: #96a0aa;">MultiWOZ evaluation uses booked domains property
 </span>                  <span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #ffe9aa; font-style: italic;">'booked_domains'</span> <span style="color: #ff8080; font-weight: bold;">in</span> items<span style="color: #c66; font-weight: bold;">[</span>-1<span style="color: #c66; font-weight: bold;">]</span>:
                       <span style="color: #c991e1;">setattr</span><span style="color: #c66; font-weight: bold;">(</span>item, <span style="color: #ffe9aa; font-style: italic;">'booked_domains'</span>, items<span style="color: #6c6; font-weight: bold;">[</span>-1<span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'booked_domains'</span><span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span>
                   <span style="color: #c991e1;">setattr</span><span style="color: #c66; font-weight: bold;">(</span>item, <span style="color: #ffe9aa; font-style: italic;">'dialogue_act'</span>, items<span style="color: #6c6; font-weight: bold;">[</span>-1<span style="color: #6c6; font-weight: bold;">][</span><span style="color: #ffe9aa; font-style: italic;">'dialogue_act'</span><span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">)</span>
@@ -2044,7 +2044,7 @@ import re
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #ff8080; font-weight: bold;">class</span> <span style="color: #91ddff;">NegativeSamplingDatasetWrapper</span><span style="color: #c66; font-weight: bold;">(</span>torch.utils.data.Dataset<span style="color: #c66; font-weight: bold;">)</span>:
     <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">__init__</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>, inner, transform=<span style="color: #aaffe4;">None</span>,num_bs_negative=4<span style="color: #c66; font-weight: bold;">)</span>:
-        <span style="color: #565575;">## </span><span style="color: #565575;">inner --&gt; datasets
+        <span style="color: #565575;">## </span><span style="color: #96a0aa;">inner --&gt; datasets
 </span>        <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">inner</span> = inner
         <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">transform</span> = transform
         <span style="color: #ff8080; font-weight: bold;">assert</span> <span style="color: #c991e1;">hasattr</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>.inner, <span style="color: #ffe9aa; font-style: italic;">'ontology'</span><span style="color: #c66; font-weight: bold;">)</span>
@@ -2058,7 +2058,7 @@ import re
         <span style="color: #ffe9aa;">item</span> = <span style="color: #ff8080; font-weight: bold;">self</span>.inner<span style="color: #c66; font-weight: bold;">[</span>i // 2<span style="color: #c66; font-weight: bold;">]</span>
 
         <span style="color: #ffe9aa;">negtive_bs_list</span>=<span style="color: #c66; font-weight: bold;">[]</span>
-        <span style="color: #565575;"># </span><span style="color: #565575;">random sampling for belief state.
+        <span style="color: #565575;"># </span><span style="color: #96a0aa;">random sampling for belief state.
 </span>        <span style="color: #ff8080; font-weight: bold;">for</span> x <span style="color: #ff8080; font-weight: bold;">in</span> <span style="color: #c991e1;">range</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>.num_bs_negative<span style="color: #c66; font-weight: bold;">)</span>:
             <span style="color: #ffe9aa;">negative_sample</span>=random.randrange<span style="color: #c66; font-weight: bold;">(</span><span style="color: #c991e1;">len</span><span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>.inner<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
             <span style="color: #ffe9aa;">neg_sample</span>=<span style="color: #ff8080; font-weight: bold;">self</span>.inner<span style="color: #c66; font-weight: bold;">[</span>negative_sample<span style="color: #c66; font-weight: bold;">]</span>
@@ -2073,7 +2073,7 @@ import re
             <span style="color: #ffe9aa;">use_new_belief</span> = <span style="color: #c66; font-weight: bold;">(</span>negative_type // 2<span style="color: #c66; font-weight: bold;">)</span> % 2
             <span style="color: #ffe9aa;">use_new_response</span> = negative_type % 2
 
-            <span style="color: #565575;"># </span><span style="color: #565575;">Negative resonse
+            <span style="color: #565575;"># </span><span style="color: #96a0aa;">Negative resonse
 </span>            <span style="color: #ffe9aa;">negative_sample</span> = random.randrange<span style="color: #c66; font-weight: bold;">(</span><span style="color: #c991e1;">len</span><span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>.inner<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
             <span style="color: #ffe9aa;">neg_sample</span> = <span style="color: #ff8080; font-weight: bold;">self</span>.inner<span style="color: #c66; font-weight: bold;">[</span>negative_sample<span style="color: #c66; font-weight: bold;">]</span>
 
@@ -2106,15 +2106,15 @@ import re
 </div>
 </div>
 </div>
-<div id="outline-container-orgcf858b6" class="outline-2">
-<h2 id="orgcf858b6"><span class="section-number-2">3.</span> Model的设计</h2>
+<div id="outline-container-orgd0b331b" class="outline-2">
+<h2 id="orgd0b331b"><span class="section-number-2">3.</span> Model的设计</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 model的设计中, training的forward和inference时的generation其实是两种形态,因此在此处进行两种描述. 先看一下训练时.
 </p>
 </div>
-<div id="outline-container-org891d870" class="outline-3">
-<h3 id="org891d870"><span class="section-number-3">3.1.</span> train- forward</h3>
+<div id="outline-container-org16660c6" class="outline-3">
+<h3 id="org16660c6"><span class="section-number-3">3.1.</span> train- forward</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 核心代码如下:
@@ -2122,7 +2122,7 @@ model的设计中, training的forward和inference时的generation其实是两种
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #ff8080; font-weight: bold;">class</span> <span style="color: #91ddff;">SoloistConfig</span><span style="color: #c66; font-weight: bold;">(</span>transformers.GPT2Config<span style="color: #c66; font-weight: bold;">)</span>:
          <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">__init__</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>,
-                      summary_label_smoothing=0.1, <span style="color: #565575;"># </span><span style="color: #565575;">for overfitting.
+                      summary_label_smoothing=0.1, <span style="color: #565575;"># </span><span style="color: #96a0aa;">for overfitting.
 </span>                      **kwargs<span style="color: #c66; font-weight: bold;">)</span>:
              <span style="color: #c991e1;">super</span><span style="color: #c66; font-weight: bold;">()</span>.__init__<span style="color: #c66; font-weight: bold;">(</span>**kwargs<span style="color: #c66; font-weight: bold;">)</span>
              <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">summary_label_smoothing</span> = summary_label_smoothing
@@ -2135,7 +2135,7 @@ model的设计中, training的forward和inference时的generation其实是两种
              <span style="color: #c991e1;">super</span><span style="color: #c66; font-weight: bold;">()</span>.__init__<span style="color: #c66; font-weight: bold;">(</span>config<span style="color: #c66; font-weight: bold;">)</span>
              <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">transformer</span> = transformers.GPT2Model<span style="color: #c66; font-weight: bold;">(</span>config<span style="color: #c66; font-weight: bold;">)</span>
              <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">lm_head</span> = nn.Linear<span style="color: #c66; font-weight: bold;">(</span>config.n_embd, config.vocab_size, bias=<span style="color: #aaffe4;">False</span><span style="color: #c66; font-weight: bold;">)</span>
-             <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">consistency_head</span> = nn.Linear<span style="color: #c66; font-weight: bold;">(</span>config.n_embd, 1<span style="color: #c66; font-weight: bold;">)</span> <span style="color: #565575;"># </span><span style="color: #565575;">?
+             <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">consistency_head</span> = nn.Linear<span style="color: #c66; font-weight: bold;">(</span>config.n_embd, 1<span style="color: #c66; font-weight: bold;">)</span> <span style="color: #565575;"># </span><span style="color: #96a0aa;">?
 </span>             <span style="color: #ff8080; font-weight: bold;">self</span>.<span style="color: #ffe9aa;">auxiliary_dropout</span> = nn.Dropout<span style="color: #c66; font-weight: bold;">(</span>config.summary_first_dropout<span style="color: #c66; font-weight: bold;">)</span>
              <span style="color: #ff8080; font-weight: bold;">self</span>.init_weights<span style="color: #c66; font-weight: bold;">()</span>
 
@@ -2143,32 +2143,32 @@ model的设计中, training的forward和inference时的generation其实是两种
              <span style="color: #ff8080; font-weight: bold;">return</span> <span style="color: #ff8080; font-weight: bold;">self</span>.lm_head
 
          <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">forward</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>,
-                     input_ids=<span style="color: #aaffe4;">None</span>,          <span style="color: #565575;"># </span><span style="color: #565575;">all input sequence tokens;
+                     input_ids=<span style="color: #aaffe4;">None</span>,          <span style="color: #565575;"># </span><span style="color: #96a0aa;">all input sequence tokens;
 </span>                     past=<span style="color: #aaffe4;">None</span>,
                      attention_mask=<span style="color: #aaffe4;">None</span>,
                      token_type_ids=<span style="color: #aaffe4;">None</span>,
                      position_ids=<span style="color: #aaffe4;">None</span>,
                      head_mask=<span style="color: #aaffe4;">None</span>,
                      inputs_embeds=<span style="color: #aaffe4;">None</span>,
-                     consistency_token_ids=<span style="color: #aaffe4;">None</span>, <span style="color: #565575;"># </span><span style="color: #565575;">the last token (eos), for classify whether consistent or not. 
-</span>                     consistency_labels=<span style="color: #aaffe4;">None</span>,  <span style="color: #565575;"># </span><span style="color: #565575;">is consistency or not
+                     consistency_token_ids=<span style="color: #aaffe4;">None</span>, <span style="color: #565575;"># </span><span style="color: #96a0aa;">the last token (eos), for classify whether consistent or not. 
+</span>                     consistency_labels=<span style="color: #aaffe4;">None</span>,  <span style="color: #565575;"># </span><span style="color: #96a0aa;">is consistency or not
 </span>                     user_intent_token_ids=<span style="color: #aaffe4;">None</span>,
                      user_intent_labels=<span style="color: #aaffe4;">None</span>,
                      user_intent_mask=<span style="color: #aaffe4;">None</span>,
-                     belief_labels=<span style="color: #aaffe4;">None</span>,      <span style="color: #565575;"># </span><span style="color: #565575;">context + belief states, and aims to predict bs.
+                     belief_labels=<span style="color: #aaffe4;">None</span>,      <span style="color: #565575;"># </span><span style="color: #96a0aa;">context + belief states, and aims to predict bs.
 </span>                     system_action_token_ids=<span style="color: #aaffe4;">None</span>,
                      system_action_labels=<span style="color: #aaffe4;">None</span>,
                      system_action_mask=<span style="color: #aaffe4;">None</span>,
-                     response_labels=<span style="color: #aaffe4;">None</span>, <span style="color: #565575;"># </span><span style="color: #565575;">only responses part has label, and others part is -100.
-</span>                     back_predict_labels=<span style="color: #aaffe4;">None</span>,  <span style="color: #565575;"># </span><span style="color: #565575;">this is the target of back predicted resonses.
+                     response_labels=<span style="color: #aaffe4;">None</span>, <span style="color: #565575;"># </span><span style="color: #96a0aa;">only responses part has label, and others part is -100.
+</span>                     back_predict_labels=<span style="color: #aaffe4;">None</span>,  <span style="color: #565575;"># </span><span style="color: #96a0aa;">this is the target of back predicted resonses.
 </span>                     bp_weight=0.3,
                      binary_labels=<span style="color: #aaffe4;">None</span>,
                      use_cache=<span style="color: #aaffe4;">None</span>,
                      output_attentions=<span style="color: #aaffe4;">None</span>,
                      output_hidden_states=<span style="color: #aaffe4;">None</span>,
-                     **kwargs  <span style="color: #565575;"># </span><span style="color: #565575;">context=context_labels
+                     **kwargs  <span style="color: #565575;"># </span><span style="color: #96a0aa;">context=context_labels
 </span>                     <span style="color: #c66; font-weight: bold;">)</span>:
-             <span style="color: #565575;"># </span><span style="color: #565575;">print(f"shape of bp weight: {bp_weight.shape}")
+             <span style="color: #565575;"># </span><span style="color: #96a0aa;">print(f"shape of bp weight: {bp_weight.shape}")
 </span>
              <span style="color: #ffe9aa;">transformer_outputs</span> = <span style="color: #ff8080; font-weight: bold;">self</span>.transformer<span style="color: #c66; font-weight: bold;">(</span>
                  input_ids,
@@ -2188,24 +2188,24 @@ model的设计中, training的forward和inference时的generation其实是两种
 
              <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">gather_auxiliary_features</span><span style="color: #c66; font-weight: bold;">(</span>token_ids<span style="color: #c66; font-weight: bold;">)</span>:
                  <span style="color: #ff8080; font-weight: bold;">if</span> token_ids <span style="color: #ff8080; font-weight: bold;">is</span> <span style="color: #aaffe4;">None</span>:
-                     <span style="color: #565575;"># </span><span style="color: #565575;">torch.full_like(input,fill_value) returns the same size
-</span>                     <span style="color: #565575;">#</span><span style="color: #565575;">as input with the filling of fill_value.
+                     <span style="color: #565575;"># </span><span style="color: #96a0aa;">torch.full_like(input,fill_value) returns the same size
+</span>                     <span style="color: #565575;">#</span><span style="color: #96a0aa;">as input with the filling of fill_value.
 </span>
-                     <span style="color: #565575;"># </span><span style="color: #565575;">hidden_states.shape[-2] is max-seqence-length
+                     <span style="color: #565575;"># </span><span style="color: #96a0aa;">hidden_states.shape[-2] is max-seqence-length
 </span>
-                     <span style="color: #565575;"># </span><span style="color: #565575;">... in split means select the last dimension, so it means select the last
-</span>                     <span style="color: #565575;"># </span><span style="color: #565575;">embedding dimension, and select the first batch, and with all seqence.
-</span>                     <span style="color: #565575;"># </span><span style="color: #565575;">so the shape is 1*msl*1
-</span>                     <span style="color: #ffe9aa;">token_ids</span> = torch.full_like<span style="color: #c66; font-weight: bold;">(</span>hidden_states<span style="color: #6c6; font-weight: bold;">[</span>..., :1, :<span style="color: #6c6; font-weight: bold;">]</span>, <span style="color: #565575;"># </span><span style="color: #565575;">which the shape is ???
+                     <span style="color: #565575;"># </span><span style="color: #96a0aa;">... in split means select the last dimension, so it means select the last
+</span>                     <span style="color: #565575;"># </span><span style="color: #96a0aa;">embedding dimension, and select the first batch, and with all seqence.
+</span>                     <span style="color: #565575;"># </span><span style="color: #96a0aa;">so the shape is 1*msl*1
+</span>                     <span style="color: #ffe9aa;">token_ids</span> = torch.full_like<span style="color: #c66; font-weight: bold;">(</span>hidden_states<span style="color: #6c6; font-weight: bold;">[</span>..., :1, :<span style="color: #6c6; font-weight: bold;">]</span>, <span style="color: #565575;"># </span><span style="color: #96a0aa;">which the shape is ???
 </span>                                                 hidden_states.shape<span style="color: #6c6; font-weight: bold;">[</span>-2<span style="color: #6c6; font-weight: bold;">]</span>-1, dtype=torch.<span style="color: #c991e1;">long</span>,<span style="color: #c66; font-weight: bold;">)</span>
                  <span style="color: #ff8080; font-weight: bold;">else</span>:
                      <span style="color: #ffe9aa;">token_ids</span> = token_ids.unsqueeze<span style="color: #c66; font-weight: bold;">(</span>-1<span style="color: #c66; font-weight: bold;">)</span>.unsqueeze<span style="color: #c66; font-weight: bold;">(</span>-1<span style="color: #c66; font-weight: bold;">)</span>
                      <span style="color: #ffe9aa;">token_ids</span> = token_ids.expand<span style="color: #c66; font-weight: bold;">(</span>
                          <span style="color: #6c6; font-weight: bold;">(</span>-1,<span style="color: #6c6; font-weight: bold;">)</span> * <span style="color: #6c6; font-weight: bold;">(</span>token_ids.dim<span style="color: #69f; font-weight: bold;">()</span> - 1<span style="color: #6c6; font-weight: bold;">)</span> + <span style="color: #6c6; font-weight: bold;">(</span>hidden_states.size<span style="color: #69f; font-weight: bold;">(</span>-1<span style="color: #69f; font-weight: bold;">)</span>,<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
 
-                 <span style="color: #565575;"># </span><span style="color: #565575;">shape of binary_token_ids: (bsz, XX, 1, hidden_size)
-</span>                 <span style="color: #565575;"># </span><span style="color: #565575;">where XX are optional leading dim of hidden_states
-</span>                 <span style="color: #565575;"># </span><span style="color: #565575;">shape of binary_logits (bsz, XX, hidden_size)
+                 <span style="color: #565575;"># </span><span style="color: #96a0aa;">shape of binary_token_ids: (bsz, XX, 1, hidden_size)
+</span>                 <span style="color: #565575;"># </span><span style="color: #96a0aa;">where XX are optional leading dim of hidden_states
+</span>                 <span style="color: #565575;"># </span><span style="color: #96a0aa;">shape of binary_logits (bsz, XX, hidden_size)
 </span>                 <span style="color: #ffe9aa;">logits</span> = hidden_states.gather<span style="color: #c66; font-weight: bold;">(</span>-2, token_ids<span style="color: #c66; font-weight: bold;">)</span>.squeeze<span style="color: #c66; font-weight: bold;">(</span>-2<span style="color: #c66; font-weight: bold;">)</span>
                  <span style="color: #ffe9aa;">logits</span> = <span style="color: #ff8080; font-weight: bold;">self</span>.auxiliary_dropout<span style="color: #c66; font-weight: bold;">(</span>logits<span style="color: #c66; font-weight: bold;">)</span>
                  <span style="color: #ff8080; font-weight: bold;">return</span> logits
@@ -2213,7 +2213,7 @@ model的设计中, training的forward和inference时的generation其实是两种
              <span style="color: #ffe9aa;">consistency_logits</span> = <span style="color: #ff8080; font-weight: bold;">self</span>.consistency_head<span style="color: #c66; font-weight: bold;">(</span>gather_auxiliary_features<span style="color: #6c6; font-weight: bold;">(</span>consistency_token_ids<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>.squeeze<span style="color: #c66; font-weight: bold;">(</span>-1<span style="color: #c66; font-weight: bold;">)</span>
              <span style="color: #ffe9aa;">consistency_loss</span> = <span style="color: #aaffe4;">None</span>
              <span style="color: #ff8080; font-weight: bold;">if</span> consistency_labels <span style="color: #ff8080; font-weight: bold;">is</span> <span style="color: #ff8080; font-weight: bold;">not</span> <span style="color: #aaffe4;">None</span>:
-                 <span style="color: #565575;"># </span><span style="color: #565575;">Auxiliary tasks
+                 <span style="color: #565575;"># </span><span style="color: #96a0aa;">Auxiliary tasks
 </span>                 <span style="color: #ffe9aa;">aux_criterion</span> = LabelSmoothingBCEWithLogitsLoss<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>.config.summary_label_smoothing<span style="color: #c66; font-weight: bold;">)</span>
                  <span style="color: #ffe9aa;">consistency_loss</span> = aux_criterion<span style="color: #c66; font-weight: bold;">(</span>consistency_logits, consistency_labels<span style="color: #c66; font-weight: bold;">)</span>
 
@@ -2233,13 +2233,13 @@ model的设计中, training的forward和inference时的generation其实是两种
                  <span style="color: #ffe9aa;">response_loss</span> = response_ce
 
                  <span style="color: #ffe9aa;">bp_loss</span>=0.
-                 <span style="color: #565575;">## </span><span style="color: #565575;">we only use 0.5 weighted bp losses.
+                 <span style="color: #565575;">## </span><span style="color: #96a0aa;">we only use 0.5 weighted bp losses.
 </span>                 <span style="color: #ff8080; font-weight: bold;">if</span> back_predict_labels <span style="color: #ff8080; font-weight: bold;">is</span> <span style="color: #ff8080; font-weight: bold;">not</span> <span style="color: #aaffe4;">None</span>:
                      <span style="color: #ffe9aa;">shift_bp_labels</span> = back_predict_labels<span style="color: #c66; font-weight: bold;">[</span>..., 1:<span style="color: #c66; font-weight: bold;">]</span>.contiguous<span style="color: #c66; font-weight: bold;">()</span>
                      <span style="color: #ffe9aa;">bp_loss</span> = loss_fct<span style="color: #c66; font-weight: bold;">(</span>
                      shift_logits.view<span style="color: #6c6; font-weight: bold;">(</span>-1, shift_logits.size<span style="color: #69f; font-weight: bold;">(</span>-1<span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span>,
                      shift_bp_labels.view<span style="color: #6c6; font-weight: bold;">(</span>-1<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
-                     <span style="color: #565575;"># </span><span style="color: #565575;">assert bp_weight is not None
+                     <span style="color: #565575;"># </span><span style="color: #96a0aa;">assert bp_weight is not None
 </span>                     <span style="color: #ffe9aa;">bp_loss</span>*=bp_weight<span style="color: #c66; font-weight: bold;">[</span>0<span style="color: #c66; font-weight: bold;">]</span>
 
              <span style="color: #ffe9aa;">output</span> = <span style="color: #c66; font-weight: bold;">(</span>lm_logits, consistency_logits,<span style="color: #c66; font-weight: bold;">)</span> + transformer_outputs<span style="color: #c66; font-weight: bold;">[</span>1:<span style="color: #c66; font-weight: bold;">]</span>
@@ -2251,15 +2251,15 @@ model的设计中, training的forward和inference时的generation其实是两种
 </div>
 </div>
 </div>
-<div id="outline-container-org16b749d" class="outline-2">
-<h2 id="org16b749d"><span class="section-number-2">4.</span> 训练流程</h2>
+<div id="outline-container-orga6eabbe" class="outline-2">
+<h2 id="orga6eabbe"><span class="section-number-2">4.</span> 训练流程</h2>
 </div>
-<div id="outline-container-orgeac35b9" class="outline-2">
-<h2 id="orgeac35b9"><span class="section-number-2">5.</span> 推理流程</h2>
+<div id="outline-container-org14f10d6" class="outline-2">
+<h2 id="org14f10d6"><span class="section-number-2">5.</span> 推理流程</h2>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Sun Jan 16 15:43:35 2022</span> <span class="date">Last modified: 2025-07-18 五 13:48</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Sun Jan 16 15:43:35 2022</span> <span class="date">Last modified: 2025-09-27 Sat 19:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>

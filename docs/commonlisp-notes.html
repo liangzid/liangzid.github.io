@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-08-02 六 12:43 -->
+<!-- 2025-09-27 Sat 21:01 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Common Lisp notes and thinkings (Part I: Functions)</title>
@@ -203,31 +203,31 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org74cd037">1. (eq function object) ?</a>
+<li><a href="#orge2884ed">1. (eq function object) ?</a>
 <ul>
-<li><a href="#org0c44d45">1.1. Three state of a function</a></li>
-<li><a href="#orgcb1e7e6">1.2. Closure: those functions who have <b>undefined</b> variable</a></li>
+<li><a href="#org2b77dc9">1.1. Three state of a function</a></li>
+<li><a href="#org4fa0eb3">1.2. Closure: those functions who have <b>undefined</b> variable</a></li>
 </ul>
 </li>
-<li><a href="#org2deed0c">2. Functional programming principle</a></li>
-<li><a href="#org33db751">3. From Bottom to Top: another programming Strategy</a>
+<li><a href="#org6886493">2. Functional programming principle</a></li>
+<li><a href="#org9e8305d">3. From Bottom to Top: another programming Strategy</a>
 <ul>
-<li><a href="#org590faa0">3.1. Some abstraction examples of functions</a></li>
-<li><a href="#org7a63828">3.2. Rethink Recursion</a></li>
+<li><a href="#org028f23c">3.1. Some abstraction examples of functions</a></li>
+<li><a href="#orgd054d9b">3.2. Rethink Recursion</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org74cd037" class="outline-2">
-<h2 id="org74cd037"><span class="section-number-2">1.</span> (eq function object) ?</h2>
+<div id="outline-container-orge2884ed" class="outline-2">
+<h2 id="orge2884ed"><span class="section-number-2">1.</span> (eq function object) ?</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Yes.
 </p>
 </div>
-<div id="outline-container-org0c44d45" class="outline-3">
-<h3 id="org0c44d45"><span class="section-number-3">1.1.</span> Three state of a function</h3>
+<div id="outline-container-org2b77dc9" class="outline-3">
+<h3 id="org2b77dc9"><span class="section-number-3">1.1.</span> Three state of a function</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 We use <code>(defun plus1 (x) (\+ x 1))</code> to define a function named <code>'plus1</code>,
@@ -245,8 +245,8 @@ three types of state for this function, as:
 </ul>
 </div>
 </div>
-<div id="outline-container-orgcb1e7e6" class="outline-3">
-<h3 id="orgcb1e7e6"><span class="section-number-3">1.2.</span> Closure: those functions who have <b>undefined</b> variable</h3>
+<div id="outline-container-org4fa0eb3" class="outline-3">
+<h3 id="org4fa0eb3"><span class="section-number-3">1.2.</span> Closure: those functions who have <b>undefined</b> variable</h3>
 <div class="outline-text-3" id="text-1-2">
 <div class="org-src-container">
 <pre class="src src-elisp"><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">setq</span> w
@@ -266,8 +266,8 @@ functions with different <code>a</code>. Here <code>plus-a</code> is a closure.
 </div>
 </div>
 </div>
-<div id="outline-container-org2deed0c" class="outline-2">
-<h2 id="org2deed0c"><span class="section-number-2">2.</span> Functional programming principle</h2>
+<div id="outline-container-org6886493" class="outline-2">
+<h2 id="org6886493"><span class="section-number-2">2.</span> Functional programming principle</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 What is FPP?
@@ -310,8 +310,8 @@ C++, JAVA, PYTHON, and so on.
 </p>
 </div>
 </div>
-<div id="outline-container-org33db751" class="outline-2">
-<h2 id="org33db751"><span class="section-number-2">3.</span> From Bottom to Top: another programming Strategy</h2>
+<div id="outline-container-org9e8305d" class="outline-2">
+<h2 id="org9e8305d"><span class="section-number-2">3.</span> From Bottom to Top: another programming Strategy</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 What we learn in courses or real-world encourage us to give a plan
@@ -343,24 +343,24 @@ strategy, because we can test every function, and develope new language
 on our own fields.
 </p>
 </div>
-<div id="outline-container-org590faa0" class="outline-3">
-<h3 id="org590faa0"><span class="section-number-3">3.1.</span> Some abstraction examples of functions</h3>
+<div id="outline-container-org028f23c" class="outline-3">
+<h3 id="org028f23c"><span class="section-number-3">3.1.</span> Some abstraction examples of functions</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #c66; font-weight: bold;">(</span>proclaim '<span style="color: #6c6; font-weight: bold;">(</span>inline last1 single append1 nconc1 mklist<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span> <span style="color: #565575;">;; </span><span style="color: #565575;">compile it
+<pre class="src src-emacs-lisp"><span style="color: #c66; font-weight: bold;">(</span>proclaim '<span style="color: #6c6; font-weight: bold;">(</span>inline last1 single append1 nconc1 mklist<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span> <span style="color: #565575;">;; </span><span style="color: #96a0aa;">compile it
 </span>
-<span style="color: #565575;">;; </span><span style="color: #565575;">git last element
+<span style="color: #565575;">;; </span><span style="color: #96a0aa;">git last element
 </span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">defun</span> <span style="color: #c991e1;">last1</span> <span style="color: #6c6; font-weight: bold;">(</span>ls<span style="color: #6c6; font-weight: bold;">)</span> <span style="color: #6c6; font-weight: bold;">(</span>car <span style="color: #69f; font-weight: bold;">(</span>last ls<span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;; </span><span style="color: #565575;">if single or not
+<span style="color: #565575;">;; </span><span style="color: #96a0aa;">if single or not
 </span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">defun</span> <span style="color: #c991e1;">single</span> <span style="color: #6c6; font-weight: bold;">(</span>ls<span style="color: #6c6; font-weight: bold;">)</span> <span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">and</span> <span style="color: #69f; font-weight: bold;">(</span>consp ls<span style="color: #69f; font-weight: bold;">)</span> <span style="color: #69f; font-weight: bold;">(</span>not <span style="color: #cc6; font-weight: bold;">(</span>cdr ls<span style="color: #cc6; font-weight: bold;">)</span><span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;; </span><span style="color: #565575;">append an element
+<span style="color: #565575;">;; </span><span style="color: #96a0aa;">append an element
 </span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">defun</span> <span style="color: #c991e1;">append1</span> <span style="color: #6c6; font-weight: bold;">(</span>ls obj<span style="color: #6c6; font-weight: bold;">)</span> <span style="color: #6c6; font-weight: bold;">(</span>append ls <span style="color: #69f; font-weight: bold;">(</span>list obj<span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;; </span><span style="color: #565575;">append an element and change the input parameter
+<span style="color: #565575;">;; </span><span style="color: #96a0aa;">append an element and change the input parameter
 </span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">defun</span> <span style="color: #c991e1;">nconc1</span> <span style="color: #6c6; font-weight: bold;">(</span>ls obj<span style="color: #6c6; font-weight: bold;">)</span> <span style="color: #6c6; font-weight: bold;">(</span>nconc ls <span style="color: #69f; font-weight: bold;">(</span>list obj<span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;; </span><span style="color: #565575;">construct a list.
+<span style="color: #565575;">;; </span><span style="color: #96a0aa;">construct a list.
 </span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">defun</span> <span style="color: #c991e1;">mklist</span> <span style="color: #6c6; font-weight: bold;">(</span>obj<span style="color: #6c6; font-weight: bold;">)</span> <span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #69f; font-weight: bold;">(</span>listp obj<span style="color: #69f; font-weight: bold;">)</span> obj <span style="color: #69f; font-weight: bold;">(</span>list obj<span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
 
-<span style="color: #565575;">;; </span><span style="color: #565575;">whether len(x)&gt;len(y) or not.
+<span style="color: #565575;">;; </span><span style="color: #96a0aa;">whether len(x)&gt;len(y) or not.
 </span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">defun</span> <span style="color: #c991e1;">longer</span> <span style="color: #6c6; font-weight: bold;">(</span>x y<span style="color: #6c6; font-weight: bold;">)</span>
   <span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">labels</span> <span style="color: #69f; font-weight: bold;">(</span><span style="color: #cc6; font-weight: bold;">(</span>compare <span style="color: #6cc; font-weight: bold;">(</span>x y<span style="color: #6cc; font-weight: bold;">)</span>
                     <span style="color: #6cc; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">and</span> <span style="color: #c6c;">(</span>consp x<span style="color: #c6c;">)</span> <span style="color: #c6c;">(</span><span style="color: #ff8080; font-weight: bold;">or</span> <span style="color: #ccc;">(</span>null y<span style="color: #ccc;">)</span> <span style="color: #ccc;">(</span>compare <span style="color: #999;">(</span>cdr x<span style="color: #999;">)</span> <span style="color: #999;">(</span>cdr y<span style="color: #999;">)</span><span style="color: #ccc;">)</span><span style="color: #c6c;">)</span><span style="color: #6cc; font-weight: bold;">)</span><span style="color: #cc6; font-weight: bold;">)</span><span style="color: #69f; font-weight: bold;">)</span>
@@ -368,7 +368,7 @@ on our own fields.
         <span style="color: #cc6; font-weight: bold;">(</span>compare x y<span style="color: #cc6; font-weight: bold;">)</span>
       <span style="color: #cc6; font-weight: bold;">(</span>&gt; <span style="color: #6cc; font-weight: bold;">(</span>length x<span style="color: #6cc; font-weight: bold;">)</span> <span style="color: #6cc; font-weight: bold;">(</span>length y<span style="color: #6cc; font-weight: bold;">)</span><span style="color: #cc6; font-weight: bold;">)</span><span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
 
-<span style="color: #565575;">;; </span><span style="color: #565575;">record the result if true, else do not record.
+<span style="color: #565575;">;; </span><span style="color: #96a0aa;">record the result if true, else do not record.
 </span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">defun</span> <span style="color: #c991e1;">filter</span> <span style="color: #6c6; font-weight: bold;">(</span>fn ls<span style="color: #6c6; font-weight: bold;">)</span>
   <span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #69f; font-weight: bold;">(</span><span style="color: #cc6; font-weight: bold;">(</span>acc nil<span style="color: #cc6; font-weight: bold;">)</span><span style="color: #69f; font-weight: bold;">)</span>
     <span style="color: #69f; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">dolist</span> <span style="color: #cc6; font-weight: bold;">(</span>x ls<span style="color: #cc6; font-weight: bold;">)</span>
@@ -376,7 +376,7 @@ on our own fields.
         <span style="color: #6cc; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">if</span> val <span style="color: #c6c;">(</span><span style="color: #ff8080; font-weight: bold;">push</span> val acc<span style="color: #c6c;">)</span><span style="color: #6cc; font-weight: bold;">)</span><span style="color: #cc6; font-weight: bold;">)</span>
       <span style="color: #cc6; font-weight: bold;">(</span>nreverse acc<span style="color: #cc6; font-weight: bold;">)</span><span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
 
-<span style="color: #565575;">;; </span><span style="color: #565575;">group source list into n numbers sub-lists.
+<span style="color: #565575;">;; </span><span style="color: #96a0aa;">group source list into n numbers sub-lists.
 </span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">defun</span> <span style="color: #c991e1;">group</span> <span style="color: #6c6; font-weight: bold;">(</span>source n<span style="color: #6c6; font-weight: bold;">)</span>
   <span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">if</span> <span style="color: #69f; font-weight: bold;">(</span>zerop n<span style="color: #69f; font-weight: bold;">)</span> <span style="color: #69f; font-weight: bold;">(</span><span style="color: #ffe9aa;">error</span> <span style="color: #ffe9aa; font-style: italic;">"zero length"</span><span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span>
   <span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">labels</span> <span style="color: #69f; font-weight: bold;">(</span><span style="color: #cc6; font-weight: bold;">(</span>rec <span style="color: #6cc; font-weight: bold;">(</span>source acc<span style="color: #6cc; font-weight: bold;">)</span>
@@ -493,8 +493,8 @@ result <span style="color: #666;">(</span>list obj<span style="color: #666;">)</
 </div>
 </div>
 </div>
-<div id="outline-container-org7a63828" class="outline-3">
-<h3 id="org7a63828"><span class="section-number-3">3.2.</span> Rethink Recursion</h3>
+<div id="outline-container-orgd054d9b" class="outline-3">
+<h3 id="orgd054d9b"><span class="section-number-3">3.2.</span> Rethink Recursion</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 while other languages use <b>loop</b> for a complicated object, lisp prefer <b>recusion</b>. Consider a function that returns the length of a list:
@@ -502,7 +502,7 @@ while other languages use <b>loop</b> for a complicated object, lisp prefer <b>r
 
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #565575;"># </span><span style="color: #565575;">similar to len(x)
+<pre class="src src-python"><span style="color: #565575;"># </span><span style="color: #96a0aa;">similar to len(x)
 </span><span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">len</span><span style="color: #c66; font-weight: bold;">(</span>ls<span style="color: #c66; font-weight: bold;">)</span>:
     <span style="color: #ffe9aa;">i</span>=0
     <span style="color: #ff8080; font-weight: bold;">for</span> x <span style="color: #ff8080; font-weight: bold;">in</span> ls:
@@ -559,7 +559,7 @@ how to understand and use <b>macro</b> in <i>common lisp</i>.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Oct  6 16:20:35 2023</span> <span class="date">Last modified: 2025-07-18 五 13:48</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Oct  6 16:20:35 2023</span> <span class="date">Last modified: 2025-09-27 Sat 19:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>

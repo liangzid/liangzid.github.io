@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-08-02 六 12:43 -->
+<!-- 2025-09-27 Sat 21:01 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>emacs lisp基本</title>
@@ -235,38 +235,38 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org41f8bc9">1. 变量声明与函数定义</a>
+<li><a href="#org4aace78">1. 变量声明与函数定义</a>
 <ul>
-<li><a href="#orgb53a362">1.1. 通过setq声明变量</a></li>
-<li><a href="#org41db8a9">1.2. 通过defvar定义不会改变声明的变量</a></li>
-<li><a href="#org1e83dde">1.3. 通过defun定义函数.</a></li>
-<li><a href="#orgad7abec">1.4. 使用局部作用域</a></li>
-<li><a href="#orga20ade9">1.5. 在对函数和变量观察时的技巧(使用C-h)</a></li>
-<li><a href="#orgd5ae9d1">1.6. 匿名函数表达式lambda</a></li>
+<li><a href="#org8a8d30e">1.1. 通过setq声明变量</a></li>
+<li><a href="#org89d7437">1.2. 通过defvar定义不会改变声明的变量</a></li>
+<li><a href="#orgb490e5a">1.3. 通过defun定义函数.</a></li>
+<li><a href="#org79eea6d">1.4. 使用局部作用域</a></li>
+<li><a href="#org9d4e8ff">1.5. 在对函数和变量观察时的技巧(使用C-h)</a></li>
+<li><a href="#orgf0dcd05">1.6. 匿名函数表达式lambda</a></li>
 </ul>
 </li>
-<li><a href="#orga444a40">2. 基本逻辑顺序</a>
+<li><a href="#org046cfd1">2. 基本逻辑顺序</a>
 <ul>
-<li><a href="#orged90d00">2.1. 顺序执行</a></li>
-<li><a href="#org24c1cb6">2.2. if 与cond</a></li>
-<li><a href="#orgb98f557">2.3. while 控制循环</a></li>
-<li><a href="#orgf5739ae">2.4. 逻辑运算 and or not</a></li>
+<li><a href="#org2fe7ddd">2.1. 顺序执行</a></li>
+<li><a href="#org60268fc">2.2. if 与cond</a></li>
+<li><a href="#org0e30ebd">2.3. while 控制循环</a></li>
+<li><a href="#org9d3f609">2.4. 逻辑运算 and or not</a></li>
 </ul>
 </li>
-<li><a href="#orgb4aab0e">3. 数据结构</a>
+<li><a href="#org5df85dd">3. 数据结构</a>
 <ul>
-<li><a href="#org4866229">3.1. 数字</a></li>
-<li><a href="#org7213bff">3.2. 字符与字符串</a>
+<li><a href="#org8cecd88">3.1. 数字</a></li>
+<li><a href="#org7ac2ba3">3.2. 字符与字符串</a>
 <ul>
-<li><a href="#org97d2687">3.2.1. 字符的表示</a></li>
-<li><a href="#orgcbaf2a7">3.2.2. 由字符产生字符串的一些函数</a></li>
-<li><a href="#org8124d8d">3.2.3. 对字符串的简单处理,查找和替换</a></li>
+<li><a href="#org9d0c909">3.2.1. 字符的表示</a></li>
+<li><a href="#org9fdda6e">3.2.2. 由字符产生字符串的一些函数</a></li>
+<li><a href="#orgf99d6df">3.2.3. 对字符串的简单处理,查找和替换</a></li>
 </ul>
 </li>
-<li><a href="#org4fe627a">3.3. cons cell and list</a>
+<li><a href="#org73fb575">3.3. cons cell and list</a>
 <ul>
-<li><a href="#orgb6bb29d">3.3.1. cons cell</a></li>
-<li><a href="#orgbcf02c7">3.3.2. list</a></li>
+<li><a href="#orgba0fdbe">3.3.1. cons cell</a></li>
+<li><a href="#orgb37de57">3.3.2. list</a></li>
 </ul>
 </li>
 </ul>
@@ -274,12 +274,12 @@
 </ul>
 </div>
 </div>
-<div id="outline-container-org41f8bc9" class="outline-2">
-<h2 id="org41f8bc9"><span class="section-number-2">1.</span> 变量声明与函数定义</h2>
+<div id="outline-container-org4aace78" class="outline-2">
+<h2 id="org4aace78"><span class="section-number-2">1.</span> 变量声明与函数定义</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-orgb53a362" class="outline-3">
-<h3 id="orgb53a362"><span class="section-number-3">1.1.</span> 通过setq声明变量</h3>
+<div id="outline-container-org8a8d30e" class="outline-3">
+<h3 id="org8a8d30e"><span class="section-number-3">1.1.</span> 通过setq声明变量</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 setq是声明变量的关键词，用法如下：
@@ -301,17 +301,17 @@ message函数起到了将变量输出到缓冲区的作用.
 </p>
 </div>
 </div>
-<div id="outline-container-org41db8a9" class="outline-3">
-<h3 id="org41db8a9"><span class="section-number-3">1.2.</span> 通过defvar定义不会改变声明的变量</h3>
+<div id="outline-container-org89d7437" class="outline-3">
+<h3 id="org89d7437"><span class="section-number-3">1.2.</span> 通过defvar定义不会改变声明的变量</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 用法和setq一致,但是定义的变量数值不会发生改变.如果定义的变量已经被定义,那么赋值将会失败.
 比如说:
 </p>
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #565575;">;; </span><span style="color: #565575;">&#22312;&#21069;&#38754;&#24050;&#32463;&#36890;&#36807;setq&#23450;&#20041;&#20102;foo&#30340;&#21069;&#25552;&#19979;
+<pre class="src src-emacs-lisp"><span style="color: #565575;">;; </span><span style="color: #96a0aa;">&#22312;&#21069;&#38754;&#24050;&#32463;&#36890;&#36807;setq&#23450;&#20041;&#20102;foo&#30340;&#21069;&#25552;&#19979;
 </span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">defvar</span> <span style="color: #ffe9aa;">foo</span> <span style="color: #ffe9aa; font-style: italic;">"liangzi"</span>
-  <span style="color: #62d196;">"This value will say who is a foo."</span><span style="color: #c66; font-weight: bold;">)</span> <span style="color: #565575;">;; </span><span style="color: #565575;">&#36825;&#19968;&#34892;&#26159;&#23545;document&#36827;&#34892;&#35299;&#37322;.</span>
+  <span style="color: #62d196;">"This value will say who is a foo."</span><span style="color: #c66; font-weight: bold;">)</span> <span style="color: #565575;">;; </span><span style="color: #96a0aa;">&#36825;&#19968;&#34892;&#26159;&#23545;document&#36827;&#34892;&#35299;&#37322;.</span>
 </pre>
 </div>
 <p>
@@ -319,39 +319,39 @@ message函数起到了将变量输出到缓冲区的作用.
 </p>
 </div>
 </div>
-<div id="outline-container-org1e83dde" class="outline-3">
-<h3 id="org1e83dde"><span class="section-number-3">1.3.</span> 通过defun定义函数.</h3>
+<div id="outline-container-orgb490e5a" class="outline-3">
+<h3 id="orgb490e5a"><span class="section-number-3">1.3.</span> 通过defun定义函数.</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 比如,我想定义一个求圆的面积的函数,我可以这么去写:
 </p>
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #565575;">;; </span><span style="color: #565575;">&#39318;&#20808;,&#22768;&#26126;PI&#30340;&#20540;
+<pre class="src src-emacs-lisp"><span style="color: #565575;">;; </span><span style="color: #96a0aa;">&#39318;&#20808;,&#22768;&#26126;PI&#30340;&#20540;
 </span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">setq</span> pi 3.14<span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;;;</span><span style="color: #565575;">3.14
+<span style="color: #565575;">;;;</span><span style="color: #96a0aa;">3.14
 </span>
 <span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">defun</span> <span style="color: #c991e1;">get-circle-sq</span> <span style="color: #6c6; font-weight: bold;">(</span>rr<span style="color: #6c6; font-weight: bold;">)</span>
-  <span style="color: #62d196;">"&#36825;&#26159;&#19968;&#20010;&#27714;&#22278;&#30340;&#38754;&#31215;&#30340;&#20989;&#25968;"</span> <span style="color: #565575;">;;</span><span style="color: #565575;">&#36825;&#26159;&#19968;&#34892;&#27880;&#37322;,&#34920;&#26126;&#36825;&#20010;&#20989;&#25968;&#22312;&#24178;&#20160;&#20040;
+  <span style="color: #62d196;">"&#36825;&#26159;&#19968;&#20010;&#27714;&#22278;&#30340;&#38754;&#31215;&#30340;&#20989;&#25968;"</span> <span style="color: #565575;">;;</span><span style="color: #96a0aa;">&#36825;&#26159;&#19968;&#34892;&#27880;&#37322;,&#34920;&#26126;&#36825;&#20010;&#20989;&#25968;&#22312;&#24178;&#20160;&#20040;
 </span>  <span style="color: #6c6; font-weight: bold;">(</span>message <span style="color: #ffe9aa; font-style: italic;">"&#22278;&#30340;&#38754;&#31215;&#26159;%.2f"</span> <span style="color: #69f; font-weight: bold;">(</span>* pi <span style="color: #cc6; font-weight: bold;">(</span>* rr rr<span style="color: #cc6; font-weight: bold;">)</span><span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span>
   <span style="color: #6c6; font-weight: bold;">(</span>* pi <span style="color: #69f; font-weight: bold;">(</span>* rr rr<span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span>
   <span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;;;</span><span style="color: #565575;">get-circle-sq
+<span style="color: #565575;">;;;</span><span style="color: #96a0aa;">get-circle-sq
 </span>
 <span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">setq</span> r 2<span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;;;</span><span style="color: #565575;">2
+<span style="color: #565575;">;;;</span><span style="color: #96a0aa;">2
 </span>
 <span style="color: #c66; font-weight: bold;">(</span>get-circle-sq r<span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;;;</span><span style="color: #565575;">12.56
+<span style="color: #565575;">;;;</span><span style="color: #96a0aa;">12.56
 </span>
 <span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">setq</span> cc <span style="color: #6c6; font-weight: bold;">(</span>get-circle-sq r<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;;;</span><span style="color: #565575;">12.56
+<span style="color: #565575;">;;;</span><span style="color: #96a0aa;">12.56
 </span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgad7abec" class="outline-3">
-<h3 id="orgad7abec"><span class="section-number-3">1.4.</span> 使用局部作用域</h3>
+<div id="outline-container-org79eea6d" class="outline-3">
+<h3 id="org79eea6d"><span class="section-number-3">1.4.</span> 使用局部作用域</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 对于刚刚的函数,我们把pi定义在了函数外面,这样并不好.并且,在函数内部我们没有定义任何的局部变量.这在一个较长的函数里面是难以实现的.下面就介绍如何使用let进行局部作用域的定义.并在此基础上,考虑局部变量的声明问题.
@@ -368,10 +368,10 @@ message函数起到了将变量输出到缓冲区的作用.
   sq<span style="color: #c66; font-weight: bold;">)</span>
 
 
-<span style="color: #565575;">;;;</span><span style="color: #565575;">get-circle-sq
+<span style="color: #565575;">;;;</span><span style="color: #96a0aa;">get-circle-sq
 </span>
 <span style="color: #c66; font-weight: bold;">(</span>get-circle-sq 2<span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;;;</span><span style="color: #565575;">12.56
+<span style="color: #565575;">;;;</span><span style="color: #96a0aa;">12.56
 </span>
 </pre>
 </div>
@@ -388,16 +388,16 @@ message函数起到了将变量输出到缓冲区的作用.
 </div>
 </div>
 </div>
-<div id="outline-container-orga20ade9" class="outline-3">
-<h3 id="orga20ade9"><span class="section-number-3">1.5.</span> 在对函数和变量观察时的技巧(使用C-h)</h3>
+<div id="outline-container-org9d4e8ff" class="outline-3">
+<h3 id="org9d4e8ff"><span class="section-number-3">1.5.</span> 在对函数和变量观察时的技巧(使用C-h)</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 我们可以通过C-h f来查询一个函数相关的信息,或者通过C-h v来擦汗寻一个变量的信息.
 </p>
 </div>
 </div>
-<div id="outline-container-orgd5ae9d1" class="outline-3">
-<h3 id="orgd5ae9d1"><span class="section-number-3">1.6.</span> 匿名函数表达式lambda</h3>
+<div id="outline-container-orgf0dcd05" class="outline-3">
+<h3 id="orgf0dcd05"><span class="section-number-3">1.6.</span> 匿名函数表达式lambda</h3>
 <div class="outline-text-3" id="text-1-6">
 <p>
 lambda表达式的格式和寻常的函数定义比较相似(只不过它没有名字而已.)
@@ -435,15 +435,15 @@ lambda表达式的格式和寻常的函数定义比较相似(只不过它没有�
 </div>
 </div>
 </div>
-<div id="outline-container-orga444a40" class="outline-2">
-<h2 id="orga444a40"><span class="section-number-2">2.</span> 基本逻辑顺序</h2>
+<div id="outline-container-org046cfd1" class="outline-2">
+<h2 id="org046cfd1"><span class="section-number-2">2.</span> 基本逻辑顺序</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 下面对每门语言基本存在的逻辑顺序进行简单的介绍.
 </p>
 </div>
-<div id="outline-container-orged90d00" class="outline-3">
-<h3 id="orged90d00"><span class="section-number-3">2.1.</span> 顺序执行</h3>
+<div id="outline-container-org2fe7ddd" class="outline-3">
+<h3 id="org2fe7ddd"><span class="section-number-3">2.1.</span> 顺序执行</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 顺序执行在函数里是默认的.这毫无疑问,也毫无问题.显式地确定顺序执行的方法是使用progn,如:
@@ -454,13 +454,13 @@ lambda表达式的格式和寻常的函数定义比较相似(只不过它没有�
   <span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">setq</span> b 4<span style="color: #6c6; font-weight: bold;">)</span>
   <span style="color: #6c6; font-weight: bold;">(</span>message <span style="color: #ffe9aa; font-style: italic;">"b-a=%d"</span> <span style="color: #69f; font-weight: bold;">(</span>- b a<span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
 
-<span style="color: #565575;">;;;</span><span style="color: #565575;">b-a=1</span>
+<span style="color: #565575;">;;;</span><span style="color: #96a0aa;">b-a=1</span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org24c1cb6" class="outline-3">
-<h3 id="org24c1cb6"><span class="section-number-3">2.2.</span> if 与cond</h3>
+<div id="outline-container-org60268fc" class="outline-3">
+<h3 id="org60268fc"><span class="section-number-3">2.2.</span> if 与cond</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个例子作为介绍:
@@ -472,7 +472,7 @@ if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个�
     <span style="color: #69f; font-weight: bold;">(</span>* -1 x<span style="color: #69f; font-weight: bold;">)</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
 
 <span style="color: #c66; font-weight: bold;">(</span>myabs -1<span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;;;</span><span style="color: #565575;">1
+<span style="color: #565575;">;;;</span><span style="color: #96a0aa;">1
 </span>
 <span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">defun</span> <span style="color: #c991e1;">good-abs</span><span style="color: #6c6; font-weight: bold;">(</span>x<span style="color: #6c6; font-weight: bold;">)</span>
   <span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">cond</span> <span style="color: #69f; font-weight: bold;">(</span><span style="color: #cc6; font-weight: bold;">(</span>&gt; x 0<span style="color: #cc6; font-weight: bold;">)</span> x<span style="color: #69f; font-weight: bold;">)</span>
@@ -481,13 +481,13 @@ if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个�
           <span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
 
 <span style="color: #c66; font-weight: bold;">(</span>good-abs -3<span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;;;</span><span style="color: #565575;">3</span>
+<span style="color: #565575;">;;;</span><span style="color: #96a0aa;">3</span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgb98f557" class="outline-3">
-<h3 id="orgb98f557"><span class="section-number-3">2.3.</span> while 控制循环</h3>
+<div id="outline-container-org0e30ebd" class="outline-3">
+<h3 id="org0e30ebd"><span class="section-number-3">2.3.</span> while 控制循环</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 事实证明，这个while循环很危险,经历一次死机之后,此处的所有文档全部消失了.
@@ -504,8 +504,8 @@ if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个�
 </div>
 </div>
 </div>
-<div id="outline-container-orgf5739ae" class="outline-3">
-<h3 id="orgf5739ae"><span class="section-number-3">2.4.</span> 逻辑运算 and or not</h3>
+<div id="outline-container-org9d3f609" class="outline-3">
+<h3 id="org9d3f609"><span class="section-number-3">2.4.</span> 逻辑运算 and or not</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 不消多说,直接上例子:
@@ -525,32 +525,32 @@ if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个�
   <span style="color: #c66; font-weight: bold;">)</span>
 
 <span style="color: #c66; font-weight: bold;">(</span>get-rectangle-sq 2<span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;;;</span><span style="color: #565575;">4
+<span style="color: #565575;">;;;</span><span style="color: #96a0aa;">4
 </span><span style="color: #c66; font-weight: bold;">(</span>get-rectangle-sq 2 3<span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;;;</span><span style="color: #565575;">6</span>
+<span style="color: #565575;">;;;</span><span style="color: #96a0aa;">6</span>
 </pre>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgb4aab0e" class="outline-2">
-<h2 id="orgb4aab0e"><span class="section-number-2">3.</span> 数据结构</h2>
+<div id="outline-container-org5df85dd" class="outline-2">
+<h2 id="org5df85dd"><span class="section-number-2">3.</span> 数据结构</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org4866229" class="outline-3">
-<h3 id="org4866229"><span class="section-number-3">3.1.</span> 数字</h3>
+<div id="outline-container-org8cecd88" class="outline-3">
+<h3 id="org8cecd88"><span class="section-number-3">3.1.</span> 数字</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 下面简单列一下数字相关的函数,详情可以来<a href="http://smacs.github.io/elisp/03-number.html">这里</a>学习.
 </p>
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #565575;">;; </span><span style="color: #565575;">&#27979;&#35797;&#20989;&#25968;
+<pre class="src src-emacs-lisp"><span style="color: #565575;">;; </span><span style="color: #96a0aa;">&#27979;&#35797;&#20989;&#25968;
 </span><span style="color: #c66; font-weight: bold;">(</span>integerp OBJECT<span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">(</span>floatp OBJECT<span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">(</span>numberp OBJECT<span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">(</span>zerop NUMBER<span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">(</span>wholenump OBJECT<span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;; </span><span style="color: #565575;">&#27604;&#36739;&#20989;&#25968;
+<span style="color: #565575;">;; </span><span style="color: #96a0aa;">&#27604;&#36739;&#20989;&#25968;
 </span><span style="color: #c66; font-weight: bold;">(</span>&gt; NUM1 NUM2<span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">(</span>&lt; NUM1 NUM2<span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">(</span>&gt;= NUM1 NUM2<span style="color: #c66; font-weight: bold;">)</span>
@@ -558,13 +558,13 @@ if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个�
 <span style="color: #c66; font-weight: bold;">(</span>= NUM1 NUM2<span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">(</span>eql OBJ1 OBJ2<span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">(</span>/= NUM1 NUM2<span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;; </span><span style="color: #565575;">&#36716;&#25442;&#20989;&#25968;
+<span style="color: #565575;">;; </span><span style="color: #96a0aa;">&#36716;&#25442;&#20989;&#25968;
 </span><span style="color: #c66; font-weight: bold;">(</span>float ARG<span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">(</span>truncate ARG <span style="color: #91ddff;">&amp;optional</span> DIVISOR<span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">(</span>floor ARG <span style="color: #91ddff;">&amp;optional</span> DIVISOR<span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">(</span>ceiling ARG <span style="color: #91ddff;">&amp;optional</span> DIVISOR<span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">(</span>round ARG <span style="color: #91ddff;">&amp;optional</span> DIVISOR<span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;; </span><span style="color: #565575;">&#36816;&#31639;
+<span style="color: #565575;">;; </span><span style="color: #96a0aa;">&#36816;&#31639;
 </span><span style="color: #c66; font-weight: bold;">(</span>+ <span style="color: #91ddff;">&amp;rest</span> NUMBERS-OR-MARKERS<span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">(</span>- <span style="color: #91ddff;">&amp;optional</span> NUMBER-OR-MARKER <span style="color: #91ddff;">&amp;rest</span> MORE-NUMBERS-OR-MARKERS<span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">(</span>* <span style="color: #91ddff;">&amp;rest</span> NUMBERS-OR-MARKERS<span style="color: #c66; font-weight: bold;">)</span>
@@ -586,26 +586,26 @@ if大家都比较熟悉,cond就是类似于switch-case的结构.下面以一个�
 <span style="color: #c66; font-weight: bold;">(</span>log ARG <span style="color: #91ddff;">&amp;optional</span> BASE<span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">(</span>log10 ARG<span style="color: #c66; font-weight: bold;">)</span>
 <span style="color: #c66; font-weight: bold;">(</span>logb ARG<span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #565575;">;; </span><span style="color: #565575;">&#38543;&#26426;&#25968;
+<span style="color: #565575;">;; </span><span style="color: #96a0aa;">&#38543;&#26426;&#25968;
 </span><span style="color: #c66; font-weight: bold;">(</span>random <span style="color: #91ddff;">&amp;optional</span> N<span style="color: #c66; font-weight: bold;">)</span>
 
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org7213bff" class="outline-3">
-<h3 id="org7213bff"><span class="section-number-3">3.2.</span> 字符与字符串</h3>
+<div id="outline-container-org7ac2ba3" class="outline-3">
+<h3 id="org7ac2ba3"><span class="section-number-3">3.2.</span> 字符与字符串</h3>
 <div class="outline-text-3" id="text-3-2">
 </div>
-<div id="outline-container-org97d2687" class="outline-4">
-<h4 id="org97d2687"><span class="section-number-4">3.2.1.</span> 字符的表示</h4>
+<div id="outline-container-org9d0c909" class="outline-4">
+<h4 id="org9d0c909"><span class="section-number-4">3.2.1.</span> 字符的表示</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <p>
 elisp里面的字符和C一样，都是用单引号表示，同时与一个整型数字挂钩（比如ASCII值）. 此处给出一个简单的示例:
 </p>
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #565575;">;; </span><span style="color: #565575;">'</span><span style="color: #aaffe4;">A</span><span style="color: #565575;">'
-</span>?A <span style="color: #565575;">;;</span><span style="color: #565575;">-&gt; 65</span>
+<pre class="src src-emacs-lisp"><span style="color: #565575;">;; </span><span style="color: #96a0aa;">'</span><span style="color: #aaffe4;">A</span><span style="color: #96a0aa;">'
+</span>?A <span style="color: #565575;">;;</span><span style="color: #96a0aa;">-&gt; 65</span>
 </pre>
 </div>
 <p>
@@ -616,17 +616,17 @@ elisp里面的字符和C一样，都是用单引号表示，同时与一个整�
 除此之外引申出来的就是一些控制字符, 如:
 </p>
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">?\a =&gt; 7                 <span style="color: #565575;">; </span><span style="color: #565575;">control-g, `</span><span style="color: #aaffe4;">C-g</span><span style="color: #565575;">'
-</span>?\b =&gt; 8                 <span style="color: #565575;">; </span><span style="color: #565575;">backspace, &lt;BS&gt;, `</span><span style="color: #aaffe4;">C-h</span><span style="color: #565575;">'
-</span>?\t =&gt; 9                 <span style="color: #565575;">; </span><span style="color: #565575;">tab, &lt;TAB&gt;, `</span><span style="color: #aaffe4;">C-i</span><span style="color: #565575;">'
-</span>?\n =&gt; 10                <span style="color: #565575;">; </span><span style="color: #565575;">newline, `</span><span style="color: #aaffe4;">C-j</span><span style="color: #565575;">'
-</span>?\v =&gt; 11                <span style="color: #565575;">; </span><span style="color: #565575;">vertical tab, `</span><span style="color: #aaffe4;">C-k</span><span style="color: #565575;">'
-</span>?\f =&gt; 12                <span style="color: #565575;">; </span><span style="color: #565575;">formfeed character, `</span><span style="color: #aaffe4;">C-l</span><span style="color: #565575;">'
-</span>?\r =&gt; 13                <span style="color: #565575;">; </span><span style="color: #565575;">carriage return, &lt;RET&gt;, `</span><span style="color: #aaffe4;">C-m</span><span style="color: #565575;">'
-</span>?\e =&gt; 27                <span style="color: #565575;">; </span><span style="color: #565575;">escape character, &lt;ESC&gt;, `C-['
-</span>?\s =&gt; 32                <span style="color: #565575;">; </span><span style="color: #565575;">space character, &lt;SPC&gt;
-</span>?\\ =&gt; 92                <span style="color: #565575;">; </span><span style="color: #565575;">backslash character, `\'
-</span>?\d =&gt; 127               <span style="color: #565575;">; </span><span style="color: #565575;">delete character, &lt;DEL&gt;
+<pre class="src src-emacs-lisp">?\a =&gt; 7                 <span style="color: #565575;">; </span><span style="color: #96a0aa;">control-g, `</span><span style="color: #aaffe4;">C-g</span><span style="color: #96a0aa;">'
+</span>?\b =&gt; 8                 <span style="color: #565575;">; </span><span style="color: #96a0aa;">backspace, &lt;BS&gt;, `</span><span style="color: #aaffe4;">C-h</span><span style="color: #96a0aa;">'
+</span>?\t =&gt; 9                 <span style="color: #565575;">; </span><span style="color: #96a0aa;">tab, &lt;TAB&gt;, `</span><span style="color: #aaffe4;">C-i</span><span style="color: #96a0aa;">'
+</span>?\n =&gt; 10                <span style="color: #565575;">; </span><span style="color: #96a0aa;">newline, `</span><span style="color: #aaffe4;">C-j</span><span style="color: #96a0aa;">'
+</span>?\v =&gt; 11                <span style="color: #565575;">; </span><span style="color: #96a0aa;">vertical tab, `</span><span style="color: #aaffe4;">C-k</span><span style="color: #96a0aa;">'
+</span>?\f =&gt; 12                <span style="color: #565575;">; </span><span style="color: #96a0aa;">formfeed character, `</span><span style="color: #aaffe4;">C-l</span><span style="color: #96a0aa;">'
+</span>?\r =&gt; 13                <span style="color: #565575;">; </span><span style="color: #96a0aa;">carriage return, &lt;RET&gt;, `</span><span style="color: #aaffe4;">C-m</span><span style="color: #96a0aa;">'
+</span>?\e =&gt; 27                <span style="color: #565575;">; </span><span style="color: #96a0aa;">escape character, &lt;ESC&gt;, `C-['
+</span>?\s =&gt; 32                <span style="color: #565575;">; </span><span style="color: #96a0aa;">space character, &lt;SPC&gt;
+</span>?\\ =&gt; 92                <span style="color: #565575;">; </span><span style="color: #96a0aa;">backslash character, `\'
+</span>?\d =&gt; 127               <span style="color: #565575;">; </span><span style="color: #96a0aa;">delete character, &lt;DEL&gt;
 </span>
 </pre>
 </div>
@@ -642,8 +642,8 @@ elisp里面的字符和C一样，都是用单引号表示，同时与一个整�
 </p>
 </div>
 </div>
-<div id="outline-container-orgcbaf2a7" class="outline-4">
-<h4 id="orgcbaf2a7"><span class="section-number-4">3.2.2.</span> 由字符产生字符串的一些函数</h4>
+<div id="outline-container-org9fdda6e" class="outline-4">
+<h4 id="org9fdda6e"><span class="section-number-4">3.2.2.</span> 由字符产生字符串的一些函数</h4>
 <div class="outline-text-4" id="text-3-2-2">
 <p>
 这部分的内容还挺无聊的,总结一下就是:
@@ -662,20 +662,20 @@ elisp里面的字符和C一样，都是用单引号表示，同时与一个整�
 </ol>
 </div>
 </div>
-<div id="outline-container-org8124d8d" class="outline-4">
-<h4 id="org8124d8d"><span class="section-number-4">3.2.3.</span> 对字符串的简单处理,查找和替换</h4>
+<div id="outline-container-orgf99d6df" class="outline-4">
+<h4 id="orgf99d6df"><span class="section-number-4">3.2.3.</span> 对字符串的简单处理,查找和替换</h4>
 <div class="outline-text-4" id="text-3-2-3">
 </div>
 <ol class="org-ol">
-<li><a id="orgd7a1634"></a>查找<br>
+<li><a id="org487b4ca"></a>查找<br>
 <div class="outline-text-5" id="text-3-2-3-1">
 <p>
 下面是进行查找的一个示例:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #c66; font-weight: bold;">(</span>string-match <span style="color: #ffe9aa; font-style: italic;">"34"</span> <span style="color: #ffe9aa; font-style: italic;">"01234567890123456789"</span><span style="color: #c66; font-weight: bold;">)</span>    <span style="color: #565575;">; </span><span style="color: #565575;">=&gt; 3
-</span><span style="color: #c66; font-weight: bold;">(</span>string-match <span style="color: #ffe9aa; font-style: italic;">"34"</span> <span style="color: #ffe9aa; font-style: italic;">"01234567890123456789"</span> 10<span style="color: #c66; font-weight: bold;">)</span> <span style="color: #565575;">; </span><span style="color: #565575;">=&gt; 13</span>
+<pre class="src src-emacs-lisp"><span style="color: #c66; font-weight: bold;">(</span>string-match <span style="color: #ffe9aa; font-style: italic;">"34"</span> <span style="color: #ffe9aa; font-style: italic;">"01234567890123456789"</span><span style="color: #c66; font-weight: bold;">)</span>    <span style="color: #565575;">; </span><span style="color: #96a0aa;">=&gt; 3
+</span><span style="color: #c66; font-weight: bold;">(</span>string-match <span style="color: #ffe9aa; font-style: italic;">"34"</span> <span style="color: #ffe9aa; font-style: italic;">"01234567890123456789"</span> 10<span style="color: #c66; font-weight: bold;">)</span> <span style="color: #565575;">; </span><span style="color: #96a0aa;">=&gt; 13</span>
 </pre>
 </div>
 <p>
@@ -700,7 +700,7 @@ elisp里面的字符和C一样，都是用单引号表示，同时与一个整�
 </p>
 </div>
 </li>
-<li><a id="org11e0041"></a>替换<br>
+<li><a id="org095ad28"></a>替换<br>
 <div class="outline-text-5" id="text-3-2-3-2">
 <p>
 替换的功能需要稍微依据查找来实现,比如:
@@ -723,23 +723,23 @@ elisp里面的字符和C一样，都是用单引号表示，同时与一个整�
 </ol>
 </div>
 </div>
-<div id="outline-container-org4fe627a" class="outline-3">
-<h3 id="org4fe627a"><span class="section-number-3">3.3.</span> cons cell and list</h3>
+<div id="outline-container-org73fb575" class="outline-3">
+<h3 id="org73fb575"><span class="section-number-3">3.3.</span> cons cell and list</h3>
 <div class="outline-text-3" id="text-3-3">
 </div>
-<div id="outline-container-orgb6bb29d" class="outline-4">
-<h4 id="orgb6bb29d"><span class="section-number-4">3.3.1.</span> cons cell</h4>
+<div id="outline-container-orgba0fdbe" class="outline-4">
+<h4 id="orgba0fdbe"><span class="section-number-4">3.3.1.</span> cons cell</h4>
 <div class="outline-text-4" id="text-3-3-1">
 <p>
 cons cell 就是一个二元组. 这个二元组主要可以分成两部分,(CAR CDR). 一般而言, 初始化一个cons cell的基本语法是:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">'<span style="color: #c66; font-weight: bold;">(</span>1 . 2<span style="color: #c66; font-weight: bold;">)</span>                                <span style="color: #565575;">; </span><span style="color: #565575;">=&gt; (1 . 2)
-</span>'<span style="color: #c66; font-weight: bold;">(</span>?a . 1<span style="color: #c66; font-weight: bold;">)</span>                               <span style="color: #565575;">; </span><span style="color: #565575;">=&gt; (97 . 1)
-</span>'<span style="color: #c66; font-weight: bold;">(</span>1 . <span style="color: #ffe9aa; font-style: italic;">"a"</span><span style="color: #c66; font-weight: bold;">)</span>                              <span style="color: #565575;">; </span><span style="color: #565575;">=&gt; (1 . "a")
-</span>'<span style="color: #c66; font-weight: bold;">(</span>1 . nil<span style="color: #c66; font-weight: bold;">)</span>                              <span style="color: #565575;">; </span><span style="color: #565575;">=&gt; (1)
-</span>'<span style="color: #c66; font-weight: bold;">(</span>nil . nil<span style="color: #c66; font-weight: bold;">)</span>                            <span style="color: #565575;">; </span><span style="color: #565575;">=&gt; (nil)
+<pre class="src src-emacs-lisp">'<span style="color: #c66; font-weight: bold;">(</span>1 . 2<span style="color: #c66; font-weight: bold;">)</span>                                <span style="color: #565575;">; </span><span style="color: #96a0aa;">=&gt; (1 . 2)
+</span>'<span style="color: #c66; font-weight: bold;">(</span>?a . 1<span style="color: #c66; font-weight: bold;">)</span>                               <span style="color: #565575;">; </span><span style="color: #96a0aa;">=&gt; (97 . 1)
+</span>'<span style="color: #c66; font-weight: bold;">(</span>1 . <span style="color: #ffe9aa; font-style: italic;">"a"</span><span style="color: #c66; font-weight: bold;">)</span>                              <span style="color: #565575;">; </span><span style="color: #96a0aa;">=&gt; (1 . "a")
+</span>'<span style="color: #c66; font-weight: bold;">(</span>1 . nil<span style="color: #c66; font-weight: bold;">)</span>                              <span style="color: #565575;">; </span><span style="color: #96a0aa;">=&gt; (1)
+</span>'<span style="color: #c66; font-weight: bold;">(</span>nil . nil<span style="color: #c66; font-weight: bold;">)</span>                            <span style="color: #565575;">; </span><span style="color: #96a0aa;">=&gt; (nil)
 </span>
 </pre>
 </div>
@@ -757,8 +757,8 @@ cons cell 就是一个二元组. 这个二元组主要可以分成两部分,(CAR
 </p>
 </div>
 </div>
-<div id="outline-container-orgbcf02c7" class="outline-4">
-<h4 id="orgbcf02c7"><span class="section-number-4">3.3.2.</span> list</h4>
+<div id="outline-container-orgb37de57" class="outline-4">
+<h4 id="orgb37de57"><span class="section-number-4">3.3.2.</span> list</h4>
 <div class="outline-text-4" id="text-3-3-2">
 <p>
 list常常是指由cons cell生成的一些东西. 我们来看一些特殊的list吧.
@@ -779,7 +779,7 @@ list常常是指由cons cell生成的一些东西. 我们来看一些特殊的li
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: 梁子 (<a href="mailto:frostliangzi@qq.com">frostliangzi@qq.com</a>)</span> <span class="date">Create Date: 2020-07-07 二 00:00</span> <span class="date">Last modified: 2025-07-18 五 13:48</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: 梁子 (<a href="mailto:frostliangzi@qq.com">frostliangzi@qq.com</a>)</span> <span class="date">Create Date: 2020-07-07 Tue 00:00</span> <span class="date">Last modified: 2025-09-27 Sat 19:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>
