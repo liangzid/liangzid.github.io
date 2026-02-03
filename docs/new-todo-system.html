@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2026-02-03 Tue 11:22 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>我的全新TODO管理系统</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">我的全新TODO管理系统</h1>
+<p>
+最近又重新思考了一下如何进行个人工作的版本流控制，对之前的reflection思路进行了一波改造升级。
+</p>
+
+<p>
+改进的原则是：
+</p>
+
+<ul class="org-ul">
+<li>实用大于美观。不过度追求所覆盖的全面和完整，只聚焦在最重要的几个方向。其余的则放空</li>
+<li>强调可持续性。
+<ul class="org-ul">
+<li>提供退出机制，以应对较为简单的个人记录。</li>
+<li>提供模板，以方便插入</li>
+<li>在文件管理与版本控制上也突出可持续。不会出现过往todo list过于复杂的情况</li>
+</ul></li>
+<li>与当前工作流深度嵌入
+<ul class="org-ul">
+<li>Git集成与全端浏览</li>
+<li>Emacs + Org Mode集成</li>
+</ul></li>
+<li>诚实与robustness
+<ul class="org-ul">
+<li>仓库私有</li>
+<li>扩展性强</li>
+</ul></li>
+</ul>
+
+<p>
+目前新版的个人版本控制流程如下。
+</p>
+<div id="outline-container-orgd3d9532" class="outline-2">
+<h2 id="orgd3d9532"><span class="section-number-2">1.</span> 系统组件分析</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+整体的项目如下图所示：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">&#9500;&#9472;&#9472; appearance
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; cloth.org
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; haircut.org
+&#9500;&#9472;&#9472; body
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; physical
+&#9474;&#160;&#160; &#9474;&#160;&#160; &#9492;&#9472;&#9472; 2026-M02.org
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; sexual-love
+&#9474;&#160;&#160;     &#9492;&#9472;&#9472; 2026-02.org
+&#9500;&#9472;&#9472; finance
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; monthly
+&#9474;&#160;&#160; &#9474;&#160;&#160; &#9492;&#9472;&#9472; 2026-M02.org
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; yearly
+&#9474;&#160;&#160;     &#9492;&#9472;&#9472; 2026.org
+&#9500;&#9472;&#9472; inbox.org
+&#9500;&#9472;&#9472; README.md
+&#9500;&#9472;&#9472; reflection
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; monthly
+&#9474;&#160;&#160; &#9474;&#160;&#160; &#9492;&#9472;&#9472; 2026-M02.org
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; quarterly
+&#9474;&#160;&#160; &#9474;&#160;&#160; &#9492;&#9472;&#9472; 2026-Q1.org
+&#9474;&#160;&#160; &#9500;&#9472;&#9472; weekly
+&#9474;&#160;&#160; &#9474;&#160;&#160; &#9492;&#9472;&#9472; 2026-W06.org
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; yearly
+&#9474;&#160;&#160;     &#9492;&#9472;&#9472; 2026.org
+&#9500;&#9472;&#9472; weekly
+&#9474;&#160;&#160; &#9492;&#9472;&#9472; 2026-W06.org
+</pre>
+</div>
+
+<p>
+可以看出，整个项目仅仅包含四个方面，分别是周报（weekly），经济、身体、外貌。至于其他，比如社交等等暂时没有加进去；阅读之类的也没有显式地加进去。这不是因为后面二者并不重要，而是他们并不需要非常严格的长期监控与处理。
+</p>
+
+<p>
+对于所关注的四个方面，只有weekly是需要日常维护的，剩余的如appearance、body、finance都可以以一个较低的频率进行更新。reflection则需要每周更新。具体来说是：
+</p>
+
+<ul class="org-ul">
+<li>Weekly：将一周七天的所有计划纳入一个文件中进行管理。</li>
+<li>Appearance：负责管理我的外在，维持作为一个正常人类的形象
+<ul class="org-ul">
+<li>Cloth：对我的衣服进行管理。定期更新、删除、修改。</li>
+<li>Haircut：对我的头发进行管理。定期修理。</li>
+</ul></li>
+<li>Body：负责监控我的身体状况。与Appearance一样，我认为这也是仍然需要重点关注的点。
+<ul class="org-ul">
+<li>Physical：指个人的身体素质。包括：体重、体脂等个人数据。从每周的周报中统计进行各项体育运动、健身等等的强度，以构成反馈。</li>
+<li>Sexual-Love：用于监控个人的性压抑程度。记录自己的性行为次数、频率、相关人员、时间。由此进行后续的心理健康状况分析。</li>
+</ul></li>
+<li>Finance：记录自己的经济状况。
+<ul class="org-ul">
+<li>Monthly：每个月都记录自己的支出和收益，挖掘出不合理的支出。设定消费数目，对金钱进行合理的分配。</li>
+<li>Yearly：从全年的角度制定每一年的经济计划 （如学生时期可能以尽量产生赤字为主，多体验）。并设置每个方向的消费比重。</li>
+</ul></li>
+<li>Reflection
+<ul class="org-ul">
+<li>Weekly：基于每周周日志的文件对本周状态进行总结。 聚焦在细节。</li>
+<li>Monthly：对于每个月的情况进行总结。 每个月都应该让事态产生明显变化。</li>
+<li>Quarterly：对于每个季度进行总结。 每个季度都应该完成一个战略目标点。</li>
+<li>Yearly：对全年的总结。 这应该站在一个比较高的层面进行总结。</li>
+</ul></li>
+<li>Inbox：用于记录某些灵光。需要被定期清理。</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org5269e0d" class="outline-2">
+<h2 id="org5269e0d"><span class="section-number-2">2.</span> 一个理想的运行结构</h2>
+<div class="outline-text-2" id="text-2">
+<ol class="org-ol">
+<li>每日开始，应该打开当周的weekly，撰写上一日的reflection</li>
+<li>应排列今日的TODO，并按照流程逐步进行。</li>
+<li>每周周五晚上或周六上午，应该进行每周的reflection，并整理手机上的身体数据。</li>
+<li>每个月发工资时，对于这个月的银行流水进行总结和记录。检查银行卡、微信、支付宝等。</li>
+<li>每个月月末阅读该月的relfection，然后撰写月度总结。</li>
+<li>每次和导师开完会对appearance的情况进行一次更新。</li>
+<li>每个季度撰写反思和总结。</li>
+<li>每年都对全年的情况进行一次系统的分析。可以把语料发给AI。</li>
+</ol>
+
+
+<p>
+维持持续记录的要点：
+</p>
+<ol class="org-ol">
+<li>在周一、二 等日安排攻坚的难题。</li>
+<li>research等tag的TODO ITEM个数应该与body、fiction、relax等实现平衡。</li>
+<li>允许在某些特殊天里“潦草记录”。但是认为连续性最为重要。</li>
+<li>允许补录。允许潦草补录。</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org559dfd1" class="outline-2">
+<h2 id="org559dfd1"><span class="section-number-2">3.</span> Weekly 模板</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+我使用emacs的yas snippets搞了一个每周模板。如下：
+</p>
+
+<p>
+#+begin_src snippets
+</p>
+</div>
+</div>
+<div id="outline-container-org7cd139a" class="outline-2">
+<h2 id="org7cd139a"><span class="section-number-2">4.</span> &lt;`(format-time-string "%Y-%m-%d %a")`&gt; 今日核心主题&#xa0;&#xa0;&#xa0;<span class="tag"><span class="___">工作日</span></span></h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org4632c2c" class="outline-3">
+<h3 id="org4632c2c"><span class="section-number-3">4.1.</span> 今日计划 <code>[%]</code></h3>
+<div class="outline-text-3" id="text-4-1">
+</div>
+<div id="outline-container-org3509d3f" class="outline-4">
+<h4 id="org3509d3f"><span class="section-number-4">4.1.1.</span> <span class="todo TODO">TODO</span> 完成ablation实验 【上午完成，优先推进】&#xa0;&#xa0;&#xa0;<span class="tag"><span class="research">research</span>&#xa0;<span class="_A">#A</span></span></h4>
+</div>
+<div id="outline-container-orgcd2d779" class="outline-4">
+<h4 id="orgcd2d779"><span class="section-number-4">4.1.2.</span> <span class="todo TODO">TODO</span> 理解现有agent memory机制 【通勤途中梳理】&#xa0;&#xa0;&#xa0;<span class="tag"><span class="research">research</span></span></h4>
+</div>
+<div id="outline-container-orgfa0a8ec" class="outline-4">
+<h4 id="orgfa0a8ec"><span class="section-number-4">4.1.3.</span> <span class="done CANCELED">CANCELED</span> 暂缓任务示例 【标注原因，可选】</h4>
+</div>
+<div id="outline-container-orge937b02" class="outline-4">
+<h4 id="orge937b02"><span class="section-number-4">4.1.4.</span> <span class="todo TODO">TODO</span> 腹部 健身&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span></span></h4>
+</div>
+<div id="outline-container-orgacae3ca" class="outline-4">
+<h4 id="orgacae3ca"><span class="section-number-4">4.1.5.</span> <span class="todo TODO">TODO</span> 有氧 30min&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span></span></h4>
+</div>
+<div id="outline-container-org2f9363d" class="outline-4">
+<h4 id="org2f9363d"><span class="section-number-4">4.1.6.</span> <span class="todo TODO">TODO</span> 23:00前早睡&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span>&#xa0;<span class="routine">routine</span></span></h4>
+</div>
+<div id="outline-container-orgbaa891e" class="outline-4">
+<h4 id="orgbaa891e"><span class="section-number-4">4.1.7.</span> <span class="todo TODO">TODO</span> 阅读小说《全力的游戏》&#xa0;&#xa0;&#xa0;<span class="tag"><span class="English">English</span>&#xa0;<span class="fiction">fiction</span></span></h4>
+</div>
+<div id="outline-container-org2295903" class="outline-4">
+<h4 id="org2295903"><span class="section-number-4">4.1.8.</span> <span class="todo TODO">TODO</span> 阅读《庄子》&#xa0;&#xa0;&#xa0;<span class="tag"><span class="Phi">Phi</span></span></h4>
+</div>
+</div>
+<div id="outline-container-org00cd618" class="outline-3">
+<h3 id="org00cd618"><span class="section-number-3">4.2.</span> 今日反思（核心模块，对应保持/失误/改进）</h3>
+<div class="outline-text-3" id="text-4-2">
+</div>
+<div id="outline-container-org95d2643" class="outline-4">
+<h4 id="org95d2643"><span class="section-number-4">4.2.1.</span> 1. 总体评价（一句话总结今日状态）</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<ul class="org-ul">
+<li>示例：总体完成核心工作任务，状态专注，时间分配基本合理；或今日进度滞后，需调整优先级和时间管理。</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org97739c3" class="outline-4">
+<h4 id="org97739c3"><span class="section-number-4">4.2.2.</span> 2. 值得保持的点（提炼优势/好习惯，具体到场景）</h4>
+<div class="outline-text-4" id="text-4-2-2">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org468f8b9" class="outline-4">
+<h4 id="org468f8b9"><span class="section-number-4">4.2.3.</span> 3. 今日失误/不足（具体不笼统，对应时间/任务/习惯/情绪）</h4>
+<div class="outline-text-4" id="text-4-2-3">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orgc2c5ad7" class="outline-4">
+<h4 id="orgc2c5ad7"><span class="section-number-4">4.2.4.</span> 4. 明日改进方案（对应失误，可落地、可执行）</h4>
+<div class="outline-text-4" id="text-4-2-4">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-org15623cb" class="outline-3">
+<h3 id="org15623cb"><span class="section-number-3">4.3.</span> 明日核心优先级（3条以内，避免多任务焦虑）</h3>
+<div class="outline-text-3" id="text-4-3">
+<ol class="org-ol">
+<li>优先完成 #A 级核心任务：XXX</li>
+<li>落实改进方案：如设置强制关机/晨起不碰手机</li>
+<li>碎片化时间利用：如通勤完成XX轻量任务</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-org9bcf418" class="outline-2">
+<h2 id="org9bcf418"><span class="section-number-2">5.</span> &lt;`(format-time-string "%Y-%m-%d %a" (time-add (current-time) (* 86400 1)))`&gt; 今日核心主题&#xa0;&#xa0;&#xa0;<span class="tag"><span class="___">工作日</span></span></h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orge37b46a" class="outline-3">
+<h3 id="orge37b46a"><span class="section-number-3">5.1.</span> 今日计划 <code>[%]</code></h3>
+<div class="outline-text-3" id="text-5-1">
+</div>
+<div id="outline-container-org24ae084" class="outline-4">
+<h4 id="org24ae084"><span class="section-number-4">5.1.1.</span> <span class="todo TODO">TODO</span> 复现ablation实验结果 【下午完成，整理数据】&#xa0;&#xa0;&#xa0;<span class="tag"><span class="research">research</span>&#xa0;<span class="_A">#A</span></span></h4>
+</div>
+<div id="outline-container-org27eee93" class="outline-4">
+<h4 id="org27eee93"><span class="section-number-4">5.1.2.</span> <span class="todo TODO">TODO</span> 整理agent memory机制笔记 【工位专注梳理】&#xa0;&#xa0;&#xa0;<span class="tag"><span class="research">research</span></span></h4>
+</div>
+<div id="outline-container-org04fd9d3" class="outline-4">
+<h4 id="org04fd9d3"><span class="section-number-4">5.1.3.</span> <span class="todo TODO">TODO</span> 上肢 健身&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span></span></h4>
+</div>
+<div id="outline-container-org805a104" class="outline-4">
+<h4 id="org805a104"><span class="section-number-4">5.1.4.</span> <span class="todo TODO">TODO</span> 拉伸 15min&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span></span></h4>
+</div>
+<div id="outline-container-org637a08e" class="outline-4">
+<h4 id="org637a08e"><span class="section-number-4">5.1.5.</span> <span class="todo TODO">TODO</span> 23:00前早睡&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span>&#xa0;<span class="routine">routine</span></span></h4>
+</div>
+<div id="outline-container-org0759c11" class="outline-4">
+<h4 id="org0759c11"><span class="section-number-4">5.1.6.</span> <span class="todo TODO">TODO</span> 精读《全力的游戏》章节&#xa0;&#xa0;&#xa0;<span class="tag"><span class="English">English</span>&#xa0;<span class="fiction">fiction</span></span></h4>
+</div>
+<div id="outline-container-orgfcab1a5" class="outline-4">
+<h4 id="orgfcab1a5"><span class="section-number-4">5.1.7.</span> <span class="todo TODO">TODO</span> 精读《庄子》核心句 【标注感悟】&#xa0;&#xa0;&#xa0;<span class="tag"><span class="Phi">Phi</span></span></h4>
+</div>
+</div>
+<div id="outline-container-org031b0bf" class="outline-3">
+<h3 id="org031b0bf"><span class="section-number-3">5.2.</span> 今日反思（核心模块，对应保持/失误/改进）</h3>
+<div class="outline-text-3" id="text-5-2">
+</div>
+<div id="outline-container-orgaca68e2" class="outline-4">
+<h4 id="orgaca68e2"><span class="section-number-4">5.2.1.</span> 1. 总体评价（一句话总结今日状态）</h4>
+<div class="outline-text-4" id="text-5-2-1">
+<ul class="org-ul">
+<li>示例：总体完成核心工作任务，状态专注，时间分配基本合理；或今日进度滞后，需调整优先级和时间管理。</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org5da526c" class="outline-4">
+<h4 id="org5da526c"><span class="section-number-4">5.2.2.</span> 2. 值得保持的点（提炼优势/好习惯，具体到场景）</h4>
+<div class="outline-text-4" id="text-5-2-2">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org3e70c60" class="outline-4">
+<h4 id="org3e70c60"><span class="section-number-4">5.2.3.</span> 3. 今日失误/不足（具体不笼统，对应时间/任务/习惯/情绪）</h4>
+<div class="outline-text-4" id="text-5-2-3">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orgfb667aa" class="outline-4">
+<h4 id="orgfb667aa"><span class="section-number-4">5.2.4.</span> 4. 明日改进方案（对应失误，可落地、可执行）</h4>
+<div class="outline-text-4" id="text-5-2-4">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd9bf791" class="outline-3">
+<h3 id="orgd9bf791"><span class="section-number-3">5.3.</span> 明日核心优先级（3条以内，避免多任务焦虑）</h3>
+<div class="outline-text-3" id="text-5-3">
+<ol class="org-ol">
+<li>优先完成 #A 级核心任务：XXX</li>
+<li>落实改进方案：如设置强制关机/晨起不碰手机</li>
+<li>碎片化时间利用：如通勤完成XX轻量任务</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf3efc71" class="outline-2">
+<h2 id="orgf3efc71"><span class="section-number-2">6.</span> &lt;`(format-time-string "%Y-%m-%d %a" (time-add (current-time) (* 86400 2)))`&gt; 今日核心主题&#xa0;&#xa0;&#xa0;<span class="tag"><span class="___">工作日</span>&#xa0;<span class="midweek">midweek</span></span></h2>
+<div class="outline-text-2" id="text-6">
+</div>
+<div id="outline-container-org1e699e4" class="outline-3">
+<h3 id="org1e699e4"><span class="section-number-3">6.1.</span> 今日计划 <code>[%]</code></h3>
+<div class="outline-text-3" id="text-6-1">
+</div>
+<div id="outline-container-orgc66d0e4" class="outline-4">
+<h4 id="orgc66d0e4"><span class="section-number-4">6.1.1.</span> <span class="todo TODO">TODO</span> 撰写ablation实验分析 【上午完成，框架搭建】&#xa0;&#xa0;&#xa0;<span class="tag"><span class="research">research</span>&#xa0;<span class="_A">#A</span></span></h4>
+</div>
+<div id="outline-container-orged0e834" class="outline-4">
+<h4 id="orged0e834"><span class="section-number-4">6.1.2.</span> <span class="todo TODO">TODO</span> 调研agent memory相关论文 【筛选3篇核心文献】&#xa0;&#xa0;&#xa0;<span class="tag"><span class="research">research</span></span></h4>
+</div>
+<div id="outline-container-orgaf1f336" class="outline-4">
+<h4 id="orgaf1f336"><span class="section-number-4">6.1.3.</span> <span class="todo TODO">TODO</span> 核心 健身&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span></span></h4>
+</div>
+<div id="outline-container-org2a86044" class="outline-4">
+<h4 id="org2a86044"><span class="section-number-4">6.1.4.</span> <span class="todo TODO">TODO</span> 有氧 20min&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span></span></h4>
+</div>
+<div id="outline-container-org025b880" class="outline-4">
+<h4 id="org025b880"><span class="section-number-4">6.1.5.</span> <span class="todo TODO">TODO</span> 22:50前早睡&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span>&#xa0;<span class="routine">routine</span></span></h4>
+</div>
+<div id="outline-container-org8b78d05" class="outline-4">
+<h4 id="org8b78d05"><span class="section-number-4">6.1.6.</span> <span class="todo TODO">TODO</span> 英语长难句分析 【《全力的游戏》节选】&#xa0;&#xa0;&#xa0;<span class="tag"><span class="English">English</span></span></h4>
+</div>
+<div id="outline-container-org368a87a" class="outline-4">
+<h4 id="org368a87a"><span class="section-number-4">6.1.7.</span> <span class="todo TODO">TODO</span> 梳理《庄子》思想框架&#xa0;&#xa0;&#xa0;<span class="tag"><span class="Phi">Phi</span></span></h4>
+</div>
+</div>
+<div id="outline-container-org1a13cc8" class="outline-3">
+<h3 id="org1a13cc8"><span class="section-number-3">6.2.</span> 今日反思（核心模块，对应保持/失误/改进）</h3>
+<div class="outline-text-3" id="text-6-2">
+</div>
+<div id="outline-container-org841ce7b" class="outline-4">
+<h4 id="org841ce7b"><span class="section-number-4">6.2.1.</span> 1. 总体评价（一句话总结今日状态）</h4>
+<div class="outline-text-4" id="text-6-2-1">
+<ul class="org-ul">
+<li>示例：总体完成核心工作任务，状态专注，时间分配基本合理；或今日进度滞后，需调整优先级和时间管理。</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org25f3ec4" class="outline-4">
+<h4 id="org25f3ec4"><span class="section-number-4">6.2.2.</span> 2. 值得保持的点（提炼优势/好习惯，具体到场景）</h4>
+<div class="outline-text-4" id="text-6-2-2">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org406b1ad" class="outline-4">
+<h4 id="org406b1ad"><span class="section-number-4">6.2.3.</span> 3. 今日失误/不足（具体不笼统，对应时间/任务/习惯/情绪）</h4>
+<div class="outline-text-4" id="text-6-2-3">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orgaf5971a" class="outline-4">
+<h4 id="orgaf5971a"><span class="section-number-4">6.2.4.</span> 4. 明日改进方案（对应失误，可落地、可执行）</h4>
+<div class="outline-text-4" id="text-6-2-4">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-org6cc4a59" class="outline-3">
+<h3 id="org6cc4a59"><span class="section-number-3">6.3.</span> 明日核心优先级（3条以内，避免多任务焦虑）</h3>
+<div class="outline-text-3" id="text-6-3">
+<ol class="org-ol">
+<li>优先完成 #A 级核心任务：XXX</li>
+<li>落实改进方案：如设置强制关机/晨起不碰手机</li>
+<li>碎片化时间利用：如通勤完成XX轻量任务</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-org472b097" class="outline-2">
+<h2 id="org472b097"><span class="section-number-2">7.</span> &lt;`(format-time-string "%Y-%m-%d %a" (time-add (current-time) (* 86400 3)))`&gt; 今日核心主题&#xa0;&#xa0;&#xa0;<span class="tag"><span class="___">工作日</span></span></h2>
+<div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-org586bc30" class="outline-3">
+<h3 id="org586bc30"><span class="section-number-3">7.1.</span> 今日计划 <code>[%]</code></h3>
+<div class="outline-text-3" id="text-7-1">
+</div>
+<div id="outline-container-org276c075" class="outline-4">
+<h4 id="org276c075"><span class="section-number-4">7.1.1.</span> <span class="todo TODO">TODO</span> 完善实验分析文档 【下午定稿，检查细节】&#xa0;&#xa0;&#xa0;<span class="tag"><span class="research">research</span>&#xa0;<span class="_A">#A</span></span></h4>
+</div>
+<div id="outline-container-orgac4b27a" class="outline-4">
+<h4 id="orgac4b27a"><span class="section-number-4">7.1.2.</span> <span class="todo TODO">TODO</span> 整理agent memory论文笔记 【提炼核心观点】&#xa0;&#xa0;&#xa0;<span class="tag"><span class="research">research</span></span></h4>
+</div>
+<div id="outline-container-org26f3344" class="outline-4">
+<h4 id="org26f3344"><span class="section-number-4">7.1.3.</span> <span class="todo TODO">TODO</span> 下肢 健身&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span></span></h4>
+</div>
+<div id="outline-container-orgec6ffc9" class="outline-4">
+<h4 id="orgec6ffc9"><span class="section-number-4">7.1.4.</span> <span class="todo TODO">TODO</span> 散步 30min&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span></span></h4>
+</div>
+<div id="outline-container-org6790ffe" class="outline-4">
+<h4 id="org6790ffe"><span class="section-number-4">7.1.5.</span> <span class="todo TODO">TODO</span> 23:00前早睡&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span>&#xa0;<span class="routine">routine</span></span></h4>
+</div>
+<div id="outline-container-org7eb9346" class="outline-4">
+<h4 id="org7eb9346"><span class="section-number-4">7.1.6.</span> <span class="todo TODO">TODO</span> 阅读《全力的游戏》新章节&#xa0;&#xa0;&#xa0;<span class="tag"><span class="English">English</span>&#xa0;<span class="fiction">fiction</span></span></h4>
+</div>
+<div id="outline-container-org54ac34a" class="outline-4">
+<h4 id="org54ac34a"><span class="section-number-4">7.1.7.</span> <span class="todo TODO">TODO</span> 书写《庄子》阅读感悟&#xa0;&#xa0;&#xa0;<span class="tag"><span class="Phi">Phi</span>&#xa0;<span class="note">note</span></span></h4>
+</div>
+</div>
+<div id="outline-container-org38a8932" class="outline-3">
+<h3 id="org38a8932"><span class="section-number-3">7.2.</span> 今日反思（核心模块，对应保持/失误/改进）</h3>
+<div class="outline-text-3" id="text-7-2">
+</div>
+<div id="outline-container-orgee21555" class="outline-4">
+<h4 id="orgee21555"><span class="section-number-4">7.2.1.</span> 1. 总体评价（一句话总结今日状态）</h4>
+<div class="outline-text-4" id="text-7-2-1">
+<ul class="org-ul">
+<li>示例：总体完成核心工作任务，状态专注，时间分配基本合理；或今日进度滞后，需调整优先级和时间管理。</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org94d8da5" class="outline-4">
+<h4 id="org94d8da5"><span class="section-number-4">7.2.2.</span> 2. 值得保持的点（提炼优势/好习惯，具体到场景）</h4>
+<div class="outline-text-4" id="text-7-2-2">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org072eb28" class="outline-4">
+<h4 id="org072eb28"><span class="section-number-4">7.2.3.</span> 3. 今日失误/不足（具体不笼统，对应时间/任务/习惯/情绪）</h4>
+<div class="outline-text-4" id="text-7-2-3">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org64b4697" class="outline-4">
+<h4 id="org64b4697"><span class="section-number-4">7.2.4.</span> 4. 明日改进方案（对应失误，可落地、可执行）</h4>
+<div class="outline-text-4" id="text-7-2-4">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfa918a2" class="outline-3">
+<h3 id="orgfa918a2"><span class="section-number-3">7.3.</span> 明日核心优先级（3条以内，避免多任务焦虑）</h3>
+<div class="outline-text-3" id="text-7-3">
+<ol class="org-ol">
+<li>优先完成 #A 级核心任务：XXX</li>
+<li>落实改进方案：如设置强制关机/晨起不碰手机</li>
+<li>碎片化时间利用：如通勤完成XX轻量任务</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-org80d789c" class="outline-2">
+<h2 id="org80d789c"><span class="section-number-2">8.</span> &lt;`(format-time-string "%Y-%m-%d %a" (time-add (current-time) (* 86400 4)))`&gt; 今日核心主题 :工作日:weekend-prep:</h2>
+<div class="outline-text-2" id="text-8">
+</div>
+<div id="outline-container-org0f4a404" class="outline-3">
+<h3 id="org0f4a404"><span class="section-number-3">8.1.</span> 今日计划 <code>[%]</code></h3>
+<div class="outline-text-3" id="text-8-1">
+</div>
+<div id="outline-container-org7b4af35" class="outline-4">
+<h4 id="org7b4af35"><span class="section-number-4">8.1.1.</span> <span class="todo TODO">TODO</span> 提交实验分析文档 【上午完成，最终检查】&#xa0;&#xa0;&#xa0;<span class="tag"><span class="research">research</span>&#xa0;<span class="_A">#A</span></span></h4>
+</div>
+<div id="outline-container-org1b830ac" class="outline-4">
+<h4 id="org1b830ac"><span class="section-number-4">8.1.2.</span> <span class="todo TODO">TODO</span> 制定下周agent memory研究计划 【通勤途中梳理】&#xa0;&#xa0;&#xa0;<span class="tag"><span class="research">research</span>&#xa0;<span class="plan">plan</span></span></h4>
+</div>
+<div id="outline-container-orgb2e3be5" class="outline-4">
+<h4 id="orgb2e3be5"><span class="section-number-4">8.1.3.</span> <span class="todo TODO">TODO</span> 全身 轻量健身&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span></span></h4>
+</div>
+<div id="outline-container-orgd77e0f1" class="outline-4">
+<h4 id="orgd77e0f1"><span class="section-number-4">8.1.4.</span> <span class="todo TODO">TODO</span> 拉伸 20min&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span></span></h4>
+</div>
+<div id="outline-container-org94e3668" class="outline-4">
+<h4 id="org94e3668"><span class="section-number-4">8.1.5.</span> <span class="todo TODO">TODO</span> 22:40前早睡&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span>&#xa0;<span class="routine">routine</span></span></h4>
+</div>
+<div id="outline-container-org1947d4d" class="outline-4">
+<h4 id="org1947d4d"><span class="section-number-4">8.1.6.</span> <span class="todo TODO">TODO</span> 英语阅读复盘 【本周内容梳理】&#xa0;&#xa0;&#xa0;<span class="tag"><span class="English">English</span></span></h4>
+</div>
+<div id="outline-container-org739cbc2" class="outline-4">
+<h4 id="org739cbc2"><span class="section-number-4">8.1.7.</span> <span class="todo TODO">TODO</span> 本周《庄子》阅读复盘&#xa0;&#xa0;&#xa0;<span class="tag"><span class="Phi">Phi</span>&#xa0;<span class="review">review</span></span></h4>
+</div>
+</div>
+<div id="outline-container-orgca9086c" class="outline-3">
+<h3 id="orgca9086c"><span class="section-number-3">8.2.</span> 今日反思（核心模块，对应保持/失误/改进）</h3>
+<div class="outline-text-3" id="text-8-2">
+</div>
+<div id="outline-container-orgee77a14" class="outline-4">
+<h4 id="orgee77a14"><span class="section-number-4">8.2.1.</span> 1. 总体评价（一句话总结今日状态）</h4>
+<div class="outline-text-4" id="text-8-2-1">
+<ul class="org-ul">
+<li>示例：总体完成核心工作任务，状态专注，时间分配基本合理；或今日进度滞后，需调整优先级和时间管理。</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org6a244f7" class="outline-4">
+<h4 id="org6a244f7"><span class="section-number-4">8.2.2.</span> 2. 值得保持的点（提炼优势/好习惯，具体到场景）</h4>
+<div class="outline-text-4" id="text-8-2-2">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org46fb022" class="outline-4">
+<h4 id="org46fb022"><span class="section-number-4">8.2.3.</span> 3. 今日失误/不足（具体不笼统，对应时间/任务/习惯/情绪）</h4>
+<div class="outline-text-4" id="text-8-2-3">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org8c48fdb" class="outline-4">
+<h4 id="org8c48fdb"><span class="section-number-4">8.2.4.</span> 4. 周末改进落实（对应失误，周末重点调整）</h4>
+<div class="outline-text-4" id="text-8-2-4">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-org0c7691c" class="outline-3">
+<h3 id="org0c7691c"><span class="section-number-3">8.3.</span> 周末核心优先级（3条以内，兼顾休息与推进）</h3>
+<div class="outline-text-3" id="text-8-3">
+<ol class="org-ol">
+<li>核心推进：XXX（轻量研究/整理任务）</li>
+<li>习惯调整：XXX（落实本周改进方案）</li>
+<li>休息放松：XXX（合理安排休闲时间）</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfb246e3" class="outline-2">
+<h2 id="orgfb246e3"><span class="section-number-2">9.</span> &lt;`(format-time-string "%Y-%m-%d %a" (time-add (current-time) (* 86400 5)))`&gt; 周末核心主题&#xa0;&#xa0;&#xa0;<span class="tag"><span class="weekend">weekend</span></span></h2>
+<div class="outline-text-2" id="text-9">
+</div>
+<div id="outline-container-orge11209a" class="outline-3">
+<h3 id="orge11209a"><span class="section-number-3">9.1.</span> 周六计划 <code>[%]</code></h3>
+<div class="outline-text-3" id="text-9-1">
+</div>
+<div id="outline-container-orgcbb2d3a" class="outline-4">
+<h4 id="orgcbb2d3a"><span class="section-number-4">9.1.1.</span> <span class="todo TODO">TODO</span> 轻量研究：整理本周实验数据 【碎片化完成】&#xa0;&#xa0;&#xa0;<span class="tag"><span class="research">research</span>&#xa0;<span class="light">light</span></span></h4>
+</div>
+<div id="outline-container-orgf1adee4" class="outline-4">
+<h4 id="orgf1adee4"><span class="section-number-4">9.1.2.</span> <span class="todo TODO">TODO</span> 户外 有氧1小时&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span>&#xa0;<span class="outdoor">outdoor</span></span></h4>
+</div>
+<div id="outline-container-org79394f4" class="outline-4">
+<h4 id="org79394f4"><span class="section-number-4">9.1.3.</span> <span class="todo TODO">TODO</span> 23:30前休息&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span>&#xa0;<span class="routine">routine</span></span></h4>
+</div>
+<div id="outline-container-org0a6eca1" class="outline-4">
+<h4 id="org0a6eca1"><span class="section-number-4">9.1.4.</span> <span class="todo TODO">TODO</span> 沉浸式阅读《全力的游戏》&#xa0;&#xa0;&#xa0;<span class="tag"><span class="English">English</span>&#xa0;<span class="fiction">fiction</span></span></h4>
+</div>
+<div id="outline-container-org1a966b4" class="outline-4">
+<h4 id="org1a966b4"><span class="section-number-4">9.1.5.</span> <span class="todo TODO">TODO</span> 深度研读《庄子》+ 书写心得&#xa0;&#xa0;&#xa0;<span class="tag"><span class="Phi">Phi</span>&#xa0;<span class="deep">deep</span></span></h4>
+</div>
+<div id="outline-container-orgbf4c2e8" class="outline-4">
+<h4 id="orgbf4c2e8"><span class="section-number-4">9.1.6.</span> <span class="todo TODO">TODO</span> 整理工位/电脑文件&#xa0;&#xa0;&#xa0;<span class="tag"><span class="routine">routine</span></span></h4>
+</div>
+</div>
+<div id="outline-container-orgf820955" class="outline-3">
+<h3 id="orgf820955"><span class="section-number-3">9.2.</span> 周六反思（轻量版，聚焦周末节奏）</h3>
+<div class="outline-text-3" id="text-9-2">
+</div>
+<div id="outline-container-org4af7631" class="outline-4">
+<h4 id="org4af7631"><span class="section-number-4">9.2.1.</span> 1. 总体感受</h4>
+<div class="outline-text-4" id="text-9-2-1">
+<ul class="org-ul">
+<li>示例：周末节奏适中，兼顾休息与轻量任务，身心状态良好；或时间浪费较多，需调整休闲与做事比例。</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orga1e5ce6" class="outline-4">
+<h4 id="orga1e5ce6"><span class="section-number-4">9.2.2.</span> 2. 值得保持的点</h4>
+<div class="outline-text-4" id="text-9-2-2">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org574e6e2" class="outline-4">
+<h4 id="org574e6e2"><span class="section-number-4">9.2.3.</span> 3. 周日调整方向</h4>
+<div class="outline-text-4" id="text-9-2-3">
+<ol class="org-ol">
+<li></li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-org59798b0" class="outline-3">
+<h3 id="org59798b0"><span class="section-number-3">9.3.</span> 周日计划 <code>[%]</code></h3>
+<div class="outline-text-3" id="text-9-3">
+</div>
+<div id="outline-container-org6b77bfb" class="outline-4">
+<h4 id="org6b77bfb"><span class="section-number-4">9.3.1.</span> <span class="todo TODO">TODO</span> 本周工作复盘：梳理研究进度与问题&#xa0;&#xa0;&#xa0;<span class="tag"><span class="research">research</span>&#xa0;<span class="review">review</span></span></h4>
+</div>
+<div id="outline-container-org3983ba8" class="outline-4">
+<h4 id="org3983ba8"><span class="section-number-4">9.3.2.</span> <span class="todo TODO">TODO</span> 下周计划细化：明确核心任务与优先级&#xa0;&#xa0;&#xa0;<span class="tag"><span class="research">research</span>&#xa0;<span class="plan">plan</span></span></h4>
+</div>
+<div id="outline-container-orga91bd15" class="outline-4">
+<h4 id="orga91bd15"><span class="section-number-4">9.3.3.</span> <span class="todo TODO">TODO</span> 放松健身：瑜伽/散步 【无强度要求】&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span>&#xa0;<span class="relax">relax</span></span></h4>
+</div>
+<div id="outline-container-orgd0cf243" class="outline-4">
+<h4 id="orgd0cf243"><span class="section-number-4">9.3.4.</span> <span class="todo TODO">TODO</span> 23:00前早睡 【调整作息，迎接工作日】&#xa0;&#xa0;&#xa0;<span class="tag"><span class="body">body</span>&#xa0;<span class="routine">routine</span></span></h4>
+</div>
+<div id="outline-container-org8e43819" class="outline-4">
+<h4 id="org8e43819"><span class="section-number-4">9.3.5.</span> <span class="todo TODO">TODO</span> 轻量阅读：英语/哲学任选&#xa0;&#xa0;&#xa0;<span class="tag"><span class="English">English</span>&#xa0;<span class="Phi">Phi</span></span></h4>
+</div>
+<div id="outline-container-org8359dc4" class="outline-4">
+<h4 id="org8359dc4"><span class="section-number-4">9.3.6.</span> <span class="todo TODO">TODO</span> 准备工作日所需物料&#xa0;&#xa0;&#xa0;<span class="tag"><span class="routine">routine</span></span></h4>
+</div>
+</div>
+<div id="outline-container-org0ef5d01" class="outline-3">
+<h3 id="org0ef5d01"><span class="section-number-3">9.4.</span> 周日反思（本周总复盘）</h3>
+<div class="outline-text-3" id="text-9-4">
+</div>
+<div id="outline-container-org392ad3f" class="outline-4">
+<h4 id="org392ad3f"><span class="section-number-4">9.4.1.</span> 1. 本周总体评价（工作/习惯/身心状态）</h4>
+<div class="outline-text-4" id="text-9-4-1">
+<ul class="org-ul">
+<li>示例：本周核心研究任务完成80%，健身习惯坚持良好，但碎片化时间利用不足，需优化。</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org41a86e6" class="outline-4">
+<h4 id="org41a86e6"><span class="section-number-4">9.4.2.</span> 2. 本周最大收获（工作/个人成长）</h4>
+<div class="outline-text-4" id="text-9-4-2">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orgba523ca" class="outline-4">
+<h4 id="orgba523ca"><span class="section-number-4">9.4.3.</span> 3. 下周核心改进方向（3条以内，聚焦重点）</h4>
+<div class="outline-text-4" id="text-9-4-3">
+<ol class="org-ol">
+<li></li>
+
+<li></li>
+
+<li></li>
+</ol>
+</div>
+</div>
+</div>
+<div id="outline-container-org5b8794f" class="outline-3">
+<h3 id="org5b8794f"><span class="section-number-3">9.5.</span> 下周一核心优先级（提前规划，快速进入状态）</h3>
+<div class="outline-text-3" id="text-9-5">
+<ol class="org-ol">
+<li>优先完成 #A 级核心任务：XXX</li>
+<li>落实本周改进：XXX</li>
+<li>启动下周新任务：XXX务</li>
+</ol>
+
+
+
+
+<p>
+#+end_src
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Tue Feb  3 10:50:12 2026</span> <span class="date">Last modified: 2026-02-03 Tue 11:22</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+</div>
+</body>
+</html>
