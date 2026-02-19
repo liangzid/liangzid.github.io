@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2026-02-19 Thu 18:32 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OpenClaw 设计细节（三）：会话管理、定时任务、节点系统、配置系统</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">OpenClaw 设计细节（三）：会话管理、定时任务、节点系统、配置系统</h1>
+<div id="outline-container-orgdc18a6f" class="outline-2">
+<h2 id="orgdc18a6f"><span class="section-number-2">1.</span> 第九章 会话管理系统</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+这一章我们来聊聊 OpenClaw 的会话管理系统。会话（Session）是用户和 AI 对话的基本单位——你和 AI 的每一次对话链，都会对应一个 session。
+</p>
+</div>
+<div id="outline-container-orgb1017a3" class="outline-3">
+<h3 id="orgb1017a3"><span class="section-number-3">1.1.</span> 9.1 会话的基本概念</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+在 OpenClaw 里，session 不是简单的内存对象，而是持久化到磁盘的。让我们看看核心数据结构：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// src/config/sessions/types.ts 相关定义
+export type SessionEntry = {
+  sessionId: string;
+  sessionFile?: string;
+  updatedAt: number;
+  systemSent?: boolean;
+  abortedLastRun?: boolean;
+  thinkingLevel?: string;
+  verboseLevel?: string;
+  reasoningLevel?: string;
+  ttsAuto?: TtsAutoMode;
+  modelOverride?: string;
+  providerOverride?: string;
+  totalTokens?: number;
+  inputTokens?: number;
+  outputTokens?: number;
+  contextTokens?: number;
+  compactionCount?: number;
+  // ... 更多字段
+};
+</pre>
+</div>
+
+<p>
+每个会话都有：
+</p>
+<ul class="org-ul">
+<li>=sessionId=：唯一标识符（UUID）</li>
+<li>=sessionFile=：会话记录文件路径（JSONL 格式）</li>
+<li>=updatedAt=：最后更新时间戳</li>
+<li>=thinkingLevel=、=verboseLevel=、=reasoningLevel=：用户设置的偏好</li>
+<li>=modelOverride=、=providerOverride=：模型覆盖设置</li>
+<li><code>totalTokens</code> 等：token 使用统计</li>
+<li>=compactionCount=：会话压缩次数（历史消息压缩）</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org8ad8469" class="outline-3">
+<h3 id="org8ad8469"><span class="section-number-3">1.2.</span> 9.2 会话文件存储</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+会话记录不是存在数据库里，而是直接存 JSONL 文件。这个设计挺有意思的：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// src/config/sessions/paths.ts 节选
+export function resolveSessionTranscriptPath(
+  sessionId: string,
+  agentId: string,
+  threadId?: string | null,
+): string {
+  const sessionsDir = ensureSessionsDir(agentId);
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  return path.join(sessionsDir, `${timestamp}_${sessionId}.jsonl`);
+}
+</pre>
+</div>
+
+<p>
+文件名格式是 <code>{timestamp}_{sessionId}.jsonl=，比如：
+=2026-02-19T10-30-00-000Z_a1b2c3d4.jsonl</code>
+</p>
+
+<p>
+JSONL 格式的好处是：
+</p>
+<ol class="org-ol">
+<li>可以增量写入（append-only）</li>
+<li>损坏了容易修复（一行一行解析）</li>
+<li>可以直接用文本编辑器查看</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orgfcf5d59" class="outline-3">
+<h3 id="orgfcf5d59"><span class="section-number-3">1.3.</span> 9.3 会话初始化流程</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+我翻了一下 <code>src/auto-reply/reply/session.ts=，里面的 =initSessionState</code> 函数是会话初始化的核心，有 470 多行！让我们梳理一下主要流程：
+</p>
+
+<ol class="org-ol">
+<li>**确定目标会话 key**：区分普通消息和原生 slash 命令</li>
+<li>**加载 session store**：从磁盘读取会话索引</li>
+<li>**检查重置触发器**：比如 <code>/new=、=/reset</code> 命令</li>
+<li>**计算会话新鲜度**：判断是否需要新建会话</li>
+<li>**构建 session entry**：合并旧状态和新设置</li>
+<li>**持久化到 store**：更新会话索引文件</li>
+<li>**触发插件钩子**：=session_start=、=session_end=</li>
+</ol>
+
+<p>
+让我们看看重置触发器的逻辑：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// src/auto-reply/reply/session.ts 节选
+const DEFAULT_RESET_TRIGGERS = ["/new", "/reset", "/clear"];
+
+// 检查是否触发重置
+for (const trigger of resetTriggers) {
+  if (!trigger) continue;
+  if (!resetAuthorized) break;
+
+  const triggerLower = trigger.toLowerCase();
+  if (trimmedBodyLower === triggerLower || strippedForResetLower === triggerLower) {
+    isNewSession = true;
+    bodyStripped = "";
+    resetTriggered = true;
+    break;
+  }
+  // 支持 "/new 你好" 这种格式
+  const triggerPrefixLower = `${triggerLower} `;
+  if (trimmedBodyLower.startsWith(triggerPrefixLower) ||
+      strippedForResetLower.startsWith(triggerPrefixLower)) {
+    isNewSession = true;
+    bodyStripped = strippedForReset.slice(trigger.length).trimStart();
+    resetTriggered = true;
+    break;
+  }
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org5dda18c" class="outline-3">
+<h3 id="org5dda18c"><span class="section-number-3">1.4.</span> 9.4 会话作用域（Scope）</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+会话的 scope 决定了什么情况下共享同一个会话。有几种模式：
+</p>
+
+<ul class="org-ul">
+<li>=per-sender=：每个发送者独立会话（默认）</li>
+<li>=per-channel=：整个频道共享一个会话</li>
+<li>=per-group=：群组内共享会话</li>
+</ul>
+
+<p>
+配置在 =config.session.scope=：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// src/config/sessions/session-key.ts
+export function resolveSessionKey(
+  scope: SessionScope,
+  ctx: MsgContext,
+  mainKey: string | null,
+): string {
+  switch (scope) {
+    case "per-channel":
+      return `${ctx.Provider}:${ctx.OriginatingChannel}:${ctx.To}:${mainKey ?? "default"}`;
+    case "per-group":
+      // ... 群组逻辑
+    case "per-sender":
+    default:
+      return `${ctx.Provider}:${ctx.OriginatingChannel}:${ctx.From}:${mainKey ?? "default"}`;
+  }
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org5f789f2" class="outline-3">
+<h3 id="org5f789f2"><span class="section-number-3">1.5.</span> 9.5 会话重置策略</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+会话不是永远存在的，可以根据时间自动重置。策略包括：
+</p>
+
+<ul class="org-ul">
+<li>=never=：从不自动重置</li>
+<li>=after=：指定时间后重置</li>
+<li>=daily=：每天重置</li>
+<li>=weekly=：每周重置</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// src/config/sessions/reset.ts
+export function evaluateSessionFreshness(params: {
+  updatedAt: number;
+  now: number;
+  policy: SessionResetPolicy;
+}): { fresh: boolean; reason?: string } {
+  // 检查会话是否还"新鲜"
+  // fresh: true → 继续用旧会话
+  // fresh: false → 创建新会话
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf19cd6b" class="outline-3">
+<h3 id="orgf19cd6b"><span class="section-number-3">1.6.</span> 9.6 会话分叉（Fork）</h3>
+<div class="outline-text-3" id="text-1-6">
+<p>
+OpenClaw 支持从父会话分叉出子会话，继承历史消息：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// src/auto-reply/reply/session.ts 节选
+function forkSessionFromParent(params: {
+  parentEntry: SessionEntry;
+  agentId: string;
+  sessionsDir: string;
+}): { sessionId: string; sessionFile: string } | null {
+  const parentSessionFile = resolveSessionFilePath(...);
+  const manager = SessionManager.open(parentSessionFile);
+  const leafId = manager.getLeafId();
+
+  if (leafId) {
+    const sessionFile = manager.createBranchedSession(leafId);
+    const sessionId = manager.getSessionId();
+    return { sessionId, sessionFile };
+  }
+  // ...
+}
+</pre>
+</div>
+
+<p>
+这个功能是通过 @mariozechner/pi-coding-agent 库实现的，我们后面再说。
+</p>
+</div>
+</div>
+<div id="outline-container-org7fd770e" class="outline-3">
+<h3 id="org7fd770e"><span class="section-number-3">1.7.</span> 9.7 会话压缩（Compaction）</h3>
+<div class="outline-text-3" id="text-1-7">
+<p>
+随着对话进行，会话历史会越来越长。OpenClaw 会定期压缩历史消息，避免上下文溢出：
+</p>
+
+<ul class="org-ul">
+<li>=compactionCount=：记录压缩次数</li>
+<li>=memoryFlushCompactionCount=：记忆刷新时的压缩计数</li>
+<li>=memoryFlushAt=：记忆刷新时间戳</li>
+</ul>
+
+<p>
+压缩逻辑会把旧的对话消息合并成摘要，节省 token。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org756f186" class="outline-2">
+<h2 id="org756f186"><span class="section-number-2">2.</span> 第10章 定时任务系统（Cron）</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+OpenClaw 有一个完整的定时任务系统，可以让 AI 在指定时间自动执行任务。比如：
+</p>
+<ul class="org-ul">
+<li>每天早上 9 点提醒天气</li>
+<li>每小时检查一次服务器状态</li>
+<li>每周生成周报</li>
+</ul>
+</div>
+<div id="outline-container-org5387ffc" class="outline-3">
+<h3 id="org5387ffc"><span class="section-number-3">2.1.</span> 10.1 定时任务类型</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+定时任务支持三种调度方式：
+</p>
+
+<ol class="org-ol">
+<li><b>*Cron 表达式**：标准 cron 格式（=</b> * * * *=）</li>
+<li>**固定间隔**：每 X 毫秒执行一次</li>
+<li>**一次性执行**：在指定时间点执行一次</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// src/cron/types.ts
+export type CronSchedule =
+  | { kind: "cron"; expr: string; tz?: string }
+  | { kind: "every"; everyMs: number; anchorMs?: number }
+  | { kind: "at"; at: string };
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org93433f4" class="outline-3">
+<h3 id="org93433f4"><span class="section-number-3">2.2.</span> 10.2 调度计算</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+我看了 <code>src/cron/schedule.ts=，里面的 =computeNextRunAtMs</code> 函数负责计算下次执行时间：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// src/cron/schedule.ts
+export function computeNextRunAtMs(
+  schedule: CronSchedule,
+  nowMs: number
+): number | undefined {
+  if (schedule.kind === "at") {
+    // 一次性任务：解析时间，检查是否在未来
+    const atMs = parseAbsoluteTimeMs(schedule.at);
+    return atMs &gt; nowMs ? atMs : undefined;
+  }
+
+  if (schedule.kind === "every") {
+    // 固定间隔：计算下一个间隔点
+    const everyMs = Math.max(1, Math.floor(schedule.everyMs));
+    const anchor = Math.max(0, Math.floor(schedule.anchorMs ?? nowMs));
+    if (nowMs &lt; anchor) return anchor;
+    const elapsed = nowMs - anchor;
+    const steps = Math.max(1, Math.floor((elapsed + everyMs - 1) / everyMs));
+    return anchor + steps * everyMs;
+  }
+
+  // Cron 表达式：用 croner 库解析
+  const expr = schedule.expr.trim();
+  const cron = new Cron(expr, {
+    timezone: resolveCronTimezone(schedule.tz),
+    catch: false,
+  });
+  const nowSecondMs = Math.floor(nowMs / 1000) * 1000;
+  const next = cron.nextRun(new Date(nowSecondMs));
+  const nextMs = next?.getTime();
+  return Number.isFinite(nextMs) &amp;&amp; nextMs &gt; nowSecondMs ? nextMs : undefined;
+}
+</pre>
+</div>
+
+<p>
+注意那个 timezone 处理——cron 任务支持时区，这很重要。
+</p>
+</div>
+</div>
+<div id="outline-container-org629343e" class="outline-3">
+<h3 id="org629343e"><span class="section-number-3">2.3.</span> 10.3 Cron 服务架构</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+CronService 是定时任务的核心类：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// src/cron/service.ts
+export class CronService {
+  private readonly state;
+
+  constructor(deps: CronServiceDeps) {
+    this.state = createCronServiceState(deps);
+  }
+
+  async start() { await ops.start(this.state); }
+  stop() { ops.stop(this.state); }
+  async status() { return await ops.status(this.state); }
+  async list(opts?: { includeDisabled?: boolean }) {
+    return await ops.list(this.state, opts);
+  }
+  async add(input: CronJobCreate) { return await ops.add(this.state, input); }
+  async update(id: string, patch: CronJobPatch) {
+    return await ops.update(this.state, id, patch);
+  }
+  async remove(id: string) { return await ops.remove(this.state, id); }
+  async run(id: string, mode?: "due" | "force") {
+    return await ops.run(this.state, id, mode);
+  }
+  wake(opts: { mode: "now" | "next-heartbeat"; text: string }) {
+    return ops.wakeNow(this.state, opts);
+  }
+}
+</pre>
+</div>
+
+<p>
+设计很清晰：
+</p>
+<ul class="org-ul">
+<li>=state=：封装内部状态</li>
+<li>=ops=：具体操作函数（start/stop/list/add/update/remove/run）</li>
+<li>分离关注点，状态和操作分开</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org074b2c3" class="outline-3">
+<h3 id="org074b2c3"><span class="section-number-3">2.4.</span> 10.4 定时任务的数据结构</h3>
+<div class="outline-text-3" id="text-2-4">
+<div class="org-src-container">
+<pre class="src src-typescript">// src/cron/types.ts
+export type CronJob = {
+  id: string;
+  name?: string;
+  description?: string;
+  schedule: CronSchedule;
+  nextRunAtMs?: number;
+  lastRunAtMs?: number;
+  lastError?: string;
+  enabled: boolean;
+  createdAtMs: number;
+  updatedAtMs: number;
+  // 任务内容
+  agentId?: string;
+  prompt?: string;
+  // ...
+};
+</pre>
+</div>
+
+<p>
+任务触发时，会创建一个隔离的 agent session，执行指定的 prompt。
+</p>
+</div>
+</div>
+<div id="outline-container-orgfe590a6" class="outline-3">
+<h3 id="orgfe590a6"><span class="section-number-3">2.5.</span> 10.5 Gateway 集成</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+Cron 服务通过 Gateway 暴露 API：
+</p>
+
+<ul class="org-ul">
+<li>=src/gateway/server-cron.ts=：HTTP 端点</li>
+<li>=src/gateway/server-methods/cron.ts=：方法处理</li>
+<li>=src/gateway/protocol/schema/cron.ts=：协议 schema</li>
+</ul>
+
+<p>
+还有专门的 CLI：=src/cli/cron-cli.ts=
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgaabc138" class="outline-2">
+<h2 id="orgaabc138"><span class="section-number-2">3.</span> 第11章 节点系统（Nodes）</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Node 系统是 OpenClaw 一个很有意思的设计——它允许远程设备（比如手机、平板）连接到 OpenClaw，提供额外的能力。
+</p>
+</div>
+<div id="outline-container-org32e8ab8" class="outline-3">
+<h3 id="org32e8ab8"><span class="section-number-3">3.1.</span> 11.1 什么是 Node？</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Node 是通过 WebSocket 连接到 Gateway 的远程客户端，可以：
+</p>
+<ul class="org-ul">
+<li>提供本地功能（摄像头、屏幕、麦克风）</li>
+<li>执行本地命令</li>
+<li>推送事件给 OpenClaw</li>
+</ul>
+
+<p>
+比如你有个手机 App 连到 OpenClaw，AI 就可以通过这个 Node 调用手机摄像头拍照。
+</p>
+</div>
+</div>
+<div id="outline-container-orgfc491fc" class="outline-3">
+<h3 id="orgfc491fc"><span class="section-number-3">3.2.</span> 11.2 Node 注册表</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+NodeRegistry 管理所有连接的节点：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// src/gateway/node-registry.ts
+export class NodeRegistry {
+  private nodesById = new Map&lt;string, NodeSession&gt;();
+  private nodesByConn = new Map&lt;string, string&gt;();
+  private pendingInvokes = new Map&lt;string, PendingInvoke&gt;();
+
+  // 注册新节点
+  register(client: GatewayWsClient, opts: { remoteIp?: string }) {
+    const nodeId = connect.device?.id ?? connect.client.id;
+    const session: NodeSession = {
+      nodeId,
+      connId: client.connId,
+      client,
+      displayName: connect.client.displayName,
+      platform: connect.client.platform,
+      version: connect.client.version,
+      caps: Array.isArray(connect.caps) ? connect.caps : [],
+      commands: Array.isArray((connect as { commands?: string[] }).commands)
+        ? ((connect as { commands?: string[] }).commands ?? [])
+        : [],
+      permissions: (connect as { permissions?: Record&lt;string, boolean&gt; }).permissions,
+      pathEnv: (connect as { pathEnv?: string }).pathEnv,
+      connectedAtMs: Date.now(),
+    };
+    this.nodesById.set(nodeId, session);
+    this.nodesByConn.set(client.connId, nodeId);
+    return session;
+  }
+
+  // 注销节点
+  unregister(connId: string): string | null {
+    const nodeId = this.nodesByConn.get(connId);
+    if (!nodeId) return null;
+    this.nodesByConn.delete(connId);
+    this.nodesById.delete(nodeId);
+    // 取消所有待处理的调用
+    for (const [id, pending] of this.pendingInvokes.entries()) {
+      if (pending.nodeId !== nodeId) continue;
+      clearTimeout(pending.timer);
+      pending.reject(new Error(`node disconnected (${pending.command})`));
+      this.pendingInvokes.delete(id);
+    }
+    return nodeId;
+  }
+
+  // 列出连接的节点
+  listConnected(): NodeSession[] {
+    return [...this.nodesById.values()];
+  }
+
+  // 获取节点
+  get(nodeId: string): NodeSession | undefined {
+    return this.nodesById.get(nodeId);
+  }
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org565d62d" class="outline-3">
+<h3 id="org565d62d"><span class="section-number-3">3.3.</span> 11.3 Node 调用机制</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+调用节点命令是异步的，带超时：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// src/gateway/node-registry.ts
+async invoke(params: {
+  nodeId: string;
+  command: string;
+  params?: unknown;
+  timeoutMs?: number;
+  idempotencyKey?: string;
+}): Promise&lt;NodeInvokeResult&gt; {
+  const node = this.nodesById.get(params.nodeId);
+  if (!node) {
+    return { ok: false, error: { code: "NOT_CONNECTED", message: "node not connected" } };
+  }
+
+  const requestId = randomUUID();
+  const payload = {
+    id: requestId,
+    nodeId: params.nodeId,
+    command: params.command,
+    paramsJSON: "params" in params &amp;&amp; params.params !== undefined
+      ? JSON.stringify(params.params)
+      : null,
+    timeoutMs: params.timeoutMs,
+    idempotencyKey: params.idempotencyKey,
+  };
+
+  const ok = this.sendEventToSession(node, "node.invoke.request", payload);
+  if (!ok) {
+    return { ok: false, error: { code: "UNAVAILABLE", message: "failed to send invoke to node" } };
+  }
+
+  const timeoutMs = typeof params.timeoutMs === "number" ? params.timeoutMs : 30_000;
+  return await new Promise&lt;NodeInvokeResult&gt;((resolve, reject) =&gt; {
+    const timer = setTimeout(() =&gt; {
+      this.pendingInvokes.delete(requestId);
+      resolve({ ok: false, error: { code: "TIMEOUT", message: "node invoke timed out" } });
+    }, timeoutMs);
+    this.pendingInvokes.set(requestId, {
+      nodeId: params.nodeId,
+      command: params.command,
+      resolve,
+      reject,
+      timer,
+    });
+  });
+}
+</pre>
+</div>
+
+<p>
+调用流程：
+</p>
+<ol class="org-ol">
+<li>生成 requestId</li>
+<li>发送 <code>node.invoke.request</code> 事件到节点</li>
+<li>等待 <code>node.invoke.result</code> 事件回来</li>
+<li>超时自动 reject</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orgbd0c4ec" class="outline-3">
+<h3 id="orgbd0c4ec"><span class="section-number-3">3.4.</span> 11.4 Node 能力（Capabilities）</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+节点连接时会声明自己的能力（caps）：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// 常见的 capabilities
+"screen"      // 屏幕共享/截图
+"camera"      // 摄像头
+"microphone"  // 麦克风
+"canvas"      // 画布操作
+"shell"       // 执行 shell 命令
+"filesystem"  // 文件系统访问
+// ...
+</pre>
+</div>
+
+<p>
+AI 可以通过这些能力来调用节点功能。
+</p>
+</div>
+</div>
+<div id="outline-container-orga6b2a24" class="outline-3">
+<h3 id="orga6b2a24"><span class="section-number-3">3.5.</span> 11.5 Node 事件系统</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+节点和 Gateway 之间是双向通信的：
+</p>
+
+<ul class="org-ul">
+<li>Gateway → Node：调用命令（=node.invoke.request=）</li>
+<li>Node → Gateway：返回结果（=node.invoke.result=）</li>
+<li>Node → Gateway：推送事件（比如传感器数据）</li>
+</ul>
+
+<p>
+相关文件：
+</p>
+<ul class="org-ul">
+<li>=src/gateway/server-node-events.ts=：节点事件处理</li>
+<li>=src/gateway/server-node-subscriptions.ts=：节点订阅管理</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb40734a" class="outline-2">
+<h2 id="orgb40734a"><span class="section-number-2">4.</span> 第12章 配置系统</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+OpenClaw 的配置系统设计得很完善，支持多层级、验证、迁移、环境变量替换等。
+</p>
+</div>
+<div id="outline-container-org7664d16" class="outline-3">
+<h3 id="org7664d16"><span class="section-number-3">4.1.</span> 12.1 配置文件格式</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+配置文件是 JSON5 格式（不是纯 JSON），支持注释、尾随逗号等：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-json5">// openclaw.json5
+{
+  // 模型配置
+  models: {
+    default: "claude-3-5-sonnet",
+    providers: {
+      anthropic: {
+        apiKey: "${ANTHROPIC_API_KEY}",
+      },
+    },
+  },
+
+  // 会话配置
+  session: {
+    scope: "per-sender",
+    resetPolicy: {
+      kind: "daily",
+      time: "04:00",
+    },
+  },
+
+  // 渠道配置
+  channels: {
+    whatsapp: {
+      // ...
+    },
+  },
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org42587b9" class="outline-3">
+<h3 id="org42587b9"><span class="section-number-3">4.2.</span> 12.2 配置类型定义</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+OpenClawConfig 是根类型，结构非常清晰：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// src/config/types.openclaw.ts
+export type OpenClawConfig = {
+  meta?: {
+    lastTouchedVersion?: string;
+    lastTouchedAt?: string;
+  };
+  auth?: AuthConfig;
+  env?: {
+    shellEnv?: { enabled?: boolean; timeoutMs?: number };
+    vars?: Record&lt;string, string&gt;;
+  };
+  logging?: LoggingConfig;
+  update?: { channel?: "stable" | "beta" | "dev"; checkOnStart?: boolean };
+  browser?: BrowserConfig;
+  ui?: {
+    seamColor?: string;
+    assistant?: { name?: string; avatar?: string };
+  };
+  skills?: SkillsConfig;
+  plugins?: PluginsConfig;
+  models?: ModelsConfig;
+  nodeHost?: NodeHostConfig;
+  agents?: AgentsConfig;
+  tools?: ToolsConfig;
+  bindings?: AgentBinding[];
+  broadcast?: BroadcastConfig;
+  audio?: AudioConfig;
+  messages?: MessagesConfig;
+  commands?: CommandsConfig;
+  approvals?: ApprovalsConfig;
+  session?: SessionConfig;
+  web?: WebConfig;
+  channels?: ChannelsConfig;
+  cron?: CronConfig;
+  hooks?: HooksConfig;
+  discovery?: DiscoveryConfig;
+  canvasHost?: CanvasHostConfig;
+  talk?: TalkConfig;
+  gateway?: GatewayConfig;
+  memory?: MemoryConfig;
+};
+</pre>
+</div>
+
+<p>
+每个子配置都在单独的文件里：
+</p>
+<ul class="org-ul">
+<li><code>types.agents.ts</code></li>
+<li><code>types.auth.ts</code></li>
+<li><code>types.channels.ts</code></li>
+<li><code>types.cron.ts</code></li>
+<li><code>types.models.ts</code></li>
+<li>&#x2026; 等等</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org991abd1" class="outline-3">
+<h3 id="org991abd1"><span class="section-number-3">4.3.</span> 12.3 配置加载流程</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+配置加载不是简单的 =JSON.parse=，而是一个完整的 pipeline：
+</p>
+
+<ol class="org-ol">
+<li>读取原始文件</li>
+<li>解析 JSON5</li>
+<li>解析 <code>$include</code> 指令（包含其他配置文件）</li>
+<li>替换 <code>${ENV_VAR}</code> 环境变量</li>
+<li>应用运行时覆盖</li>
+<li>应用默认值</li>
+<li>验证配置</li>
+<li>迁移旧版本配置</li>
+</ol>
+
+<p>
+相关文件：
+</p>
+<ul class="org-ul">
+<li>=src/config/io.ts=：文件读写</li>
+<li><code>src/config/includes-scan.ts=：</code> $include= 处理</li>
+<li>=src/config/env-substitution.ts=：环境变量替换</li>
+<li>=src/config/merge-config.ts=：合并配置</li>
+<li>=src/config/legacy-migrate.ts=：旧配置迁移</li>
+<li>=src/config/validation.ts=：配置验证</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org5f42e0c" class="outline-3">
+<h3 id="org5f42e0c"><span class="section-number-3">4.4.</span> 12.4 配置验证</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+用 Zod 做 schema 验证：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// src/config/zod-schema.ts（节选）
+export const OpenClawSchema = z.object({
+  meta: z.object({
+    lastTouchedVersion: z.string().optional(),
+    lastTouchedAt: z.string().optional(),
+  }).optional(),
+
+  session: z.object({
+    scope: z.enum(["per-sender", "per-channel", "per-group"]).optional(),
+    mainKey: z.string().optional(),
+    store: z.string().optional(),
+    resetTriggers: z.array(z.string()).optional(),
+    // ...
+  }).optional(),
+
+  models: z.object({
+    default: z.string().optional(),
+    providers: z.record(z.object({
+      apiKey: z.string().optional(),
+      baseUrl: z.string().optional(),
+      // ...
+    })).optional(),
+  }).optional(),
+
+  // ... 更多字段
+});
+</pre>
+</div>
+
+<p>
+验证失败会返回详细的问题列表：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">export type ConfigValidationIssue = {
+  path: string;
+  message: string;
+};
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9a84609" class="outline-3">
+<h3 id="org9a84609"><span class="section-number-3">4.5.</span> 12.5 配置快照</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+为了安全地修改配置，OpenClaw 用了"快照"的概念：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// src/config/types.openclaw.ts
+export type ConfigFileSnapshot = {
+  path: string;
+  exists: boolean;
+  raw: string | null;
+  parsed: unknown;
+  // 解析后，但在应用默认值之前
+  resolved: OpenClawConfig;
+  valid: boolean;
+  // 最终配置（应用了默认值）
+  config: OpenClawConfig;
+  hash?: string;
+  issues: ConfigValidationIssue[];
+  warnings: ConfigValidationIssue[];
+  legacyIssues: LegacyConfigIssue[];
+};
+</pre>
+</div>
+
+<p>
+这样可以在写入前预览变更，避免写错配置。
+</p>
+</div>
+</div>
+<div id="outline-container-org14b534a" class="outline-3">
+<h3 id="org14b534a"><span class="section-number-3">4.6.</span> 12.6 运行时覆盖</h3>
+<div class="outline-text-3" id="text-4-6">
+<p>
+配置可以在运行时通过环境变量覆盖：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #75715E;"># </span><span style="color: #96a0aa;">&#35206;&#30422;&#27169;&#22411;&#25552;&#20379;&#21830;&#30340; API key
+</span><span style="color: #FD971F;">OPENCLAW__models__providers__anthropic__apiKey</span>=sk-ant-... openclaw
+</pre>
+</div>
+
+<p>
+格式是 =OPENCLAW__path__to__field=value=。
+</p>
+
+<p>
+相关代码在 =src/config/runtime-overrides.ts=。
+</p>
+</div>
+</div>
+<div id="outline-container-orge169d6a" class="outline-3">
+<h3 id="orge169d6a"><span class="section-number-3">4.7.</span> 12.7 配置缓存</h3>
+<div class="outline-text-3" id="text-4-7">
+<p>
+为了避免反复读取和解析配置，有缓存机制：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// src/config/io.ts
+let cachedConfig: OpenClawConfig | undefined;
+let cachedConfigPath: string | undefined;
+
+export function clearConfigCache() {
+  cachedConfig = undefined;
+  cachedConfigPath = undefined;
+}
+
+export function loadConfig(...) {
+  // 检查缓存是否有效
+  // 无效则重新加载
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc81c78c" class="outline-2">
+<h2 id="orgc81c78c"><span class="section-number-2">5.</span> 总结</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+这三部分文档梳理了 OpenClaw 的核心设计：
+</p>
+
+<ol class="org-ol">
+<li>**第一部分（doc.org）**：
+<ul class="org-ul">
+<li>项目整体架构</li>
+<li>Gateway 启动流程</li>
+<li>HTTP、WebSocket、认证</li>
+<li>渠道系统</li>
+<li>安全审计</li>
+</ul></li>
+
+<li>**第二部分（doc2.org）**：
+<ul class="org-ul">
+<li>AI Agent 实现</li>
+<li>系统提示词构建</li>
+<li>Skills 系统</li>
+<li>Memory 系统</li>
+<li>插件系统</li>
+</ul></li>
+
+<li>**第三部分（doc3.org，即本文）**：
+<ul class="org-ul">
+<li>会话管理系统</li>
+<li>定时任务系统</li>
+<li>节点系统</li>
+<li>配置系统</li>
+</ul></li>
+</ol>
+
+
+<p>
+INTERESTING.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Feb 19 18:30:07 2026</span> <span class="date">Last modified: 2026-02-19 Thu 18:32</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+</div>
+</body>
+</html>

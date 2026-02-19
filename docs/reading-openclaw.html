@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2026-02-19 Thu 18:32 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OpenClaw 代码乱读笔记1</title>
+<meta name="author" content="Zi Liang" />
+<meta name="description" content="搞懂这玩意儿到底是怎么跑起来的" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">OpenClaw 代码乱读笔记1</h1>
+<blockquote>
+<p>
+警告：这不是官方文档，是我的个人笔记，可能理解有误！
+</p>
+</blockquote>
+<div id="outline-container-org3b91b8c" class="outline-2">
+<h2 id="org3b91b8c"><span class="section-number-2">1.</span> 前言：我为什么要读这个代码？</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+前几天刷 GitHub 看到 OpenClaw 这个项目 —— "多渠道 AI 网关"，听起来挺厉害的，能连 WhatsApp、Telegram、Slack 啥的。但是翻了一遍 README，感觉还是云里雾里的。
+</p>
+
+<p>
+作为一个喜欢刨根问底的人，我决定：干脆直接读源码吧！
+</p>
+
+<p>
+这篇就是我读代码时随手记的笔记，想到哪写到哪，可能有点乱，但都是真实的阅读过程。如果你也想读这个代码，也许我的笔记能给你点参考。
+</p>
+</div>
+<div id="outline-container-orgd58df38" class="outline-3">
+<h3 id="orgd58df38"><span class="section-number-3">1.1.</span> 免责声明</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>我不是 OpenClaw 的开发者</li>
+<li>我的理解可能有错，欢迎指出</li>
+<li>这不是教程，只是个人学习笔记</li>
+<li>我会尽量贴代码，但不一定都对</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org9a7cef9" class="outline-3">
+<h3 id="org9a7cef9"><span class="section-number-3">1.2.</span> 我的装备</h3>
+<div class="outline-text-3" id="text-1-2">
+<ul class="org-ul">
+<li>项目：openclaw (commit 887ca6086)</li>
+<li>Node.js：22+</li>
+<li>编辑器：VS Code（随便用的）</li>
+<li>心情：好奇 + 有点头疼</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org2f00aee" class="outline-2">
+<h2 id="org2f00aee"><span class="section-number-2">2.</span> 第一章：哇，文件夹好多 —— 先随便看看结构</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+刚 <code>git clone</code> 完，打开目录一看，好家伙，这么多文件夹！让我先随便逛逛，看看都是些啥。
+</p>
+</div>
+<div id="outline-container-org9679070" class="outline-3">
+<h3 id="org9679070"><span class="section-number-3">2.1.</span> 1.1 根目录都有啥？</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+先 <code>ls -la</code> 一下（我只列重要的）：
+</p>
+
+<pre class="example" id="orga24f43c">
+openclaw/
+├── src/              ← 这个看起来是主要代码
+├── apps/             ← 看来还有手机/电脑客户端
+├── packages/         ← monorepo 的包？
+├── skills/           ← 50 多个文件夹，啥技能？
+├── extensions/       ← 38 个文件夹，扩展？
+├── ui/               ← Web 界面？
+├── docs/             ← 文档
+├── test/             ← 测试
+├── scripts/          ← 构建脚本
+├── patches/          ← 给依赖打的补丁
+├── vendor/           ← 第三方代码
+├── Swabble/          ← 这是另一个项目？
+└── ...（一堆配置文件）
+</pre>
+
+<p>
+行吧，先记住：=src/= 应该是重点，我们后面主要看这个。
+</p>
+</div>
+</div>
+<div id="outline-container-orge43d14c" class="outline-3">
+<h3 id="orge43d14c"><span class="section-number-3">2.2.</span> 1.2 先看看 package.json —— 这项目是干嘛的？</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+文件路径：=package.json=
+</p>
+
+<p>
+每次看新项目我都先翻这个，能知道不少信息。让我读一下：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-json">{
+  "name": "openclaw",
+  "version": "2026.2.15",
+  "description": "Multi-channel AI gateway with extensible messaging integrations",
+  "type": "module",
+  "bin": {
+    "openclaw": "openclaw.mjs"
+  },
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./plugin-sdk": {
+      "types": "./dist/plugin-sdk/index.d.ts",
+      "default": "./dist/plugin-sdk/index.js"
+    },
+    ...
+  },
+  ...
+}
+</pre>
+</div>
+
+<p>
+哦，原来是 ESM 模块（="type": "module"=），入口是 =openclaw.mjs=。描述说是"多渠道 AI 网关"。
+</p>
+
+<p>
+看看依赖，能猜出不少东西：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-json">"dependencies": {
+  "@mariozechner/pi-agent-core": "0.52.12",
+  "@mariozechner/pi-ai": "0.52.12",
+  "@mariozechner/pi-coding-agent": "0.52.12",
+  "@mariozechner/pi-tui": "0.52.12",
+  "grammy": "^1.40.0",
+  "@slack/bolt": "^4.6.0",
+  "@whiskeysockets/baileys": "7.0.0-rc.9",
+  "ws": "^8.19.0",
+  "express": "^5.2.1",
+  "zod": "^4.3.6",
+  ...
+}
+</pre>
+</div>
+
+<p>
+看到这些依赖，我大概明白了：
+</p>
+<ul class="org-ul">
+<li><code>@mariozechner/pi-*</code> —— 这几个包出现频率很高，应该是核心 AI 运行时</li>
+<li><code>grammy</code> —— Telegram Bot 库</li>
+<li><code>@slack/bolt</code> —— Slack Bot</li>
+<li><code>@whiskeysockets/baileys</code> —— 这是 WhatsApp Web 的库</li>
+<li><code>ws</code> —— WebSocket</li>
+<li><code>express</code> —— HTTP 服务器</li>
+<li><code>zod</code> —— 数据验证（这个库不错）</li>
+</ul>
+
+<p>
+还有一堆别的，就不一一列了。
+</p>
+</div>
+</div>
+<div id="outline-container-org5f92917" class="outline-3">
+<h3 id="org5f92917"><span class="section-number-3">2.3.</span> 1.3 重头戏：src/ 目录里面有啥？</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+文件路径：=src/=
+</p>
+
+<p>
+让我们 <code>ls src/</code> 看看（我挑重要的列）：
+</p>
+
+<pre class="example" id="org2544d1e">
+src/
+├── agents/            ← AI 代理相关？
+├── auto-reply/        ← 自动回复？
+├── browser/           ← 浏览器控制？
+├── canvas-host/       ← Canvas 画布服务？
+├── channels/          ← 渠道管理？
+├── cli/               ← 命令行界面
+├── commands/          ← CLI 命令实现
+├── config/            ← 配置管理
+├── cron/              ← 定时任务
+├── daemon/            ← 守护进程
+├── discord/           ← Discord 渠道
+├── gateway/           ← 网关！这个目录很大，应该是核心
+├── hooks/             ← Webhook？
+├── imessage/          ← iMessage 渠道
+├── infra/             ← 基础设施
+├── line/              ← Line 渠道
+├── logging/           ← 日志
+├── media/             ← 媒体处理
+├── memory/            ← 记忆管理
+├── node-host/         ← 节点宿主？
+├── plugins/           ← 插件系统
+├── polls/             ← 投票？
+├── process/           ← 进程管理
+├── providers/         ← AI 提供商
+├── security/          ← 安全相关（这个要重点看）
+├── signal/            ← Signal 渠道
+├── slack/             ← Slack 渠道
+├── telegram/          ← Telegram 渠道
+├── tts/               ← 语音合成
+├── tui/               ← 终端 UI
+├── ui/                ← UI 相关
+├── utils/             ← 工具函数
+├── web/               ← Web 相关（WhatsApp Web？）
+├── wizard/            ← 向导？
+└── ...（还有一些）
+</pre>
+
+<p>
+有点意思，这个结构很清晰：
+</p>
+<ul class="org-ul">
+<li>每个消息渠道都有单独的目录（=discord/=、=slack/=、=telegram/=、=web/= 等）</li>
+<li><code>gateway/</code> 目录名字就很核心，而且文件很多</li>
+<li><code>agents/</code> 应该是 AI 代理部分</li>
+<li><code>security/</code> 是安全相关的（这个后面要仔细读）</li>
+</ul>
+
+<p>
+这章先不深看，就是先混个脸熟。
+</p>
+</div>
+</div>
+<div id="outline-container-orgc594919" class="outline-3">
+<h3 id="orgc594919"><span class="section-number-3">2.4.</span> 1.4 这章看完的感觉</h3>
+<div class="outline-text-3" id="text-2-4">
+<ul class="org-ul">
+<li>OpenClaw 是个 Node.js 项目，用 TypeScript，而且是 ESM</li>
+<li>核心代码肯定在 <code>src/</code> 里</li>
+<li><code>src/gateway/</code> 看起来是核心中的核心</li>
+<li>支持的渠道真多：WhatsApp、Telegram、Slack、Discord、Signal、iMessage、Line&#x2026;</li>
+<li>还有 <code>security/</code> 目录，说明开发者还是考虑了安全的</li>
+</ul>
+
+<p>
+好，第一章就到这，我们下一章看 Gateway 是怎么启动的。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc255fbf" class="outline-2">
+<h2 id="orgc255fbf"><span class="section-number-2">3.</span> 第二章：Gateway 是怎么启动的？—— 我来追踪一下 <code>openclaw gateway</code></h2>
+<div class="outline-text-2" id="text-3">
+<p>
+行了，大概知道文件夹结构了。现在我们来搞明白：当你敲入 <code>openclaw gateway</code> 时，到底发生了什么？
+</p>
+</div>
+<div id="outline-container-orgbf533ea" class="outline-3">
+<h3 id="orgbf533ea"><span class="section-number-3">3.1.</span> 2.1 先看看入口：openclaw.mjs</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+文件路径：=openclaw.mjs=
+</p>
+
+<p>
+这是 CLI 的入口文件，让我们看看：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-javascript"><span style="color: #96a0aa;">#!/usr/bin/env node
+</span>
+<span style="color: #F92672; font-weight: bold;">import</span> module from <span style="color: #E6DB74; font-style: italic;">"node:module"</span>;
+
+<span style="color: #75715E;">// </span><span style="color: #96a0aa;">&#21551;&#29992;&#32534;&#35793;&#32531;&#23384;
+</span><span style="color: #F92672; font-weight: bold;">if</span> <span style="color: #AE81FF;">(</span>module.enableCompileCache &amp;&amp; !process.env.NODE_DISABLE_COMPILE_CACHE<span style="color: #AE81FF;">)</span> <span style="color: #AE81FF;">{</span>
+  <span style="color: #F92672; font-weight: bold;">try</span> <span style="color: #66D9EF;">{</span>
+    module.enableCompileCache<span style="color: #A6E22E;">()</span>;
+  <span style="color: #66D9EF;">}</span> <span style="color: #F92672; font-weight: bold;">catch</span> <span style="color: #66D9EF;">{</span>
+    <span style="color: #75715E;">// </span><span style="color: #96a0aa;">Ignore errors
+</span>  <span style="color: #66D9EF;">}</span>
+<span style="color: #AE81FF;">}</span>
+
+<span style="color: #75715E;">// </span><span style="color: #96a0aa;">... &#19968;&#20123;&#35686;&#21578;&#36807;&#28388;&#30340;&#20195;&#30721; ...
+</span>
+<span style="color: #75715E;">// </span><span style="color: #96a0aa;">&#23581;&#35797;&#23548;&#20837;&#32534;&#35793;&#21518;&#30340;&#20837;&#21475;&#25991;&#20214;
+</span><span style="color: #F92672; font-weight: bold;">if</span> <span style="color: #AE81FF;">(</span><span style="color: #F92672; font-weight: bold;">await</span> tryImport<span style="color: #66D9EF;">(</span><span style="color: #E6DB74; font-style: italic;">"./dist/entry.js"</span><span style="color: #66D9EF;">)</span><span style="color: #AE81FF;">)</span> <span style="color: #AE81FF;">{</span>
+  <span style="color: #75715E;">// </span><span style="color: #96a0aa;">OK
+</span><span style="color: #AE81FF;">}</span> <span style="color: #F92672; font-weight: bold;">else</span> <span style="color: #F92672; font-weight: bold;">if</span> <span style="color: #AE81FF;">(</span><span style="color: #F92672; font-weight: bold;">await</span> tryImport<span style="color: #66D9EF;">(</span><span style="color: #E6DB74; font-style: italic;">"./dist/entry.mjs"</span><span style="color: #66D9EF;">)</span><span style="color: #AE81FF;">)</span> <span style="color: #AE81FF;">{</span>
+  <span style="color: #75715E;">// </span><span style="color: #96a0aa;">OK
+</span><span style="color: #AE81FF;">}</span> <span style="color: #F92672; font-weight: bold;">else</span> <span style="color: #AE81FF;">{</span>
+  <span style="color: #F92672; font-weight: bold;">throw</span> <span style="color: #F92672; font-weight: bold;">new</span> <span style="color: #66D9EF;">Error</span><span style="color: #66D9EF;">(</span><span style="color: #E6DB74; font-style: italic;">"openclaw: missing dist/entry.(m)js (build output)."</span><span style="color: #66D9EF;">)</span>;
+<span style="color: #AE81FF;">}</span>
+</pre>
+</div>
+
+<p>
+哦，挺简单的，就是加载编译后的 <code>dist/entry.js</code> 或 =dist/entry.mjs=。这是生产环境的入口。开发环境应该是直接用 tsx 跑 TypeScript 的。
+</p>
+</div>
+</div>
+<div id="outline-container-orga60a164" class="outline-3">
+<h3 id="orga60a164"><span class="section-number-3">3.2.</span> 2.2 CLI 命令是怎么注册的？</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+我翻了一下 <code>src/cli/</code> 目录，发现命令是用 <code>commander</code> 库定义的。
+</p>
+
+<p>
+文件路径：=src/cli/program/build-program.ts=
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">export function buildProgram() {
+  const program = new Command();
+  const ctx = createProgramContext();
+  const argv = process.argv;
+
+  setProgramContext(program, ctx);
+  configureProgramHelp(program, ctx);
+  registerPreActionHooks(program, ctx.programVersion);
+
+  registerProgramCommands(program, ctx, argv);  // ← 这里注册所有命令
+
+  return program;
+}
+</pre>
+</div>
+
+<p>
+好，接下来看看 <code>gateway</code> 命令具体在哪。我找到了：
+</p>
+
+<p>
+文件路径：=src/cli/gateway-cli/register.ts=
+</p>
+
+<p>
+这里面注册了 <code>gateway</code> 命令，它最终会调用 <code>runGateway()</code> 函数。
+</p>
+</div>
+</div>
+<div id="outline-container-org21f4bd7" class="outline-3">
+<h3 id="org21f4bd7"><span class="section-number-3">3.3.</span> 2.3 找到了！启动函数在这：src/gateway/server.impl.ts</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+文件路径：=src/gateway/server.impl.ts=
+</p>
+
+<p>
+终于找到核心了！=startGatewayServer()= 这个函数就是 Gateway 的启动入口。
+</p>
+
+<p>
+先看一眼函数签名：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">export async function startGatewayServer(
+  port = 18789,
+  opts: GatewayServerOptions = {},
+): Promise&lt;GatewayServer&gt; {
+  // 哇，这个函数有 44KB 那么长！
+  // 让我慢慢读...
+}
+</pre>
+</div>
+
+<p>
+44KB 的一个函数！这是要干嘛？我一开始以为看错了，后来确认了一下，真的是一个函数写了 44KB。这设计&#x2026; 有点意思，一个函数干所有事情。
+</p>
+
+<p>
+让我们试着拆解一下它的步骤（我按代码顺序整理的）：
+</p>
+</div>
+<div id="outline-container-org3bb5e65" class="outline-4">
+<h4 id="org3bb5e65"><span class="section-number-4">3.3.1.</span> 2.3.1 第一步：先把配置读了，还要迁移旧配置</h4>
+<div class="outline-text-4" id="text-3-3-1">
+<p>
+函数一开始先做这些：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// 先把环境变量里的端口设上，让其他地方也能读到
+process.env.OPENCLAW_GATEWAY_PORT = String(port);
+
+// 读取配置文件快照
+let configSnapshot = await readConfigFileSnapshot();
+
+// 检查有没有 legacy 的老配置，有的话要迁移
+if (configSnapshot.legacyIssues.length &gt; 0) {
+  // ... 迁移逻辑 ...
+  const { config: migrated, changes } = migrateLegacyConfig(configSnapshot.parsed);
+  await writeConfigFile(migrated);
+}
+</pre>
+</div>
+
+<p>
+好，先把配置搞定，还要兼容旧版本的配置。
+</p>
+</div>
+</div>
+<div id="outline-container-orgd572ecc" class="outline-4">
+<h4 id="orgd572ecc"><span class="section-number-4">3.3.2.</span> 2.3.2 第二步：初始化运行时状态</h4>
+<div class="outline-text-4" id="text-3-3-2">
+<p>
+然后创建运行时状态：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">const runtimeState = createGatewayRuntimeState({
+  initialPort: port,
+  configSnapshot,
+  // ... 其他参数
+});
+</pre>
+</div>
+
+<p>
+这个 <code>runtimeState</code> 是个什么东西？后面我再看，反正就是存各种运行时状态的。
+</p>
+</div>
+</div>
+<div id="outline-container-org0c29000" class="outline-4">
+<h4 id="org0c29000"><span class="section-number-4">3.3.3.</span> 2.3.3 第三步：启动 HTTP 和 WebSocket 服务器</h4>
+<div class="outline-text-4" id="text-3-3-3">
+<p>
+接下来是启动服务器：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// 加载 TLS 配置（如果需要 HTTPS）
+const tlsRuntime = await loadGatewayTlsRuntime({
+  config: cfg,
+  log: logTls,
+});
+
+// 创建 HTTP 服务器
+// ...
+// 处理 WebSocket 升级
+// ...
+</pre>
+</div>
+
+<p>
+这部分我们下一章再详细讲。
+</p>
+</div>
+</div>
+<div id="outline-container-orgd1a5801" class="outline-4">
+<h4 id="orgd1a5801"><span class="section-number-4">3.3.4.</span> 2.3.4 第四步：加载插件</h4>
+<div class="outline-text-4" id="text-3-3-4">
+<p>
+然后加载插件：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">const pluginRegistry = await loadGatewayPlugins({
+  cfg,
+  runtimeState,
+  deps,
+  log: logPlugins,
+});
+</pre>
+</div>
+
+<p>
+插件系统，后面有机会再看。
+</p>
+</div>
+</div>
+<div id="outline-container-orgdcaf8e3" class="outline-4">
+<h4 id="orgdcaf8e3"><span class="section-number-4">3.3.5.</span> 2.3.5 第五步：启动各个渠道</h4>
+<div class="outline-text-4" id="text-3-3-5">
+<p>
+然后启动渠道管理器：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">const channelManager = createChannelManager({
+  cfg,
+  runtimeState,
+  pluginRegistry,
+  deps,
+  log: logChannels,
+});
+</pre>
+</div>
+
+<p>
+渠道就是 WhatsApp、Telegram 这些，这部分也很重要，后面单独一章讲。
+</p>
+</div>
+</div>
+<div id="outline-container-orgb49ce20" class="outline-4">
+<h4 id="orgb49ce20"><span class="section-number-4">3.3.6.</span> 2.3.6 第六步：启动各种杂七杂八的服务</h4>
+<div class="outline-text-4" id="text-3-3-6">
+<p>
+然后启动一堆服务：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// 定时任务
+const cronService = buildGatewayCronService({ ... });
+
+// 服务发现
+await startGatewayDiscovery({ ... });
+
+// 维护任务
+startGatewayMaintenanceTimers({ ... });
+
+// 边车服务
+await startGatewaySidecars({ ... });
+
+// 健康检查
+refreshGatewayHealthSnapshot({ ... });
+
+// 还有更多...
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge3fcb5c" class="outline-4">
+<h4 id="orge3fcb5c"><span class="section-number-4">3.3.7.</span> 2.3.7 第七步：健康检查和日志</h4>
+<div class="outline-text-4" id="text-3-3-7">
+<p>
+最后记录启动日志：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">logGatewayStartup({
+  cfg,
+  port: boundPort,
+  host: finalHost,
+  tlsRuntime,
+  hasActiveChannels: channelManager.hasActiveChannels(),
+  log,
+});
+</pre>
+</div>
+
+<p>
+好家伙，这一个函数真是把所有事情都干了！
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org1ea0b0f" class="outline-3">
+<h3 id="org1ea0b0f"><span class="section-number-3">3.4.</span> 2.4 启动时都能配什么？GatewayServerOptions</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+让我们看看启动时可以传什么参数：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">export type GatewayServerOptions = {
+  bind?: GatewayBindMode;        // loopback/lan/tailnet/auto
+  host?: string;                  // 可以强行指定绑定地址
+  controlUiEnabled?: boolean;     // 要不要开控制 UI
+  openAiChatCompletionsEnabled?: boolean;
+  openResponsesEnabled?: boolean;
+  auth?: GatewayAuthConfig;
+  tailscale?: GatewayTailscaleConfig;
+  // ... 还有一些测试用的选项
+};
+</pre>
+</div>
+
+<p>
+注意了！这里有个很重要的点：默认绑定是 =loopback=，也就是 127.0.0.1 —— 这意味着默认只有这台机器自己能访问 Gateway，其他机器连不上。这个后面讲安全的时候还要说。
+</p>
+</div>
+</div>
+<div id="outline-container-orga18974f" class="outline-3">
+<h3 id="orga18974f"><span class="section-number-3">3.5.</span> 2.5 这章看完的感觉</h3>
+<div class="outline-text-3" id="text-3-5">
+<ul class="org-ul">
+<li>Gateway 启动入口是 <code>startGatewayServer()=，在 =src/gateway/server.impl.ts</code></li>
+<li>默认端口是 18789</li>
+<li>默认只监听 127.0.0.1（也就是只有这台机器自己能访问）</li>
+<li>启动流程大概是：读配置 → 初始化状态 → 启服务器 → 加载插件 → 启动渠道 → 启动各种服务</li>
+<li>这个函数真的太长了（44KB），什么都干</li>
+</ul>
+
+<p>
+好，第二章就到这。下一章我们详细看 HTTP 和 WebSocket 服务器是怎么实现的。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org60e84d1" class="outline-2">
+<h2 id="org60e84d1"><span class="section-number-2">4.</span> 第三章：Gateway 服务器里面都有啥？—— HTTP、WebSocket 和认证</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+上一章我们看到 Gateway 启动了 HTTP 和 WebSocket 服务器，这一章我们详细挖挖它们是怎么实现的。
+</p>
+</div>
+<div id="outline-container-org94d7a59" class="outline-3">
+<h3 id="org94d7a59"><span class="section-number-3">4.1.</span> 3.1 HTTP 服务器：src/gateway/server-http.ts</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+文件路径：=src/gateway/server-http.ts=
+</p>
+
+<p>
+这个文件定义了 HTTP 服务器的行为。我翻了一下，它处理的路由还挺多的，让我整理一下：
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">路径</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>/</code></td>
+<td class="org-left">重定向</td>
+<td class="org-left">重定向到 <code>/ui</code> 或其他</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>/ui/*</code></td>
+<td class="org-left">控制 UI</td>
+<td class="org-left">Web 管理界面</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>/ws</code></td>
+<td class="org-left">WebSocket</td>
+<td class="org-left">WebSocket 升级端点</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>/v1/chat/completions</code></td>
+<td class="org-left">OpenAI API</td>
+<td class="org-left">OpenAI 兼容 API</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>/v1/responses</code></td>
+<td class="org-left">OpenResponses API</td>
+<td class="org-left">另一个 API</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>/hooks/*</code></td>
+<td class="org-left">Webhooks</td>
+<td class="org-left">入站 Webhook</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>/tools/*</code></td>
+<td class="org-left">工具调用</td>
+<td class="org-left">工具调用 HTTP API</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>/canvas/*</code></td>
+<td class="org-left">Canvas</td>
+<td class="org-left">Canvas 相关</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>/browser/*</code></td>
+<td class="org-left">浏览器</td>
+<td class="org-left">浏览器控制</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+一个 HTTP 请求进来时，大概是这么个流程：
+</p>
+<ol class="org-ol">
+<li>先做认证检查（=authorizeGatewayConnect()=）</li>
+<li>然后路由匹配</li>
+<li>最后执行对应的处理器</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org552c8b9" class="outline-3">
+<h3 id="org552c8b9"><span class="section-number-3">4.2.</span> 3.2 认证系统：src/gateway/auth.ts</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+文件路径：=src/gateway/auth.ts=
+</p>
+
+<p>
+这个文件很重要！我仔细读了一下，这是 Gateway 的保安 —— 决定谁能进来，谁不能进来。
+</p>
+</div>
+<div id="outline-container-orgeccea84" class="outline-4">
+<h4 id="orgeccea84"><span class="section-number-4">4.2.1.</span> 3.2.1 都支持哪几种认证方式？</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<p>
+先看类型定义：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">export type ResolvedGatewayAuthMode = "none" | "token" | "password" | "trusted-proxy";
+</pre>
+</div>
+
+<p>
+四种模式：
+</p>
+<ul class="org-ul">
+<li><code>none</code> —— 无认证（不推荐！这相当于大门敞开）</li>
+<li><code>token</code> —— Token 认证（用一个 secret token）</li>
+<li><code>password</code> —— 密码认证</li>
+<li><code>trusted-proxy</code> —— 受信任的代理（比如 Tailscale）</li>
+</ul>
+
+<p>
+还有认证结果的类型：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">export type GatewayAuthResult = {
+  ok: boolean;
+  method?: "none" | "token" | "password" | "tailscale" | "device-token" | "trusted-proxy";
+  user?: string;
+  reason?: string;
+  rateLimited?: boolean;      // 是否被限流了
+  retryAfterMs?: number;      // 限流的话要等多久
+};
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org6ad4690" class="outline-4">
+<h4 id="org6ad4690"><span class="section-number-4">4.2.2.</span> 3.2.2 认证流程：authorizeGatewayConnect()</h4>
+<div class="outline-text-4" id="text-4-2-2">
+<p>
+这个函数是核心，让我们看看它都做了哪些检查（按代码顺序）：
+</p>
+
+<ol class="org-ol">
+<li>先检查是不是"本地直接请求"（=isLocalDirectRequest()=）—— 如果是，直接放行</li>
+<li>检查有没有 Token 或 Password —— 有就验证</li>
+<li>如果是 Tailscale，检查 Tailscale 身份</li>
+<li>检查速率限制 —— 试错太多次会被限流</li>
+</ol>
+
+<p>
+这个设计挺合理的：本地访问最方便，不用认证；远程访问必须认证。
+</p>
+</div>
+</div>
+<div id="outline-container-org24cb5ba" class="outline-4">
+<h4 id="org24cb5ba"><span class="section-number-4">4.2.3.</span> 3.2.3 什么算是"本地直接请求"？</h4>
+<div class="outline-text-4" id="text-4-2-3">
+<p>
+这个函数 <code>isLocalDirectRequest()</code> 很有意思，让我们看看代码：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">export function isLocalDirectRequest(
+  req?: IncomingMessage,
+  trustedProxies?: string[],
+): boolean {
+  // 1. 检查客户端 IP 是不是 loopback 地址
+  const clientIp = resolveRequestClientIp(req, trustedProxies) ?? "";
+  if (!isLoopbackAddress(clientIp)) {
+    return false;
+  }
+
+  // 2. 检查 Host 头
+  const host = getHostName(req.headers?.host);
+  const hostIsLocal = host === "localhost" || host === "127.0.0.1" || host === "::1";
+  const hostIsTailscaleServe = host.endsWith(".ts.net");
+
+  // 3. 检查有没有 forwarded 头
+  const hasForwarded = Boolean(
+    req.headers?.["x-forwarded-for"] ||
+    req.headers?.["x-real-ip"] ||
+    req.headers?.["x-forwarded-host"],
+  );
+
+  // 4. 检查 remote 是不是受信任的代理
+  const remoteIsTrustedProxy = isTrustedProxyAddress(req.socket?.remoteAddress, trustedProxies);
+
+  // 最终判断
+  return (hostIsLocal || hostIsTailscaleServe) &amp;&amp; (!hasForwarded || remoteIsTrustedProxy);
+}
+</pre>
+</div>
+
+<p>
+关键点我帮你划出来了：
+</p>
+<ul class="org-ul">
+<li>客户端 IP 必须是 loopback 地址（127.0.0.1 或 ::1）</li>
+<li>Host 头必须是 localhost/127.0.0.1/::1，或者是 .ts.net（Tailscale）</li>
+<li>如果有 forwarded 头，那必须来自受信任的代理</li>
+</ul>
+
+<p>
+这就解释了为什么默认绑定 127.0.0.1 是安全的 —— 只有这台机器自己能访问。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org26dc34b" class="outline-3">
+<h3 id="org26dc34b"><span class="section-number-3">4.3.</span> 3.3 WebSocket 服务器：src/gateway/server/ws-connection.ts</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+文件路径：=src/gateway/server/ws-connection.ts=
+</p>
+
+<p>
+WebSocket 是 Gateway 的主要通信方式。毕竟 HTTP 是一问一答，而 WebSocket 可以双向实时通信，更适合做控制平面。
+</p>
+
+<p>
+我看了一下，WebSocket 消息有定义好的协议格式，在 <code>src/gateway/protocol/</code> 目录里。这个后面有机会再细说。
+</p>
+
+<p>
+当一个 WebSocket 消息到达时，大概是这么处理的：
+</p>
+<ol class="org-ol">
+<li>解析帧</li>
+<li>路由到对应的方法处理器</li>
+<li>执行方法</li>
+<li>返回结果</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org462d4f8" class="outline-3">
+<h3 id="org462d4f8"><span class="section-number-3">4.4.</span> 3.4 Gateway 方法：src/gateway/server-methods/</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+文件路径：=src/gateway/server-methods/=
+</p>
+
+<p>
+这是 Gateway 的"API 端点"目录，每个文件对应一组方法。我数了一下，还挺多的：
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">文件</th>
+<th scope="col" class="org-left">方法组</th>
+<th scope="col" class="org-left">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>agent.ts</code></td>
+<td class="org-left"><code>agent.*</code></td>
+<td class="org-left">AI 代理调用</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>agents.ts</code></td>
+<td class="org-left"><code>agents.*</code></td>
+<td class="org-left">代理管理</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>browser.ts</code></td>
+<td class="org-left"><code>browser.*</code></td>
+<td class="org-left">浏览器控制</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>channels.ts</code></td>
+<td class="org-left"><code>channels.*</code></td>
+<td class="org-left">渠道管理</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>chat.ts</code></td>
+<td class="org-left"><code>chat.*</code></td>
+<td class="org-left">聊天</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>config.ts</code></td>
+<td class="org-left"><code>config.*</code></td>
+<td class="org-left">配置管理</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>cron.ts</code></td>
+<td class="org-left"><code>cron.*</code></td>
+<td class="org-left">定时任务</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>exec-approval.ts</code></td>
+<td class="org-left">-</td>
+<td class="org-left">执行审批</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>nodes.ts</code></td>
+<td class="org-left"><code>nodes.*</code></td>
+<td class="org-left">节点管理</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>sessions.ts</code></td>
+<td class="org-left"><code>sessions.*</code></td>
+<td class="org-left">会话管理</td>
+</tr>
+
+<tr>
+<td class="org-left">&#x2026;</td>
+<td class="org-left">&#x2026;</td>
+<td class="org-left">&#x2026;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+这些方法就是 Gateway 提供的所有功能了，后面我们会挑几个重要的看。
+</p>
+</div>
+</div>
+<div id="outline-container-org5506632" class="outline-3">
+<h3 id="org5506632"><span class="section-number-3">4.5.</span> 3.5 网络绑定：src/gateway/net.ts</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+文件路径：=src/gateway/net.ts=
+</p>
+
+<p>
+这个文件决定了 Gateway 怎么绑定到网络接口。
+</p>
+</div>
+<div id="outline-container-org5b2c34a" class="outline-4">
+<h4 id="org5b2c34a"><span class="section-number-4">4.5.1.</span> 3.5.1 都有哪几种绑定模式？</h4>
+<div class="outline-text-4" id="text-4-5-1">
+<div class="org-src-container">
+<pre class="src src-typescript">type GatewayBindMode = "loopback" | "lan" | "tailnet" | "auto";
+</pre>
+</div>
+
+<p>
+四种模式：
+</p>
+<ul class="org-ul">
+<li><code>loopback</code> —— 只绑定 127.0.0.1（默认，最安全）</li>
+<li><code>lan</code> —— 绑定 0.0.0.0（局域网可访问，谨慎使用）</li>
+<li><code>tailnet</code> —— 只绑定 Tailscale 地址</li>
+<li><code>auto</code> —— 自动选择（优先 loopback）</li>
+</ul>
+
+<p>
+划重点：默认是 =loopback=！这意味着默认只有这台机器自己能访问 Gateway，其他机器连不上。这个设计很安全。
+</p>
+
+<p>
+这个文件还有一些有用的工具函数：
+</p>
+<ul class="org-ul">
+<li><code>isLoopbackAddress()</code> —— 检查是不是回环地址</li>
+<li><code>isPrivateAddress()</code> —— 检查是不是私有地址</li>
+<li><code>isPrivateOrLoopbackAddress()</code> —— 两者任一</li>
+<li><code>resolveGatewayClientIp()</code> —— 解析客户端真实 IP（处理代理的情况）</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org06af8c3" class="outline-3">
+<h3 id="org06af8c3"><span class="section-number-3">4.6.</span> 3.6 这章看完的感觉</h3>
+<div class="outline-text-3" id="text-4-6">
+<ul class="org-ul">
+<li>Gateway 同时提供 HTTP 和 WebSocket 服务</li>
+<li>默认只监听 127.0.0.1，需要显式配置才能从其他地址访问</li>
+<li>认证系统支持多种模式：token、password、trusted-proxy、tailscale</li>
+<li>本地请求（127.0.0.1）不需要认证，这个设计很方便也很安全</li>
+<li>WebSocket 是主要通信方式，有定义良好的协议</li>
+<li><code>server-methods/</code> 目录包含所有 API 方法实现</li>
+</ul>
+
+<p>
+好，第三章就到这。下一章我们看渠道系统 —— 怎么连 WhatsApp、Telegram 这些。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org1a6e541" class="outline-2">
+<h2 id="org1a6e541"><span class="section-number-2">5.</span> 第四章：渠道（Channels）是怎么工作的？—— WhatsApp、Telegram 等逐个看</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+这一章是我最好奇的部分：OpenClaw 是怎么连这么多消息渠道的？让我们逐个挖。
+</p>
+</div>
+<div id="outline-container-orge39225d" class="outline-3">
+<h3 id="orge39225d"><span class="section-number-3">5.1.</span> 4.1 先看整体结构</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+在 OpenClaw 中，每个渠道都是相对独立的模块，但它们共享一些公共的抽象。先看看渠道相关的目录：
+</p>
+
+<pre class="example" id="org1209f6d">
+src/
+├── channels/           # 渠道抽象和公共代码
+├── discord/            # Discord 具体实现
+├── slack/              # Slack 具体实现
+├── telegram/           # Telegram 具体实现
+├── signal/             # Signal 具体实现
+├── web/                # WhatsApp Web 实现
+├── imessage/           # iMessage 实现
+├── line/               # Line 实现
+└── ...（更多渠道）
+</pre>
+
+<p>
+每个渠道一个目录，这个设计很清晰。
+</p>
+</div>
+</div>
+<div id="outline-container-orgdf8092d" class="outline-3">
+<h3 id="orgdf8092d"><span class="section-number-3">5.2.</span> 4.2 WhatsApp 渠道：src/web/</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+文件路径：=src/web/=
+</p>
+
+<p>
+WhatsApp 是通过 WhatsApp Web 实现的，用的是 <code>@whiskeysockets/baileys</code> 这个库。
+</p>
+
+<p>
+先看看 <code>src/web/</code> 的目录结构：
+</p>
+
+<pre class="example" id="org2c30910">
+src/web/
+├── inbound/              # 入站消息处理
+│   ├── access-control.ts # 访问控制！这个很重要
+│   ├── monitor.ts        # 监控
+│   └── send-api.ts       # 发送 API
+├── outbound.ts           # 出站消息
+├── monitor.ts            # 主监控器
+├── session.ts            # 会话管理
+├── login.ts              # 登录
+└── ...
+</pre>
+</div>
+<div id="outline-container-org3db6a66" class="outline-4">
+<h4 id="org3db6a66"><span class="section-number-4">5.2.1.</span> 4.2.1 访问控制：src/web/inbound/access-control.ts</h4>
+<div class="outline-text-4" id="text-5-2-1">
+<p>
+文件路径：=src/web/inbound/access-control.ts=
+</p>
+
+<p>
+这个文件很有意思！我仔细读了一下，它决定谁的消息会被处理，谁的会被忽略。让我们看看核心逻辑：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">export async function checkInboundAccessControl(params: {
+  accountId: string;
+  from: string;
+  selfE164: string | null;
+  senderE164: string | null;
+  group: boolean;
+  pushName?: string;
+  isFromMe: boolean;
+  // ... 更多参数
+}): Promise&lt;InboundAccessControlResult&gt; {
+  const cfg = loadConfig();
+  const account = resolveWhatsAppAccount({ cfg, accountId: params.accountId });
+
+  // dmPolicy 默认是 "pairing"
+  const dmPolicy = account.dmPolicy ?? "pairing";
+
+  // 从配置和存储中读取 allowFrom 白名单
+  const configuredAllowFrom = account.allowFrom;
+  const storeAllowFrom = await readChannelAllowFromStore("whatsapp").catch(() =&gt; []);
+  const combinedAllowFrom = Array.from(
+    new Set([...(configuredAllowFrom ?? []), ...storeAllowFrom]),
+  );
+
+  // 如果没有配置白名单，默认只允许自己给自己发消息
+  const defaultAllowFrom =
+    combinedAllowFrom.length === 0 &amp;&amp; params.selfE164
+      ? [params.selfE164]
+      : undefined;
+
+  const allowFrom = combinedAllowFrom.length &gt; 0
+    ? combinedAllowFrom
+    : defaultAllowFrom;
+
+  // ... 中间一堆检查逻辑 ...
+
+  // DM 访问控制（默认是 "pairing" 模式）
+  if (!params.group) {
+    // 如果不是 "open" 模式，而且不是自己
+    if (dmPolicy !== "open" &amp;&amp; !isSamePhone) {
+      const candidate = params.from;
+      const allowed =
+        dmHasWildcard ||
+        (normalizedAllowFrom.length &gt; 0 &amp;&amp; normalizedAllowFrom.includes(candidate));
+
+      // 如果不在白名单里
+      if (!allowed) {
+        // 如果是 pairing 模式，给对方发一个配对码
+        if (dmPolicy === "pairing") {
+          const { code, created } = await upsertChannelPairingRequest({
+            channel: "whatsapp",
+            id: candidate,
+            meta: { name: (params.pushName ?? "").trim() || undefined },
+          });
+          if (created) {
+            // 给对方发配对码
+            await params.sock.sendMessage(params.remoteJid, {
+              text: buildPairingReply({
+                channel: "whatsapp",
+                idLine: `Your WhatsApp phone number: ${candidate}`,
+                code,
+              }),
+            });
+          }
+        }
+        // 拒绝这条消息
+        return { allowed: false, ... };
+      }
+    }
+  }
+
+  // 所有检查都通过了，允许这条消息
+  return { allowed: true, ... };
+}
+</pre>
+</div>
+
+<p>
+这段代码太重要了，我帮你总结一下关键点：
+</p>
+
+<ol class="org-ol">
+<li>默认 dmPolicy 是 "pairing" —— 陌生人发消息会收到一个配对码，不会直接处理</li>
+<li>allowFrom 白名单 —— 只有在白名单里的人才能发消息</li>
+<li>默认只允许自己 —— 如果没配置白名单，默认只允许自己给自己发消息</li>
+<li>群组也有策略 —— "open"、"disabled"、"allowlist" 三种</li>
+</ol>
+
+<p>
+这个安全设计很到位！
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org467f7b7" class="outline-3">
+<h3 id="org467f7b7"><span class="section-number-3">5.3.</span> 4.3 Telegram 渠道：src/telegram/</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+文件路径：=src/telegram/=
+</p>
+
+<p>
+Telegram 用的是 <code>grammy</code> 库。我翻了一下，它支持两种接收消息的方式：
+</p>
+
+<ol class="org-ol">
+<li>Polling（轮询）—— 定期去 Telegram 服务器问"有新消息吗？"</li>
+<li>Webhook —— Telegram 有新消息时主动推送给你</li>
+</ol>
+
+<p>
+这两种方式在代码里都有实现，分别在 <code>monitor.ts</code> 和 <code>webhook.ts</code> 里。
+</p>
+</div>
+</div>
+<div id="outline-container-orgabf0408" class="outline-3">
+<h3 id="orgabf0408"><span class="section-number-3">5.4.</span> 4.4 其他渠道</h3>
+<div class="outline-text-3" id="text-5-4">
+<p>
+我简单翻了一下其他渠道：
+</p>
+
+<ul class="org-ul">
+<li>Slack（=src/slack/=）：用 =@slack/bolt=，主要通过 Webhook 接收事件</li>
+<li>Discord（=src/discord/=）：有自己的 Gateway（WebSocket）协议</li>
+<li>Signal（=src/signal/=）：用 =signal-cli=，通过 SSE（Server-Sent Events）接收消息</li>
+<li>iMessage（=src/imessage/=）：这个比较特殊，是通过监控本地数据库实现的！</li>
+</ul>
+
+<p>
+每个渠道的实现方式都不太一样，但都有一个共同点：都有访问控制机制。
+</p>
+</div>
+</div>
+<div id="outline-container-org79228a8" class="outline-3">
+<h3 id="org79228a8"><span class="section-number-3">5.5.</span> 4.5 几个通用概念</h3>
+<div class="outline-text-3" id="text-5-5">
+<p>
+不管是哪个渠道，都有一些共同的概念：
+</p>
+
+<ul class="org-ul">
+<li>入站（Inbound）—— 从渠道收到消息</li>
+<li>出站（Outbound）—— 往渠道发送消息</li>
+<li>监控（Monitor）—— 每个渠道都有一个 "monitor" 组件负责接收消息</li>
+<li>发送（Send）—— 每个渠道都有 "send" 组件负责发送消息</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgb5d2c6c" class="outline-3">
+<h3 id="orgb5d2c6c"><span class="section-number-3">5.6.</span> 4.6 这章看完的感觉</h3>
+<div class="outline-text-3" id="text-5-6">
+<ul class="org-ul">
+<li>每个渠道都有独立的实现，但共享公共抽象</li>
+<li>不同渠道使用不同的通信方式：轮询、Webhook、WebSocket、SSE、本地文件监控等</li>
+<li>每个渠道都有访问控制机制（=allowFrom=、=dmPolicy= 等）</li>
+<li>WhatsApp 是通过 WhatsApp Web 实现的，iMessage 是通过本地数据库实现的</li>
+<li>默认安全策略很严格：陌生人需要配对，不在白名单的消息会被忽略</li>
+</ul>
+
+<p>
+好，第四章就到这。这一章我们不看会话管理了，先看一个更重要的：安全审计工具。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgff052a5" class="outline-2">
+<h2 id="orgff052a5"><span class="section-number-2">6.</span> 第五章：安全审计工具 —— <code>openclaw security audit</code> 是怎么实现的？</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+我翻代码的时候发现了一个好东西：=src/security/= 目录。OpenClaw 居然自带了安全审计工具！这章我们专门看这个。
+</p>
+</div>
+<div id="outline-container-org05c6aee" class="outline-3">
+<h3 id="org05c6aee"><span class="section-number-3">6.1.</span> 5.1 先看审计结果类型</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+文件路径：=src/security/audit.ts=
+</p>
+
+<p>
+先看类型定义，能知道审计都检查什么：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">export type SecurityAuditSeverity = "info" | "warn" | "critical";
+
+export type SecurityAuditFinding = {
+  checkId: string;
+  severity: SecurityAuditSeverity;  // 严重级别
+  title: string;
+  detail: string;
+  remediation?: string;             // 修复建议
+};
+
+export type SecurityAuditReport = {
+  ts: number;
+  summary: {
+    critical: number;
+    warn: number;
+    info: number;
+  };
+  findings: SecurityAuditFinding[];
+  deep?: {
+    gateway?: {
+      attempted: boolean;
+      url: string | null;
+      ok: boolean;
+      error: string | null;
+    };
+  };
+};
+</pre>
+</div>
+
+<p>
+三个严重级别：
+</p>
+<ul class="org-ul">
+<li><code>info</code> —— 信息，没关系</li>
+<li><code>warn</code> —— 警告，最好改改</li>
+<li><code>critical</code> —— 严重，必须改！</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org1af2c0b" class="outline-3">
+<h3 id="org1af2c0b"><span class="section-number-3">6.2.</span> 5.2 都检查哪些东西？</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+我数了一下，检查项还挺多的。让我从代码里整理一下：
+</p>
+</div>
+<div id="outline-container-org273ee49" class="outline-4">
+<h4 id="org273ee49"><span class="section-number-4">6.2.1.</span> 5.2.1 文件系统权限检查</h4>
+<div class="outline-text-4" id="text-6-2-1">
+<p>
+在 <code>collectFilesystemFindings()</code> 函数里，检查这些：
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">检查项</th>
+<th scope="col" class="org-left">严重级别</th>
+<th scope="col" class="org-left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">State dir is world-writable</td>
+<td class="org-left">critical</td>
+<td class="org-left">状态目录所有人可写</td>
+</tr>
+
+<tr>
+<td class="org-left">State dir is group-writable</td>
+<td class="org-left">warn</td>
+<td class="org-left">状态目录组用户可写</td>
+</tr>
+
+<tr>
+<td class="org-left">State dir is readable by others</td>
+<td class="org-left">warn</td>
+<td class="org-left">状态目录其他人可读</td>
+</tr>
+
+<tr>
+<td class="org-left">Config file is writable by others</td>
+<td class="org-left">critical</td>
+<td class="org-left">配置文件其他人可写</td>
+</tr>
+
+<tr>
+<td class="org-left">Config file is world-readable</td>
+<td class="org-left">critical</td>
+<td class="org-left">配置文件所有人可读（可能包含 token！）</td>
+</tr>
+
+<tr>
+<td class="org-left">Config file is group-readable</td>
+<td class="org-left">warn</td>
+<td class="org-left">配置文件组用户可读</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+划重点：配置文件权限是 critical 级别的！因为配置文件里可能存着 API Key、Token 这些敏感信息。
+</p>
+
+<p>
+看这段代码：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">if (configPerms.worldWritable || configPerms.groupWritable) {
+  findings.push({
+    checkId: "fs.config.perms_writable",
+    severity: "critical",
+    title: "Config file is writable by others",
+    detail: `${formatPermissionDetail(params.configPath, configPerms)}; another user could change gateway/auth/tool policies.`,
+    remediation: formatPermissionRemediation({
+      targetPath: params.configPath,
+      perms: configPerms,
+      isDir: false,
+      posixMode: 0o600,  // ← 推荐权限：只有自己能读写
+      env: params.env,
+    }),
+  });
+}
+</pre>
+</div>
+
+<p>
+推荐权限是 <code>0o600</code> —— 只有文件所有者能读写，这个很安全。
+</p>
+</div>
+</div>
+<div id="outline-container-org24ba633" class="outline-4">
+<h4 id="org24ba633"><span class="section-number-4">6.2.2.</span> 5.2.2 Gateway 配置检查</h4>
+<div class="outline-text-4" id="text-6-2-2">
+<p>
+在 <code>collectGatewayConfigFindings()</code> 函数里，检查这些：
+</p>
+
+<ul class="org-ul">
+<li>Gateway bind mode —— 如果不是 loopback，会 warn</li>
+<li>Gateway auth mode —— 如果是 none，会 critical！</li>
+<li>Tailscale mode —— 如果是 funnel 但没有 password auth，会 critical</li>
+<li>等等&#x2026;</li>
+</ul>
+
+<p>
+又一个重点：如果 Gateway 认证模式是 none，是 critical 级别的！这相当于大门敞开。
+</p>
+</div>
+</div>
+<div id="outline-container-org6a0df14" class="outline-4">
+<h4 id="org6a0df14"><span class="section-number-4">6.2.3.</span> 5.2.3 还有更多检查项</h4>
+<div class="outline-text-4" id="text-6-2-3">
+<p>
+我看了一下 =audit-extra.ts=，还有这些检查：
+</p>
+
+<ul class="org-ul">
+<li><code>collectAttackSurfaceSummaryFindings()</code> —— 攻击面总结</li>
+<li><code>collectExposureMatrixFindings()</code> —— 暴露矩阵</li>
+<li><code>collectSecretsInConfigFindings()</code> —— 配置文件里有没有秘密</li>
+<li><code>collectModelHygieneFindings()</code> —— 模型卫生</li>
+<li><code>collectPluginsTrustFindings()</code> —— 插件信任</li>
+<li><code>collectInstalledSkillsCodeSafetyFindings()</code> —— 已安装技能的代码安全</li>
+<li><code>collectChannelSecurityFindings()</code> —— 渠道安全</li>
+<li>等等&#x2026;</li>
+</ul>
+
+<p>
+检查项真的很全！
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org999cce8" class="outline-3">
+<h3 id="org999cce8"><span class="section-number-3">6.3.</span> 5.3 怎么运行审计？</h3>
+<div class="outline-text-3" id="text-6-3">
+<p>
+看代码，审计是通过 <code>openclaw security audit</code> 命令运行的。如果你正在用 OpenClaw，记得定期跑一下这个命令！
+</p>
+</div>
+</div>
+<div id="outline-container-orgc881d25" class="outline-3">
+<h3 id="orgc881d25"><span class="section-number-3">6.4.</span> 5.4 这章看完的感觉</h3>
+<div class="outline-text-3" id="text-6-4">
+<ul class="org-ul">
+<li>OpenClaw 自带了很完善的安全审计工具</li>
+<li>文件系统权限检查很仔细，配置文件权限是 critical 级别的</li>
+<li>Gateway 认证如果是 none，也是 critical 级别的</li>
+<li>检查项很全：文件系统、Gateway 配置、渠道安全、插件、技能等等</li>
+<li>建议：用 OpenClaw 的话，定期跑 <code>openclaw security audit</code> 看看有没有问题</li>
+</ul>
+
+<p>
+好，第五章就到这。这章看完我觉得 OpenClaw 的开发者还是很重视安全的，自带审计工具这一点就很不错。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org627e6a1" class="outline-2">
+<h2 id="org627e6a1"><span class="section-number-2">7.</span> 暂时写到这里</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+我已经写了五章了，包括：
+</p>
+<ol class="org-ol">
+<li>项目结构概述</li>
+<li>Gateway 启动流程</li>
+<li>HTTP、WebSocket 和认证</li>
+<li>渠道系统（WhatsApp、Telegram 等）</li>
+<li>安全审计工具</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Feb 19 11:59:55 2026</span> <span class="date">Last modified: 2026-02-19 Thu 18:29</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2026-02-19 Thu 18:32 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OpenClaw 代码乱读笔记 2</title>
+<meta name="author" content="Zi Liang" />
+<meta name="description" content="AI Agent、Memory、Skills 和插件系统（详细版）" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">OpenClaw 代码乱读笔记 2</h1>
+<div id="outline-container-org9f27413" class="outline-2">
+<h2 id="org9f27413"><span class="section-number-2">1.</span> 第六章：AI Agent 是怎么工作的？—— Pi Embedded Runner 和系统提示词</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+好了，前面我们看了 Gateway、渠道、安全这些，现在来看看最核心的部分：AI Agent 是怎么实现的？
+</p>
+</div>
+<div id="outline-container-orga76cd81" class="outline-3">
+<h3 id="orga76cd81"><span class="section-number-3">1.1.</span> 6.1 先看系统提示词是怎么构建的</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+文件路径：=src/agents/system-prompt.ts=
+</p>
+
+<p>
+每次跟 AI 对话，首先要给它一个系统提示词（System Prompt），告诉它它是谁、它能做什么、应该怎么回答。OpenClaw 的系统提示词是动态构建的，不是写死的！
+</p>
+
+<p>
+这个文件里有一个 <code>buildAgentSystemPrompt()</code> 函数，它把很多个部分拼起来形成完整的系统提示词。让我们看看系统提示词到底长什么样 —— 我从代码里整理一下结构：
+</p>
+</div>
+<div id="outline-container-org92f9ee6" class="outline-4">
+<h4 id="org92f9ee6"><span class="section-number-4">1.1.1.</span> 6.1.1 系统提示词的完整结构</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+一个完整的系统提示词包含这些部分：
+</p>
+
+<ol class="org-ol">
+<li>身份声明</li>
+<li>Tooling（工具列表）</li>
+<li>Tool Call Style（工具调用风格）</li>
+<li>Safety（安全规则）</li>
+<li>OpenClaw CLI Quick Reference（CLI 快速参考）</li>
+<li>Skills（技能）</li>
+<li>Memory Recall（记忆召回）</li>
+<li>OpenClaw Self-Update（自更新）</li>
+<li>Model Aliases（模型别名）</li>
+<li>Workspace（工作区）</li>
+<li>Documentation（文档）</li>
+<li>Sandbox（沙箱，如果启用）</li>
+<li>User Identity（用户身份）</li>
+<li>Current Date &amp; Time（当前日期和时间）</li>
+<li>Workspace Files（工作区文件，注入的）</li>
+<li>Reply Tags（回复标签）</li>
+<li>Messaging（消息相关）</li>
+<li>Voice (TTS)（语音合成）</li>
+<li>Project Context（项目上下文）</li>
+<li>Silent Replies（静默回复）</li>
+<li>Heartbeats（心跳）</li>
+<li>Runtime（运行时信息）</li>
+</ol>
+
+<p>
+哇，真不少！让我们挑几个重要的部分详细看看。
+</p>
+</div>
+</div>
+<div id="outline-container-org42c7498" class="outline-4">
+<h4 id="org42c7498"><span class="section-number-4">1.1.2.</span> 6.1.2 Tooling 部分：工具列表</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+系统提示词会列出所有可用的工具，我从代码里把核心工具列表抄下来了：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">const coreToolSummaries: Record&lt;string, string&gt; = {
+  read: "Read file contents",
+  write: "Create or overwrite files",
+  edit: "Make precise edits to files",
+  apply_patch: "Apply multi-file patches",
+  grep: "Search file contents for patterns",
+  find: "Find files by glob pattern",
+  ls: "List directory contents",
+  exec: "Run shell commands (pty available for TTY-required CLIs)",
+  process: "Manage background exec sessions",
+  web_search: "Search the web (Brave API)",
+  web_fetch: "Fetch and extract readable content from a URL",
+  browser: "Control web browser",
+  canvas: "Present/eval/snapshot the Canvas",
+  nodes: "List/describe/notify/camera/screen on paired nodes",
+  cron: "Manage cron jobs and wake events (use for reminders; when scheduling a reminder, write the systemEvent text as something that will read like a reminder when it fires, and mention that it is a reminder depending on the time gap between setting and firing; include recent context in reminder text if appropriate)",
+  message: "Send messages and channel actions",
+  gateway: "Restart, apply config, or run updates on the running OpenClaw process",
+  agents_list: "List agent ids allowed for sessions_spawn",
+  sessions_list: "List other sessions (incl. sub-agents) with filters/last",
+  sessions_history: "Fetch history for another session/sub-agent",
+  sessions_send: "Send a message to another session/sub-agent",
+  sessions_spawn: "Spawn a sub-agent session",
+  session_status:
+    "Show a /status-equivalent status card (usage + time + Reasoning/Verbose/Elevated); use for model-use questions (📊 session_status); optional per-session model override",
+  image: "Analyze an image with the configured image model",
+};
+</pre>
+</div>
+
+<p>
+这些就是 AI 可以用的所有工具！每个工具都有简短的描述。
+</p>
+</div>
+</div>
+<div id="outline-container-org04069f8" class="outline-4">
+<h4 id="org04069f8"><span class="section-number-4">1.1.3.</span> 6.1.3 Safety 部分：安全规则</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+系统提示词里有一个 Safety 部分，很有意思，我抄下来：
+</p>
+
+<pre class="example" id="org1c71eca">
+## Safety
+You have no independent goals: do not pursue self-preservation, replication, resource acquisition, or power-seeking; avoid long-term plans beyond the user's request.
+Prioritize safety and human oversight over completion; if instructions conflict, pause and ask; comply with stop/pause/audit requests and never bypass safeguards. (Inspired by Anthropic's constitution.)
+Do not manipulate or persuade anyone to expand access or disable safeguards. Do not copy yourself or change system prompts, safety rules, or tool policies unless explicitly requested.
+</pre>
+
+<p>
+这部分提到了"受 Anthropic's constitution 启发"，有意思！
+</p>
+</div>
+</div>
+<div id="outline-container-orgebb7fee" class="outline-4">
+<h4 id="orgebb7fee"><span class="section-number-4">1.1.4.</span> 6.1.4 Skills 部分：告诉 AI 怎么用 Skills</h4>
+<div class="outline-text-4" id="text-1-1-4">
+<p>
+Skills 部分的提示词是这样的：
+</p>
+
+<pre class="example" id="org84147e2">
+## Skills (mandatory)
+Before replying: scan &lt;available_skills&gt; &lt;description&gt; entries.
+- If exactly one skill clearly applies: read its SKILL.md at &lt;location&gt; with `read`, then follow it.
+- If multiple could apply: choose the most specific one, then read/follow it.
+- If none clearly apply: do not read any SKILL.md.
+Constraints: never read more than one skill up front; only read after selecting.
+</pre>
+
+<p>
+这段提示词告诉 AI：
+</p>
+<ol class="org-ol">
+<li>先看看有哪些可用的 Skills</li>
+<li>如果正好有一个明显适用，就读它的 SKILL.md，然后照着做</li>
+<li>如果有多个可能适用，选最具体的那个</li>
+<li>如果没有明显适用的，就不要读任何 SKILL.md</li>
+<li>限制：一次最多只读一个 Skill</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org3225f5e" class="outline-4">
+<h4 id="org3225f5e"><span class="section-number-4">1.1.5.</span> 6.1.5 Memory 部分：告诉 AI 怎么用记忆</h4>
+<div class="outline-text-4" id="text-1-1-5">
+<p>
+Memory 部分的提示词：
+</p>
+
+<pre class="example" id="org40c9598">
+## Memory Recall
+Before answering anything about prior work, decisions, dates, people, preferences, or todos: run memory_search on MEMORY.md + memory/*.md; then use memory_get to pull only the needed lines. If low confidence after search, say you checked.
+Citations: include Source: &lt;path#line&gt; when it helps the user verify memory snippets.
+</pre>
+
+<p>
+这段提示词告诉 AI：在回答关于之前的工作、决定、日期、人物、偏好或待办事项之前，先用 <code>memory_search</code> 搜索 <code>MEMORY.md</code> 和 <code>memory/*.md=，然后用 =memory_get</code> 取出需要的内容。
+</p>
+</div>
+</div>
+<div id="outline-container-orgd2f1499" class="outline-4">
+<h4 id="orgd2f1499"><span class="section-number-4">1.1.6.</span> 6.1.6 三种提示词模式</h4>
+<div class="outline-text-4" id="text-1-1-6">
+<p>
+还记得前面提到的 <code>PromptMode</code> 类型吗？三种模式：
+</p>
+
+<ul class="org-ul">
+<li><code>full</code> —— 完整的提示词（主代理用）</li>
+<li><code>minimal</code> —— 精简版（子代理用，只有 Tooling、Workspace、Runtime）</li>
+<li><code>none</code> —— 只有基本身份信息</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orgcceeb22" class="outline-3">
+<h3 id="orgcceeb22"><span class="section-number-3">1.2.</span> 6.2 Skill 例子：两个真实的 SKILL.md</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+说了半天 Skill，我们来看看真实的 SKILL.md 长什么样！我选了两个比较简单的作为例子。
+</p>
+</div>
+<div id="outline-container-orgfd1ddd9" class="outline-4">
+<h4 id="orgfd1ddd9"><span class="section-number-4">1.2.1.</span> 6.2.1 例子一：weather Skill</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+文件路径：=skills/weather/SKILL.md=
+</p>
+
+<div class="org-src-container">
+<pre class="src src-markdown"><span style="color: #75715E;">---</span>
+<span style="color: #FD971F;">name</span><span style="color: #75715E;">: </span><span style="color: #E6DB74; font-style: italic;">weather</span>
+<span style="color: #FD971F;">description</span><span style="color: #75715E;">: </span><span style="color: #E6DB74; font-style: italic;">Get current weather and forecasts </span><span style="color: #AE81FF; font-style: italic;">(</span><span style="color: #E6DB74; font-style: italic;">no API key required</span><span style="color: #AE81FF; font-style: italic;">)</span><span style="color: #E6DB74; font-style: italic;">.</span>
+<span style="color: #FD971F;">homepage</span><span style="color: #75715E;">: </span><span style="color: #E6DB74; font-style: italic;">https://wttr.in/:help</span>
+<span style="color: #FD971F;">metadata</span><span style="color: #75715E;">: </span><span style="color: #AE81FF; font-style: italic;">{</span><span style="color: #E6DB74; font-style: italic;"> "openclaw": </span><span style="color: #66D9EF; font-style: italic;">{</span><span style="color: #E6DB74; font-style: italic;"> "emoji": "&#127780;&#65039;", "requires": </span><span style="color: #A6E22E; font-style: italic;">{</span><span style="color: #E6DB74; font-style: italic;"> "bins": </span><span style="color: #E6DB74; font-style: italic;">[</span><span style="color: #E6DB74; font-style: italic;">"curl"</span><span style="color: #E6DB74; font-style: italic;">]</span><span style="color: #E6DB74; font-style: italic;"> </span><span style="color: #A6E22E; font-style: italic;">}</span><span style="color: #E6DB74; font-style: italic;"> </span><span style="color: #66D9EF; font-style: italic;">}</span>
+<span style="color: #75715E;">---</span>
+
+<span style="color: #75715E;"># </span><span style="color: #A6E22E; font-size: 130%;">Weather</span>
+
+Two free services, no API keys needed.
+
+<span style="color: #75715E;">## </span><span style="color: #A6E22E; font-size: 120%;">wttr.in </span><span style="color: #66D9EF; font-size: 120%;">(</span><span style="color: #A6E22E; font-size: 120%;">primary</span><span style="color: #66D9EF; font-size: 120%;">)</span>
+
+Quick one-liner:
+
+<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
+<span style="color: #AE81FF;">curl -s "wttr.in/London?format=3"
+# Output: London: &#9925;&#65039; +8&#176;C
+</span><span style="color: #75715E;">```</span>
+
+Compact format:
+
+<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
+<span style="color: #AE81FF;">curl -s "wttr.in/London?format=%l:+%c+%t+%h+%w"
+# Output: London: &#9925;&#65039; +8&#176;C 71% &#8601;5km/h
+</span><span style="color: #75715E;">```</span>
+
+Full forecast:
+
+<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
+<span style="color: #AE81FF;">curl -s "wttr.in/London?T"
+</span><span style="color: #75715E;">```</span>
+
+Format codes: <span style="color: #75715E;">`</span><span style="color: #AE81FF;">%c</span><span style="color: #75715E;">`</span> condition &#183; <span style="color: #75715E;">`</span><span style="color: #AE81FF;">%t</span><span style="color: #75715E;">`</span> temp &#183; <span style="color: #75715E;">`</span><span style="color: #AE81FF;">%h</span><span style="color: #75715E;">`</span> humidity &#183; <span style="color: #75715E;">`</span><span style="color: #AE81FF;">%w</span><span style="color: #75715E;">`</span> wind &#183; <span style="color: #75715E;">`</span><span style="color: #AE81FF;">%l</span><span style="color: #75715E;">`</span> location &#183; <span style="color: #75715E;">`</span><span style="color: #AE81FF;">%m</span><span style="color: #75715E;">`</span> moon
+
+Tips:
+
+<span style="color: #75715E;">-</span> URL-encode spaces: <span style="color: #75715E;">`</span><span style="color: #AE81FF;">wttr.in/New+York</span><span style="color: #75715E;">`</span>
+<span style="color: #75715E;">-</span> Airport codes: <span style="color: #75715E;">`</span><span style="color: #AE81FF;">wttr.in/JFK</span><span style="color: #75715E;">`</span>
+<span style="color: #75715E;">-</span> Units: <span style="color: #75715E;">`</span><span style="color: #AE81FF;">?m</span><span style="color: #75715E;">`</span> <span style="color: #66D9EF;">(</span>metric<span style="color: #66D9EF;">)</span> <span style="color: #75715E;">`</span><span style="color: #AE81FF;">?u</span><span style="color: #75715E;">`</span> <span style="color: #66D9EF;">(</span>USCS<span style="color: #66D9EF;">)</span>
+<span style="color: #75715E;">-</span> Today only: <span style="color: #75715E;">`</span><span style="color: #AE81FF;">?1</span><span style="color: #75715E;">`</span> &#183; Current only: <span style="color: #75715E;">`</span><span style="color: #AE81FF;">?0</span><span style="color: #75715E;">`</span>
+<span style="color: #75715E;">-</span> PNG: <span style="color: #75715E;">`</span><span style="color: #AE81FF;">curl -s "wttr.in/Berlin.png" -o /tmp/weather.png</span><span style="color: #75715E;">`</span>
+
+<span style="color: #75715E;">## </span><span style="color: #A6E22E; font-size: 120%;">Open-Meteo </span><span style="color: #66D9EF; font-size: 120%;">(</span><span style="color: #A6E22E; font-size: 120%;">fallback, JSON</span><span style="color: #66D9EF; font-size: 120%;">)</span>
+
+Free, no key, good for programmatic use:
+
+<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
+<span style="color: #AE81FF;">curl -s "https://api.open-meteo.com/v1/forecast?latitude=51.5&amp;longitude=-0.12&amp;current_weather=true"
+</span><span style="color: #75715E;">```</span>
+
+Find coordinates for a city, then query. Returns JSON with temp, windspeed, weathercode.
+
+Docs: <span style="color: #66D9EF; font-weight: bold; text-decoration: underline;">https://open-meteo.com/en/docs</span>
+</pre>
+</div>
+
+<p>
+看到了吗？这就是 Skill！它就是一个 Markdown 文档，告诉 AI 怎么查天气，用什么命令，有哪些参数，等等。
+</p>
+
+<p>
+注意头部的 frontmatter：
+</p>
+<ul class="org-ul">
+<li><code>name</code> —— 名字</li>
+<li><code>description</code> —— 描述</li>
+<li><code>homepage</code> —— 主页</li>
+<li><code>metadata</code> —— 元数据，包括 emoji、需要的二进制文件（curl）、安装方式等</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgab3e078" class="outline-4">
+<h4 id="orgab3e078"><span class="section-number-4">1.2.2.</span> 6.2.2 例子二：github Skill</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+文件路径：=skills/github/SKILL.md=
+</p>
+
+<div class="org-src-container">
+<pre class="src src-markdown"><span style="color: #75715E;">---</span>
+<span style="color: #FD971F;">name</span><span style="color: #75715E;">: </span><span style="color: #E6DB74; font-style: italic;">github</span>
+<span style="color: #FD971F;">description</span><span style="color: #75715E;">: </span><span style="color: #E6DB74; font-style: italic;">"Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries."</span>
+<span style="color: #FD971F;">metadata</span><span style="color: #75715E;">:</span>
+  <span style="color: #AE81FF;">{</span>
+    "openclaw":
+      <span style="color: #66D9EF;">{</span>
+        "emoji": "&#128025;",
+        "requires": <span style="color: #A6E22E;">{</span> "bins": <span style="color: #E6DB74;">[</span>"gh"<span style="color: #E6DB74;">]</span> <span style="color: #A6E22E;">}</span>,
+        "install":
+          <span style="color: #A6E22E;">[</span>
+            <span style="color: #E6DB74;">{</span>
+              "id": "brew",
+              "kind": "brew",
+              "formula": "gh",
+              "bins": <span style="color: #FD971F;">[</span>"gh"<span style="color: #FD971F;">]</span>,
+              "label": "Install GitHub CLI <span style="color: #FD971F;">(</span>brew<span style="color: #FD971F;">)</span>",
+            <span style="color: #E6DB74;">}</span>,
+            <span style="color: #E6DB74;">{</span>
+              "id": "apt",
+              "kind": "apt",
+              "package": "gh",
+              "bins": <span style="color: #FD971F;">[</span>"gh"<span style="color: #FD971F;">]</span>,
+              "label": "Install GitHub CLI <span style="color: #FD971F;">(</span>apt<span style="color: #FD971F;">)</span>",
+            <span style="color: #E6DB74;">}</span>,
+          <span style="color: #A6E22E;">]</span>,
+      <span style="color: #66D9EF;">}</span>,
+  <span style="color: #AE81FF;">}</span>
+<span style="color: #75715E;">---</span>
+
+<span style="color: #75715E;"># </span><span style="color: #A6E22E; font-size: 130%;">GitHub Skill</span>
+
+Use the <span style="color: #75715E;">`</span><span style="color: #AE81FF;">gh</span><span style="color: #75715E;">`</span> CLI to interact with GitHub. Always specify <span style="color: #75715E;">`</span><span style="color: #AE81FF;">--repo owner/repo</span><span style="color: #75715E;">`</span> when not in a git directory, or use URLs directly.
+
+<span style="color: #75715E;">## </span><span style="color: #A6E22E; font-size: 120%;">Pull Requests</span>
+
+Check CI status on a PR:
+
+<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
+<span style="color: #AE81FF;">gh pr checks 55 --repo owner/repo
+</span><span style="color: #75715E;">```</span>
+
+List recent workflow runs:
+
+<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
+<span style="color: #AE81FF;">gh run list --repo owner/repo --limit 10
+</span><span style="color: #75715E;">```</span>
+
+View a run and see which steps failed:
+
+<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
+<span style="color: #AE81FF;">gh run view &lt;run-id&gt; --repo owner/repo
+</span><span style="color: #75715E;">```</span>
+
+View logs for failed steps only:
+
+<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
+<span style="color: #AE81FF;">gh run view &lt;run-id&gt; --repo owner/repo --log-failed
+</span><span style="color: #75715E;">```</span>
+
+<span style="color: #75715E;">## </span><span style="color: #A6E22E; font-size: 120%;">API for Advanced Queries</span>
+
+The <span style="color: #75715E;">`</span><span style="color: #AE81FF;">gh api</span><span style="color: #75715E;">`</span> command is useful for accessing data not available through other subcommands.
+
+Get PR with specific fields:
+
+<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
+<span style="color: #AE81FF;">gh api repos/owner/repo/pulls/55 --jq '.title, .state, .user.login'
+</span><span style="color: #75715E;">```</span>
+
+<span style="color: #75715E;">## </span><span style="color: #A6E22E; font-size: 120%;">JSON Output</span>
+
+Most commands support <span style="color: #75715E;">`</span><span style="color: #AE81FF;">--json</span><span style="color: #75715E;">`</span> for structured output. You can use <span style="color: #75715E;">`</span><span style="color: #AE81FF;">--jq</span><span style="color: #75715E;">`</span> to filter:
+
+<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
+<span style="color: #AE81FF;">gh issue list --repo owner/repo --json number,title --jq '.</span><span style="color: #AE81FF;">[]</span><span style="color: #AE81FF;"> | "\</span><span style="color: #AE81FF;">(</span><span style="color: #AE81FF;">.number</span><span style="color: #AE81FF;">)</span><span style="color: #AE81FF;">: \</span><span style="color: #AE81FF;">(</span><span style="color: #AE81FF;">.title</span><span style="color: #AE81FF;">)</span><span style="color: #AE81FF;">"'
+</span><span style="color: #75715E;">```</span>
+</pre>
+</div>
+
+<p>
+这个 Skill 教 AI 怎么用 <code>gh</code> CLI 跟 GitHub 交互，包括查 PR、查 CI 运行、用 gh api 做高级查询等。
+</p>
+
+<p>
+注意 metadata 里的 <code>install</code> 字段 —— 它告诉 OpenClaw 怎么安装这个 Skill 需要的依赖（gh CLI），支持 brew 和 apt 两种方式！
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf2e4d4b" class="outline-3">
+<h3 id="orgf2e4d4b"><span class="section-number-3">1.3.</span> 6.3 Pi Embedded Runner：src/agents/pi-embedded-runner/</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+文件路径：=src/agents/pi-embedded-runner/=
+</p>
+
+<p>
+OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agent。这个目录里的代码就是把 Pi 集成到 OpenClaw 里的。
+</p>
+
+<p>
+简单来说，Pi 是一个嵌入式的 AI 代理运行时，负责：
+</p>
+<ul class="org-ul">
+<li>管理对话历史</li>
+<li>调用 AI 模型</li>
+<li>处理工具调用</li>
+<li>管理上下文窗口（上下文太长时会压缩）</li>
+<li>等等&#x2026;</li>
+</ul>
+
+<p>
+这个目录里的文件挺多的，我们后面有机会再深挖。
+</p>
+</div>
+</div>
+<div id="outline-container-org6b572e4" class="outline-3">
+<h3 id="org6b572e4"><span class="section-number-3">1.4.</span> 6.4 这章看完的感觉</h3>
+<div class="outline-text-3" id="text-1-4">
+<ul class="org-ul">
+<li>系统提示词是动态构建的，不是写死的，有 20+ 个部分！</li>
+<li>Skill 就是 Markdown 文档，给 AI 看的操作指南，不是代码</li>
+<li>Skill 有 frontmatter，包括元数据、依赖、安装方式等</li>
+<li>系统提示词里有 Safety 部分，受 Anthropic's constitution 启发</li>
+<li>Pi Embedded Runner 是核心的 AI 运行时</li>
+</ul>
+
+<p>
+好，第六章就到这。下一章我们详细看看 Memory 系统 —— 之前讲得太简略了！
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org7fbfe1e" class="outline-2">
+<h2 id="org7fbfe1e"><span class="section-number-2">2.</span> 第七章：Memory 系统详细版 —— SQLite + sqlite-vec + 混合搜索</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+上一章我们简单提了一下 Memory 系统，这一章我们详细挖挖 —— 这个系统设计得挺酷的！
+</p>
+</div>
+<div id="outline-container-orge7c2a11" class="outline-3">
+<h3 id="orge7c2a11"><span class="section-number-3">2.1.</span> 7.1 再看一眼整体结构：src/memory/</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+文件路径：=src/memory/=
+</p>
+
+<p>
+这个目录里文件真多，我重新整理一下核心文件：
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">文件</th>
+<th scope="col" class="org-left">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>manager.ts</code></td>
+<td class="org-left">MemoryIndexManager 类，核心管理类（1000+ 行）</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>types.ts</code></td>
+<td class="org-left">类型定义</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>sqlite.ts</code></td>
+<td class="org-left">SQLite 数据库基础</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>sqlite-vec.ts</code></td>
+<td class="org-left">sqlite-vec 向量扩展集成</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>embeddings.ts</code></td>
+<td class="org-left">嵌入向量提供者接口</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>embeddings-openai.ts</code></td>
+<td class="org-left">OpenAI 嵌入</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>embeddings-gemini.ts</code></td>
+<td class="org-left">Gemini 嵌入</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>embeddings-voyage.ts</code></td>
+<td class="org-left">Voyage 嵌入</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>node-llama.ts</code></td>
+<td class="org-left">本地 Llama 嵌入</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>hybrid.ts</code></td>
+<td class="org-left">混合搜索（向量 + BM25 关键词）</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>manager-search.ts</code></td>
+<td class="org-left">搜索相关逻辑</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>manager-embedding-ops.ts</code></td>
+<td class="org-left">嵌入向量操作（批量处理等）</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>manager-sync-ops.ts</code></td>
+<td class="org-left">同步操作（文件监听、索引更新等）</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>batch-openai.ts</code> / <code>batch-gemini.ts</code> / <code>batch-voyage.ts</code></td>
+<td class="org-left">批量嵌入处理</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+核心是 <code>MemoryIndexManager</code> 这个类，在 <code>manager.ts</code> 里，有 1000+ 行！
+</p>
+</div>
+</div>
+<div id="outline-container-orgfc0a1da" class="outline-3">
+<h3 id="orgfc0a1da"><span class="section-number-3">2.2.</span> 7.2 MemoryIndexManager 类的详细字段</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+文件路径：=src/memory/manager.ts=
+</p>
+
+<p>
+让我再仔细看看这个类的字段，比之前更详细：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">export class MemoryIndexManager implements MemorySearchManager {
+  private readonly cacheKey: string;
+  private readonly cfg: OpenClawConfig;
+  private readonly agentId: string;
+  private readonly workspaceDir: string;
+  private readonly settings: ResolvedMemorySearchConfig;
+
+  // 嵌入向量提供者
+  private provider: EmbeddingProvider;
+  private readonly requestedProvider: "openai" | "local" | "gemini" | "voyage" | "auto";
+  private fallbackFrom?: "openai" | "local" | "gemini" | "voyage";
+  private fallbackReason?: string;
+
+  // 多个嵌入客户端
+  private openAi?: OpenAiEmbeddingClient;
+  private gemini?: GeminiEmbeddingClient;
+  private voyage?: VoyageEmbeddingClient;
+
+  // 批量处理配置
+  private batch: {
+    enabled: boolean;
+    wait: boolean;
+    concurrency: number;
+    pollIntervalMs: number;
+    timeoutMs: number;
+  };
+  private batchFailureCount = 0;
+  private batchFailureLastError?: string;
+  private batchFailureLastProvider?: string;
+
+  // SQLite 数据库
+  private db: DatabaseSync;
+  private readonly sources: Set&lt;MemorySource&gt;;
+  private providerKey: string;
+  private readonly cache: { enabled: boolean; maxEntries?: number };
+
+  // 向量搜索相关
+  private readonly vector: {
+    enabled: boolean;
+    available: boolean | null;
+    extensionPath?: string;
+    loadError?: string;
+    dims?: number;
+  };
+
+  // 全文搜索（FTS = Full-Text Search）
+  private readonly fts: {
+    enabled: boolean;
+    available: boolean;
+    loadError?: string;
+  };
+
+  // 文件监听（chokidar）
+  private watcher: FSWatcher | null = null;
+  private watchTimer: NodeJS.Timeout | null = null;
+  private sessionWatchTimer: NodeJS.Timeout | null = null;
+  private sessionUnsubscribe: (() =&gt; void) | null = null;
+
+  // 脏标记
+  private closed = false;
+  private dirty = false;
+  private sessionsDirty = false;
+  private sessionsDirtyFiles = new Set&lt;string&gt;();
+  private sessionPendingFiles = new Set&lt;string&gt;();
+
+  // 会话增量
+  private sessionDeltas = new Map&lt;
+    string,
+    { lastSize: number; pendingBytes: number; pendingMessages: number }
+  &gt;();
+  private sessionWarm = new Set&lt;string&gt;();
+
+  // 同步进行中
+  private syncing: Promise&lt;void&gt; | null = null;
+
+  // ... 还有更多字段
+}
+</pre>
+</div>
+
+<p>
+看到这些字段，我对这个系统的理解更深入了：
+</p>
+
+<ol class="org-ol">
+<li>**支持多个嵌入提供者**：OpenAI、Gemini、Voyage、本地，还有 fallback 机制</li>
+<li>**支持批量处理**：批量嵌入可以更高效</li>
+<li>**两个搜索系统**：向量搜索（vector）+ 全文搜索（fts）</li>
+<li>**文件监听**：用 chokidar 监听文件变化</li>
+<li>**会话增量跟踪**：只同步变化的部分，不是每次都全量重新索引</li>
+<li>**缓存**：嵌入向量可以缓存，避免重复计算</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orge8412c4" class="outline-3">
+<h3 id="orge8412c4"><span class="section-number-3">2.3.</span> 7.3 数据库表详细说明</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+数据库里有这几个关键表，我从代码里挖出来的：
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">表名</th>
+<th scope="col" class="org-left">用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>chunks_vec</code></td>
+<td class="org-left">向量表，存文本块的嵌入向量</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>chunks_fts</code></td>
+<td class="org-left">FTS 表，全文搜索用（SQLite FTS5）</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>embedding_cache</code></td>
+<td class="org-left">嵌入向量缓存表，避免重复计算</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>chunks</code></td>
+<td class="org-left">（可能还有）文本块元数据</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+<code>sqlite-vec</code> 是 SQLite 的一个扩展，用来做向量相似度搜索。这个设计挺聪明的：
+</p>
+<ul class="org-ul">
+<li>向量搜索用来找语义相似的内容（"意思差不多"）</li>
+<li>全文搜索用来找关键词匹配的内容（"有这个词"）</li>
+<li>两者结合起来就是"混合搜索"（Hybrid Search）</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgb269539" class="outline-3">
+<h3 id="orgb269539"><span class="section-number-3">2.4.</span> 7.4 混合搜索详细说明：src/memory/hybrid.ts</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+文件路径：=src/memory/hybrid.ts=
+</p>
+
+<p>
+混合搜索就是把向量搜索和全文搜索的结果合并起来。代码里有这些函数：
+</p>
+
+<ul class="org-ul">
+<li><code>bm25RankToScore()</code> —— 把 BM25 排名转换成 0-1 的分数</li>
+<li><code>buildFtsQuery()</code> —— 构建 FTS（全文搜索）查询</li>
+<li><code>mergeHybridResults()</code> —— 合并混合搜索结果，把向量搜索和全文搜索的分数结合起来</li>
+</ul>
+
+<p>
+BM25 是一种经典的信息检索排名函数，用来评估文档和查询的相关性。
+</p>
+</div>
+</div>
+<div id="outline-container-orgff0747f" class="outline-3">
+<h3 id="orgff0747f"><span class="section-number-3">2.5.</span> 7.5 文件监听和自动同步</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+我之前提到过，=MemoryIndexManager= 有一个 <code>watcher</code> 字段，是 <code>chokidar.FSWatcher</code> 类型。这意味着它会监听内存文件的变化，自动同步到数据库里！
+</p>
+
+<p>
+具体来说，它监听的是：
+</p>
+<ul class="org-ul">
+<li><code>MEMORY.md</code> —— 主记忆文件</li>
+<li><code>memory/*.md</code> —— memory 目录下的所有 Markdown 文件</li>
+<li>会话文件 —— 会话的变化也会同步</li>
+</ul>
+
+<p>
+你修改 =MEMORY.md=，它会自动重新索引！这个设计太贴心了！
+</p>
+</div>
+</div>
+<div id="outline-container-org1ea9178" class="outline-3">
+<h3 id="org1ea9178"><span class="section-number-3">2.6.</span> 7.6 这章看完的感觉</h3>
+<div class="outline-text-3" id="text-2-6">
+<ul class="org-ul">
+<li>Memory 系统设计得真的很完善！</li>
+<li>用 SQLite + sqlite-vec 做向量存储</li>
+<li>支持混合搜索（向量 + BM25 全文）</li>
+<li>支持多个嵌入提供者（OpenAI、Gemini、Voyage、本地），还有 fallback</li>
+<li>支持批量嵌入处理</li>
+<li>有嵌入向量缓存，避免重复计算</li>
+<li>有文件监听，自动同步变化</li>
+<li>会话增量跟踪，只同步变化的部分</li>
+</ul>
+
+<p>
+这个系统真的挺酷的！
+</p>
+
+<p>
+好，第七章就到这。下一章我们再详细看看 Skills 和插件系统的区别，以及插件系统的更多细节！
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org7e9b9f9" class="outline-2">
+<h2 id="org7e9b9f9"><span class="section-number-2">3.</span> 第八章：Skills 和插件系统详细版 —— 它们到底有什么区别？</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+翻代码的时候我发现了两个目录：=skills/= 和 =extensions/=，还有 =src/plugins/=。这三个东西是啥关系？我们来详细理一理！
+</p>
+</div>
+<div id="outline-container-orge6a6b11" class="outline-3">
+<h3 id="orge6a6b11"><span class="section-number-3">3.1.</span> 8.1 再强调一次：Skill vs 插件的核心区别</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+现在我更明白了，两者的核心区别：
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">特性</th>
+<th scope="col" class="org-left">Skill</th>
+<th scope="col" class="org-left">插件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">形式</td>
+<td class="org-left">Markdown 文档（SKILL.md）</td>
+<td class="org-left">TypeScript/JavaScript 代码</td>
+</tr>
+
+<tr>
+<td class="org-left">位置</td>
+<td class="org-left"><code>skills/</code> 目录</td>
+<td class="org-left"><code>extensions/</code> 目录</td>
+</tr>
+
+<tr>
+<td class="org-left">作用</td>
+<td class="org-left">告诉 AI 怎么做（操作指南）</td>
+<td class="org-left">给系统添加新功能（代码）</td>
+</tr>
+
+<tr>
+<td class="org-left">谁执行</td>
+<td class="org-left">AI 阅读并遵循</td>
+<td class="org-left">OpenClaw 加载并执行</td>
+</tr>
+
+<tr>
+<td class="org-left">可以做什么</td>
+<td class="org-left">教 AI 用某个工具/API</td>
+<td class="org-left">添加新工具、新命令、新服务、新渠道等</td>
+</tr>
+
+<tr>
+<td class="org-left">例子</td>
+<td class="org-left">weather、github、spotify 等</td>
+<td class="org-left">新的消息渠道（如 Matrix、Mattermost）、新工具等</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+<b><b>简单总结：</b></b>
+</p>
+<ul class="org-ul">
+<li><b><b>Skill</b></b> 是给 AI 看的说明书（"你应该这样查天气"）</li>
+<li><b><b>插件</b></b> 是给 OpenClaw 用的扩展功能（"系统现在多了这个功能"）</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org079d970" class="outline-3">
+<h3 id="org079d970"><span class="section-number-3">3.2.</span> 8.2 Skill 的 frontmatter 详细说明</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+每个 Skill 目录里都有一个 =SKILL.md=，头部有 frontmatter（YAML 或 TOML）。我们用 weather 和 github 的例子来看看：
+</p>
+</div>
+<div id="outline-container-org32f8e91" class="outline-4">
+<h4 id="org32f8e91"><span class="section-number-4">3.2.1.</span> 8.2.1 weather Skill 的 frontmatter</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<div class="org-src-container">
+<pre class="src src-yaml">---
+name: weather
+description: Get current weather and forecasts (no API key required).
+homepage: https://wttr.in/:help
+metadata: { "openclaw": { "emoji": "🌤️", "requires": { "bins": ["curl"] } }
+---
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org0ccafb7" class="outline-4">
+<h4 id="org0ccafb7"><span class="section-number-4">3.2.2.</span> 8.2.2 github Skill 的 frontmatter</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<div class="org-src-container">
+<pre class="src src-yaml">---
+name: github
+description: "Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries."
+metadata:
+  {
+    "openclaw":
+      {
+        "emoji": "🐙",
+        "requires": { "bins": ["gh"] },
+        "install":
+          [
+            {
+              "id": "brew",
+              "kind": "brew",
+              "formula": "gh",
+              "bins": ["gh"],
+              "label": "Install GitHub CLI (brew)",
+            },
+            {
+              "id": "apt",
+              "kind": "apt",
+              "package": "gh",
+              "bins": ["gh"],
+              "label": "Install GitHub CLI (apt)",
+            },
+          ],
+      },
+  }
+---
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org775cafb" class="outline-4">
+<h4 id="org775cafb"><span class="section-number-4">3.2.3.</span> 8.2.3 frontmatter 字段说明</h4>
+<div class="outline-text-4" id="text-3-2-3">
+<p>
+从这两个例子我们可以看出 frontmatter 包含这些字段：
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">字段</th>
+<th scope="col" class="org-left">说明</th>
+<th scope="col" class="org-left">是否必需</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>name</code></td>
+<td class="org-left">Skill 的名字</td>
+<td class="org-left">是</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>description</code></td>
+<td class="org-left">简短描述</td>
+<td class="org-left">是</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>homepage</code></td>
+<td class="org-left">主页链接</td>
+<td class="org-left">否</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>metadata.openclaw.emoji</code></td>
+<td class="org-left">表情符号</td>
+<td class="org-left">否</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>metadata.openclaw.requires.bins</code></td>
+<td class="org-left">需要的二进制文件列表</td>
+<td class="org-left">否</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>metadata.openclaw.install</code></td>
+<td class="org-left">安装方式列表</td>
+<td class="org-left">否</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="outline-container-org1046b33" class="outline-3">
+<h3 id="org1046b33"><span class="section-number-3">3.3.</span> 8.3 插件系统详细说明：src/plugins/</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+文件路径：=src/plugins/=
+</p>
+
+<p>
+插件系统的核心代码在 <code>src/plugins/</code> 目录里。让我们看看这个目录里都有什么：
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">文件</th>
+<th scope="col" class="org-left">功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>types.ts</code></td>
+<td class="org-left">插件类型定义</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>manifest.ts</code></td>
+<td class="org-left">插件清单处理</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>manifest-registry.ts</code></td>
+<td class="org-left">插件清单注册表</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>loader.ts</code></td>
+<td class="org-left">插件加载器</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>registry.ts</code></td>
+<td class="org-left">插件注册表</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>install.ts</code> / <code>uninstall.ts</code> / <code>update.ts</code></td>
+<td class="org-left">安装/卸载/更新</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>tools.ts</code></td>
+<td class="org-left">插件提供的工具</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>commands.ts</code></td>
+<td class="org-left">插件提供的 CLI 命令</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>services.ts</code></td>
+<td class="org-left">插件提供的服务</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>hooks.ts</code></td>
+<td class="org-left">插件钩子</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>config-schema.ts</code></td>
+<td class="org-left">配置 schema</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>status.ts</code></td>
+<td class="org-left">插件状态</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>discovery.ts</code></td>
+<td class="org-left">插件发现</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>http-registry.ts</code></td>
+<td class="org-left">HTTP 注册表</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>bundled-dir.ts</code></td>
+<td class="org-left">内置插件目录</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>config-state.ts</code></td>
+<td class="org-left">配置状态</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>source-display.ts</code></td>
+<td class="org-left">源显示</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>slots.ts</code></td>
+<td class="org-left">插槽</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>wired-hooks-*.ts</code></td>
+<td class="org-left">各种钩子</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>runtime/</code></td>
+<td class="org-left">插件运行时</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+这个目录里有 50+ 个文件！插件系统设计得真的很完善。
+</p>
+</div>
+<div id="outline-container-org4c9f038" class="outline-4">
+<h4 id="org4c9f038"><span class="section-number-4">3.3.1.</span> 8.3.1 插件清单类型：PluginManifest</h4>
+<div class="outline-text-4" id="text-3-3-1">
+<p>
+我从 <code>src/plugins/types.ts</code> 里把插件清单类型抄下来了（简化版）：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-typescript">// 插件清单
+export type PluginManifest = {
+  id: string;
+  name: string;
+  version: string;
+  description?: string;
+  publisher?: string;
+  license?: string;
+  homepage?: string;
+  repository?: string;
+
+  // 插件提供的工具
+  tools?: Array&lt;PluginManifestTool&gt;;
+
+  // 插件提供的 CLI 命令
+  commands?: Array&lt;PluginManifestCommand&gt;;
+
+  // 插件提供的服务
+  services?: Array&lt;PluginManifestService&gt;;
+
+  // 插件提供的渠道
+  channels?: Array&lt;PluginManifestChannel&gt;;
+
+  // 插件需要的依赖
+  dependencies?: Record&lt;string, string&gt;;
+
+  // 插件的配置 schema
+  config?: PluginManifestConfig;
+
+  // ... 更多字段
+};
+</pre>
+</div>
+
+<p>
+一个插件可以提供：
+</p>
+<ul class="org-ul">
+<li>新的工具（Tools）</li>
+<li>新的 CLI 命令（Commands）</li>
+<li>新的服务（Services）</li>
+<li>新的消息渠道（Channels）</li>
+<li>等等&#x2026;</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orga09542e" class="outline-3">
+<h3 id="orga09542e"><span class="section-number-3">3.4.</span> 8.4 插件加载流程</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+插件是怎么加载的？我从代码里整理的大概流程：
+</p>
+
+<ol class="org-ol">
+<li><b><b>发现插件</b></b> —— 扫描 <code>extensions/</code> 目录</li>
+<li><b><b>读取清单</b></b> —— 读取每个插件的 <code>manifest.json</code></li>
+<li><b><b>验证清单</b></b> —— 验证清单格式和内容</li>
+<li><b><b>加载代码</b></b> —— 加载插件的 JavaScript/TypeScript 代码</li>
+<li><b><b>注册功能</b></b> —— 注册插件提供的工具、命令、服务、渠道等</li>
+<li><b><b>初始化插件</b></b> —— 调用插件的初始化函数</li>
+</ol>
+
+<p>
+这个流程设计得挺清晰的。
+</p>
+</div>
+</div>
+<div id="outline-container-org2778077" class="outline-3">
+<h3 id="org2778077"><span class="section-number-3">3.5.</span> 8.5 这章看完的感觉</h3>
+<div class="outline-text-3" id="text-3-5">
+<ul class="org-ul">
+<li>Skill 是 Markdown 文档，给 AI 看的操作指南</li>
+<li>插件是代码，给 OpenClaw 用的扩展功能</li>
+<li>两者完全不同，别搞混了！</li>
+<li>Skill 有 frontmatter，包含元数据、依赖、安装方式等</li>
+<li>插件系统设计得真的很完善，有 50+ 个文件！</li>
+<li>插件可以提供工具、命令、服务、渠道等</li>
+</ul>
+
+<p>
+好，第八章就到这。这两部分（Skill 和插件）容易搞混，现在理清楚了！
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orga005cec" class="outline-2">
+<h2 id="orga005cec"><span class="section-number-2">4.</span> 第二部分暂时写到这里</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+好，第二部分的详细版我又写了三章：
+</p>
+<ol class="org-ol">
+<li>AI Agent 系统提示词详细版（包括真实的系统提示词结构、Skill 例子）</li>
+<li>Memory 系统详细版（数据库表、混合搜索、文件监听等）</li>
+<li>Skills 和插件系统详细版（frontmatter 说明、插件系统文件清单等）</li>
+</ol>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Feb 19 18:29:19 2026</span> <span class="date">Last modified: 2026-02-19 Thu 18:29</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+</div>
+</body>
+</html>
