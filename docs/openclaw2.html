@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-02-19 Thu 18:32 -->
+<!-- 2026-02-20 Fri 10:19 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OpenClaw 代码乱读笔记 2</title>
@@ -306,10 +306,10 @@
 <h4 id="org04069f8"><span class="section-number-4">1.1.3.</span> 6.1.3 Safety 部分：安全规则</h4>
 <div class="outline-text-4" id="text-1-1-3">
 <p>
-系统提示词里有一个 Safety 部分，很有意思，我抄下来：
+系统提示词里有一个 Safety 部分：
 </p>
 
-<pre class="example" id="org1c71eca">
+<pre class="example" id="orga453ba5">
 ## Safety
 You have no independent goals: do not pursue self-preservation, replication, resource acquisition, or power-seeking; avoid long-term plans beyond the user's request.
 Prioritize safety and human oversight over completion; if instructions conflict, pause and ask; comply with stop/pause/audit requests and never bypass safeguards. (Inspired by Anthropic's constitution.)
@@ -328,7 +328,7 @@ Do not manipulate or persuade anyone to expand access or disable safeguards. Do 
 Skills 部分的提示词是这样的：
 </p>
 
-<pre class="example" id="org84147e2">
+<pre class="example" id="orgf53c97e">
 ## Skills (mandatory)
 Before replying: scan &lt;available_skills&gt; &lt;description&gt; entries.
 - If exactly one skill clearly applies: read its SKILL.md at &lt;location&gt; with `read`, then follow it.
@@ -356,7 +356,7 @@ Constraints: never read more than one skill up front; only read after selecting.
 Memory 部分的提示词：
 </p>
 
-<pre class="example" id="org40c9598">
+<pre class="example" id="org9d94ae8">
 ## Memory Recall
 Before answering anything about prior work, decisions, dates, people, preferences, or todos: run memory_search on MEMORY.md + memory/*.md; then use memory_get to pull only the needed lines. If low confidence after search, say you checked.
 Citations: include Source: &lt;path#line&gt; when it helps the user verify memory snippets.
@@ -370,10 +370,6 @@ Citations: include Source: &lt;path#line&gt; when it helps the user verify memor
 <div id="outline-container-orgd2f1499" class="outline-4">
 <h4 id="orgd2f1499"><span class="section-number-4">1.1.6.</span> 6.1.6 三种提示词模式</h4>
 <div class="outline-text-4" id="text-1-1-6">
-<p>
-还记得前面提到的 <code>PromptMode</code> 类型吗？三种模式：
-</p>
-
 <ul class="org-ul">
 <li><code>full</code> —— 完整的提示词（主代理用）</li>
 <li><code>minimal</code> —— 精简版（子代理用，只有 Tooling、Workspace、Runtime）</li>
@@ -455,7 +451,7 @@ Docs: <span style="color: #66D9EF; font-weight: bold; text-decoration: underline
 </div>
 
 <p>
-看到了吗？这就是 Skill！它就是一个 Markdown 文档，告诉 AI 怎么查天气，用什么命令，有哪些参数，等等。
+它就是一个 Markdown 文档，告诉 AI 怎么查天气，用什么命令，有哪些参数，等等。
 </p>
 
 <p>
@@ -590,7 +586,7 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </ul>
 
 <p>
-这个目录里的文件挺多的，我们后面有机会再深挖。
+后面有机会再深挖。
 </p>
 </div>
 </div>
@@ -604,29 +600,18 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 <li>系统提示词里有 Safety 部分，受 Anthropic's constitution 启发</li>
 <li>Pi Embedded Runner 是核心的 AI 运行时</li>
 </ul>
-
-<p>
-好，第六章就到这。下一章我们详细看看 Memory 系统 —— 之前讲得太简略了！
-</p>
 </div>
 </div>
 </div>
-<div id="outline-container-org7fbfe1e" class="outline-2">
-<h2 id="org7fbfe1e"><span class="section-number-2">2.</span> 第七章：Memory 系统详细版 —— SQLite + sqlite-vec + 混合搜索</h2>
+<div id="outline-container-orgb3ed392" class="outline-2">
+<h2 id="orgb3ed392"><span class="section-number-2">2.</span> 第七章：Memory 系统 —— SQLite + sqlite-vec + 混合搜索</h2>
 <div class="outline-text-2" id="text-2">
-<p>
-上一章我们简单提了一下 Memory 系统，这一章我们详细挖挖 —— 这个系统设计得挺酷的！
-</p>
 </div>
 <div id="outline-container-orge7c2a11" class="outline-3">
 <h3 id="orge7c2a11"><span class="section-number-3">2.1.</span> 7.1 再看一眼整体结构：src/memory/</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 文件路径：=src/memory/=
-</p>
-
-<p>
-这个目录里文件真多，我重新整理一下核心文件：
 </p>
 
 <table>
@@ -717,7 +702,7 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </table>
 
 <p>
-核心是 <code>MemoryIndexManager</code> 这个类，在 <code>manager.ts</code> 里，有 1000+ 行！
+核心是 <code>MemoryIndexManager</code> 这个类，在 <code>manager.ts</code> 里，有 1000+ 行
 </p>
 </div>
 </div>
@@ -726,10 +711,6 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 <div class="outline-text-3" id="text-2-2">
 <p>
 文件路径：=src/memory/manager.ts=
-</p>
-
-<p>
-让我再仔细看看这个类的字段，比之前更详细：
 </p>
 
 <div class="org-src-container">
@@ -818,12 +799,12 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </p>
 
 <ol class="org-ol">
-<li>**支持多个嵌入提供者**：OpenAI、Gemini、Voyage、本地，还有 fallback 机制</li>
-<li>**支持批量处理**：批量嵌入可以更高效</li>
-<li>**两个搜索系统**：向量搜索（vector）+ 全文搜索（fts）</li>
-<li>**文件监听**：用 chokidar 监听文件变化</li>
-<li>**会话增量跟踪**：只同步变化的部分，不是每次都全量重新索引</li>
-<li>**缓存**：嵌入向量可以缓存，避免重复计算</li>
+<li>支持多个嵌入提供者：OpenAI、Gemini、Voyage、本地，还有 fallback 机制</li>
+<li>支持批量处理：批量嵌入可以更高效</li>
+<li>两个搜索系统：向量搜索（vector）+ 全文搜索（fts）</li>
+<li>文件监听：用 chokidar 监听文件变化</li>
+<li>会话增量跟踪：只同步变化的部分，不是每次都全量重新索引</li>
+<li>缓存：嵌入向量可以缓存，避免重复计算</li>
 </ol>
 </div>
 </div>
@@ -872,11 +853,11 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </table>
 
 <p>
-<code>sqlite-vec</code> 是 SQLite 的一个扩展，用来做向量相似度搜索。这个设计挺聪明的：
+<code>sqlite-vec</code> 是 SQLite 的一个扩展，用来做向量相似度搜索。
 </p>
 <ul class="org-ul">
-<li>向量搜索用来找语义相似的内容（"意思差不多"）</li>
-<li>全文搜索用来找关键词匹配的内容（"有这个词"）</li>
+<li>向量搜索用来找语义相似的内容</li>
+<li>全文搜索用来找关键词匹配的内容</li>
 <li>两者结合起来就是"混合搜索"（Hybrid Search）</li>
 </ul>
 </div>
@@ -888,26 +869,18 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 文件路径：=src/memory/hybrid.ts=
 </p>
 
-<p>
-混合搜索就是把向量搜索和全文搜索的结果合并起来。代码里有这些函数：
-</p>
-
 <ul class="org-ul">
 <li><code>bm25RankToScore()</code> —— 把 BM25 排名转换成 0-1 的分数</li>
 <li><code>buildFtsQuery()</code> —— 构建 FTS（全文搜索）查询</li>
 <li><code>mergeHybridResults()</code> —— 合并混合搜索结果，把向量搜索和全文搜索的分数结合起来</li>
 </ul>
-
-<p>
-BM25 是一种经典的信息检索排名函数，用来评估文档和查询的相关性。
-</p>
 </div>
 </div>
 <div id="outline-container-orgff0747f" class="outline-3">
 <h3 id="orgff0747f"><span class="section-number-3">2.5.</span> 7.5 文件监听和自动同步</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
-我之前提到过，=MemoryIndexManager= 有一个 <code>watcher</code> 字段，是 <code>chokidar.FSWatcher</code> 类型。这意味着它会监听内存文件的变化，自动同步到数据库里！
+<code>MemoryIndexManager</code> 有一个 <code>watcher</code> 字段，是 <code>chokidar.FSWatcher</code> 类型。这意味着它会监听内存文件的变化，自动同步到数据库里
 </p>
 
 <p>
@@ -920,7 +893,7 @@ BM25 是一种经典的信息检索排名函数，用来评估文档和查询的
 </ul>
 
 <p>
-你修改 =MEMORY.md=，它会自动重新索引！这个设计太贴心了！
+修改 <code>MEMORY.md</code> ，它会自动重新索引
 </p>
 </div>
 </div>
@@ -928,7 +901,6 @@ BM25 是一种经典的信息检索排名函数，用来评估文档和查询的
 <h3 id="org1ea9178"><span class="section-number-3">2.6.</span> 7.6 这章看完的感觉</h3>
 <div class="outline-text-3" id="text-2-6">
 <ul class="org-ul">
-<li>Memory 系统设计得真的很完善！</li>
 <li>用 SQLite + sqlite-vec 做向量存储</li>
 <li>支持混合搜索（向量 + BM25 全文）</li>
 <li>支持多个嵌入提供者（OpenAI、Gemini、Voyage、本地），还有 fallback</li>
@@ -937,29 +909,21 @@ BM25 是一种经典的信息检索排名函数，用来评估文档和查询的
 <li>有文件监听，自动同步变化</li>
 <li>会话增量跟踪，只同步变化的部分</li>
 </ul>
-
-<p>
-这个系统真的挺酷的！
-</p>
-
-<p>
-好，第七章就到这。下一章我们再详细看看 Skills 和插件系统的区别，以及插件系统的更多细节！
-</p>
 </div>
 </div>
 </div>
-<div id="outline-container-org7e9b9f9" class="outline-2">
-<h2 id="org7e9b9f9"><span class="section-number-2">3.</span> 第八章：Skills 和插件系统详细版 —— 它们到底有什么区别？</h2>
+<div id="outline-container-org8c7b138" class="outline-2">
+<h2 id="org8c7b138"><span class="section-number-2">3.</span> 第八章：Skills 和插件系统</h2>
 <div class="outline-text-2" id="text-3">
 <p>
-翻代码的时候我发现了两个目录：=skills/= 和 =extensions/=，还有 =src/plugins/=。这三个东西是啥关系？我们来详细理一理！
+翻代码的时候我发现了两个目录：=skills/= 和 =extensions/=，还有 =src/plugins/=。这三个东西是啥关系？
 </p>
 </div>
-<div id="outline-container-orge6a6b11" class="outline-3">
-<h3 id="orge6a6b11"><span class="section-number-3">3.1.</span> 8.1 再强调一次：Skill vs 插件的核心区别</h3>
+<div id="outline-container-org9fcacfc" class="outline-3">
+<h3 id="org9fcacfc"><span class="section-number-3">3.1.</span> 8.1 Skill vs 插件</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
-现在我更明白了，两者的核心区别：
+两者的核心区别：
 </p>
 
 <table>
@@ -1018,9 +982,6 @@ BM25 是一种经典的信息检索排名函数，用来评估文档和查询的
 </tbody>
 </table>
 
-<p>
-<b><b>简单总结：</b></b>
-</p>
 <ul class="org-ul">
 <li><b><b>Skill</b></b> 是给 AI 看的说明书（"你应该这样查天气"）</li>
 <li><b><b>插件</b></b> 是给 OpenClaw 用的扩展功能（"系统现在多了这个功能"）</li>
@@ -1285,10 +1246,6 @@ metadata:
 <div id="outline-container-org4c9f038" class="outline-4">
 <h4 id="org4c9f038"><span class="section-number-4">3.3.1.</span> 8.3.1 插件清单类型：PluginManifest</h4>
 <div class="outline-text-4" id="text-3-3-1">
-<p>
-我从 <code>src/plugins/types.ts</code> 里把插件清单类型抄下来了（简化版）：
-</p>
-
 <div class="org-src-container">
 <pre class="src src-typescript">// 插件清单
 export type PluginManifest = {
@@ -1340,10 +1297,6 @@ export type PluginManifest = {
 <div id="outline-container-orga09542e" class="outline-3">
 <h3 id="orga09542e"><span class="section-number-3">3.4.</span> 8.4 插件加载流程</h3>
 <div class="outline-text-3" id="text-3-4">
-<p>
-插件是怎么加载的？我从代码里整理的大概流程：
-</p>
-
 <ol class="org-ol">
 <li><b><b>发现插件</b></b> —— 扫描 <code>extensions/</code> 目录</li>
 <li><b><b>读取清单</b></b> —— 读取每个插件的 <code>manifest.json</code></li>
@@ -1352,10 +1305,6 @@ export type PluginManifest = {
 <li><b><b>注册功能</b></b> —— 注册插件提供的工具、命令、服务、渠道等</li>
 <li><b><b>初始化插件</b></b> —— 调用插件的初始化函数</li>
 </ol>
-
-<p>
-这个流程设计得挺清晰的。
-</p>
 </div>
 </div>
 <div id="outline-container-org2778077" class="outline-3">
@@ -1364,15 +1313,9 @@ export type PluginManifest = {
 <ul class="org-ul">
 <li>Skill 是 Markdown 文档，给 AI 看的操作指南</li>
 <li>插件是代码，给 OpenClaw 用的扩展功能</li>
-<li>两者完全不同，别搞混了！</li>
 <li>Skill 有 frontmatter，包含元数据、依赖、安装方式等</li>
-<li>插件系统设计得真的很完善，有 50+ 个文件！</li>
-<li>插件可以提供工具、命令、服务、渠道等</li>
+<li>插件系统有 50+ 个文件 可以提供工具、命令、服务、渠道等</li>
 </ul>
-
-<p>
-好，第八章就到这。这两部分（Skill 和插件）容易搞混，现在理清楚了！
-</p>
 </div>
 </div>
 </div>
@@ -1380,7 +1323,7 @@ export type PluginManifest = {
 <h2 id="orga005cec"><span class="section-number-2">4.</span> 第二部分暂时写到这里</h2>
 <div class="outline-text-2" id="text-4">
 <p>
-好，第二部分的详细版我又写了三章：
+第二部分我写了三章：
 </p>
 <ol class="org-ol">
 <li>AI Agent 系统提示词详细版（包括真实的系统提示词结构、Skill 例子）</li>
@@ -1391,7 +1334,7 @@ export type PluginManifest = {
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Feb 19 18:29:19 2026</span> <span class="date">Last modified: 2026-02-19 Thu 18:29</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Feb 19 18:29:19 2026</span> <span class="date">Last modified: 2026-02-20 Fri 10:19</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>
