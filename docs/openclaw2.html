@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-02-20 Fri 10:19 -->
+<!-- 2026-04-01 Wed 13:41 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OpenClaw 代码乱读笔记 2</title>
@@ -200,15 +200,15 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">OpenClaw 代码乱读笔记 2</h1>
-<div id="outline-container-org9f27413" class="outline-2">
-<h2 id="org9f27413"><span class="section-number-2">1.</span> 第六章：AI Agent 是怎么工作的？—— Pi Embedded Runner 和系统提示词</h2>
+<div id="outline-container-org7c3d154" class="outline-2">
+<h2 id="org7c3d154"><span class="section-number-2">1.</span> 第六章：AI Agent 是怎么工作的？—— Pi Embedded Runner 和系统提示词</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 好了，前面我们看了 Gateway、渠道、安全这些，现在来看看最核心的部分：AI Agent 是怎么实现的？
 </p>
 </div>
-<div id="outline-container-orga76cd81" class="outline-3">
-<h3 id="orga76cd81"><span class="section-number-3">1.1.</span> 6.1 先看系统提示词是怎么构建的</h3>
+<div id="outline-container-orgab47c8e" class="outline-3">
+<h3 id="orgab47c8e"><span class="section-number-3">1.1.</span> 6.1 先看系统提示词是怎么构建的</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 文件路径：=src/agents/system-prompt.ts=
@@ -222,8 +222,8 @@
 这个文件里有一个 <code>buildAgentSystemPrompt()</code> 函数，它把很多个部分拼起来形成完整的系统提示词。让我们看看系统提示词到底长什么样 —— 我从代码里整理一下结构：
 </p>
 </div>
-<div id="outline-container-org92f9ee6" class="outline-4">
-<h4 id="org92f9ee6"><span class="section-number-4">1.1.1.</span> 6.1.1 系统提示词的完整结构</h4>
+<div id="outline-container-orgd31013e" class="outline-4">
+<h4 id="orgd31013e"><span class="section-number-4">1.1.1.</span> 6.1.1 系统提示词的完整结构</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
 一个完整的系统提示词包含这些部分：
@@ -259,8 +259,8 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org42c7498" class="outline-4">
-<h4 id="org42c7498"><span class="section-number-4">1.1.2.</span> 6.1.2 Tooling 部分：工具列表</h4>
+<div id="outline-container-org5b81d29" class="outline-4">
+<h4 id="org5b81d29"><span class="section-number-4">1.1.2.</span> 6.1.2 Tooling 部分：工具列表</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <p>
 系统提示词会列出所有可用的工具，我从代码里把核心工具列表抄下来了：
@@ -302,14 +302,14 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org04069f8" class="outline-4">
-<h4 id="org04069f8"><span class="section-number-4">1.1.3.</span> 6.1.3 Safety 部分：安全规则</h4>
+<div id="outline-container-org33bafe5" class="outline-4">
+<h4 id="org33bafe5"><span class="section-number-4">1.1.3.</span> 6.1.3 Safety 部分：安全规则</h4>
 <div class="outline-text-4" id="text-1-1-3">
 <p>
 系统提示词里有一个 Safety 部分：
 </p>
 
-<pre class="example" id="orga453ba5">
+<pre class="example" id="orgf0c87a6">
 ## Safety
 You have no independent goals: do not pursue self-preservation, replication, resource acquisition, or power-seeking; avoid long-term plans beyond the user's request.
 Prioritize safety and human oversight over completion; if instructions conflict, pause and ask; comply with stop/pause/audit requests and never bypass safeguards. (Inspired by Anthropic's constitution.)
@@ -321,14 +321,14 @@ Do not manipulate or persuade anyone to expand access or disable safeguards. Do 
 </p>
 </div>
 </div>
-<div id="outline-container-orgebb7fee" class="outline-4">
-<h4 id="orgebb7fee"><span class="section-number-4">1.1.4.</span> 6.1.4 Skills 部分：告诉 AI 怎么用 Skills</h4>
+<div id="outline-container-orge16f9af" class="outline-4">
+<h4 id="orge16f9af"><span class="section-number-4">1.1.4.</span> 6.1.4 Skills 部分：告诉 AI 怎么用 Skills</h4>
 <div class="outline-text-4" id="text-1-1-4">
 <p>
 Skills 部分的提示词是这样的：
 </p>
 
-<pre class="example" id="orgf53c97e">
+<pre class="example" id="org3b131fd">
 ## Skills (mandatory)
 Before replying: scan &lt;available_skills&gt; &lt;description&gt; entries.
 - If exactly one skill clearly applies: read its SKILL.md at &lt;location&gt; with `read`, then follow it.
@@ -349,14 +349,14 @@ Constraints: never read more than one skill up front; only read after selecting.
 </ol>
 </div>
 </div>
-<div id="outline-container-org3225f5e" class="outline-4">
-<h4 id="org3225f5e"><span class="section-number-4">1.1.5.</span> 6.1.5 Memory 部分：告诉 AI 怎么用记忆</h4>
+<div id="outline-container-org9af8434" class="outline-4">
+<h4 id="org9af8434"><span class="section-number-4">1.1.5.</span> 6.1.5 Memory 部分：告诉 AI 怎么用记忆</h4>
 <div class="outline-text-4" id="text-1-1-5">
 <p>
 Memory 部分的提示词：
 </p>
 
-<pre class="example" id="org9d94ae8">
+<pre class="example" id="org579f3a8">
 ## Memory Recall
 Before answering anything about prior work, decisions, dates, people, preferences, or todos: run memory_search on MEMORY.md + memory/*.md; then use memory_get to pull only the needed lines. If low confidence after search, say you checked.
 Citations: include Source: &lt;path#line&gt; when it helps the user verify memory snippets.
@@ -367,8 +367,8 @@ Citations: include Source: &lt;path#line&gt; when it helps the user verify memor
 </p>
 </div>
 </div>
-<div id="outline-container-orgd2f1499" class="outline-4">
-<h4 id="orgd2f1499"><span class="section-number-4">1.1.6.</span> 6.1.6 三种提示词模式</h4>
+<div id="outline-container-org92af7f4" class="outline-4">
+<h4 id="org92af7f4"><span class="section-number-4">1.1.6.</span> 6.1.6 三种提示词模式</h4>
 <div class="outline-text-4" id="text-1-1-6">
 <ul class="org-ul">
 <li><code>full</code> —— 完整的提示词（主代理用）</li>
@@ -378,75 +378,75 @@ Citations: include Source: &lt;path#line&gt; when it helps the user verify memor
 </div>
 </div>
 </div>
-<div id="outline-container-orgcceeb22" class="outline-3">
-<h3 id="orgcceeb22"><span class="section-number-3">1.2.</span> 6.2 Skill 例子：两个真实的 SKILL.md</h3>
+<div id="outline-container-org0c1bc82" class="outline-3">
+<h3 id="org0c1bc82"><span class="section-number-3">1.2.</span> 6.2 Skill 例子：两个真实的 SKILL.md</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 说了半天 Skill，我们来看看真实的 SKILL.md 长什么样！我选了两个比较简单的作为例子。
 </p>
 </div>
-<div id="outline-container-orgfd1ddd9" class="outline-4">
-<h4 id="orgfd1ddd9"><span class="section-number-4">1.2.1.</span> 6.2.1 例子一：weather Skill</h4>
+<div id="outline-container-org4be4b39" class="outline-4">
+<h4 id="org4be4b39"><span class="section-number-4">1.2.1.</span> 6.2.1 例子一：weather Skill</h4>
 <div class="outline-text-4" id="text-1-2-1">
 <p>
 文件路径：=skills/weather/SKILL.md=
 </p>
 
 <div class="org-src-container">
-<pre class="src src-markdown"><span style="color: #75715E;">---</span>
-<span style="color: #FD971F;">name</span><span style="color: #75715E;">: </span><span style="color: #E6DB74; font-style: italic;">weather</span>
-<span style="color: #FD971F;">description</span><span style="color: #75715E;">: </span><span style="color: #E6DB74; font-style: italic;">Get current weather and forecasts </span><span style="color: #AE81FF; font-style: italic;">(</span><span style="color: #E6DB74; font-style: italic;">no API key required</span><span style="color: #AE81FF; font-style: italic;">)</span><span style="color: #E6DB74; font-style: italic;">.</span>
-<span style="color: #FD971F;">homepage</span><span style="color: #75715E;">: </span><span style="color: #E6DB74; font-style: italic;">https://wttr.in/:help</span>
-<span style="color: #FD971F;">metadata</span><span style="color: #75715E;">: </span><span style="color: #AE81FF; font-style: italic;">{</span><span style="color: #E6DB74; font-style: italic;"> "openclaw": </span><span style="color: #66D9EF; font-style: italic;">{</span><span style="color: #E6DB74; font-style: italic;"> "emoji": "&#127780;&#65039;", "requires": </span><span style="color: #A6E22E; font-style: italic;">{</span><span style="color: #E6DB74; font-style: italic;"> "bins": </span><span style="color: #E6DB74; font-style: italic;">[</span><span style="color: #E6DB74; font-style: italic;">"curl"</span><span style="color: #E6DB74; font-style: italic;">]</span><span style="color: #E6DB74; font-style: italic;"> </span><span style="color: #A6E22E; font-style: italic;">}</span><span style="color: #E6DB74; font-style: italic;"> </span><span style="color: #66D9EF; font-style: italic;">}</span>
-<span style="color: #75715E;">---</span>
+<pre class="src src-markdown"><span style="color: #6272a4;">---</span>
+<span style="color: #ff5555;">name</span><span style="color: #6272a4;">: </span><span style="color: #f1fa8c; font-style: italic;">weather</span>
+<span style="color: #ff5555;">description</span><span style="color: #6272a4;">: </span><span style="color: #f1fa8c; font-style: italic;">Get current weather and forecasts </span><span style="color: #61bfff; font-style: italic;">(</span><span style="color: #f1fa8c; font-style: italic;">no API key required</span><span style="color: #61bfff; font-style: italic;">)</span><span style="color: #f1fa8c; font-style: italic;">.</span>
+<span style="color: #ff5555;">homepage</span><span style="color: #6272a4;">: </span><span style="color: #f1fa8c; font-style: italic;">https://wttr.in/:help</span>
+<span style="color: #ff5555;">metadata</span><span style="color: #6272a4;">: </span><span style="color: #61bfff; font-style: italic;">{</span><span style="color: #f1fa8c; font-style: italic;"> "openclaw": </span><span style="color: #ff79c6; font-style: italic;">{</span><span style="color: #f1fa8c; font-style: italic;"> "emoji": "&#127780;&#65039;", "requires": </span><span style="color: #50fa7b; font-style: italic;">{</span><span style="color: #f1fa8c; font-style: italic;"> "bins": </span><span style="color: #bd93f9; font-style: italic;">[</span><span style="color: #f1fa8c; font-style: italic;">"curl"</span><span style="color: #bd93f9; font-style: italic;">]</span><span style="color: #f1fa8c; font-style: italic;"> </span><span style="color: #50fa7b; font-style: italic;">}</span><span style="color: #f1fa8c; font-style: italic;"> </span><span style="color: #ff79c6; font-style: italic;">}</span>
+<span style="color: #6272a4;">---</span>
 
-<span style="color: #75715E;"># </span><span style="color: #A6E22E; font-size: 130%;">Weather</span>
+<span style="color: #ff5555; font-weight: bold;"># </span><span style="color: #ff5555; font-weight: bold;">Weather</span>
 
 Two free services, no API keys needed.
 
-<span style="color: #75715E;">## </span><span style="color: #A6E22E; font-size: 120%;">wttr.in </span><span style="color: #66D9EF; font-size: 120%;">(</span><span style="color: #A6E22E; font-size: 120%;">primary</span><span style="color: #66D9EF; font-size: 120%;">)</span>
+<span style="color: #ff5555; font-weight: bold;">## </span><span style="color: #ff5555; font-weight: bold;">wttr.in </span><span style="color: #ff79c6; font-weight: bold;">(</span><span style="color: #ff5555; font-weight: bold;">primary</span><span style="color: #ff79c6; font-weight: bold;">)</span>
 
 Quick one-liner:
 
-<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
-<span style="color: #AE81FF;">curl -s "wttr.in/London?format=3"
+<span style="color: #6272a4; background-color: #252631;">```</span><span style="color: #bd93f9; background-color: #252631;">bash</span><span style="background-color: #252631;">
+</span><span style="color: #f1fa8c; background-color: #252631;">curl -s "wttr.in/London?format=3"
 # Output: London: &#9925;&#65039; +8&#176;C
-</span><span style="color: #75715E;">```</span>
-
+</span><span style="color: #6272a4; background-color: #252631;">```</span><span style="background-color: #252631;">
+</span>
 Compact format:
 
-<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
-<span style="color: #AE81FF;">curl -s "wttr.in/London?format=%l:+%c+%t+%h+%w"
+<span style="color: #6272a4; background-color: #252631;">```</span><span style="color: #bd93f9; background-color: #252631;">bash</span><span style="background-color: #252631;">
+</span><span style="color: #f1fa8c; background-color: #252631;">curl -s "wttr.in/London?format=%l:+%c+%t+%h+%w"
 # Output: London: &#9925;&#65039; +8&#176;C 71% &#8601;5km/h
-</span><span style="color: #75715E;">```</span>
-
+</span><span style="color: #6272a4; background-color: #252631;">```</span><span style="background-color: #252631;">
+</span>
 Full forecast:
 
-<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
-<span style="color: #AE81FF;">curl -s "wttr.in/London?T"
-</span><span style="color: #75715E;">```</span>
-
-Format codes: <span style="color: #75715E;">`</span><span style="color: #AE81FF;">%c</span><span style="color: #75715E;">`</span> condition &#183; <span style="color: #75715E;">`</span><span style="color: #AE81FF;">%t</span><span style="color: #75715E;">`</span> temp &#183; <span style="color: #75715E;">`</span><span style="color: #AE81FF;">%h</span><span style="color: #75715E;">`</span> humidity &#183; <span style="color: #75715E;">`</span><span style="color: #AE81FF;">%w</span><span style="color: #75715E;">`</span> wind &#183; <span style="color: #75715E;">`</span><span style="color: #AE81FF;">%l</span><span style="color: #75715E;">`</span> location &#183; <span style="color: #75715E;">`</span><span style="color: #AE81FF;">%m</span><span style="color: #75715E;">`</span> moon
+<span style="color: #6272a4; background-color: #252631;">```</span><span style="color: #bd93f9; background-color: #252631;">bash</span><span style="background-color: #252631;">
+</span><span style="color: #f1fa8c; background-color: #252631;">curl -s "wttr.in/London?T"
+</span><span style="color: #6272a4; background-color: #252631;">```</span><span style="background-color: #252631;">
+</span>
+Format codes: <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">%c</span><span style="color: #6272a4;">`</span> condition &#183; <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">%t</span><span style="color: #6272a4;">`</span> temp &#183; <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">%h</span><span style="color: #6272a4;">`</span> humidity &#183; <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">%w</span><span style="color: #6272a4;">`</span> wind &#183; <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">%l</span><span style="color: #6272a4;">`</span> location &#183; <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">%m</span><span style="color: #6272a4;">`</span> moon
 
 Tips:
 
-<span style="color: #75715E;">-</span> URL-encode spaces: <span style="color: #75715E;">`</span><span style="color: #AE81FF;">wttr.in/New+York</span><span style="color: #75715E;">`</span>
-<span style="color: #75715E;">-</span> Airport codes: <span style="color: #75715E;">`</span><span style="color: #AE81FF;">wttr.in/JFK</span><span style="color: #75715E;">`</span>
-<span style="color: #75715E;">-</span> Units: <span style="color: #75715E;">`</span><span style="color: #AE81FF;">?m</span><span style="color: #75715E;">`</span> <span style="color: #66D9EF;">(</span>metric<span style="color: #66D9EF;">)</span> <span style="color: #75715E;">`</span><span style="color: #AE81FF;">?u</span><span style="color: #75715E;">`</span> <span style="color: #66D9EF;">(</span>USCS<span style="color: #66D9EF;">)</span>
-<span style="color: #75715E;">-</span> Today only: <span style="color: #75715E;">`</span><span style="color: #AE81FF;">?1</span><span style="color: #75715E;">`</span> &#183; Current only: <span style="color: #75715E;">`</span><span style="color: #AE81FF;">?0</span><span style="color: #75715E;">`</span>
-<span style="color: #75715E;">-</span> PNG: <span style="color: #75715E;">`</span><span style="color: #AE81FF;">curl -s "wttr.in/Berlin.png" -o /tmp/weather.png</span><span style="color: #75715E;">`</span>
+<span style="color: #ff5555;">-</span> URL-encode spaces: <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">wttr.in/New+York</span><span style="color: #6272a4;">`</span>
+<span style="color: #ff5555;">-</span> Airport codes: <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">wttr.in/JFK</span><span style="color: #6272a4;">`</span>
+<span style="color: #ff5555;">-</span> Units: <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">?m</span><span style="color: #6272a4;">`</span> <span style="color: #ff79c6;">(</span>metric<span style="color: #ff79c6;">)</span> <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">?u</span><span style="color: #6272a4;">`</span> <span style="color: #ff79c6;">(</span>USCS<span style="color: #ff79c6;">)</span>
+<span style="color: #ff5555;">-</span> Today only: <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">?1</span><span style="color: #6272a4;">`</span> &#183; Current only: <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">?0</span><span style="color: #6272a4;">`</span>
+<span style="color: #ff5555;">-</span> PNG: <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">curl -s "wttr.in/Berlin.png" -o /tmp/weather.png</span><span style="color: #6272a4;">`</span>
 
-<span style="color: #75715E;">## </span><span style="color: #A6E22E; font-size: 120%;">Open-Meteo </span><span style="color: #66D9EF; font-size: 120%;">(</span><span style="color: #A6E22E; font-size: 120%;">fallback, JSON</span><span style="color: #66D9EF; font-size: 120%;">)</span>
+<span style="color: #ff5555; font-weight: bold;">## </span><span style="color: #ff5555; font-weight: bold;">Open-Meteo </span><span style="color: #ff79c6; font-weight: bold;">(</span><span style="color: #ff5555; font-weight: bold;">fallback, JSON</span><span style="color: #ff79c6; font-weight: bold;">)</span>
 
 Free, no key, good for programmatic use:
 
-<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
-<span style="color: #AE81FF;">curl -s "https://api.open-meteo.com/v1/forecast?latitude=51.5&amp;longitude=-0.12&amp;current_weather=true"
-</span><span style="color: #75715E;">```</span>
-
+<span style="color: #6272a4; background-color: #252631;">```</span><span style="color: #bd93f9; background-color: #252631;">bash</span><span style="background-color: #252631;">
+</span><span style="color: #f1fa8c; background-color: #252631;">curl -s "https://api.open-meteo.com/v1/forecast?latitude=51.5&amp;longitude=-0.12&amp;current_weather=true"
+</span><span style="color: #6272a4; background-color: #252631;">```</span><span style="background-color: #252631;">
+</span>
 Find coordinates for a city, then query. Returns JSON with temp, windspeed, weathercode.
 
-Docs: <span style="color: #66D9EF; font-weight: bold; text-decoration: underline;">https://open-meteo.com/en/docs</span>
+Docs: <span style="color: #bd93f9;">https://open-meteo.com/en/docs</span>
 </pre>
 </div>
 
@@ -465,91 +465,91 @@ Docs: <span style="color: #66D9EF; font-weight: bold; text-decoration: underline
 </ul>
 </div>
 </div>
-<div id="outline-container-orgab3e078" class="outline-4">
-<h4 id="orgab3e078"><span class="section-number-4">1.2.2.</span> 6.2.2 例子二：github Skill</h4>
+<div id="outline-container-org93391bc" class="outline-4">
+<h4 id="org93391bc"><span class="section-number-4">1.2.2.</span> 6.2.2 例子二：github Skill</h4>
 <div class="outline-text-4" id="text-1-2-2">
 <p>
 文件路径：=skills/github/SKILL.md=
 </p>
 
 <div class="org-src-container">
-<pre class="src src-markdown"><span style="color: #75715E;">---</span>
-<span style="color: #FD971F;">name</span><span style="color: #75715E;">: </span><span style="color: #E6DB74; font-style: italic;">github</span>
-<span style="color: #FD971F;">description</span><span style="color: #75715E;">: </span><span style="color: #E6DB74; font-style: italic;">"Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries."</span>
-<span style="color: #FD971F;">metadata</span><span style="color: #75715E;">:</span>
-  <span style="color: #AE81FF;">{</span>
+<pre class="src src-markdown"><span style="color: #6272a4;">---</span>
+<span style="color: #ff5555;">name</span><span style="color: #6272a4;">: </span><span style="color: #f1fa8c; font-style: italic;">github</span>
+<span style="color: #ff5555;">description</span><span style="color: #6272a4;">: </span><span style="color: #f1fa8c; font-style: italic;">"Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries."</span>
+<span style="color: #ff5555;">metadata</span><span style="color: #6272a4;">:</span>
+  <span style="color: #61bfff;">{</span>
     "openclaw":
-      <span style="color: #66D9EF;">{</span>
+      <span style="color: #ff79c6;">{</span>
         "emoji": "&#128025;",
-        "requires": <span style="color: #A6E22E;">{</span> "bins": <span style="color: #E6DB74;">[</span>"gh"<span style="color: #E6DB74;">]</span> <span style="color: #A6E22E;">}</span>,
+        "requires": <span style="color: #50fa7b;">{</span> "bins": <span style="color: #bd93f9;">[</span>"gh"<span style="color: #bd93f9;">]</span> <span style="color: #50fa7b;">}</span>,
         "install":
-          <span style="color: #A6E22E;">[</span>
-            <span style="color: #E6DB74;">{</span>
+          <span style="color: #50fa7b;">[</span>
+            <span style="color: #bd93f9;">{</span>
               "id": "brew",
               "kind": "brew",
               "formula": "gh",
-              "bins": <span style="color: #FD971F;">[</span>"gh"<span style="color: #FD971F;">]</span>,
-              "label": "Install GitHub CLI <span style="color: #FD971F;">(</span>brew<span style="color: #FD971F;">)</span>",
-            <span style="color: #E6DB74;">}</span>,
-            <span style="color: #E6DB74;">{</span>
+              "bins": <span style="color: #0189cc;">[</span>"gh"<span style="color: #0189cc;">]</span>,
+              "label": "Install GitHub CLI <span style="color: #0189cc;">(</span>brew<span style="color: #0189cc;">)</span>",
+            <span style="color: #bd93f9;">}</span>,
+            <span style="color: #bd93f9;">{</span>
               "id": "apt",
               "kind": "apt",
               "package": "gh",
-              "bins": <span style="color: #FD971F;">[</span>"gh"<span style="color: #FD971F;">]</span>,
-              "label": "Install GitHub CLI <span style="color: #FD971F;">(</span>apt<span style="color: #FD971F;">)</span>",
-            <span style="color: #E6DB74;">}</span>,
-          <span style="color: #A6E22E;">]</span>,
-      <span style="color: #66D9EF;">}</span>,
-  <span style="color: #AE81FF;">}</span>
-<span style="color: #75715E;">---</span>
+              "bins": <span style="color: #0189cc;">[</span>"gh"<span style="color: #0189cc;">]</span>,
+              "label": "Install GitHub CLI <span style="color: #0189cc;">(</span>apt<span style="color: #0189cc;">)</span>",
+            <span style="color: #bd93f9;">}</span>,
+          <span style="color: #50fa7b;">]</span>,
+      <span style="color: #ff79c6;">}</span>,
+  <span style="color: #61bfff;">}</span>
+<span style="color: #6272a4;">---</span>
 
-<span style="color: #75715E;"># </span><span style="color: #A6E22E; font-size: 130%;">GitHub Skill</span>
+<span style="color: #ff5555; font-weight: bold;"># </span><span style="color: #ff5555; font-weight: bold;">GitHub Skill</span>
 
-Use the <span style="color: #75715E;">`</span><span style="color: #AE81FF;">gh</span><span style="color: #75715E;">`</span> CLI to interact with GitHub. Always specify <span style="color: #75715E;">`</span><span style="color: #AE81FF;">--repo owner/repo</span><span style="color: #75715E;">`</span> when not in a git directory, or use URLs directly.
+Use the <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">gh</span><span style="color: #6272a4;">`</span> CLI to interact with GitHub. Always specify <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">--repo owner/repo</span><span style="color: #6272a4;">`</span> when not in a git directory, or use URLs directly.
 
-<span style="color: #75715E;">## </span><span style="color: #A6E22E; font-size: 120%;">Pull Requests</span>
+<span style="color: #ff5555; font-weight: bold;">## </span><span style="color: #ff5555; font-weight: bold;">Pull Requests</span>
 
 Check CI status on a PR:
 
-<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
-<span style="color: #AE81FF;">gh pr checks 55 --repo owner/repo
-</span><span style="color: #75715E;">```</span>
-
+<span style="color: #6272a4; background-color: #252631;">```</span><span style="color: #bd93f9; background-color: #252631;">bash</span><span style="background-color: #252631;">
+</span><span style="color: #f1fa8c; background-color: #252631;">gh pr checks 55 --repo owner/repo
+</span><span style="color: #6272a4; background-color: #252631;">```</span><span style="background-color: #252631;">
+</span>
 List recent workflow runs:
 
-<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
-<span style="color: #AE81FF;">gh run list --repo owner/repo --limit 10
-</span><span style="color: #75715E;">```</span>
-
+<span style="color: #6272a4; background-color: #252631;">```</span><span style="color: #bd93f9; background-color: #252631;">bash</span><span style="background-color: #252631;">
+</span><span style="color: #f1fa8c; background-color: #252631;">gh run list --repo owner/repo --limit 10
+</span><span style="color: #6272a4; background-color: #252631;">```</span><span style="background-color: #252631;">
+</span>
 View a run and see which steps failed:
 
-<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
-<span style="color: #AE81FF;">gh run view &lt;run-id&gt; --repo owner/repo
-</span><span style="color: #75715E;">```</span>
-
+<span style="color: #6272a4; background-color: #252631;">```</span><span style="color: #bd93f9; background-color: #252631;">bash</span><span style="background-color: #252631;">
+</span><span style="color: #f1fa8c; background-color: #252631;">gh run view &lt;run-id&gt; --repo owner/repo
+</span><span style="color: #6272a4; background-color: #252631;">```</span><span style="background-color: #252631;">
+</span>
 View logs for failed steps only:
 
-<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
-<span style="color: #AE81FF;">gh run view &lt;run-id&gt; --repo owner/repo --log-failed
-</span><span style="color: #75715E;">```</span>
+<span style="color: #6272a4; background-color: #252631;">```</span><span style="color: #bd93f9; background-color: #252631;">bash</span><span style="background-color: #252631;">
+</span><span style="color: #f1fa8c; background-color: #252631;">gh run view &lt;run-id&gt; --repo owner/repo --log-failed
+</span><span style="color: #6272a4; background-color: #252631;">```</span><span style="background-color: #252631;">
+</span>
+<span style="color: #ff5555; font-weight: bold;">## </span><span style="color: #ff5555; font-weight: bold;">API for Advanced Queries</span>
 
-<span style="color: #75715E;">## </span><span style="color: #A6E22E; font-size: 120%;">API for Advanced Queries</span>
-
-The <span style="color: #75715E;">`</span><span style="color: #AE81FF;">gh api</span><span style="color: #75715E;">`</span> command is useful for accessing data not available through other subcommands.
+The <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">gh api</span><span style="color: #6272a4;">`</span> command is useful for accessing data not available through other subcommands.
 
 Get PR with specific fields:
 
-<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
-<span style="color: #AE81FF;">gh api repos/owner/repo/pulls/55 --jq '.title, .state, .user.login'
-</span><span style="color: #75715E;">```</span>
+<span style="color: #6272a4; background-color: #252631;">```</span><span style="color: #bd93f9; background-color: #252631;">bash</span><span style="background-color: #252631;">
+</span><span style="color: #f1fa8c; background-color: #252631;">gh api repos/owner/repo/pulls/55 --jq '.title, .state, .user.login'
+</span><span style="color: #6272a4; background-color: #252631;">```</span><span style="background-color: #252631;">
+</span>
+<span style="color: #ff5555; font-weight: bold;">## </span><span style="color: #ff5555; font-weight: bold;">JSON Output</span>
 
-<span style="color: #75715E;">## </span><span style="color: #A6E22E; font-size: 120%;">JSON Output</span>
+Most commands support <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">--json</span><span style="color: #6272a4;">`</span> for structured output. You can use <span style="color: #6272a4;">`</span><span style="color: #f1fa8c; background-color: #252631;">--jq</span><span style="color: #6272a4;">`</span> to filter:
 
-Most commands support <span style="color: #75715E;">`</span><span style="color: #AE81FF;">--json</span><span style="color: #75715E;">`</span> for structured output. You can use <span style="color: #75715E;">`</span><span style="color: #AE81FF;">--jq</span><span style="color: #75715E;">`</span> to filter:
-
-<span style="color: #75715E;">```</span><span style="color: #66D9EF;">bash</span>
-<span style="color: #AE81FF;">gh issue list --repo owner/repo --json number,title --jq '.</span><span style="color: #AE81FF;">[]</span><span style="color: #AE81FF;"> | "\</span><span style="color: #AE81FF;">(</span><span style="color: #AE81FF;">.number</span><span style="color: #AE81FF;">)</span><span style="color: #AE81FF;">: \</span><span style="color: #AE81FF;">(</span><span style="color: #AE81FF;">.title</span><span style="color: #AE81FF;">)</span><span style="color: #AE81FF;">"'
-</span><span style="color: #75715E;">```</span>
+<span style="color: #6272a4; background-color: #252631;">```</span><span style="color: #bd93f9; background-color: #252631;">bash</span><span style="background-color: #252631;">
+</span><span style="color: #f1fa8c; background-color: #252631;">gh issue list --repo owner/repo --json number,title --jq '.</span><span style="color: #61bfff; background-color: #252631;">[]</span><span style="color: #f1fa8c; background-color: #252631;"> | "\</span><span style="color: #61bfff; background-color: #252631;">(</span><span style="color: #f1fa8c; background-color: #252631;">.number</span><span style="color: #61bfff; background-color: #252631;">)</span><span style="color: #f1fa8c; background-color: #252631;">: \</span><span style="color: #61bfff; background-color: #252631;">(</span><span style="color: #f1fa8c; background-color: #252631;">.title</span><span style="color: #61bfff; background-color: #252631;">)</span><span style="color: #f1fa8c; background-color: #252631;">"'
+</span><span style="color: #6272a4; background-color: #252631;">```</span>
 </pre>
 </div>
 
@@ -563,8 +563,8 @@ Most commands support <span style="color: #75715E;">`</span><span style="color: 
 </div>
 </div>
 </div>
-<div id="outline-container-orgf2e4d4b" class="outline-3">
-<h3 id="orgf2e4d4b"><span class="section-number-3">1.3.</span> 6.3 Pi Embedded Runner：src/agents/pi-embedded-runner/</h3>
+<div id="outline-container-org25c9279" class="outline-3">
+<h3 id="org25c9279"><span class="section-number-3">1.3.</span> 6.3 Pi Embedded Runner：src/agents/pi-embedded-runner/</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 文件路径：=src/agents/pi-embedded-runner/=
@@ -590,8 +590,8 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </p>
 </div>
 </div>
-<div id="outline-container-org6b572e4" class="outline-3">
-<h3 id="org6b572e4"><span class="section-number-3">1.4.</span> 6.4 这章看完的感觉</h3>
+<div id="outline-container-orgd1c9686" class="outline-3">
+<h3 id="orgd1c9686"><span class="section-number-3">1.4.</span> 6.4 这章看完的感觉</h3>
 <div class="outline-text-3" id="text-1-4">
 <ul class="org-ul">
 <li>系统提示词是动态构建的，不是写死的，有 20+ 个部分！</li>
@@ -603,12 +603,12 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </div>
 </div>
 </div>
-<div id="outline-container-orgb3ed392" class="outline-2">
-<h2 id="orgb3ed392"><span class="section-number-2">2.</span> 第七章：Memory 系统 —— SQLite + sqlite-vec + 混合搜索</h2>
+<div id="outline-container-orgf8df43c" class="outline-2">
+<h2 id="orgf8df43c"><span class="section-number-2">2.</span> 第七章：Memory 系统 —— SQLite + sqlite-vec + 混合搜索</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orge7c2a11" class="outline-3">
-<h3 id="orge7c2a11"><span class="section-number-3">2.1.</span> 7.1 再看一眼整体结构：src/memory/</h3>
+<div id="outline-container-org9d29bc7" class="outline-3">
+<h3 id="org9d29bc7"><span class="section-number-3">2.1.</span> 7.1 再看一眼整体结构：src/memory/</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 文件路径：=src/memory/=
@@ -706,8 +706,8 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </p>
 </div>
 </div>
-<div id="outline-container-orgfc0a1da" class="outline-3">
-<h3 id="orgfc0a1da"><span class="section-number-3">2.2.</span> 7.2 MemoryIndexManager 类的详细字段</h3>
+<div id="outline-container-org253459c" class="outline-3">
+<h3 id="org253459c"><span class="section-number-3">2.2.</span> 7.2 MemoryIndexManager 类的详细字段</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 文件路径：=src/memory/manager.ts=
@@ -808,8 +808,8 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </ol>
 </div>
 </div>
-<div id="outline-container-orge8412c4" class="outline-3">
-<h3 id="orge8412c4"><span class="section-number-3">2.3.</span> 7.3 数据库表详细说明</h3>
+<div id="outline-container-org9b8ec79" class="outline-3">
+<h3 id="org9b8ec79"><span class="section-number-3">2.3.</span> 7.3 数据库表详细说明</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 数据库里有这几个关键表，我从代码里挖出来的：
@@ -862,8 +862,8 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </ul>
 </div>
 </div>
-<div id="outline-container-orgb269539" class="outline-3">
-<h3 id="orgb269539"><span class="section-number-3">2.4.</span> 7.4 混合搜索详细说明：src/memory/hybrid.ts</h3>
+<div id="outline-container-org948524d" class="outline-3">
+<h3 id="org948524d"><span class="section-number-3">2.4.</span> 7.4 混合搜索详细说明：src/memory/hybrid.ts</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 文件路径：=src/memory/hybrid.ts=
@@ -876,8 +876,8 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </ul>
 </div>
 </div>
-<div id="outline-container-orgff0747f" class="outline-3">
-<h3 id="orgff0747f"><span class="section-number-3">2.5.</span> 7.5 文件监听和自动同步</h3>
+<div id="outline-container-orga3036b1" class="outline-3">
+<h3 id="orga3036b1"><span class="section-number-3">2.5.</span> 7.5 文件监听和自动同步</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 <code>MemoryIndexManager</code> 有一个 <code>watcher</code> 字段，是 <code>chokidar.FSWatcher</code> 类型。这意味着它会监听内存文件的变化，自动同步到数据库里
@@ -897,8 +897,8 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </p>
 </div>
 </div>
-<div id="outline-container-org1ea9178" class="outline-3">
-<h3 id="org1ea9178"><span class="section-number-3">2.6.</span> 7.6 这章看完的感觉</h3>
+<div id="outline-container-orgc8b8596" class="outline-3">
+<h3 id="orgc8b8596"><span class="section-number-3">2.6.</span> 7.6 这章看完的感觉</h3>
 <div class="outline-text-3" id="text-2-6">
 <ul class="org-ul">
 <li>用 SQLite + sqlite-vec 做向量存储</li>
@@ -912,15 +912,15 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </div>
 </div>
 </div>
-<div id="outline-container-org8c7b138" class="outline-2">
-<h2 id="org8c7b138"><span class="section-number-2">3.</span> 第八章：Skills 和插件系统</h2>
+<div id="outline-container-orgf4da4c0" class="outline-2">
+<h2 id="orgf4da4c0"><span class="section-number-2">3.</span> 第八章：Skills 和插件系统</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 翻代码的时候我发现了两个目录：=skills/= 和 =extensions/=，还有 =src/plugins/=。这三个东西是啥关系？
 </p>
 </div>
-<div id="outline-container-org9fcacfc" class="outline-3">
-<h3 id="org9fcacfc"><span class="section-number-3">3.1.</span> 8.1 Skill vs 插件</h3>
+<div id="outline-container-org64429be" class="outline-3">
+<h3 id="org64429be"><span class="section-number-3">3.1.</span> 8.1 Skill vs 插件</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 两者的核心区别：
@@ -988,15 +988,15 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </ul>
 </div>
 </div>
-<div id="outline-container-org079d970" class="outline-3">
-<h3 id="org079d970"><span class="section-number-3">3.2.</span> 8.2 Skill 的 frontmatter 详细说明</h3>
+<div id="outline-container-org9c30898" class="outline-3">
+<h3 id="org9c30898"><span class="section-number-3">3.2.</span> 8.2 Skill 的 frontmatter 详细说明</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 每个 Skill 目录里都有一个 =SKILL.md=，头部有 frontmatter（YAML 或 TOML）。我们用 weather 和 github 的例子来看看：
 </p>
 </div>
-<div id="outline-container-org32f8e91" class="outline-4">
-<h4 id="org32f8e91"><span class="section-number-4">3.2.1.</span> 8.2.1 weather Skill 的 frontmatter</h4>
+<div id="outline-container-org4798387" class="outline-4">
+<h4 id="org4798387"><span class="section-number-4">3.2.1.</span> 8.2.1 weather Skill 的 frontmatter</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <div class="org-src-container">
 <pre class="src src-yaml">---
@@ -1009,8 +1009,8 @@ metadata: { "openclaw": { "emoji": "🌤️", "requires": { "bins": ["curl"] } }
 </div>
 </div>
 </div>
-<div id="outline-container-org0ccafb7" class="outline-4">
-<h4 id="org0ccafb7"><span class="section-number-4">3.2.2.</span> 8.2.2 github Skill 的 frontmatter</h4>
+<div id="outline-container-org8579e39" class="outline-4">
+<h4 id="org8579e39"><span class="section-number-4">3.2.2.</span> 8.2.2 github Skill 的 frontmatter</h4>
 <div class="outline-text-4" id="text-3-2-2">
 <div class="org-src-container">
 <pre class="src src-yaml">---
@@ -1046,8 +1046,8 @@ metadata:
 </div>
 </div>
 </div>
-<div id="outline-container-org775cafb" class="outline-4">
-<h4 id="org775cafb"><span class="section-number-4">3.2.3.</span> 8.2.3 frontmatter 字段说明</h4>
+<div id="outline-container-orgb138329" class="outline-4">
+<h4 id="orgb138329"><span class="section-number-4">3.2.3.</span> 8.2.3 frontmatter 字段说明</h4>
 <div class="outline-text-4" id="text-3-2-3">
 <p>
 从这两个例子我们可以看出 frontmatter 包含这些字段：
@@ -1111,8 +1111,8 @@ metadata:
 </div>
 </div>
 </div>
-<div id="outline-container-org1046b33" class="outline-3">
-<h3 id="org1046b33"><span class="section-number-3">3.3.</span> 8.3 插件系统详细说明：src/plugins/</h3>
+<div id="outline-container-org44dab16" class="outline-3">
+<h3 id="org44dab16"><span class="section-number-3">3.3.</span> 8.3 插件系统详细说明：src/plugins/</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 文件路径：=src/plugins/=
@@ -1243,8 +1243,8 @@ metadata:
 这个目录里有 50+ 个文件！插件系统设计得真的很完善。
 </p>
 </div>
-<div id="outline-container-org4c9f038" class="outline-4">
-<h4 id="org4c9f038"><span class="section-number-4">3.3.1.</span> 8.3.1 插件清单类型：PluginManifest</h4>
+<div id="outline-container-orga5d59c9" class="outline-4">
+<h4 id="orga5d59c9"><span class="section-number-4">3.3.1.</span> 8.3.1 插件清单类型：PluginManifest</h4>
 <div class="outline-text-4" id="text-3-3-1">
 <div class="org-src-container">
 <pre class="src src-typescript">// 插件清单
@@ -1294,8 +1294,8 @@ export type PluginManifest = {
 </div>
 </div>
 </div>
-<div id="outline-container-orga09542e" class="outline-3">
-<h3 id="orga09542e"><span class="section-number-3">3.4.</span> 8.4 插件加载流程</h3>
+<div id="outline-container-org0344074" class="outline-3">
+<h3 id="org0344074"><span class="section-number-3">3.4.</span> 8.4 插件加载流程</h3>
 <div class="outline-text-3" id="text-3-4">
 <ol class="org-ol">
 <li><b><b>发现插件</b></b> —— 扫描 <code>extensions/</code> 目录</li>
@@ -1307,8 +1307,8 @@ export type PluginManifest = {
 </ol>
 </div>
 </div>
-<div id="outline-container-org2778077" class="outline-3">
-<h3 id="org2778077"><span class="section-number-3">3.5.</span> 8.5 这章看完的感觉</h3>
+<div id="outline-container-org0c8cf60" class="outline-3">
+<h3 id="org0c8cf60"><span class="section-number-3">3.5.</span> 8.5 这章看完的感觉</h3>
 <div class="outline-text-3" id="text-3-5">
 <ul class="org-ul">
 <li>Skill 是 Markdown 文档，给 AI 看的操作指南</li>
@@ -1319,8 +1319,8 @@ export type PluginManifest = {
 </div>
 </div>
 </div>
-<div id="outline-container-orga005cec" class="outline-2">
-<h2 id="orga005cec"><span class="section-number-2">4.</span> 第二部分暂时写到这里</h2>
+<div id="outline-container-org23ee7e6" class="outline-2">
+<h2 id="org23ee7e6"><span class="section-number-2">4.</span> 第二部分暂时写到这里</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 第二部分我写了三章：
@@ -1334,7 +1334,7 @@ export type PluginManifest = {
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Feb 19 18:29:19 2026</span> <span class="date">Last modified: 2026-02-20 Fri 10:19</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Feb 19 18:29:19 2026</span> <span class="date">Last modified: 2026-02-26 Thu 09:11</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>
