@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2026-04-01 Wed 15:45 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Agent成熟年的我对编程与工作流的思考</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">AI Agent成熟年的我对编程与工作流的思考</h1>
+<p>
+本文旨在探讨如下问题：
+</p>
+<ul class="org-ul">
+<li>Vibe Coding下人与AI的合作应当是什么模式？应当做到何种程度</li>
+<li>如何继承并发展已有的科研工作流以及相关遗产？</li>
+<li>什么东西是无法被替代的？</li>
+</ul>
+<div id="outline-container-org807c8b7" class="outline-2">
+<h2 id="org807c8b7"><span class="section-number-2">1.</span> 当下Coding Agent的进展</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+观测如下：
+</p>
+<ol class="org-ol">
+<li>LLM完全可以胜任utils function（即unit）的实现。</li>
+<li>需要承认，LLM在我不熟悉的领域，包含但不限于前端开发、后端开发、数据库、可视化等等领域均比我强。</li>
+</ol>
+
+
+<p>
+但是，截至26年4月，认为：
+</p>
+<ol class="org-ol">
+<li>让AI生成文本，无论是文章文本还是论文文本，均是不可控且低效率的。</li>
+<li>虽然AI可以充分被用于大规模编程实践，但至少从科研的角度来看，仍然存在以下问题使得使用者产生强烈的不可控感，这些领域包括：
+<ol class="org-ol">
+<li>AI生成的代码量往往较大，使得human review觉得疲惫。而失去human review的AI code即为局部不可控因素。</li>
+<li>用户撰写的代码在AI修改后，每一次修改的量往往比较小。但是如果AI的每次修改用户都不加以检查，那么项目文件仍然处于不可用状态。</li>
+<li>当一个project是由AI主导（不论是撰写还是修改维护）时，由于用户无法对代码进行细节上的掌握，所以相应的修改也变得不可行。</li>
+</ol></li>
+<li>由上一条的可控性问题产生的是信任度的问题。即：用户能否信任AI没有mock数据，没有在实现上偷懒，完全忠实了自己代码设计的本意。</li>
+<li>用户应当意识到同一个蠢人的谈话是非常疲惫的。误解同时又是表达的宿命，所以一个人与AI的交流夜应当受到这种艰难情形的干扰。</li>
+</ol>
+
+
+<p>
+总结以上几点，认为claude code等工具存在的优劣如下：
+</p>
+
+<ul class="org-ul">
+<li>优势：提供了比网页版APP更方便且智能的文件寻找、code review、以及project-level的代码生成。</li>
+<li>缺陷：这些工具无一不：
+<ul class="org-ul">
+<li>用他们的交互方式绕过了修改的review过程（即完全拥抱vibe coding）</li>
+<li>无法确保自然语言文本与所指代码的一致性。</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgeba9096" class="outline-2">
+<h2 id="orgeba9096"><span class="section-number-2">2.</span> 对全新工作与科研工作流的思考</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgff679c6" class="outline-3">
+<h3 id="orgff679c6"><span class="section-number-3">2.1.</span> 理解任务的不同特性</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+应当认识到，不同任务存在不同特性。
+</p>
+
+<p>
+AI适合的任务是以下几个领域的并集：1. 足够简单，人类懒得去做；2. 缺乏novelty的直接调用现有工具来完成的工程实现问题；3. 作为开发者无法胜任的不擅长的但是又想去实现的问题问题。
+</p>
+
+<p>
+人类适合去做的：1. 撰写核心部分的代码。 2. 梳理清楚各种数据的流动、模型、工具的选取等等等等。
+</p>
+</div>
+</div>
+<div id="outline-container-orgebf99db" class="outline-3">
+<h3 id="orgebf99db"><span class="section-number-3">2.2.</span> 根据以上需求导出工具的需求</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+我目前仍需工具完成以下事情：
+</p>
+
+<ul class="org-ul">
+<li>快速打开文件、阅读文件、编辑文件 -&#x2013;&#x2014;》即基本的编辑器需求。</li>
+<li>高效的文件diff。 -&#x2013;&#x2014;》类似git diff的需求。</li>
+<li>进度管理、项目管理、等等各项管理。 ----&#x2013;&#x2014;》文档撰写的需求。</li>
+</ul>
+
+
+<p>
+如此看来，emacs仍然比较有优势。反而甚至更有优势。因为目前像claude code等工具仍然集中在终端。emacs在Coding IDE层面的缺陷被大大弥补了。
+</p>
+
+
+<p>
+在emacs的配置上，应当加强的点：
+</p>
+<ul class="org-ul">
+<li>对git diff的熟悉和效果提升。</li>
+<li>对org文件、markdown文件提供更为强大的文件格式编辑以及preview。</li>
+<li>有时应当考虑terminal coding agent与emacs的集成。这个目前可以低优先级。</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org4fa2bfc" class="outline-2">
+<h2 id="org4fa2bfc"><span class="section-number-2">3.</span> 什么东西是无法被替代的？</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+我认为包含以下层面：
+</p>
+
+<ul class="org-ul">
+<li>对自我生命的负责与管理能力。
+<ul class="org-ul">
+<li>首先，能够保证自我系统不会崩溃。
+<ul class="org-ul">
+<li>尽量降低猝死的概率。</li>
+<li>尽量降低出意外事故的概率。</li>
+<li>不要生大病。即：身体不应该处于一种长期的病态状态。</li>
+<li>不要抑郁。即：不能让对目标的贪欲压倒自我的平衡，或者由于外部事件的鼓动产生一种剧烈的心理波动，从而影响一个人的心理健康。</li>
+<li>不要摆。 即：不能让自身的思想陷入到一种无序的混乱状态。</li>
+<li>不要沦为工具人。即：不应该让自我长期处于应激状态。即一戳一蹦达的状态。</li>
+</ul></li>
+<li>其次，应该考虑到一个人类个体的精力管理和时间管理问题。
+<ul class="org-ul">
+<li>承认精力是有限的。承认在不想工作时自我的效率之低。构建合理的发泄通道。</li>
+<li>承认做事情存在取舍，由此一段时间只能主攻一个方向。</li>
+</ul></li>
+<li>认识到社交的重要性。
+<ul class="org-ul">
+<li>自己想远远不足。多跟AI聊天呢。</li>
+<li>承认即使再内向的人也要和人类交谈。</li>
+<li>承认一个再特立独行的人也要进行 <b>个人形象管理</b></li>
+</ul></li>
+<li>认识到情绪的作用。
+<ul class="org-ul">
+<li>在过去的几年里，我认为我对我的情绪对我的行为的影响的重要性和优先级都远远低估了。这几乎是最需要进行优先提升和修改的维度。</li>
+<li>不要在人群里突然emo。大家会很尴尬的。</li>
+</ul></li>
+<li>接纳自我的生物性。
+<ul class="org-ul">
+<li>饥饿久了，暴饮暴食一顿，不丢人。</li>
+<li>性压抑久了，主动找女生聊天，或者自慰，也不丢人。</li>
+</ul></li>
+</ul></li>
+<li>信息——作为一种非物质非能量的存在，其基本量是不变的。
+<ul class="org-ul">
+<li>应当意识到，一个项目里的复杂度，即使AI出现，也是不变的。</li>
+<li>语言不是万能的。符号系统是比自然语言更高效、更精确的东西。编程语言的意义并没有消失。写代码也因此并没有消失。数学同理。</li>
+</ul></li>
+<li>所有自己喜欢做的事，自己认为有意义的事，即使AI也能做，即使其他人也都能做，也不能觉得他们被替代。</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Wed Apr  1 13:42:04 2026</span> <span class="date">Last modified: 2026-04-01 Wed 15:45</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+</div>
+</body>
+</html>
