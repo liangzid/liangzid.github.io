@@ -1,0 +1,6504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2026-04-02 Thu 10:08 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>我的emacs配置介绍-2026版</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">我的emacs配置介绍-2026版</h1>
+<p>
+A comprehensive, modular Emacs configuration with AI/LLM integration, Python development tools, Org-mode for notes and publishing, and Vim-style editing via Evil mode.
+</p>
+<div id="outline-container-org09b3da1" class="outline-2">
+<h2 id="org09b3da1"><span class="section-number-2">1.</span> Installation &amp; Setup</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orgd693a54" class="outline-3">
+<h3 id="orgd693a54"><span class="section-number-3">1.1.</span> Prerequisites</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li><b>Emacs</b> 27+ recommended</li>
+<li><b>Git</b> for version control features</li>
+<li><b>Python</b> (anaconda3 or miniconda3 recommended) for Python development</li>
+<li><b>PlantUML</b> (~/.emacs.d/software/plantuml.jar) for diagram generation</li>
+<li><b>RIPGrep</b> (rg) for counsel-rg search</li>
+<li><b>Universal Ctags</b> for Citre code navigation</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org1d258c2" class="outline-3">
+<h3 id="org1d258c2"><span class="section-number-3">1.2.</span> Installation</h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">Clone the configuration
+</span>git clone https://github.com/ziLiang3845/.emacs.d.git ~/.emacs.d
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">Install required external tools
+</span><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">- plantuml.jar (~/.emacs.d/software/plantuml.jar)
+</span><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">- rg (ripgrep)
+</span><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">- curl (for OpenRouter API)
+</span>
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">Set environment variables (see Environment Variables section)
+</span><span style="color: #ffb86c;">export</span> <span style="color: #ffc9e8;">OPENROUTER_API_KEY</span>=<span style="color: #f1fa8c; font-style: italic;">"your-api-key"</span>
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">Launch Emacs
+</span>emacs
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd6cc017" class="outline-3">
+<h3 id="orgd6cc017"><span class="section-number-3">1.3.</span> First-Time Setup</h3>
+<div class="outline-text-3" id="text-1-3">
+<ol class="org-ol">
+<li>Launch Emacs - packages will be automatically installed</li>
+<li>Wait for all packages to install (first launch may take 5-10 minutes)</li>
+<li>Restart Emacs when complete</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org00f822c" class="outline-3">
+<h3 id="org00f822c"><span class="section-number-3">1.4.</span> Setup Scripts (doc/)</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+The <code>doc/</code> directory contains shell scripts to automate the installation of system dependencies. Run these scripts in order before launching Emacs for the first time.
+</p>
+</div>
+<div id="outline-container-org305d2e5" class="outline-4">
+<h4 id="org305d2e5"><span class="section-number-4">1.4.1.</span> Ubuntu/Debian Setup Scripts</h4>
+<div class="outline-text-4" id="text-1-4-1">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Script</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>0.make_install_emacs29.sh</code></td>
+<td class="org-left">Compile and install Emacs 30.1 from source (requires build tools)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>2.run_ubuntu_shell_sudo.sh</code></td>
+<td class="org-left">Install system packages: xclip, xsel, gdb, w3m, aspell, scrot, openjdk-17, graphviz, python3, pipenv, mplayer, socat, cmake, zsh, ripgrep, ag, and development libraries</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>3.gitclone.sh</code></td>
+<td class="org-left">Clone additional repositories (for optional features)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>4.pip-install.sh</code></td>
+<td class="org-left">Install Python packages: python-lsp-server, torch, numpy, scikit-learn, matplotlib</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>5.add_fonts.sh</code></td>
+<td class="org-left">Install Maple Mono and CJK fonts (WenKai)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>6.initial_setup.sh</code></td>
+<td class="org-left">Configure git user.name and user.email globally</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>install-ctags.sh</code></td>
+<td class="org-left">Install universal-ctags for Citre code navigation</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org1b1124b" class="outline-4">
+<h4 id="org1b1124b"><span class="section-number-4">1.4.2.</span> Recommended Installation Order</h4>
+<div class="outline-text-4" id="text-1-4-2">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #ffb86c;">cd</span> ~/.emacs.d/doc/
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">1. Install system packages (Ubuntu/Debian)
+</span>sudo bash 2.run_ubuntu_shell_sudo.sh
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">2. Install Emacs from source (if not using package manager)
+</span>bash 0.make_install_emacs29.sh
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">3. Install ctags for code navigation
+</span>sudo bash install-ctags.sh
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">4. Install fonts
+</span>bash 5.add_fonts.sh
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">5. Install Python packages for LSP
+</span>bash 4.pip-install.sh
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">6. Git configuration
+</span>bash 6.initial_setup.sh
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org3839fcd" class="outline-4">
+<h4 id="org3839fcd"><span class="section-number-4">1.4.3.</span> Arch Linux</h4>
+<div class="outline-text-4" id="text-1-4-3">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Script</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>2.1.run_install_arch_pacman.sh</code></td>
+<td class="org-left">Install packages via pacman</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>5.1.add_fonts_arch_pacman.sh</code></td>
+<td class="org-left">Install fonts on Arch</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org2920558" class="outline-4">
+<h4 id="org2920558"><span class="section-number-4">1.4.4.</span> Other Setup Files</h4>
+<div class="outline-text-4" id="text-1-4-4">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">File</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>hope.org</code></td>
+<td class="org-left">TODO tracking and wishlist</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>howToGetCapture.org</code></td>
+<td class="org-left">Screen capture setup guide</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spellcheck.org</code></td>
+<td class="org-left">Spell checking configuration</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>WSL2-ubuntu-install-config-emacs.org</code></td>
+<td class="org-left">WSL2-specific Emacs installation guide</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>install_emacs_without_sudo.txt</code></td>
+<td class="org-left">Notes on building Emacs without sudo</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>latex环境指南.doc</code></td>
+<td class="org-left">LaTeX environment setup guide (Chinese)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org29f9fe5" class="outline-2">
+<h2 id="org29f9fe5"><span class="section-number-2">2.</span> Project Structure</h2>
+<div class="outline-text-2" id="text-2">
+<pre class="example" id="org3bd4902">
+.emacs.d/
+├── init.el                    # Main entry point
+├── lisp/
+│   ├── init-*.el            # Feature modules (~50 files)
+│   ├── custom.el            # Emacs Customize settings
+│   ├── my-*.el              # Custom helpers
+│   └── org-*.el             # Org-mode extensions
+├── doc/                      # Setup scripts for system dependencies
+├── other-files/              # Additional resources
+└── feeds/                    # RSS feed configuration (elfeed)
+</pre>
+</div>
+<div id="outline-container-orgea5681b" class="outline-3">
+<h3 id="orgea5681b"><span class="section-number-3">2.1.</span> Module Loading Order (init.el)</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>init-self-config-function  → Platform detection, core utilities</li>
+<li>init-wsl                   → WSL utilities</li>
+<li>init-elpa                  → Package management</li>
+<li>init-openai               → Aider (DeepSeek AI coding assistant)</li>
+<li>init-eshell               → Shell configuration</li>
+<li>init-proxy                → Proxy settings</li>
+<li>init-largefile            → Large file handling</li>
+<li>init-dired                → File manager</li>
+<li>init-clipboard            → Clipboard integration</li>
+<li>init-yas                  → Snippets</li>
+<li>init-git                  → Git gutter</li>
+<li>init-citre                → Tags-based code navigation</li>
+<li>init-python               → Python development</li>
+<li>init-latex                → LaTeX editing</li>
+<li>init-cl                   → Common Lisp</li>
+<li>init-cpp                  → C++ (disabled)</li>
+<li>init-rust                 → Rust development</li>
+<li>init-cider                → Clojure REPL</li>
+<li>init-blog                 → Org publishing</li>
+<li>init-web                  → Web development</li>
+<li>init-path                 → PATH configuration</li>
+<li>init-rss                  → RSS reader (elfeed)</li>
+<li>init-keybindings          → Global keybindings</li>
+<li>init-rg                   → Ripgrep integration</li>
+<li>init-spell                → Spell checking</li>
+<li>init-packages             → Package initialization</li>
+<li>init-lsp                  → Language Server Protocol</li>
+<li>init-evil                 → Vim emulation</li>
+<li>init-undo                 → Undo configuration</li>
+<li>init-keyfreq              → Key frequency tracking</li>
+<li>init-org                  → Org-mode configuration</li>
+<li>init-ssh                  → SSH connections</li>
+<li>init-ai                   → AI/LLM integration (gptel, claude-code-ide)</li>
+<li>init-modeline             → Mode line configuration</li>
+<li>init-window               → Window management (winum)</li>
+<li>init-chinese              → Chinese font support</li>
+<li>init-better-defaults      → Improved defaults</li>
+<li>init-ui                   → Visual theme and styling</li>
+<li>org-ui.el                 → Org-specific UI</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org86284cf" class="outline-2">
+<h2 id="org86284cf"><span class="section-number-2">3.</span> Core Features Overview</h2>
+<div class="outline-text-2" id="text-3">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Feature</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">AI/LLM Integration</td>
+<td class="org-left">GPTEL (OpenRouter), Claude Code IDE, Aider (DeepSeek)</td>
+</tr>
+
+<tr>
+<td class="org-left">Python Development</td>
+<td class="org-left">LSP (eglot), anaconda-mode, python-black, conda integration</td>
+</tr>
+
+<tr>
+<td class="org-left">Org Mode</td>
+<td class="org-left">Notes, publishing, literate programming, Babel</td>
+</tr>
+
+<tr>
+<td class="org-left">Vim Emulation</td>
+<td class="org-left">Evil mode with custom leader keys</td>
+</tr>
+
+<tr>
+<td class="org-left">Code Navigation</td>
+<td class="org-left">Citre (ctags), xref, highlight-symbol</td>
+</tr>
+
+<tr>
+<td class="org-left">Productivity</td>
+<td class="org-left">Yasnippet, smartparens, rainbow-delimiters</td>
+</tr>
+
+<tr>
+<td class="org-left">Shell Integration</td>
+<td class="org-left">vterm, eshell, SSH via tramp</td>
+</tr>
+
+<tr>
+<td class="org-left">UI/Theming</td>
+<td class="org-left">doom-dracula theme, doom-modeline, marginalia</td>
+</tr>
+
+<tr>
+<td class="org-left">Version Control</td>
+<td class="org-left">git-gutter, magit</td>
+</tr>
+
+<tr>
+<td class="org-left">Web Development</td>
+<td class="org-left">web-mode, js2-mode, emmet-mode</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgf61ff3e" class="outline-2">
+<h2 id="orgf61ff3e"><span class="section-number-2">4.</span> Keybindings Reference</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org7290704" class="outline-3">
+<h3 id="org7290704"><span class="section-number-3">4.1.</span> Global Keybindings</h3>
+<div class="outline-text-3" id="text-4-1">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-\</td>
+<td class="org-left">comment-line</td>
+<td class="org-left">Comment/uncomment current line</td>
+</tr>
+
+<tr>
+<td class="org-left">C-a</td>
+<td class="org-left">mwim-beginning-of-code-or-line</td>
+<td class="org-left">Go to beginning of code/line</td>
+</tr>
+
+<tr>
+<td class="org-left">C-e</td>
+<td class="org-left">mwim-end-of-code-or-line</td>
+<td class="org-left">Go to end of code/line</td>
+</tr>
+
+<tr>
+<td class="org-left">C-s</td>
+<td class="org-left">swiper</td>
+<td class="org-left">Incremental search with candidates</td>
+</tr>
+
+<tr>
+<td class="org-left">C-f5</td>
+<td class="org-left">lz/nohup-switch-run</td>
+<td class="org-left">Run current file (auto-detect bash/python)</td>
+</tr>
+
+<tr>
+<td class="org-left">F1</td>
+<td class="org-left">restart-emacs</td>
+<td class="org-left">Restart Emacs</td>
+</tr>
+
+<tr>
+<td class="org-left">F2</td>
+<td class="org-left">open-my-init-file</td>
+<td class="org-left">Open init.el</td>
+</tr>
+
+<tr>
+<td class="org-left">TAB</td>
+<td class="org-left">my/indent-4-space</td>
+<td class="org-left">Indent region or insert 4 spaces</td>
+</tr>
+
+<tr>
+<td class="org-left">S-TAB</td>
+<td class="org-left">my/indent-4-space (with arg)</td>
+<td class="org-left">Dedent region or delete 4 spaces</td>
+</tr>
+
+<tr>
+<td class="org-left">M-0</td>
+<td class="org-left">next-multiframe-window</td>
+<td class="org-left">Go to next window</td>
+</tr>
+
+<tr>
+<td class="org-left">M-9</td>
+<td class="org-left">previous-multiframe-window</td>
+<td class="org-left">Go to previous window</td>
+</tr>
+
+<tr>
+<td class="org-left">M-r</td>
+<td class="org-left">query-replace</td>
+<td class="org-left">Find and replace</td>
+</tr>
+
+<tr>
+<td class="org-left">M-s</td>
+<td class="org-left">counsel-rg</td>
+<td class="org-left">Ripgrep search</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x C-b</td>
+<td class="org-left">ibuffer</td>
+<td class="org-left">Buffer manager</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x 4 &lt;num&gt;</td>
+<td class="org-left">-</td>
+<td class="org-left">Split to 4 horizontal windows</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x 5 &lt;num&gt;</td>
+<td class="org-left">-</td>
+<td class="org-left">Split to 3 horizontal windows</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x 6 &lt;num&gt;</td>
+<td class="org-left">-</td>
+<td class="org-left">Split to 5 mixed windows</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org4241a7c" class="outline-3">
+<h3 id="org4241a7c"><span class="section-number-3">4.2.</span> Evil Mode Leader Key (SPC)</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual mode.
+</p>
+</div>
+<div id="outline-container-org6661045" class="outline-4">
+<h4 id="org6661045"><span class="section-number-4">4.2.1.</span> File &amp; Buffer Management</h4>
+<div class="outline-text-4" id="text-4-2-1">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC xs</td>
+<td class="org-left">save-buffer</td>
+<td class="org-left">Save current buffer</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC xf</td>
+<td class="org-left">find-file</td>
+<td class="org-left">Find file</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC xr</td>
+<td class="org-left">recentf-open-files</td>
+<td class="org-left">Open recent file</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC xb</td>
+<td class="org-left">switch-to-buffer</td>
+<td class="org-left">Switch buffer</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC xk</td>
+<td class="org-left">kill-buffer</td>
+<td class="org-left">Kill buffer</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC xc</td>
+<td class="org-left">save-buffers-kill-terminal</td>
+<td class="org-left">Save and close</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC bb</td>
+<td class="org-left">-</td>
+<td class="org-left">Switch to last buffer</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC bf</td>
+<td class="org-left">eglot-format-buffer</td>
+<td class="org-left">Format buffer</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org84445e3" class="outline-4">
+<h4 id="org84445e3"><span class="section-number-4">4.2.2.</span> Window Management</h4>
+<div class="outline-text-4" id="text-4-2-2">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC x0</td>
+<td class="org-left">delete-window</td>
+<td class="org-left">Close current window</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC x1</td>
+<td class="org-left">delete-other-windows</td>
+<td class="org-left">Maximize current window</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC x2</td>
+<td class="org-left">split-window-below</td>
+<td class="org-left">Split horizontally</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC x3</td>
+<td class="org-left">split-window-right</td>
+<td class="org-left">Split vertically</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC x5</td>
+<td class="org-left">split-3-windows-horizontally-evenly</td>
+<td class="org-left">3-way horizontal split</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC jj</td>
+<td class="org-left">scroll-other-window</td>
+<td class="org-left">Scroll other window down</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC kk</td>
+<td class="org-left">scroll-other-window-up</td>
+<td class="org-left">Scroll other window up</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org096f65d" class="outline-4">
+<h4 id="org096f65d"><span class="section-number-4">4.2.3.</span> Help &amp; Documentation</h4>
+<div class="outline-text-4" id="text-4-2-3">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC hf</td>
+<td class="org-left">counsel-describe-function</td>
+<td class="org-left">Describe function</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC hv</td>
+<td class="org-left">counsel-describe-variable</td>
+<td class="org-left">Describe variable</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC hk</td>
+<td class="org-left">describe-key</td>
+<td class="org-left">Describe key</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC hm</td>
+<td class="org-left">describe-mode</td>
+<td class="org-left">Describe mode</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org55c853c" class="outline-4">
+<h4 id="org55c853c"><span class="section-number-4">4.2.4.</span> Code Navigation &amp; Editing</h4>
+<div class="outline-text-4" id="text-4-2-4">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC gd</td>
+<td class="org-left">evil-goto-definition</td>
+<td class="org-left">Go to definition</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC hs</td>
+<td class="org-left">highlight-symbol</td>
+<td class="org-left">Highlight symbol</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC sr</td>
+<td class="org-left">highlight-symbol-query-replace</td>
+<td class="org-left">Replace highlighted symbol</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC sn</td>
+<td class="org-left">highlight-symbol-nav-mode</td>
+<td class="org-left">Navigate highlights (M-n/M-p)</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC hl</td>
+<td class="org-left">hs-hide-level</td>
+<td class="org-left">Hide code blocks by level</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC sl</td>
+<td class="org-left">hs-show-block</td>
+<td class="org-left">Show code block</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC er</td>
+<td class="org-left">eglot-rename</td>
+<td class="org-left">Rename symbol</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgb5a9854" class="outline-4">
+<h4 id="orgb5a9854"><span class="section-number-4">4.2.5.</span> Citre Code Navigation</h4>
+<div class="outline-text-4" id="text-4-2-5">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC cu</td>
+<td class="org-left">citre-update-this-tags-file</td>
+<td class="org-left">Update ctags file</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC cd</td>
+<td class="org-left">citre-jump</td>
+<td class="org-left">Jump to definition</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC cD</td>
+<td class="org-left">citre-jump-back</td>
+<td class="org-left">Jump back</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC cp</td>
+<td class="org-left">citre-ace-peek</td>
+<td class="org-left">Peek at definition</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org2e7d205" class="outline-4">
+<h4 id="org2e7d205"><span class="section-number-4">4.2.6.</span> Anaconda Mode (Python)</h4>
+<div class="outline-text-4" id="text-4-2-6">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC ad</td>
+<td class="org-left">anaconda-mode-find-definitions</td>
+<td class="org-left">Find definition</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC ar</td>
+<td class="org-left">anaconda-mode-find-references</td>
+<td class="org-left">Find references</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC aD</td>
+<td class="org-left">anaconda-mode-find-definitions-other-window</td>
+<td class="org-left">Find in other window</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC aR</td>
+<td class="org-left">anaconda-mode-find-references-other-window</td>
+<td class="org-left">Find references other window</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC aa</td>
+<td class="org-left">anaconda-mode-find-assignments</td>
+<td class="org-left">Find assignments</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC a/</td>
+<td class="org-left">anaconda-mode-show-doc</td>
+<td class="org-left">Show documentation</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org2713a69" class="outline-4">
+<h4 id="org2713a69"><span class="section-number-4">4.2.7.</span> Python Scripts (F5 / nohup)</h4>
+<div class="outline-text-4" id="text-4-2-7">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC rb</td>
+<td class="org-left">lz/running-current-bash-with-nohup</td>
+<td class="org-left">Run bash script in background</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC rp</td>
+<td class="org-left">lz/running-current-python-with-nohup</td>
+<td class="org-left">Run Python script with conda</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC ro</td>
+<td class="org-left">lz/run-occupy-python</td>
+<td class="org-left">Occupy GPU device</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC rt</td>
+<td class="org-left">lz/open-tensorboard-in-current-buffer</td>
+<td class="org-left">Open TensorBoard</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC ns</td>
+<td class="org-left">lz/look-nvidia-state</td>
+<td class="org-left">Check GPU status</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orga0ba86f" class="outline-4">
+<h4 id="orga0ba86f"><span class="section-number-4">4.2.8.</span> SSH Connections</h4>
+<div class="outline-text-4" id="text-4-2-8">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC 141</td>
+<td class="org-left">ssh-connect-141</td>
+<td class="org-left">Connect to 10.21.20.141</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC 142</td>
+<td class="org-left">ssh-connect-142</td>
+<td class="org-left">Connect to 10.21.20.142</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC cs1</td>
+<td class="org-left">ssh-connect-cs1</td>
+<td class="org-left">Connect to cs1.astaple.com</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC cs2</td>
+<td class="org-left">ssh-connect-cs2</td>
+<td class="org-left">Connect to cs2.astaple.com</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC gs9-gs16</td>
+<td class="org-left">ssh-connect-gsN</td>
+<td class="org-left">Connect to gsN.astaple.com</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC ocs1</td>
+<td class="org-left">ssh-connect-fromout-cs1</td>
+<td class="org-left">Connect via jump host</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC ogs9-ogs16</td>
+<td class="org-left">ssh-connect-fromout-gsN</td>
+<td class="org-left">Connect via jump host</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org79e32d0" class="outline-4">
+<h4 id="org79e32d0"><span class="section-number-4">4.2.9.</span> Clipboard &amp; WSL</h4>
+<div class="outline-text-4" id="text-4-2-9">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC sy</td>
+<td class="org-left">wsl-copy-region-to-clipboard</td>
+<td class="org-left">Copy to Windows clipboard</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC sd</td>
+<td class="org-left">wsl-cut-region-to-clipboard</td>
+<td class="org-left">Cut to Windows clipboard</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC si</td>
+<td class="org-left">my-yank-image-from-win-clipboard-through-powershell</td>
+<td class="org-left">Paste image from Windows</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org04feaad" class="outline-4">
+<h4 id="org04feaad"><span class="section-number-4">4.2.10.</span> Shell</h4>
+<div class="outline-text-4" id="text-4-2-10">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC sh</td>
+<td class="org-left">shell</td>
+<td class="org-left">Open shell</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC sc</td>
+<td class="org-left">shell-command</td>
+<td class="org-left">Run shell command</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgadaa2af" class="outline-4">
+<h4 id="orgadaa2af"><span class="section-number-4">4.2.11.</span> English &amp; Spell</h4>
+<div class="outline-text-4" id="text-4-2-11">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC cy</td>
+<td class="org-left">gt-translate</td>
+<td class="org-left">Translate text</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC te</td>
+<td class="org-left">toggle-company-english-helper</td>
+<td class="org-left">Toggle English helper</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC is</td>
+<td class="org-left">ispell-buffer</td>
+<td class="org-left">Spell check buffer</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC fs</td>
+<td class="org-left">flyspell-mode</td>
+<td class="org-left">Toggle spell checking</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org0692af9" class="outline-4">
+<h4 id="org0692af9"><span class="section-number-4">4.2.12.</span> Org Mode</h4>
+<div class="outline-text-4" id="text-4-2-12">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC ii</td>
+<td class="org-left">my-screen-capture</td>
+<td class="org-left">Screen capture to org</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC ih</td>
+<td class="org-left">fastinsert-org-head</td>
+<td class="org-left">Insert org header</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC ic</td>
+<td class="org-left">org-insert-src-block</td>
+<td class="org-left">Insert source block</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC op</td>
+<td class="org-left">org-publish</td>
+<td class="org-left">Publish org project</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC on</td>
+<td class="org-left">open-org-note</td>
+<td class="org-left">Open org note</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC ow</td>
+<td class="org-left">open-worklog-in-d</td>
+<td class="org-left">Open worklog</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org07b082a" class="outline-4">
+<h4 id="org07b082a"><span class="section-number-4">4.2.13.</span> Hide/Show Code</h4>
+<div class="outline-text-4" id="text-4-2-13">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC s1</td>
+<td class="org-left">latex-cover-region-with@zl</td>
+<td class="org-left">Wrap region in LaTeX command</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org56e7c4e" class="outline-4">
+<h4 id="org56e7c4e"><span class="section-number-4">4.2.14.</span> Collections</h4>
+<div class="outline-text-4" id="text-4-2-14">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC ec</td>
+<td class="org-left">collected-run</td>
+<td class="org-left">Run collected command</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="outline-container-org0e6d0c9" class="outline-3">
+<h3 id="org0e6d0c9"><span class="section-number-3">4.3.</span> Evil State Navigation</h3>
+<div class="outline-text-3" id="text-4-3">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-e</td>
+<td class="org-left">mwim-end-of-line-or-code</td>
+<td class="org-left">Go to end of line/code (Evil Normal)</td>
+</tr>
+
+<tr>
+<td class="org-left">C-p</td>
+<td class="org-left">previous-line</td>
+<td class="org-left">Previous line (Evil Normal)</td>
+</tr>
+
+<tr>
+<td class="org-left">C-n</td>
+<td class="org-left">next-line</td>
+<td class="org-left">Next line (Evil Normal)</td>
+</tr>
+
+<tr>
+<td class="org-left">C-b</td>
+<td class="org-left">backward-char</td>
+<td class="org-left">Backward char (Evil Normal)</td>
+</tr>
+
+<tr>
+<td class="org-left">C-f</td>
+<td class="org-left">forward-char</td>
+<td class="org-left">Forward char (Evil Normal)</td>
+</tr>
+
+<tr>
+<td class="org-left">C-v</td>
+<td class="org-left">scroll-up-command</td>
+<td class="org-left">Scroll up (Evil Normal)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org696171f" class="outline-3">
+<h3 id="org696171f"><span class="section-number-3">4.4.</span> Evil Escape</h3>
+<div class="outline-text-3" id="text-4-4">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">kj</td>
+<td class="org-left">-</td>
+<td class="org-left">Escape from insert mode (0.3s delay)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org4dc3659" class="outline-3">
+<h3 id="org4dc3659"><span class="section-number-3">4.5.</span> Window Navigation (winum)</h3>
+<div class="outline-text-3" id="text-4-5">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">M-0</td>
+<td class="org-left">winum-select-window-0-or-10</td>
+<td class="org-left">Select window 0 or 10</td>
+</tr>
+
+<tr>
+<td class="org-left">M-1</td>
+<td class="org-left">winum-select-window-1</td>
+<td class="org-left">Select window 1</td>
+</tr>
+
+<tr>
+<td class="org-left">M-2</td>
+<td class="org-left">winum-select-window-2</td>
+<td class="org-left">Select window 2</td>
+</tr>
+
+<tr>
+<td class="org-left">M-3</td>
+<td class="org-left">winum-select-window-3</td>
+<td class="org-left">Select window 3</td>
+</tr>
+
+<tr>
+<td class="org-left">M-4</td>
+<td class="org-left">winum-select-window-4</td>
+<td class="org-left">Select window 4</td>
+</tr>
+
+<tr>
+<td class="org-left">M-5</td>
+<td class="org-left">winum-select-window-5</td>
+<td class="org-left">Select window 5</td>
+</tr>
+
+<tr>
+<td class="org-left">M-6</td>
+<td class="org-left">winum-select-window-6</td>
+<td class="org-left">Select window 6</td>
+</tr>
+
+<tr>
+<td class="org-left">M-7</td>
+<td class="org-left">winum-select-window-7</td>
+<td class="org-left">Select window 7</td>
+</tr>
+
+<tr>
+<td class="org-left">M-8</td>
+<td class="org-left">winum-select-window-8</td>
+<td class="org-left">Select window 8</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org22a3fff" class="outline-3">
+<h3 id="org22a3fff"><span class="section-number-3">4.6.</span> Ivy/Counsel Search</h3>
+<div class="outline-text-3" id="text-4-6">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">M-x</td>
+<td class="org-left">counsel-M-x</td>
+<td class="org-left">Execute command</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x C-f</td>
+<td class="org-left">counsel-find-file</td>
+<td class="org-left">Find file with completion</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x b</td>
+<td class="org-left">counsel-switch-buffer</td>
+<td class="org-left">Switch buffer</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x B</td>
+<td class="org-left">counsel-switch-buffer-other-window</td>
+<td class="org-left">Switch buffer (other window)</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x C-r</td>
+<td class="org-left">counsel-recentf</td>
+<td class="org-left">Open recent file</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h f</td>
+<td class="org-left">counsel-describe-function</td>
+<td class="org-left">Describe function</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h v</td>
+<td class="org-left">counsel-describe-variable</td>
+<td class="org-left">Describe variable</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h C-k</td>
+<td class="org-left">find-function-on-key</td>
+<td class="org-left">Find key definition</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c C-r</td>
+<td class="org-left">ivy-resume</td>
+<td class="org-left">Resume last search</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org4073d7b" class="outline-3">
+<h3 id="org4073d7b"><span class="section-number-3">4.7.</span> Org Mode Keybindings</h3>
+<div class="outline-text-3" id="text-4-7">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-c l</td>
+<td class="org-left">org-store-link</td>
+<td class="org-left">Store link</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c s e</td>
+<td class="org-left">org-edit-src-code</td>
+<td class="org-left">Edit source block</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c s i</td>
+<td class="org-left">org-insert-src-block</td>
+<td class="org-left">Insert source block</td>
+</tr>
+
+<tr>
+<td class="org-left">C-f h</td>
+<td class="org-left">fastinsert-org-head</td>
+<td class="org-left">Insert org header template</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org479a37e" class="outline-3">
+<h3 id="org479a37e"><span class="section-number-3">4.8.</span> Python Development</h3>
+<div class="outline-text-3" id="text-4-8">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">F5</td>
+<td class="org-left">lz/nohup-switch-run</td>
+<td class="org-left">Run current file (auto-detect bash/python)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org928589a" class="outline-3">
+<h3 id="org928589a"><span class="section-number-3">4.9.</span> Citre Code Navigation</h3>
+<div class="outline-text-3" id="text-4-9">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-x c j</td>
+<td class="org-left">citre-jump</td>
+<td class="org-left">Jump to definition</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x c J</td>
+<td class="org-left">citre-jump-back</td>
+<td class="org-left">Jump back</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x c p</td>
+<td class="org-left">citre-ace-peek</td>
+<td class="org-left">Ace peek</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x c u</td>
+<td class="org-left">citre-update-this-tags-file</td>
+<td class="org-left">Update tags</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgefa3bd4" class="outline-3">
+<h3 id="orgefa3bd4"><span class="section-number-3">4.10.</span> AI/LLM Keybindings</h3>
+<div class="outline-text-3" id="text-4-10">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-c C-'</td>
+<td class="org-left">claude-code-ide-menu</td>
+<td class="org-left">Claude Code IDE menu</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c a</td>
+<td class="org-left">aidermacs-transient-menu</td>
+<td class="org-left">Aider transient menu</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgab89ef8" class="outline-3">
+<h3 id="orgab89ef8"><span class="section-number-3">4.11.</span> UI Scaling</h3>
+<div class="outline-text-3" id="text-4-11">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-c C-=</td>
+<td class="org-left">enable-150%-scale-big</td>
+<td class="org-left">Increase UI scale 150%</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c C--</td>
+<td class="org-left">enable-75%-scale-big</td>
+<td class="org-left">Decrease UI scale 75%</td>
+</tr>
+
+<tr>
+<td class="org-left">C-=</td>
+<td class="org-left">text-scale-adjust (+0.5)</td>
+<td class="org-left">Increase text size</td>
+</tr>
+
+<tr>
+<td class="org-left">C--</td>
+<td class="org-left">text-scale-adjust (-0.5)</td>
+<td class="org-left">Decrease text size</td>
+</tr>
+
+<tr>
+<td class="org-left">C-0</td>
+<td class="org-left">text-scale-adjust (reset)</td>
+<td class="org-left">Reset text size</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgf7a9dd7" class="outline-3">
+<h3 id="orgf7a9dd7"><span class="section-number-3">4.12.</span> Flymake Diagnostics</h3>
+<div class="outline-text-3" id="text-4-12">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Keybinding</th>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-x e</td>
+<td class="org-left">flymake-show-buffer-diagnostics</td>
+<td class="org-left">Show diagnostics</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x n</td>
+<td class="org-left">flymake-goto-next-error</td>
+<td class="org-left">Next error</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x N</td>
+<td class="org-left">flymake-goto-prev-error</td>
+<td class="org-left">Previous error</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb8028f6" class="outline-2">
+<h2 id="orgb8028f6"><span class="section-number-2">5.</span> Package List</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orgde97ff1" class="outline-3">
+<h3 id="orgde97ff1"><span class="section-number-3">5.1.</span> Core Infrastructure</h3>
+<div class="outline-text-3" id="text-5-1">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Package</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">use-package</td>
+<td class="org-left">Declarative package configuration</td>
+</tr>
+
+<tr>
+<td class="org-left">straight.el</td>
+<td class="org-left">Package manager (optional, disabled)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org329a19c" class="outline-3">
+<h3 id="org329a19c"><span class="section-number-3">5.2.</span> Vim Emulation (Evil)</h3>
+<div class="outline-text-3" id="text-5-2">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Package</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">evil</td>
+<td class="org-left">Vim emulation layer</td>
+</tr>
+
+<tr>
+<td class="org-left">evil-escape</td>
+<td class="org-left">Escape with "kj" sequence</td>
+</tr>
+
+<tr>
+<td class="org-left">evil-surround</td>
+<td class="org-left">Surround text objects</td>
+</tr>
+
+<tr>
+<td class="org-left">evil-visualstar</td>
+<td class="org-left">Search visual selection</td>
+</tr>
+
+<tr>
+<td class="org-left">evil-leader</td>
+<td class="org-left">Leader key support</td>
+</tr>
+
+<tr>
+<td class="org-left">undo-fu</td>
+<td class="org-left">Improved undo/redo</td>
+</tr>
+
+<tr>
+<td class="org-left">general</td>
+<td class="org-left">Keybinding definitions</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org8a989a6" class="outline-3">
+<h3 id="org8a989a6"><span class="section-number-3">5.3.</span> UI &amp; Themes</h3>
+<div class="outline-text-3" id="text-5-3">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Package</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">doom-themes</td>
+<td class="org-left">Theme collection (doom-dracula)</td>
+</tr>
+
+<tr>
+<td class="org-left">doom-modeline</td>
+<td class="org-left">Modern mode line</td>
+</tr>
+
+<tr>
+<td class="org-left">all-the-icons</td>
+<td class="org-left">Icon set</td>
+</tr>
+
+<tr>
+<td class="org-left">all-the-icons-completion</td>
+<td class="org-left">Icons in completion</td>
+</tr>
+
+<tr>
+<td class="org-left">all-the-icons-dired</td>
+<td class="org-left">Icons in dired</td>
+</tr>
+
+<tr>
+<td class="org-left">nerd-icons</td>
+<td class="org-left">Alternative icon set</td>
+</tr>
+
+<tr>
+<td class="org-left">marginalia</td>
+<td class="org-left">Enhanced minibuffer annotations</td>
+</tr>
+
+<tr>
+<td class="org-left">highlight-indentation</td>
+<td class="org-left">Indentation guides</td>
+</tr>
+
+<tr>
+<td class="org-left">rainbow-delimiters</td>
+<td class="org-left">Color-coded parentheses</td>
+</tr>
+
+<tr>
+<td class="org-left">rainbow-mode</td>
+<td class="org-left">Color codes</td>
+</tr>
+
+<tr>
+<td class="org-left">beacon</td>
+<td class="org-left">Cursor highlighting (disabled)</td>
+</tr>
+
+<tr>
+<td class="org-left">winum</td>
+<td class="org-left">Window number navigation</td>
+</tr>
+
+<tr>
+<td class="org-left">ivy-posframe</td>
+<td class="org-left">Ivy in posframe</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org5b1eb21" class="outline-3">
+<h3 id="org5b1eb21"><span class="section-number-3">5.4.</span> Python Development</h3>
+<div class="outline-text-3" id="text-5-4">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Package</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">python</td>
+<td class="org-left">Built-in Python mode</td>
+</tr>
+
+<tr>
+<td class="org-left">anaconda-mode</td>
+<td class="org-left">Python code navigation (commented)</td>
+</tr>
+
+<tr>
+<td class="org-left">company-anaconda</td>
+<td class="org-left">Company backend (commented)</td>
+</tr>
+
+<tr>
+<td class="org-left">python-black</td>
+<td class="org-left">Code formatting (commented)</td>
+</tr>
+
+<tr>
+<td class="org-left">pyenv-mode</td>
+<td class="org-left">Python env switching (commented)</td>
+</tr>
+
+<tr>
+<td class="org-left">elpy</td>
+<td class="org-left">Python IDE (commented)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org88aeb0b" class="outline-3">
+<h3 id="org88aeb0b"><span class="section-number-3">5.5.</span> Language Server Protocol</h3>
+<div class="outline-text-3" id="text-5-5">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Package</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">eglot</td>
+<td class="org-left">LSP client (built-in)</td>
+</tr>
+
+<tr>
+<td class="org-left">pyright-langserver</td>
+<td class="org-left">Python LSP server</td>
+</tr>
+
+<tr>
+<td class="org-left">copilot</td>
+<td class="org-left">GitHub Copilot</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgfca9649" class="outline-3">
+<h3 id="orgfca9649"><span class="section-number-3">5.6.</span> Code Navigation</h3>
+<div class="outline-text-3" id="text-5-6">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Package</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">citre</td>
+<td class="org-left">Tags-based code navigation</td>
+</tr>
+
+<tr>
+<td class="org-left">projectile</td>
+<td class="org-left">Project management</td>
+</tr>
+
+<tr>
+<td class="org-left">xref</td>
+<td class="org-left">Cross-reference navigation</td>
+</tr>
+
+<tr>
+<td class="org-left">highlight-symbol</td>
+<td class="org-left">Symbol highlighting</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orga080a90" class="outline-3">
+<h3 id="orga080a90"><span class="section-number-3">5.7.</span> Org Mode</h3>
+<div class="outline-text-3" id="text-5-7">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Package</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">org</td>
+<td class="org-left">Built-in outline/note-taking</td>
+</tr>
+
+<tr>
+<td class="org-left">org-roam</td>
+<td class="org-left">Roam knowledge base</td>
+</tr>
+
+<tr>
+<td class="org-left">org-roam-protocol</td>
+<td class="org-left">org-protocol for roam</td>
+</tr>
+
+<tr>
+<td class="org-left">org-bullets</td>
+<td class="org-left">Bullet points</td>
+</tr>
+
+<tr>
+<td class="org-left">org-alert</td>
+<td class="org-left">Desktop notifications</td>
+</tr>
+
+<tr>
+<td class="org-left">org-download</td>
+<td class="org-left">Image attachments</td>
+</tr>
+
+<tr>
+<td class="org-left">htmlize</td>
+<td class="org-left">HTML export for org</td>
+</tr>
+
+<tr>
+<td class="org-left">ox-publish</td>
+<td class="org-left">Publishing static sites</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org535334f" class="outline-3">
+<h3 id="org535334f"><span class="section-number-3">5.8.</span> Snippets &amp; Templates</h3>
+<div class="outline-text-3" id="text-5-8">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Package</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">yasnippet</td>
+<td class="org-left">Template snippets</td>
+</tr>
+
+<tr>
+<td class="org-left">autoinsert</td>
+<td class="org-left">Automatic file templates</td>
+</tr>
+
+<tr>
+<td class="org-left">cdlatex</td>
+<td class="org-left">LaTeX input shortcuts</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org49fa274" class="outline-3">
+<h3 id="org49fa274"><span class="section-number-3">5.9.</span> AI/LLM Integration</h3>
+<div class="outline-text-3" id="text-5-9">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Package</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">gptel</td>
+<td class="org-left">Generic LLM interface</td>
+</tr>
+
+<tr>
+<td class="org-left">claude-code-ide</td>
+<td class="org-left">Claude Code integration</td>
+</tr>
+
+<tr>
+<td class="org-left">aidermacs</td>
+<td class="org-left">Aider AI coding assistant</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org9be5492" class="outline-3">
+<h3 id="org9be5492"><span class="section-number-3">5.10.</span> Shell &amp; Terminal</h3>
+<div class="outline-text-3" id="text-5-10">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Package</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">vterm</td>
+<td class="org-left">Fast terminal emulator</td>
+</tr>
+
+<tr>
+<td class="org-left">eshell</td>
+<td class="org-left">Emacs shell</td>
+</tr>
+
+<tr>
+<td class="org-left">tramp</td>
+<td class="org-left">Remote file editing</td>
+</tr>
+
+<tr>
+<td class="org-left">counsel-tramp</td>
+<td class="org-left">Counsel interface (commented)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org50a5929" class="outline-3">
+<h3 id="org50a5929"><span class="section-number-3">5.11.</span> Version Control</h3>
+<div class="outline-text-3" id="text-5-11">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Package</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">magit</td>
+<td class="org-left">Git interface</td>
+</tr>
+
+<tr>
+<td class="org-left">git-gutter</td>
+<td class="org-left">Diff indicators in gutter</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org7d4b6e2" class="outline-3">
+<h3 id="org7d4b6e2"><span class="section-number-3">5.12.</span> Web Development</h3>
+<div class="outline-text-3" id="text-5-12">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Package</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">web-mode</td>
+<td class="org-left">HTML editing</td>
+</tr>
+
+<tr>
+<td class="org-left">js2-mode</td>
+<td class="org-left">JavaScript editing</td>
+</tr>
+
+<tr>
+<td class="org-left">js2-refactor</td>
+<td class="org-left">JavaScript refactoring</td>
+</tr>
+
+<tr>
+<td class="org-left">emmet-mode</td>
+<td class="org-left">Zen coding</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgcac87f8" class="outline-3">
+<h3 id="orgcac87f8"><span class="section-number-3">5.13.</span> Other Languages</h3>
+<div class="outline-text-3" id="text-5-13">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Package</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">rust-mode</td>
+<td class="org-left">Rust editing</td>
+</tr>
+
+<tr>
+<td class="org-left">rustic</td>
+<td class="org-left">Rust toolkit</td>
+</tr>
+
+<tr>
+<td class="org-left">cider</td>
+<td class="org-left">Clojure REPL</td>
+</tr>
+
+<tr>
+<td class="org-left">typescript-mode</td>
+<td class="org-left">TypeScript</td>
+</tr>
+
+<tr>
+<td class="org-left">auctex</td>
+<td class="org-left">LaTeX editing</td>
+</tr>
+
+<tr>
+<td class="org-left">reftex</td>
+<td class="org-left">LaTeX bibliography (commented)</td>
+</tr>
+
+<tr>
+<td class="org-left">company-auctex</td>
+<td class="org-left">Company backend for LaTeX (commented)</td>
+</tr>
+
+<tr>
+<td class="org-left">leetcode</td>
+<td class="org-left">LeetCode integration</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org01c1ef2" class="outline-3">
+<h3 id="org01c1ef2"><span class="section-number-3">5.14.</span> Productivity</h3>
+<div class="outline-text-3" id="text-5-14">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Package</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">elfeed</td>
+<td class="org-left">RSS reader</td>
+</tr>
+
+<tr>
+<td class="org-left">elfeed-org</td>
+<td class="org-left">Org-based RSS config</td>
+</tr>
+
+<tr>
+<td class="org-left">ivy</td>
+<td class="org-left">Completion framework</td>
+</tr>
+
+<tr>
+<td class="org-left">counsel</td>
+<td class="org-left">Ivy commands</td>
+</tr>
+
+<tr>
+<td class="org-left">swiper</td>
+<td class="org-left">Incremental search</td>
+</tr>
+
+<tr>
+<td class="org-left">smartparens</td>
+<td class="org-left">Smart pair management</td>
+</tr>
+
+<tr>
+<td class="org-left">hungry-delete</td>
+<td class="org-left">Delete whitespace</td>
+</tr>
+
+<tr>
+<td class="org-left">which-key</td>
+<td class="org-left">Keybinding hints</td>
+</tr>
+
+<tr>
+<td class="org-left">neotree</td>
+<td class="org-left">File tree (commented)</td>
+</tr>
+
+<tr>
+<td class="org-left">dirvish</td>
+<td class="org-left">Dired alternative (commented)</td>
+</tr>
+
+<tr>
+<td class="org-left">command-log-mode</td>
+<td class="org-left">Command history</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgc92dc18" class="outline-3">
+<h3 id="orgc92dc18"><span class="section-number-3">5.15.</span> Utilities</h3>
+<div class="outline-text-3" id="text-5-15">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Package</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">company</td>
+<td class="org-left">Text completion</td>
+</tr>
+
+<tr>
+<td class="org-left">flymake</td>
+<td class="org-left">On-the-fly syntax checking</td>
+</tr>
+
+<tr>
+<td class="org-left">hungry-delete</td>
+<td class="org-left">Delete multiple spaces</td>
+</tr>
+
+<tr>
+<td class="org-left">ace-flyspell</td>
+<td class="org-left">Ace jump to flyspell error</td>
+</tr>
+
+<tr>
+<td class="org-left">keyfreq</td>
+<td class="org-left">Track key frequency</td>
+</tr>
+
+<tr>
+<td class="org-left">undo-tree</td>
+<td class="org-left">Visual undo tree (replaced)</td>
+</tr>
+
+<tr>
+<td class="org-left">rg</td>
+<td class="org-left">Ripgrep integration</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfb963ed" class="outline-2">
+<h2 id="orgfb963ed"><span class="section-number-2">6.</span> Configuration Files</h2>
+<div class="outline-text-2" id="text-6">
+</div>
+<div id="outline-container-org4928120" class="outline-3">
+<h3 id="org4928120"><span class="section-number-3">6.1.</span> init-ai.el - AI/LLM Integration</h3>
+<div class="outline-text-3" id="text-6-1">
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">GPTEL (OpenRouter)
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">setq</span> gptel-model <span style="color: #f1fa8c; font-style: italic;">"qwen/qwen3.6-plus-preview:free"</span><span style="color: #61bfff;">)</span>
+<span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">setq</span> gptel-backend
+      <span style="color: #ff79c6;">(</span>gptel-make-openai <span style="color: #f1fa8c; font-style: italic;">"OpenRouter"</span>
+        <span style="color: #ffb86c;">:host</span> <span style="color: #f1fa8c; font-style: italic;">"openrouter.ai"</span>
+        <span style="color: #ffb86c;">:endpoint</span> <span style="color: #f1fa8c; font-style: italic;">"/api/v1/chat/completions"</span>
+        <span style="color: #ffb86c;">:stream</span> t
+        <span style="color: #ffb86c;">:key</span> <span style="color: #50fa7b;">(</span><span style="color: #ff79c6; font-weight: bold;">lambda</span> <span style="color: #bd93f9;">()</span> <span style="color: #bd93f9;">(</span>getenv <span style="color: #f1fa8c; font-style: italic;">"OPENROUTER_API_KEY"</span><span style="color: #bd93f9;">)</span><span style="color: #50fa7b;">)</span><span style="color: #ff79c6;">)</span><span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Claude Code IDE
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">use-package</span> claude-code-ide
+  <span style="color: #ffb86c;">:vc</span> <span style="color: #ff79c6;">(</span><span style="color: #ffb86c;">:url</span> <span style="color: #f1fa8c; font-style: italic;">"https://github.com/manzaltu/claude-code-ide.el"</span> <span style="color: #ffb86c;">:rev</span> <span style="color: #ffb86c;">:newest</span><span style="color: #ff79c6;">)</span>
+  <span style="color: #ffb86c;">:bind</span> <span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"C-c C-'"</span> . claude-code-ide-menu<span style="color: #ff79c6;">)</span>
+  <span style="color: #ffb86c;">:config</span>
+  <span style="color: #ff79c6;">(</span>claude-code-ide-emacs-tools-setup<span style="color: #ff79c6;">)</span><span style="color: #61bfff;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge4e626e" class="outline-3">
+<h3 id="orge4e626e"><span class="section-number-3">6.2.</span> init-openai.el - Aider (DeepSeek)</h3>
+<div class="outline-text-3" id="text-6-2">
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">use-package</span> aidermacs
+  <span style="color: #ffb86c;">:bind</span> <span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"C-c a"</span> . aidermacs-transient-menu<span style="color: #ff79c6;">)</span>
+  <span style="color: #ffb86c;">:custom</span>
+  <span style="color: #ff79c6;">(</span>aidermacs-default-model <span style="color: #f1fa8c; font-style: italic;">"deepseek"</span><span style="color: #ff79c6;">)</span>
+  <span style="color: #ff79c6;">(</span>aidermacs-architect-model <span style="color: #f1fa8c; font-style: italic;">"deepseek/deepseek-reasoner"</span><span style="color: #ff79c6;">)</span>
+  <span style="color: #ff79c6;">(</span>aidermacs-editor-model <span style="color: #f1fa8c; font-style: italic;">"deepseek/deepseek-chat"</span><span style="color: #ff79c6;">)</span>
+  <span style="color: #ff79c6;">(</span>aidermacs-backend 'vterm<span style="color: #ff79c6;">)</span>
+  <span style="color: #ff79c6;">(</span>aidermacs-watch-files t<span style="color: #ff79c6;">)</span><span style="color: #61bfff;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org4397727" class="outline-3">
+<h3 id="org4397727"><span class="section-number-3">6.3.</span> init-lsp.el - Language Server Protocol</h3>
+<div class="outline-text-3" id="text-6-3">
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Eglot auto-starts for rust-mode and python-mode
+</span><span style="color: #61bfff;">(</span>add-hook 'rust-mode-hook 'eglot-ensure<span style="color: #61bfff;">)</span>
+<span style="color: #61bfff;">(</span>add-hook 'python-mode-hook 'eglot-ensure<span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Copilot
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">use-package</span> copilot
+  <span style="color: #ffb86c;">:vc</span> <span style="color: #ff79c6;">(</span><span style="color: #ffb86c;">:url</span> <span style="color: #f1fa8c; font-style: italic;">"https://github.com/copilot-emacs/copilot.el"</span> <span style="color: #ffb86c;">:branch</span> <span style="color: #f1fa8c; font-style: italic;">"main"</span><span style="color: #ff79c6;">)</span>
+  <span style="color: #ffb86c;">:config</span>
+  <span style="color: #ff79c6;">(</span>global-copilot-mode<span style="color: #ff79c6;">)</span><span style="color: #61bfff;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org8bad452" class="outline-3">
+<h3 id="org8bad452"><span class="section-number-3">6.4.</span> init-org.el - Org Mode</h3>
+<div class="outline-text-3" id="text-6-4">
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Custom tags
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">setq</span> org-tag-alist '<span style="color: #ff79c6;">(</span><span style="color: #50fa7b;">(</span><span style="color: #f1fa8c; font-style: italic;">"@Research"</span> . ?r<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">(</span><span style="color: #f1fa8c; font-style: italic;">"@Literature"</span> . ?l<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">(</span><span style="color: #f1fa8c; font-style: italic;">"@Book"</span> . ?b<span style="color: #50fa7b;">)</span><span style="color: #ff79c6;">)</span><span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Babel languages
+</span><span style="color: #61bfff;">(</span>org-babel-do-load-languages 'org-babel-load-languages
+  '<span style="color: #ff79c6;">(</span><span style="color: #50fa7b;">(</span>emacs-lisp . t<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">(</span>ditaa . t<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">(</span>python . t<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">(</span>shell . t<span style="color: #50fa7b;">)</span>
+    <span style="color: #50fa7b;">(</span>latex . t<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">(</span>plantuml . t<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">(</span>R . t<span style="color: #50fa7b;">)</span><span style="color: #ff79c6;">)</span><span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">PlantUML
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">setq</span> org-plantuml-jar-path <span style="color: #f1fa8c; font-style: italic;">"~/.emacs.d/software/plantuml.jar"</span><span style="color: #61bfff;">)</span>
+<span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">setq</span> org-confirm-babel-evaluate nil<span style="color: #61bfff;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfdf05d4" class="outline-3">
+<h3 id="orgfdf05d4"><span class="section-number-3">6.5.</span> init-evil.el - Vim Emulation</h3>
+<div class="outline-text-3" id="text-6-5">
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Evil escape
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">setq-default</span> evil-escape-delay 0.3<span style="color: #61bfff;">)</span>
+<span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">setq-default</span> evil-escape-key-sequence <span style="color: #f1fa8c; font-style: italic;">"kj"</span><span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Undo-fu (improved undo)
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">setq</span> undo-limit 8000000 undo-strong-limit 8000000 undo-outer-limit 8000000<span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Evil surround (per-mode pairs)
+</span><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Shell: $ &#8594; $()
+</span><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Org: [ &#8594; [[]], = &#8594; ==
+</span><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Emacs-lisp: ( &#8594; ( ), ` &#8594; `'
+</span><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Generic: / &#8594; //</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org6f1d3f4" class="outline-3">
+<h3 id="org6f1d3f4"><span class="section-number-3">6.6.</span> init-ui.el - Visual Configuration</h3>
+<div class="outline-text-3" id="text-6-6">
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Theme
+</span><span style="color: #61bfff;">(</span>load-theme 'doom-dracula t<span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Font
+</span><span style="color: #61bfff;">(</span>set-face-attribute 'default nil <span style="color: #ffb86c;">:font</span> <span style="color: #f1fa8c; font-style: italic;">"Maple Mono 17"</span> <span style="color: #ffb86c;">:weight</span> 'normal<span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">CJK Font
+</span><span style="color: #61bfff;">(</span>set-fontset-font t 'han '<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"LXGW WenKai Mono"</span> . <span style="color: #f1fa8c; font-style: italic;">"&#24494;&#36719;&#38597;&#40657;"</span><span style="color: #ff79c6;">)</span><span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Hide UI elements
+</span><span style="color: #61bfff;">(</span>menu-bar-mode -1<span style="color: #61bfff;">)</span>
+<span style="color: #61bfff;">(</span>tool-bar-mode -1<span style="color: #61bfff;">)</span>
+<span style="color: #61bfff;">(</span>scroll-bar-mode -1<span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Line numbers
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">when</span> <span style="color: #ff79c6;">(</span>fboundp 'display-line-numbers-mode<span style="color: #ff79c6;">)</span>
+  <span style="color: #ff79c6;">(</span>global-display-line-numbers-mode<span style="color: #ff79c6;">)</span><span style="color: #61bfff;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd63f03e" class="outline-3">
+<h3 id="orgd63f03e"><span class="section-number-3">6.7.</span> init-python.el - Python Development</h3>
+<div class="outline-text-3" id="text-6-7">
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Run scripts with nohup
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">defun</span> <span style="color: #50fa7b;">lz/running-current-bash-with-nohup</span> <span style="color: #ff79c6;">()</span>
+  <span style="color: #ff79c6;">(</span><span style="color: #ff79c6; font-weight: bold;">interactive</span><span style="color: #ff79c6;">)</span>
+  <span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Runs: nohup bash &lt;file&gt; &gt; timestamp-identify---runfile.log &amp;
+</span>
+<span style="color: #ff79c6;">(</span><span style="color: #ff79c6; font-weight: bold;">defun</span> <span style="color: #50fa7b;">lz/running-current-python-with-nohup</span> <span style="color: #50fa7b;">()</span>
+  <span style="color: #50fa7b;">(</span><span style="color: #ff79c6; font-weight: bold;">interactive</span><span style="color: #50fa7b;">)</span>
+  <span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Prompts for conda env, then runs: nohup $python &lt;file&gt; &gt; ...
+</span>
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">GPU management
+</span><span style="color: #50fa7b;">(</span><span style="color: #ff79c6; font-weight: bold;">defun</span> <span style="color: #50fa7b;">lz/run-occupy-python</span> <span style="color: #bd93f9;">()</span>
+  <span style="color: #bd93f9;">(</span><span style="color: #ff79c6; font-weight: bold;">interactive</span><span style="color: #bd93f9;">)</span>
+  <span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Occupy GPU device for testing
+</span>
+<span style="color: #bd93f9;">(</span><span style="color: #ff79c6; font-weight: bold;">defun</span> <span style="color: #50fa7b;">lz/open-tensorboard-in-current-buffer</span> <span style="color: #0189cc;">()</span>
+  <span style="color: #0189cc;">(</span><span style="color: #ff79c6; font-weight: bold;">interactive</span><span style="color: #0189cc;">)</span>
+  <span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Open TensorBoard in project directory</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org81fcf28" class="outline-3">
+<h3 id="org81fcf28"><span class="section-number-3">6.8.</span> init-ssh.el - SSH Connections</h3>
+<div class="outline-text-3" id="text-6-8">
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Direct connections
+</span>ssh-connect-141    <span style="color: #96a0aa;">; </span><span style="color: #96a0aa;">10.21.20.141
+</span>ssh-connect-142    <span style="color: #96a0aa;">; </span><span style="color: #96a0aa;">10.21.20.142
+</span>ssh-connect-cs1    <span style="color: #96a0aa;">; </span><span style="color: #96a0aa;">cs1.astaple.com
+</span>ssh-connect-cs2    <span style="color: #96a0aa;">; </span><span style="color: #96a0aa;">cs2.astaple.com
+</span>ssh-connect-gs9-16 <span style="color: #96a0aa;">; </span><span style="color: #96a0aa;">gsN.astaple.com
+</span>
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Via jump host (is1.astaple.com)
+</span>ssh-connect-fromout-cs1-2
+ssh-connect-fromout-gs9-16
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd9ac219" class="outline-2">
+<h2 id="orgd9ac219"><span class="section-number-2">7.</span> Custom Functions</h2>
+<div class="outline-text-2" id="text-7">
+</div>
+<div id="outline-container-orgc2eb994" class="outline-3">
+<h3 id="orgc2eb994"><span class="section-number-3">7.1.</span> Core Utilities (init-self-config-function.el)</h3>
+<div class="outline-text-3" id="text-7-1">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">my/indent-4-space</td>
+<td class="org-left">Indent/dedent region or insert 4 spaces</td>
+</tr>
+
+<tr>
+<td class="org-left">Platform detection</td>
+<td class="org-left"><b>is-mac</b>, <b>is-wsl</b>, <b>is-windows</b>, <b>is-linux</b>, <b>is-gui</b></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org3ab348a" class="outline-3">
+<h3 id="org3ab348a"><span class="section-number-3">7.2.</span> Python Scripts (init-python.el)</h3>
+<div class="outline-text-3" id="text-7-2">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">lz/running-current-bash-with-nohup</td>
+<td class="org-left">Run bash script with timestamped log</td>
+</tr>
+
+<tr>
+<td class="org-left">lz/running-current-python-with-nohup</td>
+<td class="org-left">Run Python with conda environment</td>
+</tr>
+
+<tr>
+<td class="org-left">lz/nohup-switch-run</td>
+<td class="org-left">Auto-detect and run file</td>
+</tr>
+
+<tr>
+<td class="org-left">lz/run-occupy-python</td>
+<td class="org-left">Occupy GPU device</td>
+</tr>
+
+<tr>
+<td class="org-left">lz/open-tensorboard-in-current-buffer</td>
+<td class="org-left">Launch TensorBoard</td>
+</tr>
+
+<tr>
+<td class="org-left">lz/look-nvidia-state</td>
+<td class="org-left">Show GPU status</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org079c1e4" class="outline-3">
+<h3 id="org079c1e4"><span class="section-number-3">7.3.</span> Buffer Management (init-buffer.el)</h3>
+<div class="outline-text-3" id="text-7-3">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">clean-all-buffers</td>
+<td class="org-left">Kill all open buffers</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org71951b9" class="outline-3">
+<h3 id="org71951b9"><span class="section-number-3">7.4.</span> WSL Utilities (init-wsl.el)</h3>
+<div class="outline-text-3" id="text-7-4">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">wsl-copy-region-to-clipboard</td>
+<td class="org-left">Copy to Windows clipboard</td>
+</tr>
+
+<tr>
+<td class="org-left">wsl-cut-region-to-clipboard</td>
+<td class="org-left">Cut to Windows clipboard</td>
+</tr>
+
+<tr>
+<td class="org-left">my-yank-image-from-win-clipboard-through-powershell</td>
+<td class="org-left">Paste image from Windows</td>
+</tr>
+
+<tr>
+<td class="org-left">my-open-windows-downloads</td>
+<td class="org-left">Open Windows Downloads folder</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org0493c60" class="outline-3">
+<h3 id="org0493c60"><span class="section-number-3">7.5.</span> SSH Connections (init-ssh.el)</h3>
+<div class="outline-text-3" id="text-7-5">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">ssh-connect-141/142</td>
+<td class="org-left">Direct SSH to lab servers</td>
+</tr>
+
+<tr>
+<td class="org-left">ssh-connect-cs1/2</td>
+<td class="org-left">SSH to cs servers</td>
+</tr>
+
+<tr>
+<td class="org-left">ssh-connect-gs9-16</td>
+<td class="org-left">SSH to gs servers</td>
+</tr>
+
+<tr>
+<td class="org-left">ssh-connect-fromout-*</td>
+<td class="org-left">SSH via jump host</td>
+</tr>
+
+<tr>
+<td class="org-left">ssh-connect-vuln</td>
+<td class="org-left">SSH to vuln server</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org7524ce5" class="outline-3">
+<h3 id="org7524ce5"><span class="section-number-3">7.6.</span> Org Mode (init-org.el)</h3>
+<div class="outline-text-3" id="text-7-6">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">fastinsert-org-head</td>
+<td class="org-left">Insert org header template</td>
+</tr>
+
+<tr>
+<td class="org-left">org-insert-src-block</td>
+<td class="org-left">Insert source code block</td>
+</tr>
+
+<tr>
+<td class="org-left">my-screen-capture</td>
+<td class="org-left">Screen capture to org</td>
+</tr>
+
+<tr>
+<td class="org-left">open-org-note</td>
+<td class="org-left">Open org note</td>
+</tr>
+
+<tr>
+<td class="org-left">open-worklog-in-d</td>
+<td class="org-left">Open worklog</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org3a4f6b5" class="outline-3">
+<h3 id="org3a4f6b5"><span class="section-number-3">7.7.</span> Blog Publishing (init-blog.el)</h3>
+<div class="outline-text-3" id="text-7-7">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">lz/org-publish-sitemap-with-time</td>
+<td class="org-left">Custom sitemap generator</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org87889db" class="outline-3">
+<h3 id="org87889db"><span class="section-number-3">7.8.</span> LaTeX (init-latex.el)</h3>
+<div class="outline-text-3" id="text-7-8">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Function</th>
+<th scope="col" class="org-left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">latex-cover-region-with@zl</td>
+<td class="org-left">Wrap region in LaTeX command</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="outline-container-org57063c1" class="outline-2">
+<h2 id="org57063c1"><span class="section-number-2">8.</span> Platform-Specific Features</h2>
+<div class="outline-text-2" id="text-8">
+</div>
+<div id="outline-container-org3051beb" class="outline-3">
+<h3 id="org3051beb"><span class="section-number-3">8.1.</span> Windows (WSL)</h3>
+<div class="outline-text-3" id="text-8-1">
+<ul class="org-ul">
+<li>Clipboard integration via <code>clip.exe</code></li>
+<li>Image paste from Windows clipboard</li>
+<li>Proxy configuration</li>
+<li>Git configuration</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org4376d25" class="outline-3">
+<h3 id="org4376d25"><span class="section-number-3">8.2.</span> macOS</h3>
+<div class="outline-text-3" id="text-8-2">
+<ul class="org-ul">
+<li><code>exec-path-from-shell</code> for PATH management</li>
+<li>Native clipboard integration</li>
+<li>Application-open for external links</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgf9db574" class="outline-3">
+<h3 id="orgf9db574"><span class="section-number-3">8.3.</span> Linux</h3>
+<div class="outline-text-3" id="text-8-3">
+<ul class="org-ul">
+<li><code>vterm</code> for fast terminal</li>
+<li><code>xsel</code> for clipboard (optional)</li>
+<li>Native file watchers</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orga709a10" class="outline-3">
+<h3 id="orga709a10"><span class="section-number-3">8.4.</span> WSL (Windows Subsystem for Linux)</h3>
+<div class="outline-text-3" id="text-8-4">
+<ul class="org-ul">
+<li>Windows PATH filtering (removes <i>mnt/c</i> paths)</li>
+<li>Cross-platform clipboard functions</li>
+<li>GPU detection and management</li>
+<li>Jump host SSH connections</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb319c4a" class="outline-2">
+<h2 id="orgb319c4a"><span class="section-number-2">9.</span> Environment Variables</h2>
+<div class="outline-text-2" id="text-9">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Variable</th>
+<th scope="col" class="org-left">Description</th>
+<th scope="col" class="org-left">Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">OPENROUTER_API_KEY</td>
+<td class="org-left">API key for GPTEL/OpenRouter</td>
+<td class="org-left">Yes (for AI)</td>
+</tr>
+
+<tr>
+<td class="org-left">DEEPSEEK_API_KEY</td>
+<td class="org-left">API key for DeepSeek (Aider)</td>
+<td class="org-left">Yes (for Aider)</td>
+</tr>
+
+<tr>
+<td class="org-left">LC_ALL</td>
+<td class="org-left">Locale setting (<code>C.UTF-8</code>)</td>
+<td class="org-left">No</td>
+</tr>
+
+<tr>
+<td class="org-left">LANG</td>
+<td class="org-left">Language setting (<code>C.UTF-8</code>)</td>
+<td class="org-left">No</td>
+</tr>
+
+<tr>
+<td class="org-left">DISPLAY</td>
+<td class="org-left">X display for GUI features</td>
+<td class="org-left">Auto-detected</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org4f50d3c" class="outline-2">
+<h2 id="org4f50d3c"><span class="section-number-2">10.</span> Custom Themes &amp; Colors</h2>
+<div class="outline-text-2" id="text-10">
+</div>
+<div id="outline-container-orgeb1ad42" class="outline-3">
+<h3 id="orgeb1ad42"><span class="section-number-3">10.1.</span> doom-dracula Theme</h3>
+<div class="outline-text-3" id="text-10-1">
+<p>
+Mode line changes color based on Evil state:
+</p>
+<ul class="org-ul">
+<li><b>Insert state</b>: Red background (#C53030)</li>
+<li><b>Emacs state</b>: Green background (#2F855A)</li>
+<li><b>Modified buffer</b>: Yellow background (#E9B44C)</li>
+<li><b>Normal state</b>: Dark background (#000000) with green text (#68D391)</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgdbced7b" class="outline-3">
+<h3 id="orgdbced7b"><span class="section-number-3">10.2.</span> Font Configuration</h3>
+<div class="outline-text-3" id="text-10-2">
+<ul class="org-ul">
+<li><b>Default font</b>: Maple Mono 17 (Linux), JetBrainsMono 17 (fallback)</li>
+<li><b>CJK font</b>: LXGW WenKai Mono / 微软雅黑</li>
+<li><b>Mode line</b>: Maple Mono 12 italic</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org2d49b44" class="outline-2">
+<h2 id="org2d49b44"><span class="section-number-2">11.</span> Troubleshooting</h2>
+<div class="outline-text-2" id="text-11">
+</div>
+<div id="outline-container-orgdde50e7" class="outline-3">
+<h3 id="orgdde50e7"><span class="section-number-3">11.1.</span> Package Installation Fails</h3>
+<div class="outline-text-3" id="text-11-1">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">Refresh package archives
+</span>M-x package-refresh-contents RET
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org434035d" class="outline-3">
+<h3 id="org434035d"><span class="section-number-3">11.2.</span> LSP Not Working</h3>
+<div class="outline-text-3" id="text-11-2">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">Install pyright
+</span>pip install pyright
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">Or for Rust
+</span>rustup component add rust-analyzer
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org5e9a89c" class="outline-3">
+<h3 id="org5e9a89c"><span class="section-number-3">11.3.</span> AI Features Not Working</h3>
+<div class="outline-text-3" id="text-11-3">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">Check API key is set
+</span><span style="color: #ffb86c;">echo</span> $<span style="color: #ffc9e8;">OPENROUTER_API_KEY</span>
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">If using Aider, check DeepSeek key
+</span><span style="color: #ffb86c;">echo</span> $<span style="color: #ffc9e8;">DEEPSEEK_API_KEY</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9d00dad" class="outline-3">
+<h3 id="org9d00dad"><span class="section-number-3">11.4.</span> SSH Connection Issues</h3>
+<div class="outline-text-3" id="text-11-4">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">Test SSH connection manually
+</span>ssh zi@cs1.astaple.com
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">Check tramp configuration
+</span>M-x tramp-version RET
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgbde79e6" class="outline-3">
+<h3 id="orgbde79e6"><span class="section-number-3">11.5.</span> Performance Issues</h3>
+<div class="outline-text-3" id="text-11-5">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">Increase garbage collection threshold (already configured)
+</span><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">In init.el: (setq gc-cons-threshold (* 50 1024 1024))
+</span>
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">Check startup time
+</span>emacs --debug-init
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org01e5e19" class="outline-2">
+<h2 id="org01e5e19"><span class="section-number-2">12.</span> Acknowledgments</h2>
+<div class="outline-text-2" id="text-12">
+<p>
+This configuration builds upon many excellent Emacs packages and ideas from:
+</p>
+
+<ul class="org-ul">
+<li><a href="https://github.com/doomemacs/doomemacs">Doom Emacs</a> - Theme and structure inspiration</li>
+<li><a href="https://github.com/bbatsov/prelude">Prelude</a> - General configuration patterns</li>
+<li><a href="https://github.com/capitaomorte/sly">Sly</a> - Common Lisp IDE ideas</li>
+<li><a href="https://www.orgroam.com/">Org Roam</a> - Knowledge management</li>
+<li><a href="https://magit.vc/">Magit</a> - Git interface</li>
+<li><a href="https://github.com/manzaltu/claude-code-ide.el">Claude Code IDE</a> - Claude integration</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org56636ea" class="outline-2">
+<h2 id="org56636ea"><span class="section-number-2">13.</span> 中文翻译</h2>
+<div class="outline-text-2" id="text-13">
+<p>
+这是一份全面的、模块化的 Emacs 配置，集成了 AI/LLM 集成、Python 开发工具、用于笔记和发布的 Org-mode，以及通过 Evil 模式实现的 Vim 风格编辑。
+</p>
+</div>
+<div id="outline-container-orga1699cc" class="outline-3">
+<h3 id="orga1699cc"><span class="section-number-3">13.1.</span> 安装与设置</h3>
+<div class="outline-text-3" id="text-13-1">
+</div>
+<div id="outline-container-org12dd984" class="outline-4">
+<h4 id="org12dd984"><span class="section-number-4">13.1.1.</span> 前置要求</h4>
+<div class="outline-text-4" id="text-13-1-1">
+<ul class="org-ul">
+<li><b>Emacs</b> 27+ (推荐)</li>
+<li><b>Git</b> 用于版本控制功能</li>
+<li><b>Python</b> (推荐 anaconda3 或 miniconda3) 用于 Python 开发</li>
+<li><b>PlantUML</b> (~/.emacs.d/software/plantuml.jar) 用于图表生成</li>
+<li><b>RIPGrep</b> (rg) 用于 counsel-rg 搜索</li>
+<li><b>Universal Ctags</b> 用于 Citre 代码导航</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org59e2680" class="outline-4">
+<h4 id="org59e2680"><span class="section-number-4">13.1.2.</span> 安装</h4>
+<div class="outline-text-4" id="text-13-1-2">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">&#20811;&#38534;&#37197;&#32622;
+</span>git clone https://github.com/ziLiang3845/.emacs.d.git ~/.emacs.d
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">&#23433;&#35013;&#25152;&#38656;&#22806;&#37096;&#24037;&#20855;
+</span><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">- plantuml.jar (~/.emacs.d/software/plantuml.jar)
+</span><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">- rg (ripgrep)
+</span><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">- curl (&#29992;&#20110; OpenRouter API)
+</span>
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">&#35774;&#32622;&#29615;&#22659;&#21464;&#37327; (&#21442;&#35265;&#29615;&#22659;&#21464;&#37327;&#37096;&#20998;)
+</span><span style="color: #ffb86c;">export</span> <span style="color: #ffc9e8;">OPENROUTER_API_KEY</span>=<span style="color: #f1fa8c; font-style: italic;">"your-api-key"</span>
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">&#21551;&#21160; Emacs
+</span>emacs
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org4234e07" class="outline-4">
+<h4 id="org4234e07"><span class="section-number-4">13.1.3.</span> 首次设置</h4>
+<div class="outline-text-4" id="text-13-1-3">
+<ol class="org-ol">
+<li>启动 Emacs - 包将会自动安装</li>
+<li>等待所有包安装完成 (首次启动可能需要 5-10 分钟)</li>
+<li>安装完成后重启 Emacs</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org55ff97e" class="outline-4">
+<h4 id="org55ff97e"><span class="section-number-4">13.1.4.</span> 设置脚本 (doc/)</h4>
+<div class="outline-text-4" id="text-13-1-4">
+<p>
+<code>doc/</code> 目录包含用于自动化安装系统依赖的 shell 脚本。在首次启动 Emacs 之前按顺序运行这些脚本。
+</p>
+</div>
+<ol class="org-ol">
+<li><a id="org0e30fc6"></a>Ubuntu/Debian 设置脚本<br>
+<div class="outline-text-5" id="text-13-1-4-1">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">脚本</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>0.make_install_emacs29.sh</code></td>
+<td class="org-left">从源码编译安装 Emacs 30.1 (需要构建工具)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>2.run_ubuntu_shell_sudo.sh</code></td>
+<td class="org-left">安装系统包：xclip, xsel, gdb, w3m, aspell, scrot, openjdk-17, graphviz, python3, pipenv, mplayer, socat, cmake, zsh, ripgrep, ag 以及开发库</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>3.gitclone.sh</code></td>
+<td class="org-left">克隆额外的仓库 (用于可选功能)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>4.pip-install.sh</code></td>
+<td class="org-left">安装 Python 包：python-lsp-server, torch, numpy, scikit-learn, matplotlib</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>5.add_fonts.sh</code></td>
+<td class="org-left">安装 Maple Mono 和 CJK 字体 (文凯)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>6.initial_setup.sh</code></td>
+<td class="org-left">全局配置 git user.name 和 user.email</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>install-ctags.sh</code></td>
+<td class="org-left">安装 universal-ctags 用于 Citre 代码导航</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="orgd8d7312"></a>推荐的安装顺序<br>
+<div class="outline-text-5" id="text-13-1-4-2">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #ffb86c;">cd</span> ~/.emacs.d/doc/
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">1. &#23433;&#35013;&#31995;&#32479;&#21253; (Ubuntu/Debian)
+</span>sudo bash 2.run_ubuntu_shell_sudo.sh
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">2. &#20174;&#28304;&#30721;&#23433;&#35013; Emacs (&#22914;&#26524;&#19981;&#20351;&#29992;&#21253;&#31649;&#29702;&#22120;)
+</span>bash 0.make_install_emacs29.sh
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">3. &#23433;&#35013; ctags &#29992;&#20110;&#20195;&#30721;&#23548;&#33322;
+</span>sudo bash install-ctags.sh
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">4. &#23433;&#35013;&#23383;&#20307;
+</span>bash 5.add_fonts.sh
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">5. &#23433;&#35013; Python &#21253;&#29992;&#20110; LSP
+</span>bash 4.pip-install.sh
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">6. Git &#37197;&#32622;
+</span>bash 6.initial_setup.sh
+</pre>
+</div>
+</div>
+</li>
+<li><a id="orge3c76b6"></a>Arch Linux<br>
+<div class="outline-text-5" id="text-13-1-4-3">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">脚本</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>2.1.run_install_arch_pacman.sh</code></td>
+<td class="org-left">通过 pacman 安装包</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>5.1.add_fonts_arch_pacman.sh</code></td>
+<td class="org-left">在 Arch 上安装字体</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="org8c92862"></a>其他设置文件<br>
+<div class="outline-text-5" id="text-13-1-4-4">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">文件</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>hope.org</code></td>
+<td class="org-left">TODO 跟踪和愿望清单</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>howToGetCapture.org</code></td>
+<td class="org-left">截图设置指南</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>spellcheck.org</code></td>
+<td class="org-left">拼写检查配置</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>WSL2-ubuntu-install-config-emacs.org</code></td>
+<td class="org-left">WSL2 特定的 Emacs 安装指南</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>install_emacs_without_sudo.txt</code></td>
+<td class="org-left">无 sudo 构建 Emacs 的笔记</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>latex环境指南.doc</code></td>
+<td class="org-left">LaTeX 环境设置指南 (中文)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org65a64d5" class="outline-3">
+<h3 id="org65a64d5"><span class="section-number-3">13.2.</span> 项目结构</h3>
+<div class="outline-text-3" id="text-13-2">
+<pre class="example" id="org1455dae">
+.emacs.d/
+├── init.el                    # 主入口点
+├── lisp/
+│   ├── init-*.el            # 功能模块 (~50 个文件)
+│   ├── custom.el            # Emacs Customize 设置
+│   ├── my-*.el              # 自定义辅助函数
+│   └── org-*.el             # Org-mode 扩展
+├── doc/                      # 系统依赖的设置脚本
+├── other-files/              # 额外资源
+└── feeds/                    # RSS 订阅配置 (elfeed)
+</pre>
+</div>
+<div id="outline-container-org81f17c0" class="outline-4">
+<h4 id="org81f17c0"><span class="section-number-4">13.2.1.</span> 模块加载顺序 (init.el)</h4>
+<div class="outline-text-4" id="text-13-2-1">
+<ul class="org-ul">
+<li>init-self-config-function  → 平台检测，核心工具</li>
+<li>init-wsl                   → WSL 工具</li>
+<li>init-elpa                  → 包管理</li>
+<li>init-openai               → Aider (DeepSeek AI 编程助手)</li>
+<li>init-eshell               → Shell 配置</li>
+<li>init-proxy                → 代理设置</li>
+<li>init-largefile            → 大文件处理</li>
+<li>init-dired                → 文件管理器</li>
+<li>init-clipboard            → 剪贴板集成</li>
+<li>init-yas                  → 代码片段</li>
+<li>init-git                  → Git gutter</li>
+<li>init-citre                → 基于标签的代码导航</li>
+<li>init-python               → Python 开发</li>
+<li>init-latex                → LaTeX 编辑</li>
+<li>init-cl                   → Common Lisp</li>
+<li>init-cpp                  → C++ (已禁用)</li>
+<li>init-rust                 → Rust 开发</li>
+<li>init-cider                → Clojure REPL</li>
+<li>init-blog                 → Org 发布</li>
+<li>init-web                  → Web 开发</li>
+<li>init-path                 → PATH 配置</li>
+<li>init-rss                  → RSS 阅读器 (elfeed)</li>
+<li>init-keybindings          → 全局快捷键</li>
+<li>init-rg                   → Ripgrep 集成</li>
+<li>init-spell                → 拼写检查</li>
+<li>init-packages             → 包初始化</li>
+<li>init-lsp                  → 语言服务器协议</li>
+<li>init-evil                 → Vim 模拟</li>
+<li>init-undo                 → 撤销配置</li>
+<li>init-keyfreq              → 按键频率跟踪</li>
+<li>init-org                  → Org-mode 配置</li>
+<li>init-ssh                  → SSH 连接</li>
+<li>init-ai                   → AI/LLM 集成 (gptel, claude-code-ide)</li>
+<li>init-modeline             → Mode line 配置</li>
+<li>init-window               → 窗口管理 (winum)</li>
+<li>init-chinese              → 中文字体支持</li>
+<li>init-better-defaults      → 改进的默认设置</li>
+<li>init-ui                   → 视觉主题和样式</li>
+<li>org-ui.el                 → Org 特定的 UI</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org4a7b2ec" class="outline-3">
+<h3 id="org4a7b2ec"><span class="section-number-3">13.3.</span> 核心功能概览</h3>
+<div class="outline-text-3" id="text-13-3">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">AI/LLM 集成</td>
+<td class="org-left">GPTEL (OpenRouter), Claude Code IDE, Aider (DeepSeek)</td>
+</tr>
+
+<tr>
+<td class="org-left">Python 开发</td>
+<td class="org-left">LSP (eglot), anaconda-mode, python-black, conda 集成</td>
+</tr>
+
+<tr>
+<td class="org-left">Org Mode</td>
+<td class="org-left">笔记, 发布, 文学编程, Babel</td>
+</tr>
+
+<tr>
+<td class="org-left">Vim 模拟</td>
+<td class="org-left">Evil 模式与自定义 leader 键</td>
+</tr>
+
+<tr>
+<td class="org-left">代码导航</td>
+<td class="org-left">Citre (ctags), xref, highlight-symbol</td>
+</tr>
+
+<tr>
+<td class="org-left">生产力工具</td>
+<td class="org-left">Yasnippet, smartparens, rainbow-delimiters</td>
+</tr>
+
+<tr>
+<td class="org-left">Shell 集成</td>
+<td class="org-left">vterm, eshell, SSH via tramp</td>
+</tr>
+
+<tr>
+<td class="org-left">UI/主题</td>
+<td class="org-left">doom-dracula 主题, doom-modeline, marginalia</td>
+</tr>
+
+<tr>
+<td class="org-left">版本控制</td>
+<td class="org-left">git-gutter, magit</td>
+</tr>
+
+<tr>
+<td class="org-left">Web 开发</td>
+<td class="org-left">web-mode, js2-mode, emmet-mode</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org661a024" class="outline-3">
+<h3 id="org661a024"><span class="section-number-3">13.4.</span> 快捷键参考</h3>
+<div class="outline-text-3" id="text-13-4">
+</div>
+<div id="outline-container-org76b45fc" class="outline-4">
+<h4 id="org76b45fc"><span class="section-number-4">13.4.1.</span> 全局快捷键</h4>
+<div class="outline-text-4" id="text-13-4-1">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-\</td>
+<td class="org-left">comment-line</td>
+<td class="org-left">注释/取消注释当前行</td>
+</tr>
+
+<tr>
+<td class="org-left">C-a</td>
+<td class="org-left">mwim-beginning-of-code-or-line</td>
+<td class="org-left">跳转到代码/行首</td>
+</tr>
+
+<tr>
+<td class="org-left">C-e</td>
+<td class="org-left">mwim-end-of-code-or-line</td>
+<td class="org-left">跳转到代码/行尾</td>
+</tr>
+
+<tr>
+<td class="org-left">C-s</td>
+<td class="org-left">swiper</td>
+<td class="org-left">带候选项的增量搜索</td>
+</tr>
+
+<tr>
+<td class="org-left">C-f5</td>
+<td class="org-left">lz/nohup-switch-run</td>
+<td class="org-left">运行当前文件 (自动检测 bash/python)</td>
+</tr>
+
+<tr>
+<td class="org-left">F1</td>
+<td class="org-left">restart-emacs</td>
+<td class="org-left">重启 Emacs</td>
+</tr>
+
+<tr>
+<td class="org-left">F2</td>
+<td class="org-left">open-my-init-file</td>
+<td class="org-left">打开 init.el</td>
+</tr>
+
+<tr>
+<td class="org-left">TAB</td>
+<td class="org-left">my/indent-4-space</td>
+<td class="org-left">缩进区域或插入 4 个空格</td>
+</tr>
+
+<tr>
+<td class="org-left">S-TAB</td>
+<td class="org-left">my/indent-4-space (带参数)</td>
+<td class="org-left">取消缩进或删除 4 个空格</td>
+</tr>
+
+<tr>
+<td class="org-left">M-0</td>
+<td class="org-left">next-multiframe-window</td>
+<td class="org-left">切换到下一个窗口</td>
+</tr>
+
+<tr>
+<td class="org-left">M-9</td>
+<td class="org-left">previous-multiframe-window</td>
+<td class="org-left">切换到上一个窗口</td>
+</tr>
+
+<tr>
+<td class="org-left">M-r</td>
+<td class="org-left">query-replace</td>
+<td class="org-left">查找和替换</td>
+</tr>
+
+<tr>
+<td class="org-left">M-s</td>
+<td class="org-left">counsel-rg</td>
+<td class="org-left">Ripgrep 搜索</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x C-b</td>
+<td class="org-left">ibuffer</td>
+<td class="org-left">Buffer 管理器</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x 4 &lt;num&gt;</td>
+<td class="org-left">-</td>
+<td class="org-left">分屏为 4 个水平窗口</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x 5 &lt;num&gt;</td>
+<td class="org-left">-</td>
+<td class="org-left">分屏为 3 个水平窗口</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x 6 &lt;num&gt;</td>
+<td class="org-left">-</td>
+<td class="org-left">分屏为 5 个混合窗口</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org7a73a1f" class="outline-4">
+<h4 id="org7a73a1f"><span class="section-number-4">13.4.2.</span> Evil 模式 Leader 键 (SPC)</h4>
+<div class="outline-text-4" id="text-13-4-2">
+<p>
+以下所有快捷键在 Evil Normal/Visual 模式下以 <code>SPC</code> 为前缀。
+</p>
+</div>
+<ol class="org-ol">
+<li><a id="org30dadc8"></a>文件和缓冲区管理<br>
+<div class="outline-text-5" id="text-13-4-2-1">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC xs</td>
+<td class="org-left">save-buffer</td>
+<td class="org-left">保存当前缓冲区</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC xf</td>
+<td class="org-left">find-file</td>
+<td class="org-left">查找文件</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC xr</td>
+<td class="org-left">recentf-open-files</td>
+<td class="org-left">打开最近文件</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC xb</td>
+<td class="org-left">switch-to-buffer</td>
+<td class="org-left">切换缓冲区</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC xk</td>
+<td class="org-left">kill-buffer</td>
+<td class="org-left">关闭缓冲区</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC xc</td>
+<td class="org-left">save-buffers-kill-terminal</td>
+<td class="org-left">保存并关闭</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC bb</td>
+<td class="org-left">-</td>
+<td class="org-left">切换到上一个缓冲区</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC bf</td>
+<td class="org-left">eglot-format-buffer</td>
+<td class="org-left">格式化缓冲区</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="orge24c8c3"></a>窗口管理<br>
+<div class="outline-text-5" id="text-13-4-2-2">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC x0</td>
+<td class="org-left">delete-window</td>
+<td class="org-left">关闭当前窗口</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC x1</td>
+<td class="org-left">delete-other-windows</td>
+<td class="org-left">最大化当前窗口</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC x2</td>
+<td class="org-left">split-window-below</td>
+<td class="org-left">水平分屏</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC x3</td>
+<td class="org-left">split-window-right</td>
+<td class="org-left">垂直分屏</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC x5</td>
+<td class="org-left">split-3-windows-horizontally-evenly</td>
+<td class="org-left">三向水平分屏</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC jj</td>
+<td class="org-left">scroll-other-window</td>
+<td class="org-left">滚动其他窗口向下</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC kk</td>
+<td class="org-left">scroll-other-window-up</td>
+<td class="org-left">滚动其他窗口向上</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="org8be490a"></a>帮助和文档<br>
+<div class="outline-text-5" id="text-13-4-2-3">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC hf</td>
+<td class="org-left">counsel-describe-function</td>
+<td class="org-left">描述函数</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC hv</td>
+<td class="org-left">counsel-describe-variable</td>
+<td class="org-left">描述变量</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC hk</td>
+<td class="org-left">describe-key</td>
+<td class="org-left">描述按键</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC hm</td>
+<td class="org-left">describe-mode</td>
+<td class="org-left">描述模式</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="orgd34e92d"></a>代码导航和编辑<br>
+<div class="outline-text-5" id="text-13-4-2-4">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC gd</td>
+<td class="org-left">evil-goto-definition</td>
+<td class="org-left">跳转到定义</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC hs</td>
+<td class="org-left">highlight-symbol</td>
+<td class="org-left">高亮符号</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC sr</td>
+<td class="org-left">highlight-symbol-query-replace</td>
+<td class="org-left">替换高亮的符号</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC sn</td>
+<td class="org-left">highlight-symbol-nav-mode</td>
+<td class="org-left">导航高亮 (M-n/M-p)</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC hl</td>
+<td class="org-left">hs-hide-level</td>
+<td class="org-left">按级别隐藏代码块</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC sl</td>
+<td class="org-left">hs-show-block</td>
+<td class="org-left">显示代码块</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC er</td>
+<td class="org-left">eglot-rename</td>
+<td class="org-left">重命名符号</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="org1f2ffd9"></a>Citre 代码导航<br>
+<div class="outline-text-5" id="text-13-4-2-5">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC cu</td>
+<td class="org-left">citre-update-this-tags-file</td>
+<td class="org-left">更新 ctags 文件</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC cd</td>
+<td class="org-left">citre-jump</td>
+<td class="org-left">跳转到定义</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC cD</td>
+<td class="org-left">citre-jump-back</td>
+<td class="org-left">跳回</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC cp</td>
+<td class="org-left">citre-ace-peek</td>
+<td class="org-left">查看定义</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="org19528f7"></a>Anaconda 模式 (Python)<br>
+<div class="outline-text-5" id="text-13-4-2-6">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC ad</td>
+<td class="org-left">anaconda-mode-find-definitions</td>
+<td class="org-left">查找定义</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC ar</td>
+<td class="org-left">anaconda-mode-find-references</td>
+<td class="org-left">查找引用</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC aD</td>
+<td class="org-left">anaconda-mode-find-definitions-other-window</td>
+<td class="org-left">在其他窗口中查找</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC aR</td>
+<td class="org-left">anaconda-mode-find-references-other-window</td>
+<td class="org-left">在其他窗口中查找引用</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC aa</td>
+<td class="org-left">anaconda-mode-find-assignments</td>
+<td class="org-left">查找赋值</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC a/</td>
+<td class="org-left">anaconda-mode-show-doc</td>
+<td class="org-left">显示文档</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="orgdfb5fac"></a>Python 脚本 (F5 / nohup)<br>
+<div class="outline-text-5" id="text-13-4-2-7">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC rb</td>
+<td class="org-left">lz/running-current-bash-with-nohup</td>
+<td class="org-left">在后台运行 bash 脚本</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC rp</td>
+<td class="org-left">lz/running-current-python-with-nohup</td>
+<td class="org-left">使用 conda 运行 Python 脚本</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC ro</td>
+<td class="org-left">lz/run-occupy-python</td>
+<td class="org-left">占用 GPU 设备</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC rt</td>
+<td class="org-left">lz/open-tensorboard-in-current-buffer</td>
+<td class="org-left">打开 TensorBoard</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC ns</td>
+<td class="org-left">lz/look-nvidia-state</td>
+<td class="org-left">查看 GPU 状态</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="org677e4cb"></a>SSH 连接<br>
+<div class="outline-text-5" id="text-13-4-2-8">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC 141</td>
+<td class="org-left">ssh-connect-141</td>
+<td class="org-left">连接到 10.21.20.141</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC 142</td>
+<td class="org-left">ssh-connect-142</td>
+<td class="org-left">连接到 10.21.20.142</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC cs1</td>
+<td class="org-left">ssh-connect-cs1</td>
+<td class="org-left">连接到 cs1.astaple.com</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC cs2</td>
+<td class="org-left">ssh-connect-cs2</td>
+<td class="org-left">连接到 cs2.astaple.com</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC gs9-gs16</td>
+<td class="org-left">ssh-connect-gsN</td>
+<td class="org-left">连接到 gsN.astaple.com</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC ocs1</td>
+<td class="org-left">ssh-connect-fromout-cs1</td>
+<td class="org-left">通过跳板主机连接</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC ogs9-ogs16</td>
+<td class="org-left">ssh-connect-fromout-gsN</td>
+<td class="org-left">通过跳板主机连接 gsN</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="orgd2f80d8"></a>剪贴板和 WSL<br>
+<div class="outline-text-5" id="text-13-4-2-9">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC sy</td>
+<td class="org-left">wsl-copy-region-to-clipboard</td>
+<td class="org-left">复制到 Windows 剪贴板</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC sd</td>
+<td class="org-left">wsl-cut-region-to-clipboard</td>
+<td class="org-left">剪切到 Windows 剪贴板</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC si</td>
+<td class="org-left">my-yank-image-from-win-clipboard-through-powershell</td>
+<td class="org-left">从 Windows 粘贴图片</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="org5e03a56"></a>Shell<br>
+<div class="outline-text-5" id="text-13-4-2-10">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC sh</td>
+<td class="org-left">shell</td>
+<td class="org-left">打开 shell</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC sc</td>
+<td class="org-left">shell-command</td>
+<td class="org-left">运行 shell 命令</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="orgf586df7"></a>英文和拼写<br>
+<div class="outline-text-5" id="text-13-4-2-11">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC cy</td>
+<td class="org-left">gt-translate</td>
+<td class="org-left">翻译文本</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC te</td>
+<td class="org-left">toggle-company-english-helper</td>
+<td class="org-left">切换英文助手</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC is</td>
+<td class="org-left">ispell-buffer</td>
+<td class="org-left">拼写检查缓冲区</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC fs</td>
+<td class="org-left">flyspell-mode</td>
+<td class="org-left">切换拼写检查</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="orgb342914"></a>Org 模式<br>
+<div class="outline-text-5" id="text-13-4-2-12">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC ii</td>
+<td class="org-left">my-screen-capture</td>
+<td class="org-left">截图到 org</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC ih</td>
+<td class="org-left">fastinsert-org-head</td>
+<td class="org-left">插入 org 标题</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC ic</td>
+<td class="org-left">org-insert-src-block</td>
+<td class="org-left">插入代码块</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC op</td>
+<td class="org-left">org-publish</td>
+<td class="org-left">发布 org 项目</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC on</td>
+<td class="org-left">open-org-note</td>
+<td class="org-left">打开 org 笔记</td>
+</tr>
+
+<tr>
+<td class="org-left">SPC ow</td>
+<td class="org-left">open-worklog-in-d</td>
+<td class="org-left">打开工作日志</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="org6204521"></a>隐藏/显示代码<br>
+<div class="outline-text-5" id="text-13-4-2-13">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC s1</td>
+<td class="org-left">latex-cover-region-with@zl</td>
+<td class="org-left">用 LaTeX 命令包裹区域</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><a id="org466775a"></a>集合<br>
+<div class="outline-text-5" id="text-13-4-2-14">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">SPC ec</td>
+<td class="org-left">collected-run</td>
+<td class="org-left">运行收集的命令</td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+</ol>
+</div>
+<div id="outline-container-org364a022" class="outline-4">
+<h4 id="org364a022"><span class="section-number-4">13.4.3.</span> Evil 状态导航</h4>
+<div class="outline-text-4" id="text-13-4-3">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-e</td>
+<td class="org-left">mwim-end-of-line-or-code</td>
+<td class="org-left">跳转到行/代码末尾 (Evil Normal)</td>
+</tr>
+
+<tr>
+<td class="org-left">C-p</td>
+<td class="org-left">previous-line</td>
+<td class="org-left">上一行 (Evil Normal)</td>
+</tr>
+
+<tr>
+<td class="org-left">C-n</td>
+<td class="org-left">next-line</td>
+<td class="org-left">下一行 (Evil Normal)</td>
+</tr>
+
+<tr>
+<td class="org-left">C-b</td>
+<td class="org-left">backward-char</td>
+<td class="org-left">后退字符 (Evil Normal)</td>
+</tr>
+
+<tr>
+<td class="org-left">C-f</td>
+<td class="org-left">forward-char</td>
+<td class="org-left">前进字符 (Evil Normal)</td>
+</tr>
+
+<tr>
+<td class="org-left">C-v</td>
+<td class="org-left">scroll-up-command</td>
+<td class="org-left">向上滚动 (Evil Normal)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgcc2ac92" class="outline-4">
+<h4 id="orgcc2ac92"><span class="section-number-4">13.4.4.</span> Evil 转义</h4>
+<div class="outline-text-4" id="text-13-4-4">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">kj</td>
+<td class="org-left">-</td>
+<td class="org-left">从插入模式退出 (0.3秒延迟)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org335efa3" class="outline-4">
+<h4 id="org335efa3"><span class="section-number-4">13.4.5.</span> 窗口导航 (winum)</h4>
+<div class="outline-text-4" id="text-13-4-5">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">M-0</td>
+<td class="org-left">winum-select-window-0-or-10</td>
+<td class="org-left">选择窗口 0 或 10</td>
+</tr>
+
+<tr>
+<td class="org-left">M-1</td>
+<td class="org-left">winum-select-window-1</td>
+<td class="org-left">选择窗口 1</td>
+</tr>
+
+<tr>
+<td class="org-left">M-2</td>
+<td class="org-left">winum-select-window-2</td>
+<td class="org-left">选择窗口 2</td>
+</tr>
+
+<tr>
+<td class="org-left">M-3</td>
+<td class="org-left">winum-select-window-3</td>
+<td class="org-left">选择窗口 3</td>
+</tr>
+
+<tr>
+<td class="org-left">M-4</td>
+<td class="org-left">winum-select-window-4</td>
+<td class="org-left">选择窗口 4</td>
+</tr>
+
+<tr>
+<td class="org-left">M-5</td>
+<td class="org-left">winum-select-window-5</td>
+<td class="org-left">选择窗口 5</td>
+</tr>
+
+<tr>
+<td class="org-left">M-6</td>
+<td class="org-left">winum-select-window-6</td>
+<td class="org-left">选择窗口 6</td>
+</tr>
+
+<tr>
+<td class="org-left">M-7</td>
+<td class="org-left">winum-select-window-7</td>
+<td class="org-left">选择窗口 7</td>
+</tr>
+
+<tr>
+<td class="org-left">M-8</td>
+<td class="org-left">winum-select-window-8</td>
+<td class="org-left">选择窗口 8</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgb3e2a7e" class="outline-4">
+<h4 id="orgb3e2a7e"><span class="section-number-4">13.4.6.</span> Ivy/Counsel 搜索</h4>
+<div class="outline-text-4" id="text-13-4-6">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">M-x</td>
+<td class="org-left">counsel-M-x</td>
+<td class="org-left">执行命令</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x C-f</td>
+<td class="org-left">counsel-find-file</td>
+<td class="org-left">带补全的查找文件</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x b</td>
+<td class="org-left">counsel-switch-buffer</td>
+<td class="org-left">切换缓冲区</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x B</td>
+<td class="org-left">counsel-switch-buffer-other-window</td>
+<td class="org-left">切换缓冲区 (其他窗口)</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x C-r</td>
+<td class="org-left">counsel-recentf</td>
+<td class="org-left">打开最近文件</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h f</td>
+<td class="org-left">counsel-describe-function</td>
+<td class="org-left">描述函数</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h v</td>
+<td class="org-left">counsel-describe-variable</td>
+<td class="org-left">描述变量</td>
+</tr>
+
+<tr>
+<td class="org-left">C-h C-k</td>
+<td class="org-left">find-function-on-key</td>
+<td class="org-left">查找按键定义</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c C-r</td>
+<td class="org-left">ivy-resume</td>
+<td class="org-left">恢复上次搜索</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgdec7fa7" class="outline-4">
+<h4 id="orgdec7fa7"><span class="section-number-4">13.4.7.</span> Org 模式快捷键</h4>
+<div class="outline-text-4" id="text-13-4-7">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-c l</td>
+<td class="org-left">org-store-link</td>
+<td class="org-left">存储链接</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c s e</td>
+<td class="org-left">org-edit-src-code</td>
+<td class="org-left">编辑代码块</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c s i</td>
+<td class="org-left">org-insert-src-block</td>
+<td class="org-left">插入代码块</td>
+</tr>
+
+<tr>
+<td class="org-left">C-f h</td>
+<td class="org-left">fastinsert-org-head</td>
+<td class="org-left">插入 org 标题模板</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org931db65" class="outline-4">
+<h4 id="org931db65"><span class="section-number-4">13.4.8.</span> Python 开发</h4>
+<div class="outline-text-4" id="text-13-4-8">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">F5</td>
+<td class="org-left">lz/nohup-switch-run</td>
+<td class="org-left">运行当前文件 (自动检测 bash/python)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgdda50aa" class="outline-4">
+<h4 id="orgdda50aa"><span class="section-number-4">13.4.9.</span> Citre 代码导航</h4>
+<div class="outline-text-4" id="text-13-4-9">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-x c j</td>
+<td class="org-left">citre-jump</td>
+<td class="org-left">跳转到定义</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x c J</td>
+<td class="org-left">citre-jump-back</td>
+<td class="org-left">跳回</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x c p</td>
+<td class="org-left">citre-ace-peek</td>
+<td class="org-left">Ace peek</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x c u</td>
+<td class="org-left">citre-update-this-tags-file</td>
+<td class="org-left">更新 tags</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgbfe0859" class="outline-4">
+<h4 id="orgbfe0859"><span class="section-number-4">13.4.10.</span> AI/LLM 快捷键</h4>
+<div class="outline-text-4" id="text-13-4-10">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-c C-'</td>
+<td class="org-left">claude-code-ide-menu</td>
+<td class="org-left">Claude Code IDE 菜单</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c a</td>
+<td class="org-left">aidermacs-transient-menu</td>
+<td class="org-left">Aider 瞬时菜单</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org671c278" class="outline-4">
+<h4 id="org671c278"><span class="section-number-4">13.4.11.</span> UI 缩放</h4>
+<div class="outline-text-4" id="text-13-4-11">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-c C-=</td>
+<td class="org-left">enable-150%-scale-big</td>
+<td class="org-left">增大 UI 比例到 150%</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c C--</td>
+<td class="org-left">enable-75%-scale-big</td>
+<td class="org-left">减小 UI 比例到 75%</td>
+</tr>
+
+<tr>
+<td class="org-left">C-=</td>
+<td class="org-left">text-scale-adjust (+0.5)</td>
+<td class="org-left">增大字号</td>
+</tr>
+
+<tr>
+<td class="org-left">C--</td>
+<td class="org-left">text-scale-adjust (-0.5)</td>
+<td class="org-left">减小字号</td>
+</tr>
+
+<tr>
+<td class="org-left">C-0</td>
+<td class="org-left">text-scale-adjust (reset)</td>
+<td class="org-left">重置字号</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org7a1d039" class="outline-4">
+<h4 id="org7a1d039"><span class="section-number-4">13.4.12.</span> Flymake 诊断</h4>
+<div class="outline-text-4" id="text-13-4-12">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-x e</td>
+<td class="org-left">flymake-show-buffer-diagnostics</td>
+<td class="org-left">显示诊断信息</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x n</td>
+<td class="org-left">flymake-goto-next-error</td>
+<td class="org-left">下一个错误</td>
+</tr>
+
+<tr>
+<td class="org-left">C-x N</td>
+<td class="org-left">flymake-goto-prev-error</td>
+<td class="org-left">上一个错误</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="outline-container-org611e1f2" class="outline-3">
+<h3 id="org611e1f2"><span class="section-number-3">13.5.</span> 包列表</h3>
+<div class="outline-text-3" id="text-13-5">
+</div>
+<div id="outline-container-org435a9d0" class="outline-4">
+<h4 id="org435a9d0"><span class="section-number-4">13.5.1.</span> 核心基础设施</h4>
+<div class="outline-text-4" id="text-13-5-1">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">包</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">use-package</td>
+<td class="org-left">声明式包配置</td>
+</tr>
+
+<tr>
+<td class="org-left">straight.el</td>
+<td class="org-left">包管理器 (可选, 已禁用)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgf261ebe" class="outline-4">
+<h4 id="orgf261ebe"><span class="section-number-4">13.5.2.</span> Vim 模拟 (Evil)</h4>
+<div class="outline-text-4" id="text-13-5-2">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">包</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">evil</td>
+<td class="org-left">Vim 模拟层</td>
+</tr>
+
+<tr>
+<td class="org-left">evil-escape</td>
+<td class="org-left">使用 "kj" 序列转义</td>
+</tr>
+
+<tr>
+<td class="org-left">evil-surround</td>
+<td class="org-left">环绕文本对象</td>
+</tr>
+
+<tr>
+<td class="org-left">evil-visualstar</td>
+<td class="org-left">搜索可视化选择</td>
+</tr>
+
+<tr>
+<td class="org-left">evil-leader</td>
+<td class="org-left">Leader 键支持</td>
+</tr>
+
+<tr>
+<td class="org-left">undo-fu</td>
+<td class="org-left">改进的撤销/重做</td>
+</tr>
+
+<tr>
+<td class="org-left">general</td>
+<td class="org-left">快捷键定义</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org6313389" class="outline-4">
+<h4 id="org6313389"><span class="section-number-4">13.5.3.</span> UI 和主题</h4>
+<div class="outline-text-4" id="text-13-5-3">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">包</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">doom-themes</td>
+<td class="org-left">主题集合 (doom-dracula)</td>
+</tr>
+
+<tr>
+<td class="org-left">doom-modeline</td>
+<td class="org-left">现代 mode line</td>
+</tr>
+
+<tr>
+<td class="org-left">all-the-icons</td>
+<td class="org-left">图标集</td>
+</tr>
+
+<tr>
+<td class="org-left">all-the-icons-completion</td>
+<td class="org-left">补全中的图标</td>
+</tr>
+
+<tr>
+<td class="org-left">all-the-icons-dired</td>
+<td class="org-left">dired 中的图标</td>
+</tr>
+
+<tr>
+<td class="org-left">nerd-icons</td>
+<td class="org-left">替代图标集</td>
+</tr>
+
+<tr>
+<td class="org-left">marginalia</td>
+<td class="org-left">增强的 minibuffer 注解</td>
+</tr>
+
+<tr>
+<td class="org-left">highlight-indentation</td>
+<td class="org-left">缩进指南</td>
+</tr>
+
+<tr>
+<td class="org-left">rainbow-delimiters</td>
+<td class="org-left">彩色括号</td>
+</tr>
+
+<tr>
+<td class="org-left">rainbow-mode</td>
+<td class="org-left">颜色代码</td>
+</tr>
+
+<tr>
+<td class="org-left">beacon</td>
+<td class="org-left">光标高亮 (已禁用)</td>
+</tr>
+
+<tr>
+<td class="org-left">winum</td>
+<td class="org-left">窗口编号导航</td>
+</tr>
+
+<tr>
+<td class="org-left">ivy-posframe</td>
+<td class="org-left">Ivy in posframe</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgc19b149" class="outline-4">
+<h4 id="orgc19b149"><span class="section-number-4">13.5.4.</span> Python 开发</h4>
+<div class="outline-text-4" id="text-13-5-4">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">包</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">python</td>
+<td class="org-left">内置 Python 模式</td>
+</tr>
+
+<tr>
+<td class="org-left">anaconda-mode</td>
+<td class="org-left">Python 代码导航 (已注释)</td>
+</tr>
+
+<tr>
+<td class="org-left">company-anaconda</td>
+<td class="org-left">Company 后端 (已注释)</td>
+</tr>
+
+<tr>
+<td class="org-left">python-black</td>
+<td class="org-left">代码格式化 (已注释)</td>
+</tr>
+
+<tr>
+<td class="org-left">pyenv-mode</td>
+<td class="org-left">Python 环境切换 (已注释)</td>
+</tr>
+
+<tr>
+<td class="org-left">elpy</td>
+<td class="org-left">Python IDE (已注释)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org094f5ef" class="outline-4">
+<h4 id="org094f5ef"><span class="section-number-4">13.5.5.</span> 语言服务器协议</h4>
+<div class="outline-text-4" id="text-13-5-5">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">包</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">eglot</td>
+<td class="org-left">LSP 客户端 (内置)</td>
+</tr>
+
+<tr>
+<td class="org-left">pyright-langserver</td>
+<td class="org-left">Python LSP 服务器</td>
+</tr>
+
+<tr>
+<td class="org-left">copilot</td>
+<td class="org-left">GitHub Copilot</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org8a6ce18" class="outline-4">
+<h4 id="org8a6ce18"><span class="section-number-4">13.5.6.</span> 代码导航</h4>
+<div class="outline-text-4" id="text-13-5-6">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">包</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">citre</td>
+<td class="org-left">基于标签的代码导航</td>
+</tr>
+
+<tr>
+<td class="org-left">projectile</td>
+<td class="org-left">项目管理</td>
+</tr>
+
+<tr>
+<td class="org-left">xref</td>
+<td class="org-left">交叉引用导航</td>
+</tr>
+
+<tr>
+<td class="org-left">highlight-symbol</td>
+<td class="org-left">符号高亮</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org7949bdc" class="outline-4">
+<h4 id="org7949bdc"><span class="section-number-4">13.5.7.</span> Org Mode</h4>
+<div class="outline-text-4" id="text-13-5-7">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">包</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">org</td>
+<td class="org-left">内置大纲/笔记工具</td>
+</tr>
+
+<tr>
+<td class="org-left">org-roam</td>
+<td class="org-left">漫游知识库</td>
+</tr>
+
+<tr>
+<td class="org-left">org-roam-protocol</td>
+<td class="org-left">roam 的 org-protocol</td>
+</tr>
+
+<tr>
+<td class="org-left">org-bullets</td>
+<td class="org-left">项目符号</td>
+</tr>
+
+<tr>
+<td class="org-left">org-alert</td>
+<td class="org-left">桌面通知</td>
+</tr>
+
+<tr>
+<td class="org-left">org-download</td>
+<td class="org-left">图片附件</td>
+</tr>
+
+<tr>
+<td class="org-left">htmlize</td>
+<td class="org-left">org 的 HTML 导出</td>
+</tr>
+
+<tr>
+<td class="org-left">ox-publish</td>
+<td class="org-left">发布静态站点</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org08e05c6" class="outline-4">
+<h4 id="org08e05c6"><span class="section-number-4">13.5.8.</span> 代码片段和模板</h4>
+<div class="outline-text-4" id="text-13-5-8">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">包</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">yasnippet</td>
+<td class="org-left">模板代码片段</td>
+</tr>
+
+<tr>
+<td class="org-left">autoinsert</td>
+<td class="org-left">自动文件模板</td>
+</tr>
+
+<tr>
+<td class="org-left">cdlatex</td>
+<td class="org-left">LaTeX 输入快捷方式</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org579e673" class="outline-4">
+<h4 id="org579e673"><span class="section-number-4">13.5.9.</span> AI/LLM 集成</h4>
+<div class="outline-text-4" id="text-13-5-9">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">包</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">gptel</td>
+<td class="org-left">通用 LLM 接口</td>
+</tr>
+
+<tr>
+<td class="org-left">claude-code-ide</td>
+<td class="org-left">Claude Code 集成</td>
+</tr>
+
+<tr>
+<td class="org-left">aidermacs</td>
+<td class="org-left">Aider AI 编程助手</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org9e130fa" class="outline-4">
+<h4 id="org9e130fa"><span class="section-number-4">13.5.10.</span> Shell 和终端</h4>
+<div class="outline-text-4" id="text-13-5-10">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">包</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">vterm</td>
+<td class="org-left">快速终端模拟器</td>
+</tr>
+
+<tr>
+<td class="org-left">eshell</td>
+<td class="org-left">Emacs shell</td>
+</tr>
+
+<tr>
+<td class="org-left">tramp</td>
+<td class="org-left">远程文件编辑</td>
+</tr>
+
+<tr>
+<td class="org-left">counsel-tramp</td>
+<td class="org-left">Counsel 接口 (已注释)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org8c9d9ec" class="outline-4">
+<h4 id="org8c9d9ec"><span class="section-number-4">13.5.11.</span> 版本控制</h4>
+<div class="outline-text-4" id="text-13-5-11">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">包</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">magit</td>
+<td class="org-left">Git 界面</td>
+</tr>
+
+<tr>
+<td class="org-left">git-gutter</td>
+<td class="org-left">装订线中的差异指示器</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgadd0f22" class="outline-4">
+<h4 id="orgadd0f22"><span class="section-number-4">13.5.12.</span> Web 开发</h4>
+<div class="outline-text-4" id="text-13-5-12">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">包</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">web-mode</td>
+<td class="org-left">HTML 编辑</td>
+</tr>
+
+<tr>
+<td class="org-left">js2-mode</td>
+<td class="org-left">JavaScript 编辑</td>
+</tr>
+
+<tr>
+<td class="org-left">js2-refactor</td>
+<td class="org-left">JavaScript 重构</td>
+</tr>
+
+<tr>
+<td class="org-left">emmet-mode</td>
+<td class="org-left">Zen 编码</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org199ad5e" class="outline-4">
+<h4 id="org199ad5e"><span class="section-number-4">13.5.13.</span> 其他语言</h4>
+<div class="outline-text-4" id="text-13-5-13">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">包</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">rust-mode</td>
+<td class="org-left">Rust 编辑</td>
+</tr>
+
+<tr>
+<td class="org-left">rustic</td>
+<td class="org-left">Rust 工具包</td>
+</tr>
+
+<tr>
+<td class="org-left">cider</td>
+<td class="org-left">Clojure REPL</td>
+</tr>
+
+<tr>
+<td class="org-left">typescript-mode</td>
+<td class="org-left">TypeScript</td>
+</tr>
+
+<tr>
+<td class="org-left">auctex</td>
+<td class="org-left">LaTeX 编辑</td>
+</tr>
+
+<tr>
+<td class="org-left">reftex</td>
+<td class="org-left">LaTeX 参考文献 (已注释)</td>
+</tr>
+
+<tr>
+<td class="org-left">company-auctex</td>
+<td class="org-left">LaTeX 的 Company 后端 (已注释)</td>
+</tr>
+
+<tr>
+<td class="org-left">leetcode</td>
+<td class="org-left">LeetCode 集成</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org218c9b4" class="outline-4">
+<h4 id="org218c9b4"><span class="section-number-4">13.5.14.</span> 生产力工具</h4>
+<div class="outline-text-4" id="text-13-5-14">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">包</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">elfeed</td>
+<td class="org-left">RSS 阅读器</td>
+</tr>
+
+<tr>
+<td class="org-left">elfeed-org</td>
+<td class="org-left">基于 org 的 RSS 配置</td>
+</tr>
+
+<tr>
+<td class="org-left">ivy</td>
+<td class="org-left">补全框架</td>
+</tr>
+
+<tr>
+<td class="org-left">counsel</td>
+<td class="org-left">Ivy 命令</td>
+</tr>
+
+<tr>
+<td class="org-left">swiper</td>
+<td class="org-left">增量搜索</td>
+</tr>
+
+<tr>
+<td class="org-left">smartparens</td>
+<td class="org-left">智能配对管理</td>
+</tr>
+
+<tr>
+<td class="org-left">hungry-delete</td>
+<td class="org-left">删除空白</td>
+</tr>
+
+<tr>
+<td class="org-left">which-key</td>
+<td class="org-left">快捷键提示</td>
+</tr>
+
+<tr>
+<td class="org-left">neotree</td>
+<td class="org-left">文件树 (已注释)</td>
+</tr>
+
+<tr>
+<td class="org-left">dirvish</td>
+<td class="org-left">Dired 替代品 (已注释)</td>
+</tr>
+
+<tr>
+<td class="org-left">command-log-mode</td>
+<td class="org-left">命令历史</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org9dd857c" class="outline-4">
+<h4 id="org9dd857c"><span class="section-number-4">13.5.15.</span> 实用工具</h4>
+<div class="outline-text-4" id="text-13-5-15">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">包</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">company</td>
+<td class="org-left">文本补全</td>
+</tr>
+
+<tr>
+<td class="org-left">flymake</td>
+<td class="org-left">飞行语法检查</td>
+</tr>
+
+<tr>
+<td class="org-left">hungry-delete</td>
+<td class="org-left">删除多个空格</td>
+</tr>
+
+<tr>
+<td class="org-left">ace-flyspell</td>
+<td class="org-left">Ace 跳转到 flyspell 错误</td>
+</tr>
+
+<tr>
+<td class="org-left">keyfreq</td>
+<td class="org-left">跟踪按键频率</td>
+</tr>
+
+<tr>
+<td class="org-left">undo-tree</td>
+<td class="org-left">可视化撤销树 (已替换)</td>
+</tr>
+
+<tr>
+<td class="org-left">rg</td>
+<td class="org-left">Ripgrep 集成</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="outline-container-org6007db9" class="outline-3">
+<h3 id="org6007db9"><span class="section-number-3">13.6.</span> 配置文件</h3>
+<div class="outline-text-3" id="text-13-6">
+</div>
+<div id="outline-container-orgf5593e6" class="outline-4">
+<h4 id="orgf5593e6"><span class="section-number-4">13.6.1.</span> init-ai.el - AI/LLM 集成</h4>
+<div class="outline-text-4" id="text-13-6-1">
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">GPTEL (OpenRouter)
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">setq</span> gptel-model <span style="color: #f1fa8c; font-style: italic;">"qwen/qwen3.6-plus-preview:free"</span><span style="color: #61bfff;">)</span>
+<span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">setq</span> gptel-backend
+      <span style="color: #ff79c6;">(</span>gptel-make-openai <span style="color: #f1fa8c; font-style: italic;">"OpenRouter"</span>
+        <span style="color: #ffb86c;">:host</span> <span style="color: #f1fa8c; font-style: italic;">"openrouter.ai"</span>
+        <span style="color: #ffb86c;">:endpoint</span> <span style="color: #f1fa8c; font-style: italic;">"/api/v1/chat/completions"</span>
+        <span style="color: #ffb86c;">:stream</span> t
+        <span style="color: #ffb86c;">:key</span> <span style="color: #50fa7b;">(</span><span style="color: #ff79c6; font-weight: bold;">lambda</span> <span style="color: #bd93f9;">()</span> <span style="color: #bd93f9;">(</span>getenv <span style="color: #f1fa8c; font-style: italic;">"OPENROUTER_API_KEY"</span><span style="color: #bd93f9;">)</span><span style="color: #50fa7b;">)</span><span style="color: #ff79c6;">)</span><span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Claude Code IDE
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">use-package</span> claude-code-ide
+  <span style="color: #ffb86c;">:vc</span> <span style="color: #ff79c6;">(</span><span style="color: #ffb86c;">:url</span> <span style="color: #f1fa8c; font-style: italic;">"https://github.com/manzaltu/claude-code-ide.el"</span> <span style="color: #ffb86c;">:rev</span> <span style="color: #ffb86c;">:newest</span><span style="color: #ff79c6;">)</span>
+  <span style="color: #ffb86c;">:bind</span> <span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"C-c C-'"</span> . claude-code-ide-menu<span style="color: #ff79c6;">)</span>
+  <span style="color: #ffb86c;">:config</span>
+  <span style="color: #ff79c6;">(</span>claude-code-ide-emacs-tools-setup<span style="color: #ff79c6;">)</span><span style="color: #61bfff;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge02f6df" class="outline-4">
+<h4 id="orge02f6df"><span class="section-number-4">13.6.2.</span> init-openai.el - Aider (DeepSeek)</h4>
+<div class="outline-text-4" id="text-13-6-2">
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">use-package</span> aidermacs
+  <span style="color: #ffb86c;">:bind</span> <span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"C-c a"</span> . aidermacs-transient-menu<span style="color: #ff79c6;">)</span>
+  <span style="color: #ffb86c;">:custom</span>
+  <span style="color: #ff79c6;">(</span>aidermacs-default-model <span style="color: #f1fa8c; font-style: italic;">"deepseek"</span><span style="color: #ff79c6;">)</span>
+  <span style="color: #ff79c6;">(</span>aidermacs-architect-model <span style="color: #f1fa8c; font-style: italic;">"deepseek/deepseek-reasoner"</span><span style="color: #ff79c6;">)</span>
+  <span style="color: #ff79c6;">(</span>aidermacs-editor-model <span style="color: #f1fa8c; font-style: italic;">"deepseek/deepseek-chat"</span><span style="color: #ff79c6;">)</span>
+  <span style="color: #ff79c6;">(</span>aidermacs-backend 'vterm<span style="color: #ff79c6;">)</span>
+  <span style="color: #ff79c6;">(</span>aidermacs-watch-files t<span style="color: #ff79c6;">)</span><span style="color: #61bfff;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org510cb15" class="outline-4">
+<h4 id="org510cb15"><span class="section-number-4">13.6.3.</span> init-lsp.el - 语言服务器协议</h4>
+<div class="outline-text-4" id="text-13-6-3">
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Eglot &#33258;&#21160;&#20026; rust-mode &#21644; python-mode &#21551;&#21160;
+</span><span style="color: #61bfff;">(</span>add-hook 'rust-mode-hook 'eglot-ensure<span style="color: #61bfff;">)</span>
+<span style="color: #61bfff;">(</span>add-hook 'python-mode-hook 'eglot-ensure<span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Copilot
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">use-package</span> copilot
+  <span style="color: #ffb86c;">:vc</span> <span style="color: #ff79c6;">(</span><span style="color: #ffb86c;">:url</span> <span style="color: #f1fa8c; font-style: italic;">"https://github.com/copilot-emacs/copilot.el"</span> <span style="color: #ffb86c;">:branch</span> <span style="color: #f1fa8c; font-style: italic;">"main"</span><span style="color: #ff79c6;">)</span>
+  <span style="color: #ffb86c;">:config</span>
+  <span style="color: #ff79c6;">(</span>global-copilot-mode<span style="color: #ff79c6;">)</span><span style="color: #61bfff;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc968e4e" class="outline-4">
+<h4 id="orgc968e4e"><span class="section-number-4">13.6.4.</span> init-org.el - Org Mode</h4>
+<div class="outline-text-4" id="text-13-6-4">
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">&#33258;&#23450;&#20041;&#26631;&#31614;
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">setq</span> org-tag-alist '<span style="color: #ff79c6;">(</span><span style="color: #50fa7b;">(</span><span style="color: #f1fa8c; font-style: italic;">"@Research"</span> . ?r<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">(</span><span style="color: #f1fa8c; font-style: italic;">"@Literature"</span> . ?l<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">(</span><span style="color: #f1fa8c; font-style: italic;">"@Book"</span> . ?b<span style="color: #50fa7b;">)</span><span style="color: #ff79c6;">)</span><span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Babel &#35821;&#35328;
+</span><span style="color: #61bfff;">(</span>org-babel-do-load-languages 'org-babel-load-languages
+  '<span style="color: #ff79c6;">(</span><span style="color: #50fa7b;">(</span>emacs-lisp . t<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">(</span>ditaa . t<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">(</span>python . t<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">(</span>shell . t<span style="color: #50fa7b;">)</span>
+    <span style="color: #50fa7b;">(</span>latex . t<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">(</span>plantuml . t<span style="color: #50fa7b;">)</span> <span style="color: #50fa7b;">(</span>R . t<span style="color: #50fa7b;">)</span><span style="color: #ff79c6;">)</span><span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">PlantUML
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">setq</span> org-plantuml-jar-path <span style="color: #f1fa8c; font-style: italic;">"~/.emacs.d/software/plantuml.jar"</span><span style="color: #61bfff;">)</span>
+<span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">setq</span> org-confirm-babel-evaluate nil<span style="color: #61bfff;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org375300a" class="outline-4">
+<h4 id="org375300a"><span class="section-number-4">13.6.5.</span> init-evil.el - Vim 模拟</h4>
+<div class="outline-text-4" id="text-13-6-5">
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Evil &#36716;&#20041;
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">setq-default</span> evil-escape-delay 0.3<span style="color: #61bfff;">)</span>
+<span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">setq-default</span> evil-escape-key-sequence <span style="color: #f1fa8c; font-style: italic;">"kj"</span><span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Undo-fu (&#25913;&#36827;&#30340;&#25764;&#38144;)
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">setq</span> undo-limit 8000000 undo-strong-limit 8000000 undo-outer-limit 8000000<span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Evil surround (&#27599;&#27169;&#24335;&#37197;&#23545;)
+</span><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Shell: $ &#8594; $()
+</span><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Org: [ &#8594; [[]], = &#8594; ==
+</span><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">Emacs-lisp: ( &#8594; ( ), ` &#8594; `'
+</span><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">&#36890;&#29992;: / &#8594; //</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgca9e28c" class="outline-4">
+<h4 id="orgca9e28c"><span class="section-number-4">13.6.6.</span> init-ui.el - 视觉配置</h4>
+<div class="outline-text-4" id="text-13-6-6">
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">&#20027;&#39064;
+</span><span style="color: #61bfff;">(</span>load-theme 'doom-dracula t<span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">&#23383;&#20307;
+</span><span style="color: #61bfff;">(</span>set-face-attribute 'default nil <span style="color: #ffb86c;">:font</span> <span style="color: #f1fa8c; font-style: italic;">"Maple Mono 17"</span> <span style="color: #ffb86c;">:weight</span> 'normal<span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">CJK &#23383;&#20307;
+</span><span style="color: #61bfff;">(</span>set-fontset-font t 'han '<span style="color: #ff79c6;">(</span><span style="color: #f1fa8c; font-style: italic;">"LXGW WenKai Mono"</span> . <span style="color: #f1fa8c; font-style: italic;">"&#24494;&#36719;&#38597;&#40657;"</span><span style="color: #ff79c6;">)</span><span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">&#38544;&#34255; UI &#20803;&#32032;
+</span><span style="color: #61bfff;">(</span>menu-bar-mode -1<span style="color: #61bfff;">)</span>
+<span style="color: #61bfff;">(</span>tool-bar-mode -1<span style="color: #61bfff;">)</span>
+<span style="color: #61bfff;">(</span>scroll-bar-mode -1<span style="color: #61bfff;">)</span>
+
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">&#34892;&#21495;
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">when</span> <span style="color: #ff79c6;">(</span>fboundp 'display-line-numbers-mode<span style="color: #ff79c6;">)</span>
+  <span style="color: #ff79c6;">(</span>global-display-line-numbers-mode<span style="color: #ff79c6;">)</span><span style="color: #61bfff;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgcc1b4ea" class="outline-4">
+<h4 id="orgcc1b4ea"><span class="section-number-4">13.6.7.</span> init-python.el - Python 开发</h4>
+<div class="outline-text-4" id="text-13-6-7">
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">&#20351;&#29992; nohup &#36816;&#34892;&#33050;&#26412;
+</span><span style="color: #61bfff;">(</span><span style="color: #ff79c6; font-weight: bold;">defun</span> <span style="color: #50fa7b;">lz/running-current-bash-with-nohup</span> <span style="color: #ff79c6;">()</span>
+  <span style="color: #ff79c6;">(</span><span style="color: #ff79c6; font-weight: bold;">interactive</span><span style="color: #ff79c6;">)</span>
+  <span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">&#36816;&#34892;: nohup bash &lt;file&gt; &gt; timestamp-identify---runfile.log &amp;
+</span>
+<span style="color: #ff79c6;">(</span><span style="color: #ff79c6; font-weight: bold;">defun</span> <span style="color: #50fa7b;">lz/running-current-python-with-nohup</span> <span style="color: #50fa7b;">()</span>
+  <span style="color: #50fa7b;">(</span><span style="color: #ff79c6; font-weight: bold;">interactive</span><span style="color: #50fa7b;">)</span>
+  <span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">&#25552;&#31034;&#36873;&#25321; conda &#29615;&#22659;&#65292;&#28982;&#21518;&#36816;&#34892;: nohup $python &lt;file&gt; &gt; ...
+</span>
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">GPU &#31649;&#29702;
+</span><span style="color: #50fa7b;">(</span><span style="color: #ff79c6; font-weight: bold;">defun</span> <span style="color: #50fa7b;">lz/run-occupy-python</span> <span style="color: #bd93f9;">()</span>
+  <span style="color: #bd93f9;">(</span><span style="color: #ff79c6; font-weight: bold;">interactive</span><span style="color: #bd93f9;">)</span>
+  <span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">&#21344;&#29992; GPU &#35774;&#22791;&#29992;&#20110;&#27979;&#35797;
+</span>
+<span style="color: #bd93f9;">(</span><span style="color: #ff79c6; font-weight: bold;">defun</span> <span style="color: #50fa7b;">lz/open-tensorboard-in-current-buffer</span> <span style="color: #0189cc;">()</span>
+  <span style="color: #0189cc;">(</span><span style="color: #ff79c6; font-weight: bold;">interactive</span><span style="color: #0189cc;">)</span>
+  <span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">&#22312;&#39033;&#30446;&#30446;&#24405;&#20013;&#25171;&#24320; TensorBoard</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgfc3f323" class="outline-4">
+<h4 id="orgfc3f323"><span class="section-number-4">13.6.8.</span> init-ssh.el - SSH 连接</h4>
+<div class="outline-text-4" id="text-13-6-8">
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">&#30452;&#25509;&#36830;&#25509;
+</span>ssh-connect-141    <span style="color: #96a0aa;">; </span><span style="color: #96a0aa;">10.21.20.141
+</span>ssh-connect-142    <span style="color: #96a0aa;">; </span><span style="color: #96a0aa;">10.21.20.142
+</span>ssh-connect-cs1    <span style="color: #96a0aa;">; </span><span style="color: #96a0aa;">cs1.astaple.com
+</span>ssh-connect-cs2    <span style="color: #96a0aa;">; </span><span style="color: #96a0aa;">cs2.astaple.com
+</span>ssh-connect-gs9-16 <span style="color: #96a0aa;">; </span><span style="color: #96a0aa;">gsN.astaple.com
+</span>
+<span style="color: #96a0aa;">;; </span><span style="color: #96a0aa;">&#36890;&#36807;&#36339;&#26495;&#20027;&#26426; (is1.astaple.com)
+</span>ssh-connect-fromout-cs1-2
+ssh-connect-fromout-gs9-16
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org4430d44" class="outline-3">
+<h3 id="org4430d44"><span class="section-number-3">13.7.</span> 自定义函数</h3>
+<div class="outline-text-3" id="text-13-7">
+</div>
+<div id="outline-container-org520c38e" class="outline-4">
+<h4 id="org520c38e"><span class="section-number-4">13.7.1.</span> 核心工具 (init-self-config-function.el)</h4>
+<div class="outline-text-4" id="text-13-7-1">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">函数</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">my/indent-4-space</td>
+<td class="org-left">缩进/取消缩进区域或插入 4 个空格</td>
+</tr>
+
+<tr>
+<td class="org-left">平台检测</td>
+<td class="org-left"><b>is-mac</b>, <b>is-wsl</b>, <b>is-windows</b>, <b>is-linux</b>, <b>is-gui</b></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org02d4b7e" class="outline-4">
+<h4 id="org02d4b7e"><span class="section-number-4">13.7.2.</span> Python 脚本 (init-python.el)</h4>
+<div class="outline-text-4" id="text-13-7-2">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">函数</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">lz/running-current-bash-with-nohup</td>
+<td class="org-left">使用带时间戳的日志运行 bash 脚本</td>
+</tr>
+
+<tr>
+<td class="org-left">lz/running-current-python-with-nohup</td>
+<td class="org-left">使用 conda 环境运行 Python</td>
+</tr>
+
+<tr>
+<td class="org-left">lz/nohup-switch-run</td>
+<td class="org-left">自动检测并运行文件</td>
+</tr>
+
+<tr>
+<td class="org-left">lz/run-occupy-python</td>
+<td class="org-left">占用 GPU 设备</td>
+</tr>
+
+<tr>
+<td class="org-left">lz/open-tensorboard-in-current-buffer</td>
+<td class="org-left">启动 TensorBoard</td>
+</tr>
+
+<tr>
+<td class="org-left">lz/look-nvidia-state</td>
+<td class="org-left">显示 GPU 状态</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org2389bf8" class="outline-4">
+<h4 id="org2389bf8"><span class="section-number-4">13.7.3.</span> 缓冲区管理 (init-buffer.el)</h4>
+<div class="outline-text-4" id="text-13-7-3">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">函数</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">clean-all-buffers</td>
+<td class="org-left">关闭所有打开的缓冲区</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org95de738" class="outline-4">
+<h4 id="org95de738"><span class="section-number-4">13.7.4.</span> WSL 工具 (init-wsl.el)</h4>
+<div class="outline-text-4" id="text-13-7-4">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">函数</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">wsl-copy-region-to-clipboard</td>
+<td class="org-left">复制到 Windows 剪贴板</td>
+</tr>
+
+<tr>
+<td class="org-left">wsl-cut-region-to-clipboard</td>
+<td class="org-left">剪切到 Windows 剪贴板</td>
+</tr>
+
+<tr>
+<td class="org-left">my-yank-image-from-win-clipboard-through-powershell</td>
+<td class="org-left">从 Windows 粘贴图片</td>
+</tr>
+
+<tr>
+<td class="org-left">my-open-windows-downloads</td>
+<td class="org-left">打开 Windows 下载文件夹</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgabf93e4" class="outline-4">
+<h4 id="orgabf93e4"><span class="section-number-4">13.7.5.</span> SSH 连接 (init-ssh.el)</h4>
+<div class="outline-text-4" id="text-13-7-5">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">函数</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">ssh-connect-141/142</td>
+<td class="org-left">直接 SSH 到实验室服务器</td>
+</tr>
+
+<tr>
+<td class="org-left">ssh-connect-cs1/2</td>
+<td class="org-left">SSH 到 cs 服务器</td>
+</tr>
+
+<tr>
+<td class="org-left">ssh-connect-gs9-16</td>
+<td class="org-left">SSH 到 gs 服务器</td>
+</tr>
+
+<tr>
+<td class="org-left">ssh-connect-fromout-*</td>
+<td class="org-left">通过跳板主机 SSH</td>
+</tr>
+
+<tr>
+<td class="org-left">ssh-connect-vuln</td>
+<td class="org-left">SSH 到 vuln 服务器</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org8aa33eb" class="outline-4">
+<h4 id="org8aa33eb"><span class="section-number-4">13.7.6.</span> Org 模式 (init-org.el)</h4>
+<div class="outline-text-4" id="text-13-7-6">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">函数</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">fastinsert-org-head</td>
+<td class="org-left">插入 org 标题模板</td>
+</tr>
+
+<tr>
+<td class="org-left">org-insert-src-block</td>
+<td class="org-left">插入代码块</td>
+</tr>
+
+<tr>
+<td class="org-left">my-screen-capture</td>
+<td class="org-left">截图到 org</td>
+</tr>
+
+<tr>
+<td class="org-left">open-org-note</td>
+<td class="org-left">打开 org 笔记</td>
+</tr>
+
+<tr>
+<td class="org-left">open-worklog-in-d</td>
+<td class="org-left">打开工作日志</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org59e2888" class="outline-4">
+<h4 id="org59e2888"><span class="section-number-4">13.7.7.</span> 博客发布 (init-blog.el)</h4>
+<div class="outline-text-4" id="text-13-7-7">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">函数</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">lz/org-publish-sitemap-with-time</td>
+<td class="org-left">自定义站点地图生成器</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgaabe21d" class="outline-4">
+<h4 id="orgaabe21d"><span class="section-number-4">13.7.8.</span> LaTeX (init-latex.el)</h4>
+<div class="outline-text-4" id="text-13-7-8">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">函数</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">latex-cover-region-with@zl</td>
+<td class="org-left">用 LaTeX 命令包裹区域</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd49f680" class="outline-3">
+<h3 id="orgd49f680"><span class="section-number-3">13.8.</span> 平台特定功能</h3>
+<div class="outline-text-3" id="text-13-8">
+</div>
+<div id="outline-container-org613b17e" class="outline-4">
+<h4 id="org613b17e"><span class="section-number-4">13.8.1.</span> Windows (WSL)</h4>
+<div class="outline-text-4" id="text-13-8-1">
+<ul class="org-ul">
+<li>通过 <code>clip.exe</code> 实现剪贴板集成</li>
+<li>从 Windows 剪贴板粘贴图片</li>
+<li>代理配置</li>
+<li>Git 配置</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org8de6d5f" class="outline-4">
+<h4 id="org8de6d5f"><span class="section-number-4">13.8.2.</span> macOS</h4>
+<div class="outline-text-4" id="text-13-8-2">
+<ul class="org-ul">
+<li><code>exec-path-from-shell</code> 用于 PATH 管理</li>
+<li>原生剪贴板集成</li>
+<li>application-open 用于外部链接</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org28889e9" class="outline-4">
+<h4 id="org28889e9"><span class="section-number-4">13.8.3.</span> Linux</h4>
+<div class="outline-text-4" id="text-13-8-3">
+<ul class="org-ul">
+<li><code>vterm</code> 用于快速终端</li>
+<li><code>xsel</code> 用于剪贴板 (可选)</li>
+<li>原生文件监视器</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgb44a486" class="outline-4">
+<h4 id="orgb44a486"><span class="section-number-4">13.8.4.</span> WSL (Windows Subsystem for Linux)</h4>
+<div class="outline-text-4" id="text-13-8-4">
+<ul class="org-ul">
+<li>Windows PATH 过滤 (移除 <i>mnt/c</i> 路径)</li>
+<li>跨平台剪贴板功能</li>
+<li>GPU 检测和管理</li>
+<li>通过跳板主机的 SSH 连接</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org0aaff68" class="outline-3">
+<h3 id="org0aaff68"><span class="section-number-3">13.9.</span> 环境变量</h3>
+<div class="outline-text-3" id="text-13-9">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">变量</th>
+<th scope="col" class="org-left">描述</th>
+<th scope="col" class="org-left">是否必需</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">OPENROUTER_API_KEY</td>
+<td class="org-left">GPTEL/OpenRouter 的 API 密钥</td>
+<td class="org-left">AI 功能必需</td>
+</tr>
+
+<tr>
+<td class="org-left">DEEPSEEK_API_KEY</td>
+<td class="org-left">DeepSeek (Aider) 的 API 密钥</td>
+<td class="org-left">Aider 必需</td>
+</tr>
+
+<tr>
+<td class="org-left">LC_ALL</td>
+<td class="org-left">区域设置 (<code>C.UTF-8</code>)</td>
+<td class="org-left">否</td>
+</tr>
+
+<tr>
+<td class="org-left">LANG</td>
+<td class="org-left">语言设置 (<code>C.UTF-8</code>)</td>
+<td class="org-left">否</td>
+</tr>
+
+<tr>
+<td class="org-left">DISPLAY</td>
+<td class="org-left">GUI 功能的 X 显示</td>
+<td class="org-left">自动检测</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgc6a6d93" class="outline-3">
+<h3 id="orgc6a6d93"><span class="section-number-3">13.10.</span> 自定义主题和颜色</h3>
+<div class="outline-text-3" id="text-13-10">
+</div>
+<div id="outline-container-orgb963566" class="outline-4">
+<h4 id="orgb963566"><span class="section-number-4">13.10.1.</span> doom-dracula 主题</h4>
+<div class="outline-text-4" id="text-13-10-1">
+<p>
+Mode line 根据 Evil 状态改变颜色：
+</p>
+<ul class="org-ul">
+<li><b>插入状态</b>: 红色背景 (#C53030)</li>
+<li><b>Emacs 状态</b>: 绿色背景 (#2F855A)</li>
+<li><b>修改的缓冲区</b>: 黄色背景 (#E9B44C)</li>
+<li><b>普通状态</b>: 深色背景 (#000000) 配绿色文字 (#68D391)</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org18c25d1" class="outline-4">
+<h4 id="org18c25d1"><span class="section-number-4">13.10.2.</span> 字体配置</h4>
+<div class="outline-text-4" id="text-13-10-2">
+<ul class="org-ul">
+<li><b>默认字体</b>: Maple Mono 17 (Linux), JetBrainsMono 17 (备用)</li>
+<li><b>CJK 字体</b>: LXGW WenKai Mono / 微软雅黑</li>
+<li><b>Mode line</b>: Maple Mono 12 italic</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org32fa03c" class="outline-3">
+<h3 id="org32fa03c"><span class="section-number-3">13.11.</span> 故障排除</h3>
+<div class="outline-text-3" id="text-13-11">
+</div>
+<div id="outline-container-orgc597f2a" class="outline-4">
+<h4 id="orgc597f2a"><span class="section-number-4">13.11.1.</span> 包安装失败</h4>
+<div class="outline-text-4" id="text-13-11-1">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">&#21047;&#26032;&#21253;&#26723;&#26696;
+</span>M-x package-refresh-contents RET
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge179e0c" class="outline-4">
+<h4 id="orge179e0c"><span class="section-number-4">13.11.2.</span> LSP 不工作</h4>
+<div class="outline-text-4" id="text-13-11-2">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">&#23433;&#35013; pyright
+</span>pip install pyright
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">&#25110;&#32773;&#23545;&#20110; Rust
+</span>rustup component add rust-analyzer
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org89afdc7" class="outline-4">
+<h4 id="org89afdc7"><span class="section-number-4">13.11.3.</span> AI 功能不工作</h4>
+<div class="outline-text-4" id="text-13-11-3">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">&#26816;&#26597; API &#23494;&#38053;&#26159;&#21542;&#35774;&#32622;
+</span><span style="color: #ffb86c;">echo</span> $<span style="color: #ffc9e8;">OPENROUTER_API_KEY</span>
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">&#22914;&#26524;&#20351;&#29992; Aider&#65292;&#26816;&#26597; DeepSeek &#23494;&#38053;
+</span><span style="color: #ffb86c;">echo</span> $<span style="color: #ffc9e8;">DEEPSEEK_API_KEY</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org1d078a0" class="outline-4">
+<h4 id="org1d078a0"><span class="section-number-4">13.11.4.</span> SSH 连接问题</h4>
+<div class="outline-text-4" id="text-13-11-4">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">&#25163;&#21160;&#27979;&#35797; SSH &#36830;&#25509;
+</span>ssh zi@cs1.astaple.com
+
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">&#26816;&#26597; tramp &#37197;&#32622;
+</span>M-x tramp-version RET
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org2d0853a" class="outline-4">
+<h4 id="org2d0853a"><span class="section-number-4">13.11.5.</span> 性能问题</h4>
+<div class="outline-text-4" id="text-13-11-5">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">&#22686;&#21152;&#22403;&#22334;&#22238;&#25910;&#38408;&#20540; (&#24050;&#37197;&#32622;)
+</span><span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">&#22312; init.el &#20013;: (setq gc-cons-threshold (* 50 1024 1024))
+</span>
+<span style="color: #96a0aa;"># </span><span style="color: #96a0aa;">&#26816;&#26597;&#21551;&#21160;&#26102;&#38388;
+</span>emacs --debug-init
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orga4d1fd7" class="outline-3">
+<h3 id="orga4d1fd7"><span class="section-number-3">13.12.</span> 致谢</h3>
+<div class="outline-text-3" id="text-13-12">
+<p>
+此配置基于众多优秀的 Emacs 包和思想构建：
+</p>
+
+<ul class="org-ul">
+<li><a href="https://github.com/doomemacs/doomemacs">Doom Emacs</a> - 主题和结构灵感</li>
+<li><a href="https://github.com/bbatsov/prelude">Prelude</a> - 通用配置模式</li>
+<li><a href="https://github.com/capitaomorte/sly">Sly</a> - Common Lisp IDE 思路</li>
+<li><a href="https://www.orgroam.com/">Org Roam</a> - 知识管理</li>
+<li><a href="https://magit.vc/">Magit</a> - Git 界面</li>
+<li><a href="https://github.com/manzaltu/claude-code-ide.el">Claude Code IDE</a> - Claude 集成</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Apr  2 09:57:55 2026</span> <span class="date">Last modified: 2026-04-02 Thu 10:06</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+</div>
+</body>
+</html>

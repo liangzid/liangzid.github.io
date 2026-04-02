@@ -1,0 +1,1822 @@
+#+title: 我的emacs配置介绍-2026版
+#+date: Thu Apr  2 09:57:55 2026
+#+author: Zi Liang
+#+email: zi1415926.liang@connect.polyu.hk
+#+latex_class: elegantpaper
+#+filetags: ::
+
+A comprehensive, modular Emacs configuration with AI/LLM integration, Python development tools, Org-mode for notes and publishing, and Vim-style editing via Evil mode.
+
+* Installation & Setup
+** Prerequisites
+
+- *Emacs* 27+ recommended
+- *Git* for version control features
+- *Python* (anaconda3 or miniconda3 recommended) for Python development
+- *PlantUML* (~/.emacs.d/software/plantuml.jar) for diagram generation
+- *RIPGrep* (rg) for counsel-rg search
+- *Universal Ctags* for Citre code navigation
+
+** Installation
+
+#+BEGIN_SRC bash
+# Clone the configuration
+git clone https://github.com/ziLiang3845/.emacs.d.git ~/.emacs.d
+
+# Install required external tools
+# - plantuml.jar (~/.emacs.d/software/plantuml.jar)
+# - rg (ripgrep)
+# - curl (for OpenRouter API)
+
+# Set environment variables (see Environment Variables section)
+export OPENROUTER_API_KEY="your-api-key"
+
+# Launch Emacs
+emacs
+#+END_SRC
+
+** First-Time Setup
+
+1. Launch Emacs - packages will be automatically installed
+2. Wait for all packages to install (first launch may take 5-10 minutes)
+3. Restart Emacs when complete
+
+** Setup Scripts (doc/)
+
+The =doc/= directory contains shell scripts to automate the installation of system dependencies. Run these scripts in order before launching Emacs for the first time.
+
+*** Ubuntu/Debian Setup Scripts
+
+| Script                      | Description                                                                                              |
+|-----------------------------|----------------------------------------------------------------------------------------------------------|
+| =0.make_install_emacs29.sh=   | Compile and install Emacs 30.1 from source (requires build tools)                                        |
+| =2.run_ubuntu_shell_sudo.sh=  | Install system packages: xclip, xsel, gdb, w3m, aspell, scrot, openjdk-17, graphviz, python3, pipenv, mplayer, socat, cmake, zsh, ripgrep, ag, and development libraries |
+| =3.gitclone.sh=              | Clone additional repositories (for optional features)                                                     |
+| =4.pip-install.sh=          | Install Python packages: python-lsp-server, torch, numpy, scikit-learn, matplotlib                      |
+| =5.add_fonts.sh=            | Install Maple Mono and CJK fonts (WenKai)                                                                |
+| =6.initial_setup.sh=        | Configure git user.name and user.email globally                                                          |
+| =install-ctags.sh=         | Install universal-ctags for Citre code navigation                                                       |
+
+*** Recommended Installation Order
+
+#+BEGIN_SRC bash
+cd ~/.emacs.d/doc/
+
+# 1. Install system packages (Ubuntu/Debian)
+sudo bash 2.run_ubuntu_shell_sudo.sh
+
+# 2. Install Emacs from source (if not using package manager)
+bash 0.make_install_emacs29.sh
+
+# 3. Install ctags for code navigation
+sudo bash install-ctags.sh
+
+# 4. Install fonts
+bash 5.add_fonts.sh
+
+# 5. Install Python packages for LSP
+bash 4.pip-install.sh
+
+# 6. Git configuration
+bash 6.initial_setup.sh
+#+END_SRC
+
+*** Arch Linux
+
+| Script                           | Description                           |
+|----------------------------------|---------------------------------------|
+| =2.1.run_install_arch_pacman.sh=  | Install packages via pacman           |
+| =5.1.add_fonts_arch_pacman.sh=   | Install fonts on Arch                 |
+
+*** Other Setup Files
+
+| File                               | Description                                      |
+|------------------------------------|--------------------------------------------------|
+| =hope.org=                          | TODO tracking and wishlist                      |
+| =howToGetCapture.org=               | Screen capture setup guide                       |
+| =spellcheck.org=                    | Spell checking configuration                     |
+| =WSL2-ubuntu-install-config-emacs.org= | WSL2-specific Emacs installation guide       |
+| =install_emacs_without_sudo.txt=   | Notes on building Emacs without sudo            |
+| =latex环境指南.doc=                  | LaTeX environment setup guide (Chinese)          |
+
+* Project Structure
+
+#+BEGIN_EXAMPLE
+.emacs.d/
+├── init.el                    # Main entry point
+├── lisp/
+│   ├── init-*.el            # Feature modules (~50 files)
+│   ├── custom.el            # Emacs Customize settings
+│   ├── my-*.el              # Custom helpers
+│   └── org-*.el             # Org-mode extensions
+├── doc/                      # Setup scripts for system dependencies
+├── other-files/              # Additional resources
+└── feeds/                    # RSS feed configuration (elfeed)
+#+END_EXAMPLE
+
+** Module Loading Order (init.el)
+
+- init-self-config-function  → Platform detection, core utilities
+- init-wsl                   → WSL utilities
+- init-elpa                  → Package management
+- init-openai               → Aider (DeepSeek AI coding assistant)
+- init-eshell               → Shell configuration
+- init-proxy                → Proxy settings
+- init-largefile            → Large file handling
+- init-dired                → File manager
+- init-clipboard            → Clipboard integration
+- init-yas                  → Snippets
+- init-git                  → Git gutter
+- init-citre                → Tags-based code navigation
+- init-python               → Python development
+- init-latex                → LaTeX editing
+- init-cl                   → Common Lisp
+- init-cpp                  → C++ (disabled)
+- init-rust                 → Rust development
+- init-cider                → Clojure REPL
+- init-blog                 → Org publishing
+- init-web                  → Web development
+- init-path                 → PATH configuration
+- init-rss                  → RSS reader (elfeed)
+- init-keybindings          → Global keybindings
+- init-rg                   → Ripgrep integration
+- init-spell                → Spell checking
+- init-packages             → Package initialization
+- init-lsp                  → Language Server Protocol
+- init-evil                 → Vim emulation
+- init-undo                 → Undo configuration
+- init-keyfreq              → Key frequency tracking
+- init-org                  → Org-mode configuration
+- init-ssh                  → SSH connections
+- init-ai                   → AI/LLM integration (gptel, claude-code-ide)
+- init-modeline             → Mode line configuration
+- init-window               → Window management (winum)
+- init-chinese              → Chinese font support
+- init-better-defaults      → Improved defaults
+- init-ui                   → Visual theme and styling
+- org-ui.el                 → Org-specific UI
+
+* Core Features Overview
+
+| Feature                 | Description                                               |
+|-------------------------|-----------------------------------------------------------|
+| AI/LLM Integration      | GPTEL (OpenRouter), Claude Code IDE, Aider (DeepSeek)     |
+| Python Development      | LSP (eglot), anaconda-mode, python-black, conda integration |
+| Org Mode                | Notes, publishing, literate programming, Babel             |
+| Vim Emulation           | Evil mode with custom leader keys                         |
+| Code Navigation         | Citre (ctags), xref, highlight-symbol                    |
+| Productivity            | Yasnippet, smartparens, rainbow-delimiters               |
+| Shell Integration       | vterm, eshell, SSH via tramp                              |
+| UI/Theming              | doom-dracula theme, doom-modeline, marginalia              |
+| Version Control         | git-gutter, magit                                         |
+| Web Development         | web-mode, js2-mode, emmet-mode                           |
+
+* Keybindings Reference
+
+** Global Keybindings
+
+| Keybinding    | Function                              | Description                              |
+|---------------|---------------------------------------|------------------------------------------|
+| C-\           | comment-line                          | Comment/uncomment current line           |
+| C-a           | mwim-beginning-of-code-or-line        | Go to beginning of code/line             |
+| C-e           | mwim-end-of-code-or-line              | Go to end of code/line                    |
+| C-s           | swiper                                | Incremental search with candidates        |
+| C-f5          | lz/nohup-switch-run                   | Run current file (auto-detect bash/python) |
+| F1            | restart-emacs                         | Restart Emacs                            |
+| F2            | open-my-init-file                     | Open init.el                             |
+| TAB           | my/indent-4-space                     | Indent region or insert 4 spaces         |
+| S-TAB         | my/indent-4-space (with arg)          | Dedent region or delete 4 spaces         |
+| M-0           | next-multiframe-window                | Go to next window                        |
+| M-9           | previous-multiframe-window            | Go to previous window                     |
+| M-r           | query-replace                         | Find and replace                          |
+| M-s           | counsel-rg                            | Ripgrep search                           |
+| C-x C-b       | ibuffer                               | Buffer manager                           |
+| C-x 4 <num>   | -                                     | Split to 4 horizontal windows            |
+| C-x 5 <num>   | -                                     | Split to 3 horizontal windows            |
+| C-x 6 <num>   | -                                     | Split to 5 mixed windows                 |
+
+** Evil Mode Leader Key (SPC)
+
+All keybindings below are prefixed with =SPC= in Evil Normal/Visual mode.
+
+*** File & Buffer Management
+
+| Keybinding | Function                    | Description                     |
+|------------|-----------------------------|---------------------------------|
+| SPC xs     | save-buffer                 | Save current buffer             |
+| SPC xf     | find-file                   | Find file                       |
+| SPC xr     | recentf-open-files          | Open recent file                |
+| SPC xb     | switch-to-buffer            | Switch buffer                   |
+| SPC xk     | kill-buffer                 | Kill buffer                     |
+| SPC xc     | save-buffers-kill-terminal | Save and close                  |
+| SPC bb     | -                           | Switch to last buffer           |
+| SPC bf     | eglot-format-buffer         | Format buffer                   |
+
+*** Window Management
+
+| Keybinding | Function                              | Description                         |
+|------------|---------------------------------------|-------------------------------------|
+| SPC x0     | delete-window                         | Close current window                |
+| SPC x1     | delete-other-windows                  | Maximize current window             |
+| SPC x2     | split-window-below                    | Split horizontally                  |
+| SPC x3     | split-window-right                    | Split vertically                    |
+| SPC x5     | split-3-windows-horizontally-evenly   | 3-way horizontal split              |
+| SPC jj     | scroll-other-window                   | Scroll other window down            |
+| SPC kk     | scroll-other-window-up                | Scroll other window up              |
+
+*** Help & Documentation
+
+| Keybinding | Function                       | Description                 |
+|------------|--------------------------------|-----------------------------|
+| SPC hf     | counsel-describe-function      | Describe function           |
+| SPC hv     | counsel-describe-variable      | Describe variable           |
+| SPC hk     | describe-key                   | Describe key                |
+| SPC hm     | describe-mode                  | Describe mode               |
+
+*** Code Navigation & Editing
+
+| Keybinding | Function                          | Description                      |
+|------------|-----------------------------------|----------------------------------|
+| SPC gd     | evil-goto-definition              | Go to definition                 |
+| SPC hs     | highlight-symbol                  | Highlight symbol                 |
+| SPC sr     | highlight-symbol-query-replace    | Replace highlighted symbol       |
+| SPC sn     | highlight-symbol-nav-mode         | Navigate highlights (M-n/M-p)   |
+| SPC hl     | hs-hide-level                     | Hide code blocks by level        |
+| SPC sl     | hs-show-block                     | Show code block                  |
+| SPC er     | eglot-rename                      | Rename symbol                    |
+
+*** Citre Code Navigation
+
+| Keybinding | Function                         | Description                  |
+|------------|----------------------------------|------------------------------|
+| SPC cu     | citre-update-this-tags-file      | Update ctags file            |
+| SPC cd     | citre-jump                       | Jump to definition           |
+| SPC cD     | citre-jump-back                  | Jump back                    |
+| SPC cp     | citre-ace-peek                  | Peek at definition           |
+
+*** Anaconda Mode (Python)
+
+| Keybinding | Function                                        | Description                      |
+|------------|-------------------------------------------------|----------------------------------|
+| SPC ad     | anaconda-mode-find-definitions                  | Find definition                  |
+| SPC ar     | anaconda-mode-find-references                  | Find references                  |
+| SPC aD     | anaconda-mode-find-definitions-other-window    | Find in other window             |
+| SPC aR     | anaconda-mode-find-references-other-window     | Find references other window     |
+| SPC aa     | anaconda-mode-find-assignments                 | Find assignments                 |
+| SPC a/     | anaconda-mode-show-doc                         | Show documentation               |
+
+*** Python Scripts (F5 / nohup)
+
+| Keybinding | Function                                | Description                       |
+|------------|-----------------------------------------|-----------------------------------|
+| SPC rb     | lz/running-current-bash-with-nohup      | Run bash script in background    |
+| SPC rp     | lz/running-current-python-with-nohup   | Run Python script with conda     |
+| SPC ro     | lz/run-occupy-python                    | Occupy GPU device                 |
+| SPC rt     | lz/open-tensorboard-in-current-buffer   | Open TensorBoard                  |
+| SPC ns     | lz/look-nvidia-state                    | Check GPU status                  |
+
+*** SSH Connections
+
+| Keybinding       | Function                 | Description                        |
+|------------------|-------------------------|------------------------------------|
+| SPC 141          | ssh-connect-141         | Connect to 10.21.20.141            |
+| SPC 142          | ssh-connect-142         | Connect to 10.21.20.142            |
+| SPC cs1          | ssh-connect-cs1         | Connect to cs1.astaple.com         |
+| SPC cs2          | ssh-connect-cs2         | Connect to cs2.astaple.com         |
+| SPC gs9-gs16     | ssh-connect-gsN         | Connect to gsN.astaple.com         |
+| SPC ocs1         | ssh-connect-fromout-cs1 | Connect via jump host              |
+| SPC ogs9-ogs16   | ssh-connect-fromout-gsN | Connect via jump host              |
+
+*** Clipboard & WSL
+
+| Keybinding | Function                                                    | Description                      |
+|------------|-------------------------------------------------------------|----------------------------------|
+| SPC sy     | wsl-copy-region-to-clipboard                                | Copy to Windows clipboard        |
+| SPC sd     | wsl-cut-region-to-clipboard                                | Cut to Windows clipboard         |
+| SPC si     | my-yank-image-from-win-clipboard-through-powershell         | Paste image from Windows         |
+
+*** Shell
+
+| Keybinding | Function              | Description              |
+|------------|-----------------------|--------------------------|
+| SPC sh     | shell                 | Open shell              |
+| SPC sc     | shell-command         | Run shell command       |
+
+*** English & Spell
+
+| Keybinding | Function                            | Description                |
+|------------|-------------------------------------|----------------------------|
+| SPC cy     | gt-translate                        | Translate text             |
+| SPC te     | toggle-company-english-helper       | Toggle English helper      |
+| SPC is     | ispell-buffer                       | Spell check buffer         |
+| SPC fs     | flyspell-mode                       | Toggle spell checking      |
+
+*** Org Mode
+
+| Keybinding | Function                    | Description                     |
+|------------|-----------------------------|--------------------------------|
+| SPC ii     | my-screen-capture           | Screen capture to org          |
+| SPC ih     | fastinsert-org-head         | Insert org header              |
+| SPC ic     | org-insert-src-block        | Insert source block            |
+| SPC op     | org-publish                 | Publish org project            |
+| SPC on     | open-org-note               | Open org note                  |
+| SPC ow     | open-worklog-in-d           | Open worklog                   |
+
+*** Hide/Show Code
+
+| Keybinding | Function                         | Description                    |
+|------------|----------------------------------|--------------------------------|
+| SPC s1     | latex-cover-region-with@zl      | Wrap region in LaTeX command   |
+
+*** Collections
+
+| Keybinding | Function         | Description              |
+|------------|------------------|--------------------------|
+| SPC ec     | collected-run    | Run collected command    |
+
+** Evil State Navigation
+
+| Keybinding | Function                      | Description                         |
+|------------|-------------------------------|-------------------------------------|
+| C-e        | mwim-end-of-line-or-code      | Go to end of line/code (Evil Normal) |
+| C-p        | previous-line                 | Previous line (Evil Normal)          |
+| C-n        | next-line                     | Next line (Evil Normal)              |
+| C-b        | backward-char                 | Backward char (Evil Normal)          |
+| C-f        | forward-char                  | Forward char (Evil Normal)           |
+| C-v        | scroll-up-command             | Scroll up (Evil Normal)              |
+
+** Evil Escape
+
+| Keybinding | Function | Description                        |
+|------------|----------|------------------------------------|
+| kj         | -        | Escape from insert mode (0.3s delay) |
+
+** Window Navigation (winum)
+
+| Keybinding | Function                       | Description                |
+|------------|--------------------------------|----------------------------|
+| M-0        | winum-select-window-0-or-10  | Select window 0 or 10      |
+| M-1        | winum-select-window-1         | Select window 1            |
+| M-2        | winum-select-window-2         | Select window 2            |
+| M-3        | winum-select-window-3         | Select window 3            |
+| M-4        | winum-select-window-4         | Select window 4            |
+| M-5        | winum-select-window-5         | Select window 5            |
+| M-6        | winum-select-window-6         | Select window 6            |
+| M-7        | winum-select-window-7         | Select window 7            |
+| M-8        | winum-select-window-8         | Select window 8            |
+
+** Ivy/Counsel Search
+
+| Keybinding  | Function                         | Description                  |
+|-------------|----------------------------------|------------------------------|
+| M-x         | counsel-M-x                      | Execute command              |
+| C-x C-f     | counsel-find-file                | Find file with completion    |
+| C-x b       | counsel-switch-buffer            | Switch buffer                |
+| C-x B       | counsel-switch-buffer-other-window | Switch buffer (other window) |
+| C-x C-r     | counsel-recentf                  | Open recent file             |
+| C-h f       | counsel-describe-function        | Describe function            |
+| C-h v       | counsel-describe-variable        | Describe variable            |
+| C-h C-k     | find-function-on-key             | Find key definition          |
+| C-c C-r     | ivy-resume                       | Resume last search           |
+
+** Org Mode Keybindings
+
+| Keybinding | Function                  | Description                     |
+|------------|---------------------------|---------------------------------|
+| C-c l      | org-store-link            | Store link                      |
+| C-c s e    | org-edit-src-code         | Edit source block               |
+| C-c s i    | org-insert-src-block      | Insert source block             |
+| C-f h      | fastinsert-org-head       | Insert org header template      |
+
+** Python Development
+
+| Keybinding | Function              | Description                              |
+|------------|-----------------------|------------------------------------------|
+| F5         | lz/nohup-switch-run   | Run current file (auto-detect bash/python) |
+
+** Citre Code Navigation
+
+| Keybinding | Function                          | Description                  |
+|------------|-----------------------------------|------------------------------|
+| C-x c j    | citre-jump                        | Jump to definition           |
+| C-x c J    | citre-jump-back                   | Jump back                    |
+| C-x c p    | citre-ace-peek                    | Ace peek                     |
+| C-x c u    | citre-update-this-tags-file       | Update tags                  |
+
+** AI/LLM Keybindings
+
+| Keybinding | Function                    | Description                     |
+|------------|-----------------------------|---------------------------------|
+| C-c C-'    | claude-code-ide-menu        | Claude Code IDE menu           |
+| C-c a      | aidermacs-transient-menu   | Aider transient menu           |
+
+** UI Scaling
+
+| Keybinding  | Function                  | Description                    |
+|-------------|---------------------------|--------------------------------|
+| C-c C-=     | enable-150%-scale-big     | Increase UI scale 150%        |
+| C-c C--     | enable-75%-scale-big      | Decrease UI scale 75%         |
+| C-=         | text-scale-adjust (+0.5)  | Increase text size             |
+| C--         | text-scale-adjust (-0.5)  | Decrease text size             |
+| C-0         | text-scale-adjust (reset) | Reset text size                |
+
+** Flymake Diagnostics
+
+| Keybinding | Function                              | Description             |
+|------------|---------------------------------------|-------------------------|
+| C-x e      | flymake-show-buffer-diagnostics       | Show diagnostics        |
+| C-x n      | flymake-goto-next-error              | Next error              |
+| C-x N      | flymake-goto-prev-error              | Previous error          |
+
+* Package List
+
+** Core Infrastructure
+
+| Package      | Description                            |
+|--------------|----------------------------------------|
+| use-package  | Declarative package configuration      |
+| straight.el  | Package manager (optional, disabled)   |
+
+** Vim Emulation (Evil)
+
+| Package           | Description                       |
+|-------------------|-----------------------------------|
+| evil             | Vim emulation layer               |
+| evil-escape      | Escape with "kj" sequence         |
+| evil-surround    | Surround text objects             |
+| evil-visualstar  | Search visual selection          |
+| evil-leader      | Leader key support                |
+| undo-fu          | Improved undo/redo                |
+| general          | Keybinding definitions            |
+
+** UI & Themes
+
+| Package                | Description                         |
+|------------------------|-------------------------------------|
+| doom-themes            | Theme collection (doom-dracula)     |
+| doom-modeline          | Modern mode line                    |
+| all-the-icons          | Icon set                           |
+| all-the-icons-completion | Icons in completion              |
+| all-the-icons-dired   | Icons in dired                      |
+| nerd-icons             | Alternative icon set               |
+| marginalia             | Enhanced minibuffer annotations     |
+| highlight-indentation  | Indentation guides                 |
+| rainbow-delimiters     | Color-coded parentheses             |
+| rainbow-mode           | Color codes                        |
+| beacon                 | Cursor highlighting (disabled)      |
+| winum                  | Window number navigation            |
+| ivy-posframe           | Ivy in posframe                    |
+
+** Python Development
+
+| Package          | Description                            |
+|------------------|----------------------------------------|
+| python           | Built-in Python mode                   |
+| anaconda-mode   | Python code navigation (commented)    |
+| company-anaconda | Company backend (commented)           |
+| python-black     | Code formatting (commented)           |
+| pyenv-mode       | Python env switching (commented)      |
+| elpy             | Python IDE (commented)                 |
+
+** Language Server Protocol
+
+| Package            | Description                       |
+|--------------------|-----------------------------------|
+| eglot              | LSP client (built-in)             |
+| pyright-langserver | Python LSP server                 |
+| copilot            | GitHub Copilot                    |
+
+** Code Navigation
+
+| Package        | Description                      |
+|----------------|----------------------------------|
+| citre          | Tags-based code navigation       |
+| projectile     | Project management               |
+| xref           | Cross-reference navigation       |
+| highlight-symbol | Symbol highlighting             |
+
+** Org Mode
+
+| Package              | Description                         |
+|----------------------|-------------------------------------|
+| org                 | Built-in outline/note-taking        |
+| org-roam            | Roam knowledge base                 |
+| org-roam-protocol   | org-protocol for roam               |
+| org-bullets         | Bullet points                       |
+| org-alert           | Desktop notifications               |
+| org-download        | Image attachments                   |
+| htmlize             | HTML export for org                 |
+| ox-publish          | Publishing static sites             |
+
+** Snippets & Templates
+
+| Package   | Description                    |
+|-----------|--------------------------------|
+| yasnippet | Template snippets             |
+| autoinsert| Automatic file templates      |
+| cdlatex   | LaTeX input shortcuts         |
+
+** AI/LLM Integration
+
+| Package           | Description                       |
+|-------------------|-----------------------------------|
+| gptel             | Generic LLM interface             |
+| claude-code-ide   | Claude Code integration           |
+| aidermacs         | Aider AI coding assistant         |
+
+** Shell & Terminal
+
+| Package         | Description                       |
+|-----------------|-----------------------------------|
+| vterm           | Fast terminal emulator            |
+| eshell          | Emacs shell                       |
+| tramp           | Remote file editing               |
+| counsel-tramp   | Counsel interface (commented)    |
+
+** Version Control
+
+| Package   | Description               |
+|-----------|---------------------------|
+| magit     | Git interface             |
+| git-gutter| Diff indicators in gutter |
+
+** Web Development
+
+| Package         | Description               |
+|-----------------|---------------------------|
+| web-mode        | HTML editing              |
+| js2-mode        | JavaScript editing       |
+| js2-refactor    | JavaScript refactoring   |
+| emmet-mode      | Zen coding                |
+
+** Other Languages
+
+| Package          | Description                        |
+|------------------|------------------------------------|
+| rust-mode        | Rust editing                       |
+| rustic          | Rust toolkit                       |
+| cider           | Clojure REPL                       |
+| typescript-mode | TypeScript                         |
+| auctex          | LaTeX editing                      |
+| reftex          | LaTeX bibliography (commented)     |
+| company-auctex  | Company backend for LaTeX (commented) |
+| leetcode        | LeetCode integration               |
+
+** Productivity
+
+| Package              | Description                        |
+|----------------------|------------------------------------|
+| elfeed              | RSS reader                         |
+| elfeed-org          | Org-based RSS config               |
+| ivy                 | Completion framework               |
+| counsel             | Ivy commands                       |
+| swiper              | Incremental search                 |
+| smartparens         | Smart pair management              |
+| hungry-delete       | Delete whitespace                  |
+| which-key           | Keybinding hints                   |
+| neotree             | File tree (commented)              |
+| dirvish             | Dired alternative (commented)      |
+| command-log-mode    | Command history                    |
+
+** Utilities
+
+| Package          | Description                        |
+|------------------|------------------------------------|
+| company          | Text completion                     |
+| flymake          | On-the-fly syntax checking         |
+| hungry-delete    | Delete multiple spaces             |
+| ace-flyspell     | Ace jump to flyspell error         |
+| keyfreq          | Track key frequency                |
+| undo-tree        | Visual undo tree (replaced)       |
+| rg               | Ripgrep integration                |
+
+* Configuration Files
+
+** init-ai.el - AI/LLM Integration
+
+#+BEGIN_SRC elisp
+;; GPTEL (OpenRouter)
+(setq gptel-model "qwen/qwen3.6-plus-preview:free")
+(setq gptel-backend
+      (gptel-make-openai "OpenRouter"
+        :host "openrouter.ai"
+        :endpoint "/api/v1/chat/completions"
+        :stream t
+        :key (lambda () (getenv "OPENROUTER_API_KEY"))))
+
+;; Claude Code IDE
+(use-package claude-code-ide
+  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
+  :bind ("C-c C-'" . claude-code-ide-menu)
+  :config
+  (claude-code-ide-emacs-tools-setup))
+#+END_SRC
+
+** init-openai.el - Aider (DeepSeek)
+
+#+BEGIN_SRC elisp
+(use-package aidermacs
+  :bind ("C-c a" . aidermacs-transient-menu)
+  :custom
+  (aidermacs-default-model "deepseek")
+  (aidermacs-architect-model "deepseek/deepseek-reasoner")
+  (aidermacs-editor-model "deepseek/deepseek-chat")
+  (aidermacs-backend 'vterm)
+  (aidermacs-watch-files t))
+#+END_SRC
+
+** init-lsp.el - Language Server Protocol
+
+#+BEGIN_SRC elisp
+;; Eglot auto-starts for rust-mode and python-mode
+(add-hook 'rust-mode-hook 'eglot-ensure)
+(add-hook 'python-mode-hook 'eglot-ensure)
+
+;; Copilot
+(use-package copilot
+  :vc (:url "https://github.com/copilot-emacs/copilot.el" :branch "main")
+  :config
+  (global-copilot-mode))
+#+END_SRC
+
+** init-org.el - Org Mode
+
+#+BEGIN_SRC elisp
+;; Custom tags
+(setq org-tag-alist '(("@Research" . ?r) ("@Literature" . ?l) ("@Book" . ?b)))
+
+;; Babel languages
+(org-babel-do-load-languages 'org-babel-load-languages
+  '((emacs-lisp . t) (ditaa . t) (python . t) (shell . t)
+    (latex . t) (plantuml . t) (R . t)))
+
+;; PlantUML
+(setq org-plantuml-jar-path "~/.emacs.d/software/plantuml.jar")
+(setq org-confirm-babel-evaluate nil)
+#+END_SRC
+
+** init-evil.el - Vim Emulation
+
+#+BEGIN_SRC elisp
+;; Evil escape
+(setq-default evil-escape-delay 0.3)
+(setq-default evil-escape-key-sequence "kj")
+
+;; Undo-fu (improved undo)
+(setq undo-limit 8000000 undo-strong-limit 8000000 undo-outer-limit 8000000)
+
+;; Evil surround (per-mode pairs)
+;; Shell: $ → $()
+;; Org: [ → [[]], = → ==
+;; Emacs-lisp: ( → ( ), ` → `'
+;; Generic: / → //
+#+END_SRC
+
+** init-ui.el - Visual Configuration
+
+#+BEGIN_SRC elisp
+;; Theme
+(load-theme 'doom-dracula t)
+
+;; Font
+(set-face-attribute 'default nil :font "Maple Mono 17" :weight 'normal)
+
+;; CJK Font
+(set-fontset-font t 'han '("LXGW WenKai Mono" . "微软雅黑"))
+
+;; Hide UI elements
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+;; Line numbers
+(when (fboundp 'display-line-numbers-mode)
+  (global-display-line-numbers-mode))
+#+END_SRC
+
+** init-python.el - Python Development
+
+#+BEGIN_SRC elisp
+;; Run scripts with nohup
+(defun lz/running-current-bash-with-nohup ()
+  (interactive)
+  ;; Runs: nohup bash <file> > timestamp-identify---runfile.log &
+
+(defun lz/running-current-python-with-nohup ()
+  (interactive)
+  ;; Prompts for conda env, then runs: nohup $python <file> > ...
+
+;; GPU management
+(defun lz/run-occupy-python ()
+  (interactive)
+  ;; Occupy GPU device for testing
+
+(defun lz/open-tensorboard-in-current-buffer ()
+  (interactive)
+  ;; Open TensorBoard in project directory
+#+END_SRC
+
+** init-ssh.el - SSH Connections
+
+#+BEGIN_SRC elisp
+;; Direct connections
+ssh-connect-141    ; 10.21.20.141
+ssh-connect-142    ; 10.21.20.142
+ssh-connect-cs1    ; cs1.astaple.com
+ssh-connect-cs2    ; cs2.astaple.com
+ssh-connect-gs9-16 ; gsN.astaple.com
+
+;; Via jump host (is1.astaple.com)
+ssh-connect-fromout-cs1-2
+ssh-connect-fromout-gs9-16
+#+END_SRC
+
+* Custom Functions
+
+** Core Utilities (init-self-config-function.el)
+
+| Function            | Description                                    |
+|---------------------|------------------------------------------------|
+| my/indent-4-space   | Indent/dedent region or insert 4 spaces        |
+| Platform detection  | *is-mac*, *is-wsl*, *is-windows*, *is-linux*, *is-gui* |
+
+** Python Scripts (init-python.el)
+
+| Function                                   | Description                           |
+|--------------------------------------------|---------------------------------------|
+| lz/running-current-bash-with-nohup         | Run bash script with timestamped log  |
+| lz/running-current-python-with-nohup       | Run Python with conda environment     |
+| lz/nohup-switch-run                       | Auto-detect and run file              |
+| lz/run-occupy-python                      | Occupy GPU device                     |
+| lz/open-tensorboard-in-current-buffer     | Launch TensorBoard                    |
+| lz/look-nvidia-state                      | Show GPU status                       |
+
+** Buffer Management (init-buffer.el)
+
+| Function           | Description                    |
+|--------------------|--------------------------------|
+| clean-all-buffers  | Kill all open buffers          |
+
+** WSL Utilities (init-wsl.el)
+
+| Function                                              | Description                        |
+|-------------------------------------------------------|------------------------------------|
+| wsl-copy-region-to-clipboard                          | Copy to Windows clipboard          |
+| wsl-cut-region-to-clipboard                          | Cut to Windows clipboard           |
+| my-yank-image-from-win-clipboard-through-powershell   | Paste image from Windows           |
+| my-open-windows-downloads                            | Open Windows Downloads folder       |
+
+** SSH Connections (init-ssh.el)
+
+| Function               | Description                       |
+|------------------------|-----------------------------------|
+| ssh-connect-141/142    | Direct SSH to lab servers         |
+| ssh-connect-cs1/2      | SSH to cs servers                 |
+| ssh-connect-gs9-16     | SSH to gs servers                 |
+| ssh-connect-fromout-*  | SSH via jump host                 |
+| ssh-connect-vuln       | SSH to vuln server                |
+
+** Org Mode (init-org.el)
+
+| Function             | Description                     |
+|----------------------|---------------------------------|
+| fastinsert-org-head  | Insert org header template      |
+| org-insert-src-block | Insert source code block        |
+| my-screen-capture    | Screen capture to org           |
+| open-org-note        | Open org note                   |
+| open-worklog-in-d    | Open worklog                    |
+
+** Blog Publishing (init-blog.el)
+
+| Function                          | Description               |
+|-----------------------------------|---------------------------|
+| lz/org-publish-sitemap-with-time  | Custom sitemap generator   |
+
+** LaTeX (init-latex.el)
+
+| Function                    | Description                     |
+|-----------------------------|---------------------------------|
+| latex-cover-region-with@zl | Wrap region in LaTeX command    |
+
+* Platform-Specific Features
+
+** Windows (WSL)
+
+- Clipboard integration via =clip.exe=
+- Image paste from Windows clipboard
+- Proxy configuration
+- Git configuration
+
+** macOS
+
+- =exec-path-from-shell= for PATH management
+- Native clipboard integration
+- Application-open for external links
+
+** Linux
+
+- =vterm= for fast terminal
+- =xsel= for clipboard (optional)
+- Native file watchers
+
+** WSL (Windows Subsystem for Linux)
+
+- Windows PATH filtering (removes /mnt/c/ paths)
+- Cross-platform clipboard functions
+- GPU detection and management
+- Jump host SSH connections
+
+* Environment Variables
+
+| Variable           | Description                          | Required          |
+|-------------------|--------------------------------------|-------------------|
+| OPENROUTER_API_KEY | API key for GPTEL/OpenRouter        | Yes (for AI)      |
+| DEEPSEEK_API_KEY  | API key for DeepSeek (Aider)         | Yes (for Aider)   |
+| LC_ALL            | Locale setting (=C.UTF-8=)           | No                |
+| LANG              | Language setting (=C.UTF-8=)         | No                |
+| DISPLAY           | X display for GUI features           | Auto-detected     |
+
+* Custom Themes & Colors
+
+** doom-dracula Theme
+
+Mode line changes color based on Evil state:
+- *Insert state*: Red background (#C53030)
+- *Emacs state*: Green background (#2F855A)
+- *Modified buffer*: Yellow background (#E9B44C)
+- *Normal state*: Dark background (#000000) with green text (#68D391)
+
+** Font Configuration
+
+- *Default font*: Maple Mono 17 (Linux), JetBrainsMono 17 (fallback)
+- *CJK font*: LXGW WenKai Mono / 微软雅黑
+- *Mode line*: Maple Mono 12 italic
+
+* Troubleshooting
+
+** Package Installation Fails
+
+#+BEGIN_SRC bash
+# Refresh package archives
+M-x package-refresh-contents RET
+#+END_SRC
+
+** LSP Not Working
+
+#+BEGIN_SRC bash
+# Install pyright
+pip install pyright
+
+# Or for Rust
+rustup component add rust-analyzer
+#+END_SRC
+
+** AI Features Not Working
+
+#+BEGIN_SRC bash
+# Check API key is set
+echo $OPENROUTER_API_KEY
+
+# If using Aider, check DeepSeek key
+echo $DEEPSEEK_API_KEY
+#+END_SRC
+
+** SSH Connection Issues
+
+#+BEGIN_SRC bash
+# Test SSH connection manually
+ssh zi@cs1.astaple.com
+
+# Check tramp configuration
+M-x tramp-version RET
+#+END_SRC
+
+** Performance Issues
+
+#+BEGIN_SRC bash
+# Increase garbage collection threshold (already configured)
+# In init.el: (setq gc-cons-threshold (* 50 1024 1024))
+
+# Check startup time
+emacs --debug-init
+#+END_SRC
+
+* Acknowledgments
+
+This configuration builds upon many excellent Emacs packages and ideas from:
+
+- [[https://github.com/doomemacs/doomemacs][Doom Emacs]] - Theme and structure inspiration
+- [[https://github.com/bbatsov/prelude][Prelude]] - General configuration patterns
+- [[https://github.com/capitaomorte/sly][Sly]] - Common Lisp IDE ideas
+- [[https://www.orgroam.com/][Org Roam]] - Knowledge management
+- [[https://magit.vc/][Magit]] - Git interface
+- [[https://github.com/manzaltu/claude-code-ide.el][Claude Code IDE]] - Claude integration
+
+* 中文翻译
+
+这是一份全面的、模块化的 Emacs 配置，集成了 AI/LLM 集成、Python 开发工具、用于笔记和发布的 Org-mode，以及通过 Evil 模式实现的 Vim 风格编辑。
+
+** 安装与设置
+*** 前置要求
+
+- *Emacs* 27+ (推荐)
+- *Git* 用于版本控制功能
+- *Python* (推荐 anaconda3 或 miniconda3) 用于 Python 开发
+- *PlantUML* (~/.emacs.d/software/plantuml.jar) 用于图表生成
+- *RIPGrep* (rg) 用于 counsel-rg 搜索
+- *Universal Ctags* 用于 Citre 代码导航
+
+*** 安装
+
+#+BEGIN_SRC bash
+# 克隆配置
+git clone https://github.com/ziLiang3845/.emacs.d.git ~/.emacs.d
+
+# 安装所需外部工具
+# - plantuml.jar (~/.emacs.d/software/plantuml.jar)
+# - rg (ripgrep)
+# - curl (用于 OpenRouter API)
+
+# 设置环境变量 (参见环境变量部分)
+export OPENROUTER_API_KEY="your-api-key"
+
+# 启动 Emacs
+emacs
+#+END_SRC
+
+*** 首次设置
+
+1. 启动 Emacs - 包将会自动安装
+2. 等待所有包安装完成 (首次启动可能需要 5-10 分钟)
+3. 安装完成后重启 Emacs
+
+*** 设置脚本 (doc/)
+
+=doc/= 目录包含用于自动化安装系统依赖的 shell 脚本。在首次启动 Emacs 之前按顺序运行这些脚本。
+
+**** Ubuntu/Debian 设置脚本
+
+| 脚本                           | 描述                                                                                                              |
+|------------------------------|------------------------------------------------------------------------------------------------------------------|
+| =0.make_install_emacs29.sh=   | 从源码编译安装 Emacs 30.1 (需要构建工具)                                                                          |
+| =2.run_ubuntu_shell_sudo.sh=  | 安装系统包：xclip, xsel, gdb, w3m, aspell, scrot, openjdk-17, graphviz, python3, pipenv, mplayer, socat, cmake, zsh, ripgrep, ag 以及开发库 |
+| =3.gitclone.sh=              | 克隆额外的仓库 (用于可选功能)                                                                                     |
+| =4.pip-install.sh=          | 安装 Python 包：python-lsp-server, torch, numpy, scikit-learn, matplotlib                                        |
+| =5.add_fonts.sh=            | 安装 Maple Mono 和 CJK 字体 (文凯)                                                                               |
+| =6.initial_setup.sh=        | 全局配置 git user.name 和 user.email                                                                             |
+| =install-ctags.sh=         | 安装 universal-ctags 用于 Citre 代码导航                                                                        |
+
+**** 推荐的安装顺序
+
+#+BEGIN_SRC bash
+cd ~/.emacs.d/doc/
+
+# 1. 安装系统包 (Ubuntu/Debian)
+sudo bash 2.run_ubuntu_shell_sudo.sh
+
+# 2. 从源码安装 Emacs (如果不使用包管理器)
+bash 0.make_install_emacs29.sh
+
+# 3. 安装 ctags 用于代码导航
+sudo bash install-ctags.sh
+
+# 4. 安装字体
+bash 5.add_fonts.sh
+
+# 5. 安装 Python 包用于 LSP
+bash 4.pip-install.sh
+
+# 6. Git 配置
+bash 6.initial_setup.sh
+#+END_SRC
+
+**** Arch Linux
+
+| 脚本                           | 描述                   |
+|------------------------------|-----------------------|
+| =2.1.run_install_arch_pacman.sh=  | 通过 pacman 安装包    |
+| =5.1.add_fonts_arch_pacman.sh=   | 在 Arch 上安装字体    |
+
+**** 其他设置文件
+
+| 文件                                    | 描述                              |
+|---------------------------------------|----------------------------------|
+| =hope.org=                              | TODO 跟踪和愿望清单               |
+| =howToGetCapture.org=                   | 截图设置指南                       |
+| =spellcheck.org=                        | 拼写检查配置                       |
+| =WSL2-ubuntu-install-config-emacs.org= | WSL2 特定的 Emacs 安装指南         |
+| =install_emacs_without_sudo.txt=        | 无 sudo 构建 Emacs 的笔记          |
+| =latex环境指南.doc=                      | LaTeX 环境设置指南 (中文)          |
+
+** 项目结构
+
+#+BEGIN_EXAMPLE
+.emacs.d/
+├── init.el                    # 主入口点
+├── lisp/
+│   ├── init-*.el            # 功能模块 (~50 个文件)
+│   ├── custom.el            # Emacs Customize 设置
+│   ├── my-*.el              # 自定义辅助函数
+│   └── org-*.el             # Org-mode 扩展
+├── doc/                      # 系统依赖的设置脚本
+├── other-files/              # 额外资源
+└── feeds/                    # RSS 订阅配置 (elfeed)
+#+END_EXAMPLE
+
+*** 模块加载顺序 (init.el)
+
+- init-self-config-function  → 平台检测，核心工具
+- init-wsl                   → WSL 工具
+- init-elpa                  → 包管理
+- init-openai               → Aider (DeepSeek AI 编程助手)
+- init-eshell               → Shell 配置
+- init-proxy                → 代理设置
+- init-largefile            → 大文件处理
+- init-dired                → 文件管理器
+- init-clipboard            → 剪贴板集成
+- init-yas                  → 代码片段
+- init-git                  → Git gutter
+- init-citre                → 基于标签的代码导航
+- init-python               → Python 开发
+- init-latex                → LaTeX 编辑
+- init-cl                   → Common Lisp
+- init-cpp                  → C++ (已禁用)
+- init-rust                 → Rust 开发
+- init-cider                → Clojure REPL
+- init-blog                 → Org 发布
+- init-web                  → Web 开发
+- init-path                 → PATH 配置
+- init-rss                  → RSS 阅读器 (elfeed)
+- init-keybindings          → 全局快捷键
+- init-rg                   → Ripgrep 集成
+- init-spell                → 拼写检查
+- init-packages             → 包初始化
+- init-lsp                  → 语言服务器协议
+- init-evil                 → Vim 模拟
+- init-undo                 → 撤销配置
+- init-keyfreq              → 按键频率跟踪
+- init-org                  → Org-mode 配置
+- init-ssh                  → SSH 连接
+- init-ai                   → AI/LLM 集成 (gptel, claude-code-ide)
+- init-modeline             → Mode line 配置
+- init-window               → 窗口管理 (winum)
+- init-chinese              → 中文字体支持
+- init-better-defaults      → 改进的默认设置
+- init-ui                   → 视觉主题和样式
+- org-ui.el                 → Org 特定的 UI
+
+** 核心功能概览
+
+| 功能                   | 描述                                               |
+|----------------------|--------------------------------------------------|
+| AI/LLM 集成            | GPTEL (OpenRouter), Claude Code IDE, Aider (DeepSeek)     |
+| Python 开发            | LSP (eglot), anaconda-mode, python-black, conda 集成      |
+| Org Mode              | 笔记, 发布, 文学编程, Babel                              |
+| Vim 模拟               | Evil 模式与自定义 leader 键                              |
+| 代码导航               | Citre (ctags), xref, highlight-symbol               |
+| 生产力工具             | Yasnippet, smartparens, rainbow-delimiters         |
+| Shell 集成            | vterm, eshell, SSH via tramp                       |
+| UI/主题               | doom-dracula 主题, doom-modeline, marginalia        |
+| 版本控制               | git-gutter, magit                                 |
+| Web 开发              | web-mode, js2-mode, emmet-mode                    |
+
+** 快捷键参考
+
+*** 全局快捷键
+
+| 快捷键     | 功能                              | 描述                              |
+|----------|----------------------------------|----------------------------------|
+| C-\      | comment-line                     | 注释/取消注释当前行                 |
+| C-a      | mwim-beginning-of-code-or-line   | 跳转到代码/行首                    |
+| C-e      | mwim-end-of-code-or-line         | 跳转到代码/行尾                    |
+| C-s      | swiper                           | 带候选项的增量搜索                  |
+| C-f5     | lz/nohup-switch-run              | 运行当前文件 (自动检测 bash/python) |
+| F1       | restart-emacs                    | 重启 Emacs                        |
+| F2       | open-my-init-file                | 打开 init.el                      |
+| TAB      | my/indent-4-space                | 缩进区域或插入 4 个空格             |
+| S-TAB    | my/indent-4-space (带参数)       | 取消缩进或删除 4 个空格            |
+| M-0      | next-multiframe-window           | 切换到下一个窗口                   |
+| M-9      | previous-multiframe-window       | 切换到上一个窗口                   |
+| M-r      | query-replace                    | 查找和替换                        |
+| M-s      | counsel-rg                       | Ripgrep 搜索                     |
+| C-x C-b  | ibuffer                          | Buffer 管理器                    |
+| C-x 4 <num> | -                           | 分屏为 4 个水平窗口               |
+| C-x 5 <num> | -                           | 分屏为 3 个水平窗口               |
+| C-x 6 <num> | -                           | 分屏为 5 个混合窗口               |
+
+*** Evil 模式 Leader 键 (SPC)
+
+以下所有快捷键在 Evil Normal/Visual 模式下以 =SPC= 为前缀。
+
+**** 文件和缓冲区管理
+
+| 快捷键   | 功能                    | 描述                     |
+|--------|------------------------|------------------------|
+| SPC xs | save-buffer            | 保存当前缓冲区             |
+| SPC xf | find-file              | 查找文件                  |
+| SPC xr | recentf-open-files     | 打开最近文件               |
+| SPC xb | switch-to-buffer       | 切换缓冲区                |
+| SPC xk | kill-buffer            | 关闭缓冲区                |
+| SPC xc | save-buffers-kill-terminal | 保存并关闭              |
+| SPC bb | -                      | 切换到上一个缓冲区           |
+| SPC bf | eglot-format-buffer    | 格式化缓冲区               |
+
+**** 窗口管理
+
+| 快捷键   | 功能                              | 描述                         |
+|--------|----------------------------------|------------------------------|
+| SPC x0 | delete-window                    | 关闭当前窗口                    |
+| SPC x1 | delete-other-windows             | 最大化当前窗口                  |
+| SPC x2 | split-window-below               | 水平分屏                      |
+| SPC x3 | split-window-right               | 垂直分屏                      |
+| SPC x5 | split-3-windows-horizontally-evenly | 三向水平分屏                  |
+| SPC jj | scroll-other-window              | 滚动其他窗口向下                |
+| SPC kk | scroll-other-window-up           | 滚动其他窗口向上                |
+
+**** 帮助和文档
+
+| 快捷键   | 功能                          | 描述                 |
+|--------|------------------------------|---------------------|
+| SPC hf | counsel-describe-function     | 描述函数             |
+| SPC hv | counsel-describe-variable     | 描述变量             |
+| SPC hk | describe-key                  | 描述按键             |
+| SPC hm | describe-mode                 | 描述模式             |
+
+**** 代码导航和编辑
+
+| 快捷键   | 功能                             | 描述                      |
+|--------|---------------------------------|--------------------------|
+| SPC gd | evil-goto-definition            | 跳转到定义                |
+| SPC hs | highlight-symbol                 | 高亮符号                  |
+| SPC sr | highlight-symbol-query-replace  | 替换高亮的符号             |
+| SPC sn | highlight-symbol-nav-mode       | 导航高亮 (M-n/M-p)       |
+| SPC hl | hs-hide-level                   | 按级别隐藏代码块            |
+| SPC sl | hs-show-block                   | 显示代码块                 |
+| SPC er | eglot-rename                    | 重命名符号                 |
+
+**** Citre 代码导航
+
+| 快捷键   | 功能                         | 描述                  |
+|--------|-----------------------------|---------------------|
+| SPC cu | citre-update-this-tags-file | 更新 ctags 文件       |
+| SPC cd | citre-jump                  | 跳转到定义            |
+| SPC cD | citre-jump-back             | 跳回                  |
+| SPC cp | citre-ace-peek             | 查看定义              |
+
+**** Anaconda 模式 (Python)
+
+| 快捷键   | 功能                                        | 描述                      |
+|--------|---------------------------------------------|--------------------------|
+| SPC ad | anaconda-mode-find-definitions              | 查找定义                  |
+| SPC ar | anaconda-mode-find-references              | 查找引用                  |
+| SPC aD | anaconda-mode-find-definitions-other-window | 在其他窗口中查找          |
+| SPC aR | anaconda-mode-find-references-other-window | 在其他窗口中查找引用       |
+| SPC aa | anaconda-mode-find-assignments             | 查找赋值                  |
+| SPC a/ | anaconda-mode-show-doc                    | 显示文档                  |
+
+**** Python 脚本 (F5 / nohup)
+
+| 快捷键   | 功能                                  | 描述                       |
+|--------|--------------------------------------|--------------------------|
+| SPC rb | lz/running-current-bash-with-nohup   | 在后台运行 bash 脚本       |
+| SPC rp | lz/running-current-python-with-nohup | 使用 conda 运行 Python 脚本 |
+| SPC ro | lz/run-occupy-python                  | 占用 GPU 设备              |
+| SPC rt | lz/open-tensorboard-in-current-buffer | 打开 TensorBoard          |
+| SPC ns | lz/look-nvidia-state                  | 查看 GPU 状态              |
+
+**** SSH 连接
+
+| 快捷键         | 功能                 | 描述                        |
+|--------------|--------------------|----------------------------|
+| SPC 141      | ssh-connect-141    | 连接到 10.21.20.141        |
+| SPC 142      | ssh-connect-142    | 连接到 10.21.20.142        |
+| SPC cs1      | ssh-connect-cs1    | 连接到 cs1.astaple.com     |
+| SPC cs2      | ssh-connect-cs2    | 连接到 cs2.astaple.com     |
+| SPC gs9-gs16 | ssh-connect-gsN    | 连接到 gsN.astaple.com     |
+| SPC ocs1     | ssh-connect-fromout-cs1 | 通过跳板主机连接         |
+| SPC ogs9-ogs16 | ssh-connect-fromout-gsN | 通过跳板主机连接 gsN    |
+
+**** 剪贴板和 WSL
+
+| 快捷键   | 功能                                              | 描述                      |
+|--------|--------------------------------------------------|--------------------------|
+| SPC sy | wsl-copy-region-to-clipboard                     | 复制到 Windows 剪贴板      |
+| SPC sd | wsl-cut-region-to-clipboard                     | 剪切到 Windows 剪贴板      |
+| SPC si | my-yank-image-from-win-clipboard-through-powershell | 从 Windows 粘贴图片   |
+
+**** Shell
+
+| 快捷键   | 功能              | 描述              |
+|--------|------------------|-----------------|
+| SPC sh | shell            | 打开 shell       |
+| SPC sc | shell-command    | 运行 shell 命令   |
+
+**** 英文和拼写
+
+| 快捷键   | 功能                            | 描述                |
+|--------|---------------------------------|--------------------|
+| SPC cy | gt-translate                    | 翻译文本            |
+| SPC te | toggle-company-english-helper   | 切换英文助手        |
+| SPC is | ispell-buffer                   | 拼写检查缓冲区      |
+| SPC fs | flyspell-mode                   | 切换拼写检查        |
+
+**** Org 模式
+
+| 快捷键   | 功能                    | 描述                     |
+|--------|------------------------|------------------------|
+| SPC ii | my-screen-capture      | 截图到 org              |
+| SPC ih | fastinsert-org-head    | 插入 org 标题           |
+| SPC ic | org-insert-src-block   | 插入代码块              |
+| SPC op | org-publish            | 发布 org 项目           |
+| SPC on | open-org-note          | 打开 org 笔记           |
+| SPC ow | open-worklog-in-d      | 打开工作日志             |
+
+**** 隐藏/显示代码
+
+| 快捷键   | 功能                        | 描述                    |
+|--------|----------------------------|-----------------------|
+| SPC s1 | latex-cover-region-with@zl | 用 LaTeX 命令包裹区域   |
+
+**** 集合
+
+| 快捷键   | 功能           | 描述              |
+|--------|---------------|-----------------|
+| SPC ec | collected-run | 运行收集的命令    |
+
+*** Evil 状态导航
+
+| 快捷键   | 功能                         | 描述                         |
+|--------|-----------------------------|-----------------------------|
+| C-e    | mwim-end-of-line-or-code   | 跳转到行/代码末尾 (Evil Normal) |
+| C-p    | previous-line               | 上一行 (Evil Normal)         |
+| C-n    | next-line                   | 下一行 (Evil Normal)         |
+| C-b    | backward-char               | 后退字符 (Evil Normal)       |
+| C-f    | forward-char                | 前进字符 (Evil Normal)        |
+| C-v    | scroll-up-command           | 向上滚动 (Evil Normal)       |
+
+*** Evil 转义
+
+| 快捷键   | 功能   | 描述                              |
+|--------|-------|---------------------------------|
+| kj    | -     | 从插入模式退出 (0.3秒延迟)           |
+
+*** 窗口导航 (winum)
+
+| 快捷键   | 功能                       | 描述                |
+|--------|--------------------------|-------------------|
+| M-0    | winum-select-window-0-or-10 | 选择窗口 0 或 10   |
+| M-1    | winum-select-window-1    | 选择窗口 1          |
+| M-2    | winum-select-window-2    | 选择窗口 2          |
+| M-3    | winum-select-window-3    | 选择窗口 3          |
+| M-4    | winum-select-window-4    | 选择窗口 4          |
+| M-5    | winum-select-window-5    | 选择窗口 5          |
+| M-6    | winum-select-window-6    | 选择窗口 6          |
+| M-7    | winum-select-window-7    | 选择窗口 7          |
+| M-8    | winum-select-window-8    | 选择窗口 8          |
+
+*** Ivy/Counsel 搜索
+
+| 快捷键      | 功能                            | 描述                  |
+|-----------|---------------------------------|---------------------|
+| M-x       | counsel-M-x                    | 执行命令              |
+| C-x C-f   | counsel-find-file               | 带补全的查找文件       |
+| C-x b     | counsel-switch-buffer           | 切换缓冲区            |
+| C-x B     | counsel-switch-buffer-other-window | 切换缓冲区 (其他窗口) |
+| C-x C-r   | counsel-recentf                 | 打开最近文件           |
+| C-h f     | counsel-describe-function       | 描述函数              |
+| C-h v     | counsel-describe-variable       | 描述变量              |
+| C-h C-k   | find-function-on-key            | 查找按键定义           |
+| C-c C-r   | ivy-resume                      | 恢复上次搜索           |
+
+*** Org 模式快捷键
+
+| 快捷键      | 功能                  | 描述                     |
+|-----------|---------------------|------------------------|
+| C-c l     | org-store-link      | 存储链接                 |
+| C-c s e   | org-edit-src-code   | 编辑代码块               |
+| C-c s i   | org-insert-src-block | 插入代码块              |
+| C-f h     | fastinsert-org-head | 插入 org 标题模板        |
+
+*** Python 开发
+
+| 快捷键    | 功能                      | 描述                              |
+|---------|-------------------------|----------------------------------|
+| F5      | lz/nohup-switch-run     | 运行当前文件 (自动检测 bash/python) |
+
+*** Citre 代码导航
+
+| 快捷键      | 功能                         | 描述                  |
+|-----------|----------------------------|---------------------|
+| C-x c j   | citre-jump                 | 跳转到定义            |
+| C-x c J   | citre-jump-back            | 跳回                  |
+| C-x c p   | citre-ace-peek            | Ace peek            |
+| C-x c u   | citre-update-this-tags-file | 更新 tags           |
+
+*** AI/LLM 快捷键
+
+| 快捷键       | 功能                    | 描述                     |
+|------------|-------------------------|------------------------|
+| C-c C-'   | claude-code-ide-menu    | Claude Code IDE 菜单    |
+| C-c a     | aidermacs-transient-menu | Aider 瞬时菜单          |
+
+*** UI 缩放
+
+| 快捷键       | 功能                      | 描述                    |
+|------------|-------------------------|-----------------------|
+| C-c C-=   | enable-150%-scale-big   | 增大 UI 比例到 150%     |
+| C-c C--   | enable-75%-scale-big    | 减小 UI 比例到 75%      |
+| C-=       | text-scale-adjust (+0.5) | 增大字号                |
+| C--       | text-scale-adjust (-0.5) | 减小字号                |
+| C-0       | text-scale-adjust (reset) | 重置字号              |
+
+*** Flymake 诊断
+
+| 快捷键    | 功能                              | 描述             |
+|---------|----------------------------------|----------------|
+| C-x e   | flymake-show-buffer-diagnostics  | 显示诊断信息       |
+| C-x n   | flymake-goto-next-error         | 下一个错误         |
+| C-x N   | flymake-goto-prev-error         | 上一个错误         |
+
+** 包列表
+
+*** 核心基础设施
+
+| 包           | 描述                            |
+|-------------|--------------------------------|
+| use-package | 声明式包配置                    |
+| straight.el | 包管理器 (可选, 已禁用)         |
+
+*** Vim 模拟 (Evil)
+
+| 包                | 描述                       |
+|------------------|---------------------------|
+| evil             | Vim 模拟层                  |
+| evil-escape      | 使用 "kj" 序列转义           |
+| evil-surround    | 环绕文本对象                 |
+| evil-visualstar  | 搜索可视化选择               |
+| evil-leader      | Leader 键支持               |
+| undo-fu          | 改进的撤销/重做              |
+| general          | 快捷键定义                  |
+
+*** UI 和主题
+
+| 包                      | 描述                         |
+|------------------------|-----------------------------|
+| doom-themes             | 主题集合 (doom-dracula)     |
+| doom-modeline           | 现代 mode line               |
+| all-the-icons           | 图标集                       |
+| all-the-icons-completion | 补全中的图标                |
+| all-the-icons-dired    | dired 中的图标               |
+| nerd-icons              | 替代图标集                   |
+| marginalia              | 增强的 minibuffer 注解       |
+| highlight-indentation   | 缩进指南                    |
+| rainbow-delimiters      | 彩色括号                    |
+| rainbow-mode           | 颜色代码                    |
+| beacon                 | 光标高亮 (已禁用)             |
+| winum                  | 窗口编号导航                  |
+| ivy-posframe            | Ivy in posframe             |
+
+*** Python 开发
+
+| 包              | 描述                            |
+|----------------|--------------------------------|
+| python         | 内置 Python 模式                |
+| anaconda-mode  | Python 代码导航 (已注释)        |
+| company-anaconda | Company 后端 (已注释)          |
+| python-black   | 代码格式化 (已注释)             |
+| pyenv-mode    | Python 环境切换 (已注释)         |
+| elpy           | Python IDE (已注释)             |
+
+*** 语言服务器协议
+
+| 包                | 描述                       |
+|------------------|---------------------------|
+| eglot            | LSP 客户端 (内置)           |
+| pyright-langserver | Python LSP 服务器         |
+| copilot          | GitHub Copilot             |
+
+*** 代码导航
+
+| 包              | 描述                      |
+|----------------|--------------------------|
+| citre          | 基于标签的代码导航           |
+| projectile     | 项目管理                   |
+| xref           | 交叉引用导航                |
+| highlight-symbol | 符号高亮                 |
+
+*** Org Mode
+
+| 包                   | 描述                         |
+|---------------------|----------------------------|
+| org                | 内置大纲/笔记工具              |
+| org-roam           | 漫游知识库                    |
+| org-roam-protocol   | roam 的 org-protocol        |
+| org-bullets        | 项目符号                     |
+| org-alert          | 桌面通知                     |
+| org-download       | 图片附件                     |
+| htmlize            | org 的 HTML 导出             |
+| ox-publish         | 发布静态站点                  |
+
+*** 代码片段和模板
+
+| 包         | 描述                    |
+|-----------|------------------------|
+| yasnippet | 模板代码片段             |
+| autoinsert | 自动文件模板            |
+| cdlatex   | LaTeX 输入快捷方式       |
+
+*** AI/LLM 集成
+
+| 包                 | 描述                       |
+|-------------------|---------------------------|
+| gptel             | 通用 LLM 接口              |
+| claude-code-ide    | Claude Code 集成          |
+| aidermacs         | Aider AI 编程助手           |
+
+*** Shell 和终端
+
+| 包             | 描述                       |
+|---------------|--------------------------|
+| vterm         | 快速终端模拟器               |
+| eshell        | Emacs shell               |
+| tramp         | 远程文件编辑                |
+| counsel-tramp | Counsel 接口 (已注释)       |
+
+*** 版本控制
+
+| 包         | 描述               |
+|-----------|------------------|
+| magit     | Git 界面           |
+| git-gutter | 装订线中的差异指示器 |
+
+*** Web 开发
+
+| 包            | 描述               |
+|--------------|------------------|
+| web-mode     | HTML 编辑          |
+| js2-mode     | JavaScript 编辑   |
+| js2-refactor | JavaScript 重构   |
+| emmet-mode   | Zen 编码           |
+
+*** 其他语言
+
+| 包               | 描述                        |
+|-----------------|----------------------------|
+| rust-mode       | Rust 编辑                   |
+| rustic         | Rust 工具包                  |
+| cider          | Clojure REPL               |
+| typescript-mode | TypeScript                  |
+| auctex         | LaTeX 编辑                  |
+| reftex         | LaTeX 参考文献 (已注释)       |
+| company-auctex  | LaTeX 的 Company 后端 (已注释) |
+| leetcode       | LeetCode 集成               |
+
+*** 生产力工具
+
+| 包                  | 描述                        |
+|-------------------|---------------------------|
+| elfeed              | RSS 阅读器                   |
+| elfeed-org          | 基于 org 的 RSS 配置        |
+| ivy                 | 补全框架                    |
+| counsel             | Ivy 命令                   |
+| swiper              | 增量搜索                    |
+| smartparens         | 智能配对管理                |
+| hungry-delete       | 删除空白                    |
+| which-key           | 快捷键提示                  |
+| neotree             | 文件树 (已注释)              |
+| dirvish             | Dired 替代品 (已注释)        |
+| command-log-mode    | 命令历史                    |
+
+*** 实用工具
+
+| 包              | 描述                        |
+|--------------|------------------------------|
+| company      | 文本补全                      |
+| flymake      | 飞行语法检查                   |
+| hungry-delete | 删除多个空格                  |
+| ace-flyspell | Ace 跳转到 flyspell 错误       |
+| keyfreq      | 跟踪按键频率                   |
+| undo-tree    | 可视化撤销树 (已替换)           |
+| rg           | Ripgrep 集成                  |
+
+** 配置文件
+
+*** init-ai.el - AI/LLM 集成
+
+#+BEGIN_SRC elisp
+;; GPTEL (OpenRouter)
+(setq gptel-model "qwen/qwen3.6-plus-preview:free")
+(setq gptel-backend
+      (gptel-make-openai "OpenRouter"
+        :host "openrouter.ai"
+        :endpoint "/api/v1/chat/completions"
+        :stream t
+        :key (lambda () (getenv "OPENROUTER_API_KEY"))))
+
+;; Claude Code IDE
+(use-package claude-code-ide
+  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
+  :bind ("C-c C-'" . claude-code-ide-menu)
+  :config
+  (claude-code-ide-emacs-tools-setup))
+#+END_SRC
+
+*** init-openai.el - Aider (DeepSeek)
+
+#+BEGIN_SRC elisp
+(use-package aidermacs
+  :bind ("C-c a" . aidermacs-transient-menu)
+  :custom
+  (aidermacs-default-model "deepseek")
+  (aidermacs-architect-model "deepseek/deepseek-reasoner")
+  (aidermacs-editor-model "deepseek/deepseek-chat")
+  (aidermacs-backend 'vterm)
+  (aidermacs-watch-files t))
+#+END_SRC
+
+*** init-lsp.el - 语言服务器协议
+
+#+BEGIN_SRC elisp
+;; Eglot 自动为 rust-mode 和 python-mode 启动
+(add-hook 'rust-mode-hook 'eglot-ensure)
+(add-hook 'python-mode-hook 'eglot-ensure)
+
+;; Copilot
+(use-package copilot
+  :vc (:url "https://github.com/copilot-emacs/copilot.el" :branch "main")
+  :config
+  (global-copilot-mode))
+#+END_SRC
+
+*** init-org.el - Org Mode
+
+#+BEGIN_SRC elisp
+;; 自定义标签
+(setq org-tag-alist '(("@Research" . ?r) ("@Literature" . ?l) ("@Book" . ?b)))
+
+;; Babel 语言
+(org-babel-do-load-languages 'org-babel-load-languages
+  '((emacs-lisp . t) (ditaa . t) (python . t) (shell . t)
+    (latex . t) (plantuml . t) (R . t)))
+
+;; PlantUML
+(setq org-plantuml-jar-path "~/.emacs.d/software/plantuml.jar")
+(setq org-confirm-babel-evaluate nil)
+#+END_SRC
+
+*** init-evil.el - Vim 模拟
+
+#+BEGIN_SRC elisp
+;; Evil 转义
+(setq-default evil-escape-delay 0.3)
+(setq-default evil-escape-key-sequence "kj")
+
+;; Undo-fu (改进的撤销)
+(setq undo-limit 8000000 undo-strong-limit 8000000 undo-outer-limit 8000000)
+
+;; Evil surround (每模式配对)
+;; Shell: $ → $()
+;; Org: [ → [[]], = → ==
+;; Emacs-lisp: ( → ( ), ` → `'
+;; 通用: / → //
+#+END_SRC
+
+*** init-ui.el - 视觉配置
+
+#+BEGIN_SRC elisp
+;; 主题
+(load-theme 'doom-dracula t)
+
+;; 字体
+(set-face-attribute 'default nil :font "Maple Mono 17" :weight 'normal)
+
+;; CJK 字体
+(set-fontset-font t 'han '("LXGW WenKai Mono" . "微软雅黑"))
+
+;; 隐藏 UI 元素
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+;; 行号
+(when (fboundp 'display-line-numbers-mode)
+  (global-display-line-numbers-mode))
+#+END_SRC
+
+*** init-python.el - Python 开发
+
+#+BEGIN_SRC elisp
+;; 使用 nohup 运行脚本
+(defun lz/running-current-bash-with-nohup ()
+  (interactive)
+  ;; 运行: nohup bash <file> > timestamp-identify---runfile.log &
+
+(defun lz/running-current-python-with-nohup ()
+  (interactive)
+  ;; 提示选择 conda 环境，然后运行: nohup $python <file> > ...
+
+;; GPU 管理
+(defun lz/run-occupy-python ()
+  (interactive)
+  ;; 占用 GPU 设备用于测试
+
+(defun lz/open-tensorboard-in-current-buffer ()
+  (interactive)
+  ;; 在项目目录中打开 TensorBoard
+#+END_SRC
+
+*** init-ssh.el - SSH 连接
+
+#+BEGIN_SRC elisp
+;; 直接连接
+ssh-connect-141    ; 10.21.20.141
+ssh-connect-142    ; 10.21.20.142
+ssh-connect-cs1    ; cs1.astaple.com
+ssh-connect-cs2    ; cs2.astaple.com
+ssh-connect-gs9-16 ; gsN.astaple.com
+
+;; 通过跳板主机 (is1.astaple.com)
+ssh-connect-fromout-cs1-2
+ssh-connect-fromout-gs9-16
+#+END_SRC
+
+** 自定义函数
+
+*** 核心工具 (init-self-config-function.el)
+
+| 函数                    | 描述                                    |
+|----------------------|----------------------------------------|
+| my/indent-4-space    | 缩进/取消缩进区域或插入 4 个空格           |
+| 平台检测              | *is-mac*, *is-wsl*, *is-windows*, *is-linux*, *is-gui* |
+
+*** Python 脚本 (init-python.el)
+
+| 函数                                      | 描述                           |
+|------------------------------------------|-------------------------------|
+| lz/running-current-bash-with-nohup        | 使用带时间戳的日志运行 bash 脚本  |
+| lz/running-current-python-with-nohup      | 使用 conda 环境运行 Python     |
+| lz/nohup-switch-run                     | 自动检测并运行文件              |
+| lz/run-occupy-python                    | 占用 GPU 设备                  |
+| lz/open-tensorboard-in-current-buffer   | 启动 TensorBoard              |
+| lz/look-nvidia-state                    | 显示 GPU 状态                  |
+
+*** 缓冲区管理 (init-buffer.el)
+
+| 函数             | 描述                    |
+|----------------|------------------------|
+| clean-all-buffers | 关闭所有打开的缓冲区     |
+
+*** WSL 工具 (init-wsl.el)
+
+| 函数                                              | 描述                        |
+|---------------------------------------------------|----------------------------|
+| wsl-copy-region-to-clipboard                      | 复制到 Windows 剪贴板        |
+| wsl-cut-region-to-clipboard                      | 剪切到 Windows 剪贴板        |
+| my-yank-image-from-win-clipboard-through-powershell | 从 Windows 粘贴图片       |
+| my-open-windows-downloads                        | 打开 Windows 下载文件夹     |
+
+*** SSH 连接 (init-ssh.el)
+
+| 函数                 | 描述                       |
+|--------------------|---------------------------|
+| ssh-connect-141/142 | 直接 SSH 到实验室服务器     |
+| ssh-connect-cs1/2  | SSH 到 cs 服务器            |
+| ssh-connect-gs9-16 | SSH 到 gs 服务器            |
+| ssh-connect-fromout-* | 通过跳板主机 SSH           |
+| ssh-connect-vuln   | SSH 到 vuln 服务器         |
+
+*** Org 模式 (init-org.el)
+
+| 函数               | 描述                     |
+|------------------|------------------------|
+| fastinsert-org-head | 插入 org 标题模板        |
+| org-insert-src-block | 插入代码块              |
+| my-screen-capture  | 截图到 org              |
+| open-org-note     | 打开 org 笔记            |
+| open-worklog-in-d | 打开工作日志              |
+
+*** 博客发布 (init-blog.el)
+
+| 函数                            | 描述                   |
+|-------------------------------|------------------------|
+| lz/org-publish-sitemap-with-time | 自定义站点地图生成器    |
+
+*** LaTeX (init-latex.el)
+
+| 函数                      | 描述                     |
+|-------------------------|------------------------|
+| latex-cover-region-with@zl | 用 LaTeX 命令包裹区域   |
+
+** 平台特定功能
+
+*** Windows (WSL)
+
+- 通过 =clip.exe= 实现剪贴板集成
+- 从 Windows 剪贴板粘贴图片
+- 代理配置
+- Git 配置
+
+*** macOS
+
+- =exec-path-from-shell= 用于 PATH 管理
+- 原生剪贴板集成
+- application-open 用于外部链接
+
+*** Linux
+
+- =vterm= 用于快速终端
+- =xsel= 用于剪贴板 (可选)
+- 原生文件监视器
+
+*** WSL (Windows Subsystem for Linux)
+
+- Windows PATH 过滤 (移除 /mnt/c/ 路径)
+- 跨平台剪贴板功能
+- GPU 检测和管理
+- 通过跳板主机的 SSH 连接
+
+** 环境变量
+
+| 变量              | 描述                          | 是否必需           |
+|-----------------|------------------------------|------------------|
+| OPENROUTER_API_KEY | GPTEL/OpenRouter 的 API 密钥   | AI 功能必需        |
+| DEEPSEEK_API_KEY | DeepSeek (Aider) 的 API 密钥   | Aider 必需        |
+| LC_ALL          | 区域设置 (=C.UTF-8=)            | 否                |
+| LANG            | 语言设置 (=C.UTF-8=)            | 否                |
+| DISPLAY         | GUI 功能的 X 显示              | 自动检测           |
+
+** 自定义主题和颜色
+
+*** doom-dracula 主题
+
+Mode line 根据 Evil 状态改变颜色：
+- *插入状态*: 红色背景 (#C53030)
+- *Emacs 状态*: 绿色背景 (#2F855A)
+- *修改的缓冲区*: 黄色背景 (#E9B44C)
+- *普通状态*: 深色背景 (#000000) 配绿色文字 (#68D391)
+
+*** 字体配置
+
+- *默认字体*: Maple Mono 17 (Linux), JetBrainsMono 17 (备用)
+- *CJK 字体*: LXGW WenKai Mono / 微软雅黑
+- *Mode line*: Maple Mono 12 italic
+
+** 故障排除
+
+*** 包安装失败
+
+#+BEGIN_SRC bash
+# 刷新包档案
+M-x package-refresh-contents RET
+#+END_SRC
+
+*** LSP 不工作
+
+#+BEGIN_SRC bash
+# 安装 pyright
+pip install pyright
+
+# 或者对于 Rust
+rustup component add rust-analyzer
+#+END_SRC
+
+*** AI 功能不工作
+
+#+BEGIN_SRC bash
+# 检查 API 密钥是否设置
+echo $OPENROUTER_API_KEY
+
+# 如果使用 Aider，检查 DeepSeek 密钥
+echo $DEEPSEEK_API_KEY
+#+END_SRC
+
+*** SSH 连接问题
+
+#+BEGIN_SRC bash
+# 手动测试 SSH 连接
+ssh zi@cs1.astaple.com
+
+# 检查 tramp 配置
+M-x tramp-version RET
+#+END_SRC
+
+*** 性能问题
+
+#+BEGIN_SRC bash
+# 增加垃圾回收阈值 (已配置)
+# 在 init.el 中: (setq gc-cons-threshold (* 50 1024 1024))
+
+# 检查启动时间
+emacs --debug-init
+#+END_SRC
+
+** 致谢
+
+此配置基于众多优秀的 Emacs 包和思想构建：
+
+- [[https://github.com/doomemacs/doomemacs][Doom Emacs]] - 主题和结构灵感
+- [[https://github.com/bbatsov/prelude][Prelude]] - 通用配置模式
+- [[https://github.com/capitaomorte/sly][Sly]] - Common Lisp IDE 思路
+- [[https://www.orgroam.com/][Org Roam]] - 知识管理
+- [[https://magit.vc/][Magit]] - Git 界面
+- [[https://github.com/manzaltu/claude-code-ide.el][Claude Code IDE]] - Claude 集成
