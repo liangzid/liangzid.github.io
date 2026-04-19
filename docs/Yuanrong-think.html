@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2026-04-19 Sun 14:10 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>对圆融学派的思考与批判</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">对圆融学派的思考与批判</h1>
+<div id="outline-container-org541a23a" class="outline-3">
+<h3 id="org541a23a"><span class="section-number-3">0.1.</span> 论见性不灭</h3>
+<div class="outline-text-3" id="text-0-1">
+<p>
+这里的见性不灭不是说人有意识、或者说见性永恒存在；也不是说有一个抽象的法（就像绝对精神理念一样）永远存在于世间。见性不灭是说人拥有了知自我存在、观察自我存在的功能。这个功能不是永恒的，但是又不是断灭的，而是生灭却可以持续起作用的。所谓的见性不灭，是说虽然“无我”，但是流动着的这个个体却可以时时刻刻地观察自我——对自我进行止观，即“应无所住而生其心”。
+</p>
+
+<p>
+更具体来说就是：
+</p>
+<ol class="org-ol">
+<li>承认无我。没有一个永恒不灭的我，也没有一个可以不断继承的我。</li>
+<li><p>
+否认断灭见。认识到人存在过程乃至于所谓的轮回的过程就像是河流的流动、篝火的燃烧。每时每刻河流里的水都不相同，篝火的燃烧所需的材料与消耗的氧气也不同，但是总体上看这个河流却是刹那相续的，篝火也是持续燃烧的。因此否认断灭见。
+</p>
+
+<p>
+否认断灭见的核心在于认识到每时每刻都在断灭又每时每刻都在兴起。所以“无所住”。无所住的核心在于本来就无法住，因为本来就是流动的。所以本来无一物。同时认识到过去的念头与当下的思绪与未来的心都无直接关联，过去已过，未来未来，当下生灭，所以过去心不可得，现在心不可得，未来心不可得。由此来看，心不在外，不在内，不在内外之间，不在抽象的实体之上，因为心本来就不存在、不可得，因为心本身就是一个有为的刹那生灭的东西。这就是认识到心不存在、假有的这个功能与心一样刹那生灭，但是又可以时时体察自我，所以叫“见性不灭”。
+</p></li>
+</ol>
+
+
+<p>
+专注于事情上与这种应无所住而生其心的状态是一致的。沉浸在一件事情上，但是保持清醒，同时不耽于此，这就是最高级别的处在现实世界的止观，也是最高级别的修行。这里的止在于停住了其他干扰自己的念头。这里的观在于能够意识到自己在做什么并在有意识地做这件事。
+</p>
+
+<p>
+两句话：
+</p>
+<ul class="org-ul">
+<li>事来即应，事去不留。只在当下，不恋结果。</li>
+<li>过去已去，未来未来，现在生灭，方为现在。</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgfa59896" class="outline-3">
+<h3 id="orgfa59896"><span class="section-number-3">0.2.</span> 解语</h3>
+<div class="outline-text-3" id="text-0-2">
+<blockquote>
+<p>
+念起不随，知而不住。知幻即离，离即不迷。
+</p>
+</blockquote>
+
+<p>
+解：
+</p>
+<ul class="org-ul">
+<li>念起不随：念头升起落下，时时刻刻流转。但是我可以选择不跟随。当我聚焦在某件事上时，其他的念头并不会打扰我，我知道我在聚焦于什么。这就是念起不随。我保有我的觉知，聆听体察任何一个念头，但是却不受到他们的影响，不受到他们的控制，这就是念起不随。</li>
+<li>知而不住：我了知我在做什么。我了知我的情绪、我的状态、我的内心的所有的情感。我了知我的需求。我了知我的欲、我的愤怒、我的无知。我了知一切。但是我不能去抓取，不能尝试将某个东西固定下来。我不能期待好的东西一直存留，坏的东西快点走掉或者不要过来。我只能不评判、不分别、永远保持宁静地体察他们、了然他们，不住在任何一个状态里，而是任随任何一个状态自然地流转。当我伤心时，我就自然而然留下眼泪。当我快乐时，我就开心地笑。毫无滞塞，这就是我。</li>
+<li>知幻即离：当我意识到了我并不存在，我便不可以执着于自我。当我意识到过去心不可得，未来心不可得，现在心念念相续，也不可得，我就应该意识到没有一个这样的我。既然没有我，就离开贪求，就离开对他人的恨，就离开了愚蠢和任何的执着。我不会对我所处的状态感到痴迷，因为没有我，自然这些果位都是虚无。既然没有我，便也没有比较、没有高下，只是一个个的过程，缘起缘灭罢了。就像是雾气、烟花、屏幕上的图景、耳畔的声音、一切的一切。意识到无我，便不去追求，而是去做应该做的。意识到无世界，便也体会到真正的安静与寂灭。</li>
+<li>离即不迷：只要时刻保持这种了知的状态，无论做任何事、在什么环境下，我都处在一种本来状态下、而非无明。</li>
+</ul>
+
+<blockquote>
+<p>
+初于闻中，入流亡所。
+所入既寂，动静二相，了然不生。
+如是渐增，闻所闻尽。
+尽闻不住，觉所觉空。
+空觉极圆，空所空灭。
+生灭既灭，寂灭现前。
+</p>
+</blockquote>
+
+
+<ul class="org-ul">
+<li>初于闻中，入流亡所：当我用六识与世界交互时，应当是“入流”的状态。出流指个体向外观察世界，分别尘缘。换句话说，出流是指见性出去，说我看到了什么，听到了什么，我还想听什么，看什么。入流是指不干扰这些信号的流入，但是侧重点在于体悟这个自我的认知过程。是指体会自己的见性，体会到自己如何听闻，察觉到自我的根性。是指我意识到我有这个观的能力，我知道我是如何观的。是指我的见性可以使得我作为一面镜子清晰映照出在这一世界中的我的究竟是什么——由此体察一切。入流不是堵上耳朵，不是去掉能听这个功能，而是不干预，不反对，不执着，静静地体察、映照这个过程。是为照。亡所，缺省词，是指亡所追逐。</li>
+<li>所入既寂，动静二相，了然不生。寂不是说外面会安静下来。而是说外面的躁也好，静也好，并不会对我的心掀起任何反应。这时，无论外面是躁还是静，对我来说，我都是一种寂然的状态。这时，我的内心是“了然”的，我不是死人，不是木头，不是失去了看到、听到的功能性，而是恰恰由于不受到念头、执着、情绪的干扰，能够更加清晰地回归到这些动与静本来的相上，非常清晰，所以是了然。不生不是说我的心不动。我的心念念流转，如同瀑布，怎么可能不动呢？不生是说的无住。我永远不会跑偏。</li>
+<li>如是渐增，闻所闻尽。我无法想象出这是什么境界。</li>
+<li>尽闻不住，觉所觉空。我能够体察到一切，能够看到他们的缘起缘灭，由此我能觉知到我所觉知到的一切的空性。</li>
+<li>空觉极圆，空所空灭。随着我体察的越多，我对空的察觉就越加圆融，最终，所产生的空性这一观察也不再执着了。于是空所空二者俱灭。</li>
+<li>生灭既灭，寂灭现前。既然生灭缘起被认识为性空，而性空不应执着也被意识到，那么一种寂灭的样貌就被还原了。这时的寂灭不是追逐的目标，也不是修行期待获得的状态，而是本来如此、自然而然展现在面前的结果。</li>
+</ul>
+
+
+
+<blockquote>
+<p>
+真性有为空，缘生故如幻；无为无起灭，不实如空华。
+言妄显诸真，妄真同二妄；犹非真非真，云何见所见？
+中间无实性，是故若交芦。结解同所因，圣凡无二路。
+汝观交中性，空有二俱非。迷晦即无明，发明便解脱。
+解结因次第，六解一亦亡；根选择圆通，入流成正觉。
+陀那微细识，习气成暴流；真非真恐迷，我常不开演。
+自心取自心，非幻成幻法；不取无非幻，非幻尚不生，幻法云何立？
+是名妙莲华，金刚王宝觉。如幻三摩提，弹指超无学。
+此阿毗达磨，十方薄伽梵，一路涅槃门。
+</p>
+</blockquote>
+
+
+<ul class="org-ul">
+<li>真性有为空，缘生故如幻；无为无起灭，不实如空华。
+<ul class="org-ul">
+<li>有为法是空的，这时因为一切的有为法都赖于缘起，又由此缘尽而灭。就如幻梦一般。我们飘渺的浮生，也寄托在这幻梦里。</li>
+<li>无为法虽然强名无为，但是一个不生又不灭的连生灭都没有的法，又怎么能算是实在的东西呢？</li>
+</ul></li>
+<li>言妄显诸真，妄真同二妄；犹非真非真，云何见所见？
+<ul class="org-ul">
+<li>世界上的事情没有什么是虚无的，也没有什么是真实的。当我们认知有为法的虚妄时，一个真如、真理、如来藏才由此产生，对真的这种执着也由此展开。可是这种真本身就是同妄一样是虚妄的东西。换而言之，没有真，也不没有非真，二者圆融一体，这才是真实义。</li>
+<li>既然真、非真二者都被否认了，那么能见与所见的主客体关系又为何会存在？</li>
+<li>了知到这些点，才算是意识到了圆融。</li>
+</ul></li>
+<li>中间无实性，是故若交芦。结解同所因，圣凡无二路。
+<ul class="org-ul">
+<li>倘若能够意识到能见、所见乃至包括二者之间都不存在永恒的、自然的、真实的实体，而仅仅是认识过程中的缘起的主观的臆造，那么就能认识到主体与客体、真与妄就像是交替缠绕的芦苇、像是连在一起的芦苇一样互相关联，由道一而生二。</li>
+<li>因此，如果试图脱离虚妄，就必须同样也离开所谓的那个虚假的真实。如果试图消泯客体，就需要放弃主体。如果需要达到真实义，就必须消解二元对立，此为圆融。如果需要达到这种圆融无碍的境界，即揭开这样绞缠的芦苇的方法，其实是寄托在芦苇的绞缠的现状当中的。换而言之，所谓的圣途和世俗里的凡途，其实并不是有根本的路线上的不同，二者都依托于相同的本质，但是表达出两种不同的见解。山河大地既是如幻如梦的外境，其本身也是充满了宁静寂然的如如不动的净土。六根六识的肮脏与圣洁，莫不如是。</li>
+<li>由此可知，开悟的依托与产生痛苦的根源一致。了悟的土壤是无明。菩提来自烦恼。</li>
+<li>由此可知，所谓的追求开悟的执着是试图把交芦中的一根剪掉只留下另一根的执着。这仍然还是执着。这边是妄真同二妄，由此远离真实义。</li>
+<li>真正的解脱是实无所得的，是一切都不变，唯有视角发生了变化。是从二元的解构回到了了然不生的状态。</li>
+</ul></li>
+<li>汝观交中性，空有二俱非。迷晦即无明，发明便解脱。
+<ul class="org-ul">
+<li>如果能够体察到在能、所这样的认知结构里，认识到谈及空和谈及有都是错误的，即认识到执着于根与尘的实在与否定根与尘的存在都是错误的，那么就算是正确的体察。这样的体察本身既非因缘性又非实体性，由此知道这样的体察可以时时刻刻存在又从来不是真的存在，如果能一直保有这种状态，那么就能从执着在根与尘的实在与不存在两种错误的玩晦暗观点中解脱。</li>
+</ul></li>
+<li>解结因次第，六解一亦亡；根选择圆通，入流成正觉。
+<ul class="org-ul">
+<li>人的六识，无论是源于色蕴的前五识还是受想行识的第六识，都是这能与所的表达，都是这根与尘的表达。六根能识，六尘为所识。六识本质上是人的认知化用为不同形式的具体表现。看似有六个不同的识，实际上本质是一体——即认识。</li>
+<li>不管通过观察哪一个识的认识活动，即哪一个根缘哪一个尘产生了何种的认识，只要能细细体察到这一个根尘上的认识过程，那么就能在这一识上解掉之前对能与所、主与客的错误的执着为实体或执着为无的见解，由此在这一根上得到解脱。</li>
+<li>由于六识本质上是一回事，所以在一识上的深入的体察便是对人类的认识过程的精妙体察。这样的尝试进行此类体察的过程被称作入流。</li>
+<li>体察这一认知的过程即为正觉（正确的觉知）。</li>
+</ul></li>
+<li>陀那微细识，习气成暴流；真非真恐迷，我常不开演。
+<ul class="org-ul">
+<li>人的内心的念头极其微细，如同随机种子一般不断地影响着一个人的思考过程。过去的我的行动所结的果在积累，果实内的种子诱导着我的每一个无意识的思维。倘若不加认知，那么这些种子便会在后续的时机成熟，重新成长、结果，由此因果相续。</li>
+<li>人类受到基因、生长的环境、身边的文化等等一切的影响，已经积攒了且仍在积攒数不尽也看不清的无数的极其微细的习气。这些习气在每时每刻都在随着该人的思考、行为而变动，而转化，就像是瀑布前后相继的雨滴像是河道里澎湃的水流，在刹那的时序上前后相续，在呼吸之间不断上演这一过程。</li>
+<li>这些习气就是我的吗？我之前开示，说他们不是我。我说这些前后相继的习气从来不会持续不动，就像河流无法停留。哪怕过一个刹那，河里的水也再不相同。可是这种非真的开导又被误认为我在说这条河流不存在，被误认为我在说这些念头升起、辗转、相续的过程的虚假，由此产生大众的颠倒迷醉。所以我常常对这个问题保持回避态度。但是今天，我想讲讲：</li>
+</ul></li>
+<li>自心取自心，非幻成幻法；不取无非幻，非幻尚不生，幻法云何立？
+<ul class="org-ul">
+<li>倘若把这些习气、这些念头认知为自我，认为这些想法都是来自于一个名为我的实体，乃至于把六识所缘的一切都认知为一个固定的世界，那么就会产生上述的主客体的幻觉，就会产生执着为有的错误认知。而实际上，如果能深深思维，细细自我体察就会意识到：这个认为我存在、认为有一个我的这样的一个思维不过也是在暴流中的诸多种子的一个。</li>
+<li>倘若自心取自心，那么本来清净、本来寂静的这个世界——这个非幻的一切都会沦为幻法。即由于这种错误的思维，才导致了晦暗、无明、与痛苦。就像是一个有眼疾的人看虚空，由于白内障或者等原因，这个人看到虚空里有很多飞蚊和花朵。不是花朵真的存在，是眼睛（我的认识）的问题。所以啊，对于近视的我们，应当擦亮眼镜。</li>
+<li>如果我们不执着与此，即我们不取这种错误的见地，那么真如同虚妄一起消失。幻法也就消失了。</li>
+<li>可是倘若解构这种认知的方式仅仅是把这些习气、种子标记为虚假，那么就会产生一个错误的对真实（妙体、解脱、如来藏）的追求。需要知道这个对真实的追求本身也是虚幻的，也是这些习气里的一种，也是来自于对这一认知过程的错误理解下的一种执着。</li>
+<li>如果能够意识到这一点，思维在面对如同暴流的念头时就不会试图去取一种认为一切皆无的错误见解，也不会去认为这些东西是真的、是非幻的，是有的。这样就产生了一个不是无也不是“非幻”的思维——这就是中观。</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org647baf5" class="outline-2">
+<h2 id="org647baf5"><span class="section-number-2">1.</span> 论圆融对能知与所知的解构</h2>
+<div class="outline-text-2" id="text-1">
+<ol class="org-ol">
+<li>能知与所知，即根与尘，本身应该被理解为是一种无自性的、非实在的东西。
+<ol class="org-ol">
+<li>能知与所知的存在来自于认识的过程。这段认识开始了，二者显现。这段认识结束，二者消失。</li>
+</ol></li>
+<li>无分别心不是昏昧。
+<ol class="org-ol">
+<li>无分别心不是指不去体察、不去认识，而是指认识过程中的专注与自我对这一认识过程的照见。</li>
+<li>了然于心。</li>
+<li>但不执着。</li>
+</ol></li>
+</ol>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Sun Apr 19 12:38:41 2026</span> <span class="date">Last modified: 2026-04-19 Sun 14:09</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+</div>
+</body>
+</html>
