@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-09-27 Sat 21:01 -->
+<!-- 2026-05-10 Sun 17:14 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>rust 生命周期（lifetime）解析</title>
@@ -11,25 +11,10 @@
 </head>
 <body>
 <div id="preamble" class="status">
-<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
 </div>
 <div id="content" class="content">
 <h1 class="title">rust 生命周期（lifetime）解析</h1>
-<div id="table-of-contents" role="doc-toc">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents" role="doc-toc">
-<ul>
-<li><a href="#orgdebdeb3">1. 回顾ownership和reference。</a></li>
-<li><a href="#org8531415">2. rust设计哲学</a></li>
-<li><a href="#orgae331e6">3. 生命周期解析</a>
-<ul>
-<li><a href="#org9f9005c">3.1. 先复杂化：引入生命周期</a></li>
-<li><a href="#orgee9da26">3.2. 简化生命周期的描述</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
 <p>
 在阅读这篇文章之前，如果我不知道什么是所有权（ownership），那么我会先去搜索相关知识或者阅读<a href="rust-learning.html">这篇</a>笔记。
 </p>
@@ -37,8 +22,8 @@
 <p>
 如果我之前学过所有权相关的知识，那么就不用去看了。
 </p>
-<div id="outline-container-orgdebdeb3" class="outline-2">
-<h2 id="orgdebdeb3"><span class="section-number-2">1.</span> 回顾ownership和reference。</h2>
+<div id="outline-container-org6dbd101" class="outline-2">
+<h2 id="org6dbd101"><span class="section-number-2">1.</span> 回顾ownership和reference。</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 首先试图回顾一下关于所有权和引用的一些问题。
@@ -55,8 +40,8 @@
 </ol>
 </div>
 </div>
-<div id="outline-container-org8531415" class="outline-2">
-<h2 id="org8531415"><span class="section-number-2">2.</span> rust设计哲学</h2>
+<div id="outline-container-org60eb7bd" class="outline-2">
+<h2 id="org60eb7bd"><span class="section-number-2">2.</span> rust设计哲学</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 在介绍什么是生命周期之前，可能还需要简单介绍一下rust的设计哲学。我理解rust的设计哲学是：
@@ -73,12 +58,12 @@
 </p>
 </div>
 </div>
-<div id="outline-container-orgae331e6" class="outline-2">
-<h2 id="orgae331e6"><span class="section-number-2">3.</span> 生命周期解析</h2>
+<div id="outline-container-org732e65f" class="outline-2">
+<h2 id="org732e65f"><span class="section-number-2">3.</span> 生命周期解析</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org9f9005c" class="outline-3">
-<h3 id="org9f9005c"><span class="section-number-3">3.1.</span> 先复杂化：引入生命周期</h3>
+<div id="outline-container-org7e5d2e8" class="outline-3">
+<h3 id="org7e5d2e8"><span class="section-number-3">3.1.</span> 先复杂化：引入生命周期</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 我们先以一个返回两个字符串中最长的一个的函数，来引入生命周期的概念。
@@ -86,13 +71,13 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">longest</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">x</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span>, <span style="color: #ffe9aa;">y</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span> <span style="color: #c66; font-weight: bold;">{</span>
-         <span style="color: #ff8080; font-weight: bold;">if</span> x.len<span style="color: #6c6; font-weight: bold;">()</span> &gt; y.len<span style="color: #6c6; font-weight: bold;">()</span> <span style="color: #6c6; font-weight: bold;">{</span>
+<pre class="src src-rust"><span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">longest</span><span style="color: #24f6d9;">(</span><span style="color: #62ff94;">x</span>: <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #e6ff57;">str</span>, <span style="color: #62ff94;">y</span>: <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #e6ff57;">str</span><span style="color: #24f6d9;">)</span> -&gt; <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #e6ff57;">str</span> <span style="color: #24f6d9;">{</span>
+         <span style="color: #c770ff; font-weight: bold;">if</span> x.len<span style="color: #c770ff;">()</span> &gt; y.len<span style="color: #c770ff;">()</span> <span style="color: #c770ff;">{</span>
              x
-         <span style="color: #6c6; font-weight: bold;">}</span> <span style="color: #ff8080; font-weight: bold;">else</span> <span style="color: #6c6; font-weight: bold;">{</span>
+         <span style="color: #c770ff;">}</span> <span style="color: #c770ff; font-weight: bold;">else</span> <span style="color: #c770ff;">{</span>
              y
-         <span style="color: #6c6; font-weight: bold;">}</span>
-<span style="color: #c66; font-weight: bold;">}</span>
+         <span style="color: #c770ff;">}</span>
+<span style="color: #24f6d9;">}</span>
 </pre>
 </div>
 <p>
@@ -101,13 +86,13 @@
 
 <div class="org-src-container">
 <pre class="src src-rust">
-<span style="color: #ff8080; font-weight: bold;">let</span> s2=<span style="color: #ffe9aa; font-style: italic;">"blabla"</span>;
-<span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #ffe9aa;">smax</span>;
-<span style="color: #c66; font-weight: bold;">{</span>
-<span style="color: #ff8080; font-weight: bold;">let</span> s1=<span style="color: #91ddff;">String</span>::from<span style="color: #6c6; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"abcccccccccccc"</span><span style="color: #6c6; font-weight: bold;">)</span>;
-         smax=longest<span style="color: #6c6; font-weight: bold;">(</span>s1.as_str<span style="color: #69f; font-weight: bold;">()</span>,s2<span style="color: #6c6; font-weight: bold;">)</span>;
-<span style="color: #c66; font-weight: bold;">}</span>
-<span style="color: #c991e1;">println!</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa; font-style: italic;">"</span>, smax<span style="color: #c66; font-weight: bold;">)</span>;
+<span style="color: #c770ff; font-weight: bold;">let</span> s2=<span style="color: #1cc24b;">"blabla"</span>;
+<span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">smax</span>;
+<span style="color: #24f6d9;">{</span>
+<span style="color: #c770ff; font-weight: bold;">let</span> s1=<span style="color: #e6ff57;">String</span>::from<span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"abcccccccccccc"</span><span style="color: #c770ff;">)</span>;
+         smax=longest<span style="color: #c770ff;">(</span>s1.as_str<span style="color: #e6ff57;">()</span>,s2<span style="color: #c770ff;">)</span>;
+<span style="color: #24f6d9;">}</span>
+<span style="color: #30b3ff;">println!</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"</span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;">"</span>, smax<span style="color: #24f6d9;">)</span>;
 
 </pre>
 </div>
@@ -125,13 +110,13 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">longest</span><span style="color: #c66; font-weight: bold;">&lt;</span>'<span style="color: #ffe9aa;">a</span><span style="color: #c66; font-weight: bold;">&gt;(</span><span style="color: #ffe9aa;">x</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>'<span style="color: #ffe9aa;">a</span> <span style="color: #91ddff;">str</span>, <span style="color: #ffe9aa;">y</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>'<span style="color: #ffe9aa;">a</span> <span style="color: #91ddff;">str</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>'<span style="color: #ffe9aa;">a</span> <span style="color: #91ddff;">str</span> <span style="color: #c66; font-weight: bold;">{</span>
-    <span style="color: #ff8080; font-weight: bold;">if</span> x.len<span style="color: #6c6; font-weight: bold;">()</span> &gt; y.len<span style="color: #6c6; font-weight: bold;">()</span> <span style="color: #6c6; font-weight: bold;">{</span>
+<pre class="src src-rust"><span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">longest</span><span style="color: #24f6d9;">&lt;</span>'<span style="color: #62ff94;">a</span><span style="color: #24f6d9;">&gt;(</span><span style="color: #62ff94;">x</span>: <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span>'<span style="color: #62ff94;">a</span> <span style="color: #e6ff57;">str</span>, <span style="color: #62ff94;">y</span>: <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span>'<span style="color: #62ff94;">a</span> <span style="color: #e6ff57;">str</span><span style="color: #24f6d9;">)</span> -&gt; <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span>'<span style="color: #62ff94;">a</span> <span style="color: #e6ff57;">str</span> <span style="color: #24f6d9;">{</span>
+    <span style="color: #c770ff; font-weight: bold;">if</span> x.len<span style="color: #c770ff;">()</span> &gt; y.len<span style="color: #c770ff;">()</span> <span style="color: #c770ff;">{</span>
           x
-    <span style="color: #6c6; font-weight: bold;">}</span> <span style="color: #ff8080; font-weight: bold;">else</span> <span style="color: #6c6; font-weight: bold;">{</span>
+    <span style="color: #c770ff;">}</span> <span style="color: #c770ff; font-weight: bold;">else</span> <span style="color: #c770ff;">{</span>
           y
-    <span style="color: #6c6; font-weight: bold;">}</span>
-<span style="color: #c66; font-weight: bold;">}</span>
+    <span style="color: #c770ff;">}</span>
+<span style="color: #24f6d9;">}</span>
 </pre>
 </div>
 
@@ -144,11 +129,11 @@
 </p>
 <div class="org-src-container">
 <pre class="src src-rust">
-<span style="color: #ff8080; font-weight: bold;">let</span> s2=<span style="color: #ffe9aa; font-style: italic;">"blabla"</span>;
-<span style="color: #ff8080; font-weight: bold;">let</span> <span style="color: #ffe9aa;">smax</span>;
-<span style="color: #ff8080; font-weight: bold;">let</span> s1=<span style="color: #91ddff;">String</span>::from<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"abcccccccccccc"</span><span style="color: #c66; font-weight: bold;">)</span>;
-         smax=longest<span style="color: #c66; font-weight: bold;">(</span>s1.as_str<span style="color: #6c6; font-weight: bold;">()</span>,s2<span style="color: #c66; font-weight: bold;">)</span>;
-<span style="color: #c991e1;">println!</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa; font-style: italic;">"</span>, smax<span style="color: #c66; font-weight: bold;">)</span>;
+<span style="color: #c770ff; font-weight: bold;">let</span> s2=<span style="color: #1cc24b;">"blabla"</span>;
+<span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">smax</span>;
+<span style="color: #c770ff; font-weight: bold;">let</span> s1=<span style="color: #e6ff57;">String</span>::from<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"abcccccccccccc"</span><span style="color: #24f6d9;">)</span>;
+         smax=longest<span style="color: #24f6d9;">(</span>s1.as_str<span style="color: #c770ff;">()</span>,s2<span style="color: #24f6d9;">)</span>;
+<span style="color: #30b3ff;">println!</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"</span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;">"</span>, smax<span style="color: #24f6d9;">)</span>;
 
 </pre>
 </div>
@@ -168,20 +153,20 @@
 
 <div class="org-src-container">
 <pre class="src src-rust">
-<span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">longest</span><span style="color: #c66; font-weight: bold;">&lt;</span>'<span style="color: #ffe9aa;">a</span><span style="color: #c66; font-weight: bold;">&gt;(</span><span style="color: #ffe9aa;">x</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>'<span style="color: #ffe9aa;">a</span> <span style="color: #91ddff;">str</span>, <span style="color: #ffe9aa;">y</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>'<span style="color: #ffe9aa;">a</span> <span style="color: #91ddff;">str</span> <span style="color: #c66; font-weight: bold;">{</span>
+<span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">longest</span><span style="color: #24f6d9;">&lt;</span>'<span style="color: #62ff94;">a</span><span style="color: #24f6d9;">&gt;(</span><span style="color: #62ff94;">x</span>: <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span>'<span style="color: #62ff94;">a</span> <span style="color: #e6ff57;">str</span>, <span style="color: #62ff94;">y</span>: <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #e6ff57;">str</span><span style="color: #24f6d9;">)</span> -&gt; <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span>'<span style="color: #62ff94;">a</span> <span style="color: #e6ff57;">str</span> <span style="color: #24f6d9;">{</span>
     x
-<span style="color: #c66; font-weight: bold;">}</span>
+<span style="color: #24f6d9;">}</span>
 
-<span style="color: #ff8080; font-weight: bold;">struct</span> <span style="color: #91ddff;">ImportantExcerpt</span><span style="color: #c66; font-weight: bold;">&lt;</span>'<span style="color: #ffe9aa;">a</span><span style="color: #c66; font-weight: bold;">&gt;</span> <span style="color: #c66; font-weight: bold;">{</span>
-    <span style="color: #ffe9aa;">part</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>'<span style="color: #ffe9aa;">a</span> <span style="color: #91ddff;">str</span>,
-<span style="color: #c66; font-weight: bold;">}</span>
+<span style="color: #c770ff; font-weight: bold;">struct</span> <span style="color: #e6ff57;">ImportantExcerpt</span><span style="color: #24f6d9;">&lt;</span>'<span style="color: #62ff94;">a</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #24f6d9;">{</span>
+    <span style="color: #62ff94;">part</span>: <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span>'<span style="color: #62ff94;">a</span> <span style="color: #e6ff57;">str</span>,
+<span style="color: #24f6d9;">}</span>
 
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgee9da26" class="outline-3">
-<h3 id="orgee9da26"><span class="section-number-3">3.2.</span> 简化生命周期的描述</h3>
+<div id="outline-container-orgf488b70" class="outline-3">
+<h3 id="orgf488b70"><span class="section-number-3">3.2.</span> 简化生命周期的描述</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 下面来试着简化生命周期的描述。如果一直写生命周期，就显得有些繁琐，因此rust也设计了简化生命周期描述的方式。主要包括三条规则：
@@ -197,9 +182,9 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">first_word</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">s</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span> <span style="color: #c66; font-weight: bold;">{}</span>
-<span style="color: #565575;">//</span><span style="color: #96a0aa;">&#31561;&#20215;&#20110;
-</span><span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">first_word</span><span style="color: #c66; font-weight: bold;">&lt;</span>'<span style="color: #ffe9aa;">a</span><span style="color: #c66; font-weight: bold;">&gt;(</span><span style="color: #ffe9aa;">s</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>'<span style="color: #ffe9aa;">a</span> <span style="color: #91ddff;">str</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>'<span style="color: #ffe9aa;">a</span> <span style="color: #91ddff;">str</span> <span style="color: #c66; font-weight: bold;">{}</span>
+<pre class="src src-rust"><span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">first_word</span><span style="color: #24f6d9;">(</span><span style="color: #62ff94;">s</span>: <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #e6ff57;">str</span><span style="color: #24f6d9;">)</span> -&gt; <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #e6ff57;">str</span> <span style="color: #24f6d9;">{}</span>
+<span style="color: #8ca391;">//</span><span style="color: #8ca391; font-style: italic;">&#31561;&#20215;&#20110;
+</span><span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">first_word</span><span style="color: #24f6d9;">&lt;</span>'<span style="color: #62ff94;">a</span><span style="color: #24f6d9;">&gt;(</span><span style="color: #62ff94;">s</span>: <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span>'<span style="color: #62ff94;">a</span> <span style="color: #e6ff57;">str</span><span style="color: #24f6d9;">)</span> -&gt; <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span>'<span style="color: #62ff94;">a</span> <span style="color: #e6ff57;">str</span> <span style="color: #24f6d9;">{}</span>
 </pre>
 </div>
 
@@ -209,19 +194,19 @@
 
 <div class="org-src-container">
 <pre class="src src-rust">
-<span style="color: #63f2f1; font-weight: bold;">#!</span><span style="color: #c66; font-weight: bold;">[</span><span style="color: #63f2f1; font-weight: bold;">allow</span><span style="color: #6c6; font-weight: bold;">(</span><span style="color: #63f2f1; font-weight: bold;">unused</span><span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">]</span>
-<span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">main</span><span style="color: #c66; font-weight: bold;">()</span> <span style="color: #c66; font-weight: bold;">{</span>
-<span style="color: #ff8080; font-weight: bold;">struct</span> <span style="color: #91ddff;">ImportantExcerpt</span><span style="color: #6c6; font-weight: bold;">&lt;</span>'<span style="color: #ffe9aa;">a</span><span style="color: #6c6; font-weight: bold;">&gt;</span> <span style="color: #6c6; font-weight: bold;">{</span>
-    <span style="color: #ffe9aa;">part</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>'<span style="color: #ffe9aa;">a</span> <span style="color: #91ddff;">str</span>,
-<span style="color: #6c6; font-weight: bold;">}</span>
+<span style="color: #ffa83d;">#!</span><span style="color: #24f6d9;">[</span><span style="color: #ffa83d;">allow</span><span style="color: #c770ff;">(</span><span style="color: #ffa83d;">unused</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">]</span>
+<span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span> <span style="color: #24f6d9;">{</span>
+<span style="color: #c770ff; font-weight: bold;">struct</span> <span style="color: #e6ff57;">ImportantExcerpt</span><span style="color: #c770ff;">&lt;</span>'<span style="color: #62ff94;">a</span><span style="color: #c770ff;">&gt;</span> <span style="color: #c770ff;">{</span>
+    <span style="color: #62ff94;">part</span>: <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span>'<span style="color: #62ff94;">a</span> <span style="color: #e6ff57;">str</span>,
+<span style="color: #c770ff;">}</span>
 
-<span style="color: #ff8080; font-weight: bold;">impl</span><span style="color: #6c6; font-weight: bold;">&lt;</span>'<span style="color: #ffe9aa;">a</span><span style="color: #6c6; font-weight: bold;">&gt;</span> <span style="color: #91ddff;">ImportantExcerpt</span><span style="color: #6c6; font-weight: bold;">&lt;</span>'<span style="color: #ffe9aa;">a</span><span style="color: #6c6; font-weight: bold;">&gt;</span> <span style="color: #6c6; font-weight: bold;">{</span>
-    <span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">announce_and_return_part</span><span style="color: #69f; font-weight: bold;">(</span><span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #ff8080; font-weight: bold;">self</span>, <span style="color: #ffe9aa;">announcement</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span><span style="color: #69f; font-weight: bold;">)</span> -&gt; <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span> <span style="color: #69f; font-weight: bold;">{</span>
-          <span style="color: #c991e1;">println!</span><span style="color: #cc6; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"Attention please: </span><span style="color: #ffe9aa; font-style: italic;">{}</span><span style="color: #ffe9aa; font-style: italic;">"</span>, announcement<span style="color: #cc6; font-weight: bold;">)</span>;
-          <span style="color: #ff8080; font-weight: bold;">self</span>.part
-    <span style="color: #69f; font-weight: bold;">}</span>
-<span style="color: #6c6; font-weight: bold;">}</span>
-<span style="color: #c66; font-weight: bold;">}</span>
+<span style="color: #c770ff; font-weight: bold;">impl</span><span style="color: #c770ff;">&lt;</span>'<span style="color: #62ff94;">a</span><span style="color: #c770ff;">&gt;</span> <span style="color: #e6ff57;">ImportantExcerpt</span><span style="color: #c770ff;">&lt;</span>'<span style="color: #62ff94;">a</span><span style="color: #c770ff;">&gt;</span> <span style="color: #c770ff;">{</span>
+    <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">announce_and_return_part</span><span style="color: #e6ff57;">(</span><span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #c770ff; font-weight: bold;">self</span>, <span style="color: #62ff94;">announcement</span>: <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #e6ff57;">str</span><span style="color: #e6ff57;">)</span> -&gt; <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #e6ff57;">str</span> <span style="color: #e6ff57;">{</span>
+          <span style="color: #30b3ff;">println!</span><span style="color: #30b3ff;">(</span><span style="color: #1cc24b;">"Attention please: </span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;">"</span>, announcement<span style="color: #30b3ff;">)</span>;
+          <span style="color: #c770ff; font-weight: bold;">self</span>.part
+    <span style="color: #e6ff57;">}</span>
+<span style="color: #c770ff;">}</span>
+<span style="color: #24f6d9;">}</span>
 
 </pre>
 </div>
@@ -230,9 +215,9 @@
 第三种情况：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust">  <span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">longest</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa;">x</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span>, <span style="color: #ffe9aa;">y</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span> <span style="color: #c66; font-weight: bold;">{}</span>
-    <span style="color: #565575;">//</span><span style="color: #96a0aa;">&#31561;&#20215;&#20110;
-</span><span style="color: #ff8080; font-weight: bold;">fn</span> <span style="color: #c991e1;">longest</span><span style="color: #c66; font-weight: bold;">&lt;</span>'<span style="color: #ffe9aa;">a</span>, '<span style="color: #ffe9aa;">b</span><span style="color: #c66; font-weight: bold;">&gt;(</span><span style="color: #ffe9aa;">x</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>'<span style="color: #ffe9aa;">a</span> <span style="color: #91ddff;">str</span>, <span style="color: #ffe9aa;">y</span>: <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span>'<span style="color: #ffe9aa;">b</span> <span style="color: #91ddff;">str</span><span style="color: #c66; font-weight: bold;">)</span> -&gt; <span style="color: #A9F16C; background-color: #1b182c;">&amp;</span><span style="color: #91ddff;">str</span> <span style="color: #c66; font-weight: bold;">{}</span>
+<pre class="src src-rust">  <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">longest</span><span style="color: #24f6d9;">(</span><span style="color: #62ff94;">x</span>: <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #e6ff57;">str</span>, <span style="color: #62ff94;">y</span>: <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #e6ff57;">str</span><span style="color: #24f6d9;">)</span> -&gt; <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #e6ff57;">str</span> <span style="color: #24f6d9;">{}</span>
+    <span style="color: #8ca391;">//</span><span style="color: #8ca391; font-style: italic;">&#31561;&#20215;&#20110;
+</span><span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">longest</span><span style="color: #24f6d9;">&lt;</span>'<span style="color: #62ff94;">a</span>, '<span style="color: #62ff94;">b</span><span style="color: #24f6d9;">&gt;(</span><span style="color: #62ff94;">x</span>: <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span>'<span style="color: #62ff94;">a</span> <span style="color: #e6ff57;">str</span>, <span style="color: #62ff94;">y</span>: <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span>'<span style="color: #62ff94;">b</span> <span style="color: #e6ff57;">str</span><span style="color: #24f6d9;">)</span> -&gt; <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #e6ff57;">str</span> <span style="color: #24f6d9;">{}</span>
 </pre>
 </div>
 
@@ -245,7 +230,7 @@
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Nov 19 09:36:11 2021</span> <span class="date">Last modified: 2025-09-27 Sat 19:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Nov 19 09:36:11 2021</span> <span class="date">Last modified: 2026-05-10 Sun 16:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-09-27 Sat 21:01 -->
+<!-- 2026-05-10 Sun 17:14 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>python进阶使用</title>
@@ -11,72 +11,44 @@
 </head>
 <body>
 <div id="preamble" class="status">
-<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
 </div>
 <div id="content" class="content">
 <h1 class="title">python进阶使用</h1>
-<div id="table-of-contents" role="doc-toc">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents" role="doc-toc">
-<ul>
-<li><a href="#org92b8332">1. python标准库进阶</a>
-<ul>
-<li><a href="#org4661199">1.1. 命令行函数: argparse</a></li>
-<li><a href="#org70bfa70">1.2. 日志：logging相关</a></li>
-<li><a href="#org95fcf27">1.3. 规范参数类型：typing</a></li>
-<li><a href="#org3536891">1.4. collections：常见的特殊数据结构</a>
-<ul>
-<li><a href="#org3cdfa03">1.4.1. Counter</a></li>
-<li><a href="#orgf853607">1.4.2. defaultdict</a></li>
-<li><a href="#org0972bd2">1.4.3. OrderedDict</a></li>
-</ul>
-</li>
-<li><a href="#org85f3d7e">1.5. 我真的理解了正则匹配嘛？re</a></li>
-</ul>
-</li>
-<li><a href="#orgb143dc8">2. python特殊用法</a>
-<ul>
-<li><a href="#orgaf19df2">2.1. f-string: 格式化字符串</a></li>
-<li><a href="#orga355339">2.2. \*args与\**kwargs</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
 <p>
 自大四上学期使用python炼丹开始计算，笔者使用python已经两年了。目前自以为对python的使用十分纯熟，但在阅读他们代码时，仍然发现很多地方是自己从未用过的，因而总结如下，作为针对笔者自己的进阶指南。希望能够通过这种方式对python本身和其标准库的使用更进一层楼。
 </p>
-<div id="outline-container-org92b8332" class="outline-2">
-<h2 id="org92b8332"><span class="section-number-2">1.</span> python标准库进阶</h2>
+<div id="outline-container-orgd2dba39" class="outline-2">
+<h2 id="orgd2dba39"><span class="section-number-2">1.</span> python标准库进阶</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org4661199" class="outline-3">
-<h3 id="org4661199"><span class="section-number-3">1.1.</span> 命令行函数: argparse</h3>
+<div id="outline-container-org332d844" class="outline-3">
+<h3 id="org332d844"><span class="section-number-3">1.1.</span> 命令行函数: argparse</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 可以通过传递参数的名字来告诉文件我在传递哪个参数，模拟C程序的命令行效果。示例如下：
 </p>
 <div class="org-src-container">
-<pre class="src src-python">     <span style="color: #565575;">## </span><span style="color: #96a0aa;">init argparse for better application.
-</span>     <span style="color: #565575;"># </span><span style="color: #96a0aa;">you should finally edit this function for better use
-</span>     <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">setup_train_args</span><span style="color: #c66; font-weight: bold;">()</span>:
+<pre class="src src-python">     <span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">init argparse for better application.
+</span>     <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">you should finally edit this function for better use
+</span>     <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">setup_train_args</span><span style="color: #24f6d9;">()</span>:
 
-         <span style="color: #ffe9aa;">parser</span> = argparse.ArgumentParser<span style="color: #c66; font-weight: bold;">()</span>
-         <span style="color: #565575;">## </span><span style="color: #96a0aa;">this line is for logging, please do not delete it.
-</span>         parser.add_argument<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'--save_log_path'</span>, default=<span style="color: #ffe9aa; font-style: italic;">'./running_results.log'</span>,
-                             <span style="color: #c991e1;">type</span>=<span style="color: #c991e1;">str</span>, required=<span style="color: #aaffe4;">False</span><span style="color: #c66; font-weight: bold;">)</span>
+         <span style="color: #62ff94;">parser</span> <span style="color: #24f6d9;">=</span> argparse.ArgumentParser<span style="color: #24f6d9;">()</span>
+         <span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">this line is for logging, please do not delete it.
+</span>         parser.add_argument<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">'--save_log_path'</span>, default<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">'./running_results.log'</span>,
+                             <span style="color: #30b3ff;">type</span><span style="color: #24f6d9;">=</span><span style="color: #30b3ff;">str</span>, required<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span><span style="color: #24f6d9;">)</span>
 
-         <span style="color: #565575;">### </span><span style="color: #96a0aa;">you can change, comment or delete blew sections.
-</span>         parser.add_argument<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"--max_seq_length"</span>, default=64,
-                             <span style="color: #c991e1;">type</span>=<span style="color: #c991e1;">int</span>, required=<span style="color: #aaffe4;">False</span>, <span style="color: #c991e1;">help</span>=<span style="color: #ffe9aa; font-style: italic;">"max sequence length"</span><span style="color: #c66; font-weight: bold;">)</span>
-         parser.add_argument<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'--cuda_num'</span>, default=<span style="color: #ffe9aa; font-style: italic;">'6'</span>, <span style="color: #c991e1;">type</span>=<span style="color: #c991e1;">str</span>, required=<span style="color: #aaffe4;">False</span><span style="color: #c66; font-weight: bold;">)</span>
-         parser.add_argument<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'--fraction'</span>, default=<span style="color: #ffe9aa; font-style: italic;">'0.5'</span>,
-                             <span style="color: #c991e1;">type</span>=<span style="color: #c991e1;">float</span>, required=<span style="color: #aaffe4;">False</span><span style="color: #c66; font-weight: bold;">)</span>
-         parser.add_argument<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">'--no_cuda'</span>, action=<span style="color: #ffe9aa; font-style: italic;">'store_true'</span><span style="color: #c66; font-weight: bold;">)</span>
+         <span style="color: #8ca391;">### </span><span style="color: #8ca391; font-style: italic;">you can change, comment or delete blew sections.
+</span>         parser.add_argument<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"--max_seq_length"</span>, default<span style="color: #24f6d9;">=</span>64,
+                             <span style="color: #30b3ff;">type</span><span style="color: #24f6d9;">=</span><span style="color: #30b3ff;">int</span>, required<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>, <span style="color: #30b3ff;">help</span><span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"max sequence length"</span><span style="color: #24f6d9;">)</span>
+         parser.add_argument<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">'--cuda_num'</span>, default<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">'6'</span>, <span style="color: #30b3ff;">type</span><span style="color: #24f6d9;">=</span><span style="color: #30b3ff;">str</span>, required<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span><span style="color: #24f6d9;">)</span>
+         parser.add_argument<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">'--fraction'</span>, default<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">'0.5'</span>,
+                             <span style="color: #30b3ff;">type</span><span style="color: #24f6d9;">=</span><span style="color: #30b3ff;">float</span>, required<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span><span style="color: #24f6d9;">)</span>
+         parser.add_argument<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">'--no_cuda'</span>, action<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">'store_true'</span><span style="color: #24f6d9;">)</span>
 
-         <span style="color: #ff8080; font-weight: bold;">return</span> parser.parse_args<span style="color: #c66; font-weight: bold;">()</span>
+         <span style="color: #c770ff; font-weight: bold;">return</span> parser.parse_args<span style="color: #24f6d9;">()</span>
 
-<span style="color: #ffe9aa;">args</span>=setup_train_args<span style="color: #c66; font-weight: bold;">()</span>
+<span style="color: #62ff94;">args</span><span style="color: #24f6d9;">=</span>setup_train_args<span style="color: #24f6d9;">()</span>
 </pre>
 </div>
 <p>
@@ -88,8 +60,8 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org70bfa70" class="outline-3">
-<h3 id="org70bfa70"><span class="section-number-3">1.2.</span> 日志：logging相关</h3>
+<div id="outline-container-org3a745a7" class="outline-3">
+<h3 id="org3a745a7"><span class="section-number-3">1.2.</span> 日志：logging相关</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 logging的功能比print稍微复杂一些，当然好处就是看起来更不错了，同时流输出到文件中也更加稳定，如果忍不住用print，可以 <code>print\=logger.info</code> alias一下。。。当然我目前还是很喜欢print来debug。
@@ -99,71 +71,71 @@ logging的功能比print稍微复杂一些，当然好处就是看起来更不�
 我自己写了一个万能logging配置，如下：
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ff8080; font-weight: bold;">global</span> logger
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">global</span> logger
 
 
-<span style="color: #565575;">## </span><span style="color: #96a0aa;">config logging formatter.
-</span><span style="color: #ff8080; font-weight: bold;">class</span> <span style="color: #91ddff;">CustomFormatter</span><span style="color: #c66; font-weight: bold;">(</span>logging.Formatter<span style="color: #c66; font-weight: bold;">)</span>:
-         <span style="color: #ffe9aa;">grey</span> = <span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #aaffe4;">\x1b</span><span style="color: #ffe9aa; font-style: italic;">[0;37m"</span>
-         <span style="color: #ffe9aa;">green</span> = <span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #aaffe4;">\x1b</span><span style="color: #ffe9aa; font-style: italic;">[1;32m"</span>
-         <span style="color: #ffe9aa;">yellow</span> = <span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #aaffe4;">\x1b</span><span style="color: #ffe9aa; font-style: italic;">[1;33m"</span>
-         <span style="color: #ffe9aa;">red</span> = <span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #aaffe4;">\x1b</span><span style="color: #ffe9aa; font-style: italic;">[1;31m"</span>
-         <span style="color: #ffe9aa;">purple</span> = <span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #aaffe4;">\x1b</span><span style="color: #ffe9aa; font-style: italic;">[1;35m"</span>
-         <span style="color: #ffe9aa;">blue</span> = <span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #aaffe4;">\x1b</span><span style="color: #ffe9aa; font-style: italic;">[1;34m"</span>
-         <span style="color: #ffe9aa;">light_blue</span> = <span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #aaffe4;">\x1b</span><span style="color: #ffe9aa; font-style: italic;">[1;36m"</span>
-         <span style="color: #ffe9aa;">reset</span> = <span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #aaffe4;">\x1b</span><span style="color: #ffe9aa; font-style: italic;">[0m"</span>
-         <span style="color: #ffe9aa;">blink_red</span> = <span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #aaffe4;">\x1b</span><span style="color: #ffe9aa; font-style: italic;">[5m</span><span style="color: #aaffe4;">\x1b</span><span style="color: #ffe9aa; font-style: italic;">[1;31m"</span>
+<span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">config logging formatter.
+</span><span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">CustomFormatter</span><span style="color: #24f6d9;">(</span>logging.Formatter<span style="color: #24f6d9;">)</span>:
+         <span style="color: #62ff94;">grey</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[0;37m"</span>
+         <span style="color: #62ff94;">green</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[1;32m"</span>
+         <span style="color: #62ff94;">yellow</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[1;33m"</span>
+         <span style="color: #62ff94;">red</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[1;31m"</span>
+         <span style="color: #62ff94;">purple</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[1;35m"</span>
+         <span style="color: #62ff94;">blue</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[1;34m"</span>
+         <span style="color: #62ff94;">light_blue</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[1;36m"</span>
+         <span style="color: #62ff94;">reset</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[0m"</span>
+         <span style="color: #62ff94;">blink_red</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[5m</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[1;31m"</span>
 
-         <span style="color: #c991e1;">format</span> = <span style="color: #ffe9aa; font-style: italic;">"%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"</span>
-         <span style="color: #ffe9aa;">FORMATS</span> = <span style="color: #c66; font-weight: bold;">{</span>
-             logging.DEBUG: purple + <span style="color: #c991e1;">format</span> + reset,
-             logging.INFO: green + <span style="color: #c991e1;">format</span> + reset,
-             logging.WARNING: yellow + <span style="color: #c991e1;">format</span> + reset,
-             logging.ERROR: red + <span style="color: #c991e1;">format</span> + reset,
-             logging.CRITICAL: blink_red + <span style="color: #c991e1;">format</span> + reset
-         <span style="color: #c66; font-weight: bold;">}</span>
+         <span style="color: #30b3ff;">format</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"</span>
+         <span style="color: #62ff94;">FORMATS</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">{</span>
+             logging.DEBUG: purple <span style="color: #24f6d9;">+</span> <span style="color: #30b3ff;">format</span> <span style="color: #24f6d9;">+</span> reset,
+             logging.INFO: green <span style="color: #24f6d9;">+</span> <span style="color: #30b3ff;">format</span> <span style="color: #24f6d9;">+</span> reset,
+             logging.WARNING: yellow <span style="color: #24f6d9;">+</span> <span style="color: #30b3ff;">format</span> <span style="color: #24f6d9;">+</span> reset,
+             logging.ERROR: red <span style="color: #24f6d9;">+</span> <span style="color: #30b3ff;">format</span> <span style="color: #24f6d9;">+</span> reset,
+             logging.CRITICAL: blink_red <span style="color: #24f6d9;">+</span> <span style="color: #30b3ff;">format</span> <span style="color: #24f6d9;">+</span> reset
+         <span style="color: #24f6d9;">}</span>
 
-         <span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">format</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ff8080; font-weight: bold;">self</span>, record<span style="color: #c66; font-weight: bold;">)</span>:
-             <span style="color: #ffe9aa;">log_fmt</span> = <span style="color: #ff8080; font-weight: bold;">self</span>.FORMATS.get<span style="color: #c66; font-weight: bold;">(</span>record.levelno<span style="color: #c66; font-weight: bold;">)</span>
-             <span style="color: #ffe9aa;">formatter</span> = logging.Formatter<span style="color: #c66; font-weight: bold;">(</span>log_fmt<span style="color: #c66; font-weight: bold;">)</span>
-             <span style="color: #ff8080; font-weight: bold;">return</span> formatter.<span style="color: #c991e1;">format</span><span style="color: #c66; font-weight: bold;">(</span>record<span style="color: #c66; font-weight: bold;">)</span>
+         <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">format</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">self</span>, record<span style="color: #24f6d9;">)</span>:
+             <span style="color: #62ff94;">log_fmt</span> <span style="color: #24f6d9;">=</span> <span style="color: #c770ff; font-weight: bold;">self</span>.FORMATS.get<span style="color: #24f6d9;">(</span>record.levelno<span style="color: #24f6d9;">)</span>
+             <span style="color: #62ff94;">formatter</span> <span style="color: #24f6d9;">=</span> logging.Formatter<span style="color: #24f6d9;">(</span>log_fmt<span style="color: #24f6d9;">)</span>
+             <span style="color: #c770ff; font-weight: bold;">return</span> formatter.<span style="color: #30b3ff;">format</span><span style="color: #24f6d9;">(</span>record<span style="color: #24f6d9;">)</span>
 
-<span style="color: #565575;">## </span><span style="color: #96a0aa;">generate logger
-</span><span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">_create_logger</span><span style="color: #c66; font-weight: bold;">(</span>args<span style="color: #c66; font-weight: bold;">)</span>:
-
-
-         <span style="color: #ffe9aa;">logger</span> = logging.getLogger<span style="color: #c66; font-weight: bold;">(</span><span style="color: #c991e1;">__name__</span><span style="color: #c66; font-weight: bold;">)</span>
-         logger.setLevel<span style="color: #c66; font-weight: bold;">(</span>logging.INFO<span style="color: #c66; font-weight: bold;">)</span>
-
-         <span style="color: #565575;"># </span><span style="color: #96a0aa;">formatter = logging.Formatter(
-</span>         <span style="color: #565575;">#     </span><span style="color: #96a0aa;">'%(asctime)s - %(levelname)s - %(message)s')
-</span>         <span style="color: #ffe9aa;">formatter</span>=CustomFormatter<span style="color: #c66; font-weight: bold;">()</span>
-
-         <span style="color: #565575;"># </span><span style="color: #96a0aa;">construct a handle for file logs.
-</span>         <span style="color: #ffe9aa;">file_handler</span> = logging.FileHandler<span style="color: #c66; font-weight: bold;">(</span>
-             filename=args.save_log_path<span style="color: #c66; font-weight: bold;">)</span>
-         file_handler.setFormatter<span style="color: #c66; font-weight: bold;">(</span>formatter<span style="color: #c66; font-weight: bold;">)</span>
-         file_handler.setLevel<span style="color: #c66; font-weight: bold;">(</span>logging.INFO<span style="color: #c66; font-weight: bold;">)</span>
-         logger.addHandler<span style="color: #c66; font-weight: bold;">(</span>file_handler<span style="color: #c66; font-weight: bold;">)</span>
-
-         <span style="color: #565575;"># </span><span style="color: #96a0aa;">construct a handle for console logs.
-</span>         <span style="color: #ffe9aa;">console</span> = logging.StreamHandler<span style="color: #c66; font-weight: bold;">()</span>
-         console.setLevel<span style="color: #c66; font-weight: bold;">(</span>logging.DEBUG<span style="color: #c66; font-weight: bold;">)</span>
-         console.setFormatter<span style="color: #c66; font-weight: bold;">(</span>formatter<span style="color: #c66; font-weight: bold;">)</span>
-         logger.addHandler<span style="color: #c66; font-weight: bold;">(</span>console<span style="color: #c66; font-weight: bold;">)</span>
-         <span style="color: #ff8080; font-weight: bold;">return</span> logger
-
-<span style="color: #565575;">## </span><span style="color: #96a0aa;">main function
-</span><span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">main</span><span style="color: #c66; font-weight: bold;">()</span>:
-         <span style="color: #ffe9aa;">args</span>=setup_train_args<span style="color: #c66; font-weight: bold;">()</span>
-         <span style="color: #ffe9aa;">logger</span>=_create_logger<span style="color: #c66; font-weight: bold;">(</span>args<span style="color: #c66; font-weight: bold;">)</span>
-         logger.setLevel<span style="color: #c66; font-weight: bold;">(</span>logging.DEBUG<span style="color: #c66; font-weight: bold;">)</span>
+<span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">generate logger
+</span><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">_create_logger</span><span style="color: #24f6d9;">(</span>args<span style="color: #24f6d9;">)</span>:
 
 
-         logger.info<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"aaaaaaaaaaaaaaaa"</span><span style="color: #c66; font-weight: bold;">)</span>
-         logger.debug<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"bbbbbbbbb"</span><span style="color: #c66; font-weight: bold;">)</span>
-         logger.error<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"cccccccccccccc"</span><span style="color: #c66; font-weight: bold;">)</span>
-         logger.critical<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"ddddd"</span><span style="color: #c66; font-weight: bold;">)</span>
+         <span style="color: #62ff94;">logger</span> <span style="color: #24f6d9;">=</span> logging.getLogger<span style="color: #24f6d9;">(</span><span style="color: #30b3ff;">__name__</span><span style="color: #24f6d9;">)</span>
+         logger.setLevel<span style="color: #24f6d9;">(</span>logging.INFO<span style="color: #24f6d9;">)</span>
+
+         <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">formatter = logging.Formatter(
+</span>         <span style="color: #8ca391;">#     </span><span style="color: #8ca391; font-style: italic;">'%(asctime)s - %(levelname)s - %(message)s')
+</span>         <span style="color: #62ff94;">formatter</span><span style="color: #24f6d9;">=</span>CustomFormatter<span style="color: #24f6d9;">()</span>
+
+         <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">construct a handle for file logs.
+</span>         <span style="color: #62ff94;">file_handler</span> <span style="color: #24f6d9;">=</span> logging.FileHandler<span style="color: #24f6d9;">(</span>
+             filename<span style="color: #24f6d9;">=</span>args.save_log_path<span style="color: #24f6d9;">)</span>
+         file_handler.setFormatter<span style="color: #24f6d9;">(</span>formatter<span style="color: #24f6d9;">)</span>
+         file_handler.setLevel<span style="color: #24f6d9;">(</span>logging.INFO<span style="color: #24f6d9;">)</span>
+         logger.addHandler<span style="color: #24f6d9;">(</span>file_handler<span style="color: #24f6d9;">)</span>
+
+         <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">construct a handle for console logs.
+</span>         <span style="color: #62ff94;">console</span> <span style="color: #24f6d9;">=</span> logging.StreamHandler<span style="color: #24f6d9;">()</span>
+         console.setLevel<span style="color: #24f6d9;">(</span>logging.DEBUG<span style="color: #24f6d9;">)</span>
+         console.setFormatter<span style="color: #24f6d9;">(</span>formatter<span style="color: #24f6d9;">)</span>
+         logger.addHandler<span style="color: #24f6d9;">(</span>console<span style="color: #24f6d9;">)</span>
+         <span style="color: #c770ff; font-weight: bold;">return</span> logger
+
+<span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">main function
+</span><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span>:
+         <span style="color: #62ff94;">args</span><span style="color: #24f6d9;">=</span>setup_train_args<span style="color: #24f6d9;">()</span>
+         <span style="color: #62ff94;">logger</span><span style="color: #24f6d9;">=</span>_create_logger<span style="color: #24f6d9;">(</span>args<span style="color: #24f6d9;">)</span>
+         logger.setLevel<span style="color: #24f6d9;">(</span>logging.DEBUG<span style="color: #24f6d9;">)</span>
+
+
+         logger.info<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"aaaaaaaaaaaaaaaa"</span><span style="color: #24f6d9;">)</span>
+         logger.debug<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"bbbbbbbbb"</span><span style="color: #24f6d9;">)</span>
+         logger.error<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"cccccccccccccc"</span><span style="color: #24f6d9;">)</span>
+         logger.critical<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"ddddd"</span><span style="color: #24f6d9;">)</span>
 
 </pre>
 </div>
@@ -173,7 +145,7 @@ logging的功能比print稍微复杂一些，当然好处就是看起来更不�
 </p>
 
 
-<div id="org779849f" class="figure">
+<div id="org18139bf" class="figure">
 <p><img src="./images/screenshot_20211206_155849.png" alt="screenshot_20211206_155849.png">
 </p>
 </div>
@@ -183,8 +155,8 @@ logging的功能比print稍微复杂一些，当然好处就是看起来更不�
 </p>
 </div>
 </div>
-<div id="outline-container-org95fcf27" class="outline-3">
-<h3 id="org95fcf27"><span class="section-number-3">1.3.</span> 规范参数类型：typing</h3>
+<div id="outline-container-org0277b86" class="outline-3">
+<h3 id="org0277b86"><span class="section-number-3">1.3.</span> 规范参数类型：typing</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 python身为动态语言，对类型的要求不是很高。但是，如果试图撰写清晰的、标准的代码，如写一个库，那么对参数类型的刻画是十分必要的。可以通过标准库typing进行解决。
@@ -195,11 +167,11 @@ python身为动态语言，对类型的要求不是很高。但是，如果试�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ff8080; font-weight: bold;">from</span> typing <span style="color: #ff8080; font-weight: bold;">import</span> Any, Dict, List, Optional, Tuple, Union, overload
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">from</span> typing <span style="color: #c770ff; font-weight: bold;">import</span> Any, Dict, List, Optional, Tuple, Union, overload
 
-<span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">prepare_for_tokenization</span><span style="color: #c66; font-weight: bold;">(</span>text: <span style="color: #c991e1;">str</span>,
-                                  is_split_into_words: <span style="color: #c991e1;">bool</span> = <span style="color: #aaffe4;">False</span>,
-                                  **kwargs<span style="color: #c66; font-weight: bold;">)</span> -&gt; Tuple<span style="color: #c66; font-weight: bold;">[</span><span style="color: #c991e1;">str</span>, Dict<span style="color: #6c6; font-weight: bold;">[</span><span style="color: #c991e1;">str</span>, Any<span style="color: #6c6; font-weight: bold;">]</span><span style="color: #c66; font-weight: bold;">]</span>:
+<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">prepare_for_tokenization</span><span style="color: #24f6d9;">(</span>text: <span style="color: #30b3ff;">str</span>,
+                                  is_split_into_words: <span style="color: #30b3ff;">bool</span> <span style="color: #24f6d9;">=</span> <span style="color: #ffa83d;">False</span>,
+                                  <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">-&gt;</span> Tuple<span style="color: #24f6d9;">[</span><span style="color: #30b3ff;">str</span>, Dict<span style="color: #c770ff;">[</span><span style="color: #30b3ff;">str</span>, Any<span style="color: #c770ff;">]</span><span style="color: #24f6d9;">]</span>:
          blablabla...
 
 </pre>
@@ -265,15 +237,15 @@ python身为动态语言，对类型的要求不是很高。但是，如果试�
 </p>
 </div>
 </div>
-<div id="outline-container-org3536891" class="outline-3">
-<h3 id="org3536891"><span class="section-number-3">1.4.</span> collections：常见的特殊数据结构</h3>
+<div id="outline-container-org10766c6" class="outline-3">
+<h3 id="org10766c6"><span class="section-number-3">1.4.</span> collections：常见的特殊数据结构</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 大家已经对dict,list,set,tuple这些东西习以为常了，还有一些稍微高阶的结构，记录如下。
 </p>
 </div>
-<div id="outline-container-org3cdfa03" class="outline-4">
-<h4 id="org3cdfa03"><span class="section-number-4">1.4.1.</span> Counter</h4>
+<div id="outline-container-org609e605" class="outline-4">
+<h4 id="org609e605"><span class="section-number-4">1.4.1.</span> Counter</h4>
 <div class="outline-text-4" id="text-1-4-1">
 <p>
 Counter就是计数器，用以统计频率。其输入是一个迭代器对象（如一个列表），输出是一个字典，该字典的key就是迭代器里的值，该字典的value就是该值出现的频率。
@@ -281,12 +253,12 @@ Counter就是计数器，用以统计频率。其输入是一个迭代器对象�
 
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ff8080; font-weight: bold;">from</span> collections <span style="color: #ff8080; font-weight: bold;">import</span> Counter
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">from</span> collections <span style="color: #c770ff; font-weight: bold;">import</span> Counter
 
-<span style="color: #ffe9aa;">a</span>=<span style="color: #c66; font-weight: bold;">[</span>1,1,1,2,2,2,3,3,1,1,2,4,5,6,7,7,7,7,7,7,7,7,7<span style="color: #c66; font-weight: bold;">]</span>
-<span style="color: #ffe9aa;">b</span>=Counter<span style="color: #c66; font-weight: bold;">(</span>a<span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #c991e1;">print</span><span style="color: #c66; font-weight: bold;">(</span>f<span style="color: #ffe9aa; font-style: italic;">"a: </span>{a}<span style="color: #aaffe4;">\n</span><span style="color: #ffe9aa; font-style: italic;">b: </span>{b}<span style="color: #aaffe4;">\n</span><span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #ff8080; font-weight: bold;">return</span> <span style="color: #c66; font-weight: bold;">(</span>f<span style="color: #ffe9aa; font-style: italic;">"b: </span>{b}<span style="color: #aaffe4;">\n</span><span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #c66; font-weight: bold;">)</span>
+<span style="color: #62ff94;">a</span><span style="color: #24f6d9;">=</span><span style="color: #24f6d9;">[</span>1,1,1,2,2,2,3,3,1,1,2,4,5,6,7,7,7,7,7,7,7,7,7<span style="color: #24f6d9;">]</span>
+<span style="color: #62ff94;">b</span><span style="color: #24f6d9;">=</span>Counter<span style="color: #24f6d9;">(</span>a<span style="color: #24f6d9;">)</span>
+<span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"a: </span>{a}<span style="color: #ffa83d;">\n</span><span style="color: #1cc24b;">b: </span>{b}<span style="color: #ffa83d;">\n</span><span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
+<span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"b: </span>{b}<span style="color: #ffa83d;">\n</span><span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
 </pre>
 </div>
 
@@ -295,38 +267,38 @@ Counter就是计数器，用以统计频率。其输入是一个迭代器对象�
 </p>
 </div>
 </div>
-<div id="outline-container-orgf853607" class="outline-4">
-<h4 id="orgf853607"><span class="section-number-4">1.4.2.</span> defaultdict</h4>
+<div id="outline-container-org196c18d" class="outline-4">
+<h4 id="org196c18d"><span class="section-number-4">1.4.2.</span> defaultdict</h4>
 <div class="outline-text-4" id="text-1-4-2">
 <p>
 defualtdict与dict的不同在于，defaultDict对于一个未收录的key，会自动根据初始化defaultDict的函数来初始化这个key的value。如：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ff8080; font-weight: bold;">from</span> collections <span style="color: #ff8080; font-weight: bold;">import</span> defaultdict
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">from</span> collections <span style="color: #c770ff; font-weight: bold;">import</span> defaultdict
 
-<span style="color: #ffe9aa;">a</span>=defaultdict<span style="color: #c66; font-weight: bold;">(</span><span style="color: #c991e1;">list</span><span style="color: #c66; font-weight: bold;">)</span>
-a<span style="color: #c66; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">"test"</span><span style="color: #c66; font-weight: bold;">]</span>.append<span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"test result"</span><span style="color: #c66; font-weight: bold;">)</span>
+<span style="color: #62ff94;">a</span><span style="color: #24f6d9;">=</span>defaultdict<span style="color: #24f6d9;">(</span><span style="color: #30b3ff;">list</span><span style="color: #24f6d9;">)</span>
+a<span style="color: #24f6d9;">[</span><span style="color: #1cc24b;">"test"</span><span style="color: #24f6d9;">]</span>.append<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"test result"</span><span style="color: #24f6d9;">)</span>
 
-<span style="color: #ff8080; font-weight: bold;">return</span> a
+<span style="color: #c770ff; font-weight: bold;">return</span> a
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org0972bd2" class="outline-4">
-<h4 id="org0972bd2"><span class="section-number-4">1.4.3.</span> OrderedDict</h4>
+<div id="outline-container-org028b2c0" class="outline-4">
+<h4 id="org028b2c0"><span class="section-number-4">1.4.3.</span> OrderedDict</h4>
 <div class="outline-text-4" id="text-1-4-3">
 <p>
 OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。比如在我读取一个json文件时，可能就需要约束OrderedDict的形式：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ff8080; font-weight: bold;">import</span> json
-<span style="color: #ff8080; font-weight: bold;">from</span> collections <span style="color: #ff8080; font-weight: bold;">import</span> OrderedDict
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">import</span> json
+<span style="color: #c770ff; font-weight: bold;">from</span> collections <span style="color: #c770ff; font-weight: bold;">import</span> OrderedDict
 
-<span style="color: #ffe9aa;">filename</span>=<span style="color: #ffe9aa; font-style: italic;">"blablabla"</span>
-<span style="color: #ff8080; font-weight: bold;">with</span> <span style="color: #c991e1;">open</span><span style="color: #c66; font-weight: bold;">(</span>filename,<span style="color: #ffe9aa; font-style: italic;">"r"</span><span style="color: #c66; font-weight: bold;">)</span> <span style="color: #ff8080; font-weight: bold;">as</span> f:
-          <span style="color: #ffe9aa;">data</span>=json.load<span style="color: #c66; font-weight: bold;">(</span>f, object_pairs_hook=OrderedDict<span style="color: #c66; font-weight: bold;">)</span>
+<span style="color: #62ff94;">filename</span><span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"blablabla"</span>
+<span style="color: #c770ff; font-weight: bold;">with</span> <span style="color: #30b3ff;">open</span><span style="color: #24f6d9;">(</span>filename,<span style="color: #1cc24b;">"r"</span><span style="color: #24f6d9;">)</span> <span style="color: #c770ff; font-weight: bold;">as</span> f:
+          <span style="color: #62ff94;">data</span><span style="color: #24f6d9;">=</span>json.load<span style="color: #24f6d9;">(</span>f, object_pairs_hook<span style="color: #24f6d9;">=</span>OrderedDict<span style="color: #24f6d9;">)</span>
 </pre>
 </div>
 
@@ -337,8 +309,8 @@ OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。�
 </div>
 </div>
 </div>
-<div id="outline-container-org85f3d7e" class="outline-3">
-<h3 id="org85f3d7e"><span class="section-number-3">1.5.</span> 我真的理解了正则匹配嘛？re</h3>
+<div id="outline-container-org307e8b0" class="outline-3">
+<h3 id="org307e8b0"><span class="section-number-3">1.5.</span> 我真的理解了正则匹配嘛？re</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 正则表达式匹配是一个大坑，我曾经在读书馆看到一本厚厚的书，就在讲这一件事。所以此处仅仅是简单描绘一下我所遇到的场景。后续可能会补充。
@@ -353,7 +325,7 @@ OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ffe9aa;">p1</span>=r<span style="color: #ffe9aa; font-style: italic;">"("</span> + r<span style="color: #ffe9aa; font-style: italic;">"|"</span>.join<span style="color: #c66; font-weight: bold;">(</span>escaped_special_toks<span style="color: #c66; font-weight: bold;">)</span> + r<span style="color: #ffe9aa; font-style: italic;">")|"</span> + r<span style="color: #ffe9aa; font-style: italic;">"(.+?)"</span>
+<pre class="src src-python"><span style="color: #62ff94;">p1</span><span style="color: #24f6d9;">=</span>r<span style="color: #1cc24b;">"("</span> <span style="color: #24f6d9;">+</span> r<span style="color: #1cc24b;">"|"</span>.join<span style="color: #24f6d9;">(</span>escaped_special_toks<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">+</span> r<span style="color: #1cc24b;">")|"</span> <span style="color: #24f6d9;">+</span> r<span style="color: #1cc24b;">"(.+?)"</span>
 </pre>
 </div>
 <p>
@@ -475,27 +447,27 @@ OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。�
 </div>
 </div>
 </div>
-<div id="outline-container-orgb143dc8" class="outline-2">
-<h2 id="orgb143dc8"><span class="section-number-2">2.</span> python特殊用法</h2>
+<div id="outline-container-org01895b6" class="outline-2">
+<h2 id="org01895b6"><span class="section-number-2">2.</span> python特殊用法</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgaf19df2" class="outline-3">
-<h3 id="orgaf19df2"><span class="section-number-3">2.1.</span> f-string: 格式化字符串</h3>
+<div id="outline-container-org4d446f5" class="outline-3">
+<h3 id="org4d446f5"><span class="section-number-3">2.1.</span> f-string: 格式化字符串</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 之前一直用 <code>format</code> 函数来格式化字符串，后来发现下面的两种形式是等效的。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ffe9aa;">result</span>=12.5
-<span style="color: #c991e1;">print</span><span style="color: #c66; font-weight: bold;">(</span><span style="color: #ffe9aa; font-style: italic;">"result: {}"</span>.<span style="color: #c991e1;">format</span><span style="color: #6c6; font-weight: bold;">(</span>result<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #c991e1;">print</span><span style="color: #c66; font-weight: bold;">(</span>f<span style="color: #ffe9aa; font-style: italic;">"result: </span>{result}<span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #c66; font-weight: bold;">)</span>
+<pre class="src src-python"><span style="color: #62ff94;">result</span><span style="color: #24f6d9;">=</span>12.5
+<span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"result: {}"</span>.<span style="color: #30b3ff;">format</span><span style="color: #c770ff;">(</span>result<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+<span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"result: </span>{result}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orga355339" class="outline-3">
-<h3 id="orga355339"><span class="section-number-3">2.2.</span> \*args与\**kwargs</h3>
+<div id="outline-container-org886164c" class="outline-3">
+<h3 id="org886164c"><span class="section-number-3">2.2.</span> \*args与\**kwargs</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 对于函数而言，我可能不知道我能接受的参数有多长，甚至不知道他们都是啥。这时候就可以用上述两个关键字。对于函数而言，
@@ -512,13 +484,13 @@ OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">fourPrint</span><span style="color: #c66; font-weight: bold;">(</span>first,*args<span style="color: #c66; font-weight: bold;">)</span>:
-         <span style="color: #c991e1;">print</span><span style="color: #c66; font-weight: bold;">(</span>f<span style="color: #ffe9aa; font-style: italic;">"first: </span>{first}<span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #c66; font-weight: bold;">)</span>
-         <span style="color: #ff8080; font-weight: bold;">for</span> i <span style="color: #ff8080; font-weight: bold;">in</span> args:
-             <span style="color: #c991e1;">print</span><span style="color: #c66; font-weight: bold;">(</span>f<span style="color: #ffe9aa; font-style: italic;">"and: </span>{i}<span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #c66; font-weight: bold;">)</span>
-         <span style="color: #ff8080; font-weight: bold;">return</span> args<span style="color: #c66; font-weight: bold;">[</span>0<span style="color: #c66; font-weight: bold;">]</span> 
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">fourPrint</span><span style="color: #24f6d9;">(</span>first,<span style="color: #24f6d9;">*</span>args<span style="color: #24f6d9;">)</span>:
+         <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"first: </span>{first}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
+         <span style="color: #c770ff; font-weight: bold;">for</span> i <span style="color: #c770ff; font-weight: bold;">in</span> args:
+             <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"and: </span>{i}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
+         <span style="color: #c770ff; font-weight: bold;">return</span> args<span style="color: #24f6d9;">[</span>0<span style="color: #24f6d9;">]</span> 
 
-<span style="color: #ff8080; font-weight: bold;">return</span> fourPrint<span style="color: #c66; font-weight: bold;">(</span>0,1,2,3<span style="color: #c66; font-weight: bold;">)</span>
+<span style="color: #c770ff; font-weight: bold;">return</span> fourPrint<span style="color: #24f6d9;">(</span>0,1,2,3<span style="color: #24f6d9;">)</span>
 
 </pre>
 </div></li>
@@ -526,13 +498,13 @@ OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。�
 
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">fourPrint</span><span style="color: #c66; font-weight: bold;">(</span>first,**kwargs<span style="color: #c66; font-weight: bold;">)</span>:
-         <span style="color: #c991e1;">print</span><span style="color: #c66; font-weight: bold;">(</span>f<span style="color: #ffe9aa; font-style: italic;">"first: </span>{first}<span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #c66; font-weight: bold;">)</span>
-         <span style="color: #ff8080; font-weight: bold;">for</span> key <span style="color: #ff8080; font-weight: bold;">in</span> kwargs:
-             <span style="color: #c991e1;">print</span><span style="color: #c66; font-weight: bold;">(</span>f<span style="color: #ffe9aa; font-style: italic;">"and: </span>{kwargs[key]}<span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #c66; font-weight: bold;">)</span>
-         <span style="color: #ff8080; font-weight: bold;">return</span> kwargs<span style="color: #c66; font-weight: bold;">[</span>key<span style="color: #c66; font-weight: bold;">]</span>,key 
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">fourPrint</span><span style="color: #24f6d9;">(</span>first,<span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span>:
+         <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"first: </span>{first}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
+         <span style="color: #c770ff; font-weight: bold;">for</span> key <span style="color: #c770ff; font-weight: bold;">in</span> kwargs:
+             <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"and: </span>{kwargs[key]}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
+         <span style="color: #c770ff; font-weight: bold;">return</span> kwargs<span style="color: #24f6d9;">[</span>key<span style="color: #24f6d9;">]</span>,key 
 
-<span style="color: #ff8080; font-weight: bold;">return</span> fourPrint<span style="color: #c66; font-weight: bold;">(</span>first=0,second=1,third=2,fourth=3<span style="color: #c66; font-weight: bold;">)</span>
+<span style="color: #c770ff; font-weight: bold;">return</span> fourPrint<span style="color: #24f6d9;">(</span>first<span style="color: #24f6d9;">=</span>0,second<span style="color: #24f6d9;">=</span>1,third<span style="color: #24f6d9;">=</span>2,fourth<span style="color: #24f6d9;">=</span>3<span style="color: #24f6d9;">)</span>
 
 </pre>
 </div>
@@ -542,14 +514,14 @@ OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ffe9aa;">mytupe</span>=<span style="color: #c66; font-weight: bold;">(</span>1,2,3,4<span style="color: #c66; font-weight: bold;">)</span>
-<span style="color: #ffe9aa;">mydict</span>=<span style="color: #c66; font-weight: bold;">{</span><span style="color: #ffe9aa; font-style: italic;">"first"</span>:1,<span style="color: #ffe9aa; font-style: italic;">"second"</span>:2,<span style="color: #ffe9aa; font-style: italic;">"third"</span>:3,<span style="color: #ffe9aa; font-style: italic;">"fourth"</span>:4<span style="color: #c66; font-weight: bold;">}</span>
+<pre class="src src-python"><span style="color: #62ff94;">mytupe</span><span style="color: #24f6d9;">=</span><span style="color: #24f6d9;">(</span>1,2,3,4<span style="color: #24f6d9;">)</span>
+<span style="color: #62ff94;">mydict</span><span style="color: #24f6d9;">=</span><span style="color: #24f6d9;">{</span><span style="color: #1cc24b;">"first"</span>:1,<span style="color: #1cc24b;">"second"</span>:2,<span style="color: #1cc24b;">"third"</span>:3,<span style="color: #1cc24b;">"fourth"</span>:4<span style="color: #24f6d9;">}</span>
 
-<span style="color: #ff8080; font-weight: bold;">def</span> <span style="color: #c991e1;">fourPrint</span><span style="color: #c66; font-weight: bold;">(</span>first,second,third,fourth<span style="color: #c66; font-weight: bold;">)</span>:
-         <span style="color: #c991e1;">print</span><span style="color: #c66; font-weight: bold;">(</span>f<span style="color: #ffe9aa; font-style: italic;">"first: </span>{first}<span style="color: #ffe9aa; font-style: italic;">"</span><span style="color: #c66; font-weight: bold;">)</span>
-         <span style="color: #ff8080; font-weight: bold;">return</span> fourth 
+<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">fourPrint</span><span style="color: #24f6d9;">(</span>first,second,third,fourth<span style="color: #24f6d9;">)</span>:
+         <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"first: </span>{first}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
+         <span style="color: #c770ff; font-weight: bold;">return</span> fourth 
 
-<span style="color: #ff8080; font-weight: bold;">return</span> <span style="color: #c66; font-weight: bold;">(</span>fourPrint<span style="color: #6c6; font-weight: bold;">(</span>*mytupe<span style="color: #6c6; font-weight: bold;">)</span>,fourPrint<span style="color: #6c6; font-weight: bold;">(</span>**mydict<span style="color: #6c6; font-weight: bold;">)</span><span style="color: #c66; font-weight: bold;">)</span>
+<span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #24f6d9;">(</span>fourPrint<span style="color: #c770ff;">(</span><span style="color: #24f6d9;">*</span>mytupe<span style="color: #c770ff;">)</span>,fourPrint<span style="color: #c770ff;">(</span><span style="color: #24f6d9;">**</span>mydict<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
 
 </pre>
 </div>
@@ -564,7 +536,7 @@ OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。�
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Mon Dec  6 14:55:52 2021</span> <span class="date">Last modified: 2025-09-27 Sat 19:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Mon Dec  6 14:55:52 2021</span> <span class="date">Last modified: 2026-05-10 Sun 16:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>

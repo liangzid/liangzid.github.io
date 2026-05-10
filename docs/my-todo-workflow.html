@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-09-27 Sat 21:01 -->
+<!-- 2026-05-10 Sun 17:14 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>My Attempt of a Potentially New TODO Workflow: How to sync Mobile Phone with My Computer.</title>
@@ -195,28 +195,10 @@
 </head>
 <body>
 <div id="preamble" class="status">
-<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
 </div>
 <div id="content" class="content">
 <h1 class="title">My Attempt of a Potentially New TODO Workflow: How to sync Mobile Phone with My Computer.</h1>
-<div id="table-of-contents" role="doc-toc">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents" role="doc-toc">
-<ul>
-<li><a href="#orgc26e837">1. Configuration of My Phone</a>
-<ul>
-<li><a href="#org24a8d8f">1.1. Configuration of termux</a>
-<ul>
-<li><a href="#org667d9ae">1.1.1. Basic <code>git</code> configuration in termux:</a></li>
-<li><a href="#orgecb1e82">1.1.2. Config My TODOs</a></li>
-<li><a href="#org1980b3d">1.1.3. Config Cron in the Termux</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
 <p>
 <b>Basic idea:</b> I use my computer for most of the TODO plans, but make sure this
 changes can be obtained and edited by my phone. Besides, I need to ensure
@@ -227,16 +209,16 @@ such a communication is free and has no extra requirements of OS, and so on.
 <b>Solution:</b> I use <code>termux</code> to manage my doc communication from my phone to the computer,
 and use <code>git</code> and corresponding hubs to play the role of "bridge".
 </p>
-<div id="outline-container-orgc26e837" class="outline-2">
-<h2 id="orgc26e837"><span class="section-number-2">1.</span> Configuration of My Phone</h2>
+<div id="outline-container-org1a27fd2" class="outline-2">
+<h2 id="org1a27fd2"><span class="section-number-2">1.</span> Configuration of My Phone</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org24a8d8f" class="outline-3">
-<h3 id="org24a8d8f"><span class="section-number-3">1.1.</span> Configuration of termux</h3>
+<div id="outline-container-org2dac96a" class="outline-3">
+<h3 id="org2dac96a"><span class="section-number-3">1.1.</span> Configuration of termux</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-org667d9ae" class="outline-4">
-<h4 id="org667d9ae"><span class="section-number-4">1.1.1.</span> Basic <code>git</code> configuration in termux:</h4>
+<div id="outline-container-orgbb273c6" class="outline-4">
+<h4 id="orgbb273c6"><span class="section-number-4">1.1.1.</span> Basic <code>git</code> configuration in termux:</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <div class="org-src-container">
 <pre class="src src-sh">pkg update -y &amp;&amp; pkg upgrade -y
@@ -246,18 +228,18 @@ pkg install git cronie openssh -y
 
 crond
 
-git config --global user.name <span style="color: #ffe9aa; font-style: italic;">"liangzid"</span>
-git config --global user.email <span style="color: #ffe9aa; font-style: italic;">"2273067585@qq.com"</span>
+git config --global user.name <span style="color: #1cc24b;">"liangzid"</span>
+git config --global user.email <span style="color: #1cc24b;">"2273067585@qq.com"</span>
 
-ssh-keygen -t ed25519 -C <span style="color: #ffe9aa; font-style: italic;">"GitHub Key"</span>
-<span style="color: #c991e1;">echo</span> <span style="color: #ffe9aa; font-style: italic;">"--------------------------Key----------------------------------"</span>
+ssh-keygen -t ed25519 -C <span style="color: #1cc24b;">"GitHub Key"</span>
+<span style="color: #30b3ff;">echo</span> <span style="color: #1cc24b;">"--------------------------Key----------------------------------"</span>
 cat ~/.ssh/id_ed25519.pub
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgecb1e82" class="outline-4">
-<h4 id="orgecb1e82"><span class="section-number-4">1.1.2.</span> Config My TODOs</h4>
+<div id="outline-container-org6cc0e07" class="outline-4">
+<h4 id="org6cc0e07"><span class="section-number-4">1.1.2.</span> Config My TODOs</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <p>
 Download it:
@@ -265,7 +247,7 @@ Download it:
 
 <div class="org-src-container">
 <pre class="src src-sh">git clone git@github.com:liangzid/orgtodo.git ~/orgtodo
-<span style="color: #c991e1;">cd</span> ~/orgtodo
+<span style="color: #30b3ff;">cd</span> ~/orgtodo
 </pre>
 </div>
 
@@ -274,30 +256,30 @@ Configuration the automatic shell script (<code>~/sync_orgtodo.sh</code>):
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #565575;">#</span><span style="color: #96a0aa;">!/bin/</span><span style="color: #ff8080; font-weight: bold;">bash</span><span style="color: #96a0aa;">
+<pre class="src src-sh"><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">!/bin/</span><span style="color: #c770ff; font-weight: bold;">bash</span><span style="color: #8ca391; font-style: italic;">
 </span>
-<span style="color: #c991e1;">cd</span> ~/orgtodo || <span style="color: #ff8080; font-weight: bold;">exit</span> 1
+<span style="color: #30b3ff;">cd</span> ~/orgtodo || <span style="color: #c770ff; font-weight: bold;">exit</span> 1
 
 git add -A
 
-<span style="color: #ff8080; font-weight: bold;">if</span> git diff-index --quiet HEAD --; <span style="color: #ff8080; font-weight: bold;">then</span>
-    <span style="color: #c991e1;">echo</span> <span style="color: #ffe9aa; font-style: italic;">"No Changes. Do not require to Upload."</span>
-<span style="color: #ff8080; font-weight: bold;">else</span>
-    git commit -m <span style="color: #ffe9aa; font-style: italic;">"AutoCommit By TERMUX: $(</span><span style="color: #fa8072;">date +'%Y-%m-%d %H:%M:%S'</span><span style="color: #ffe9aa; font-style: italic;">)"</span>
-<span style="color: #ff8080; font-weight: bold;">fi</span>
+<span style="color: #c770ff; font-weight: bold;">if</span> git diff-index --quiet HEAD --; <span style="color: #c770ff; font-weight: bold;">then</span>
+    <span style="color: #30b3ff;">echo</span> <span style="color: #1cc24b;">"No Changes. Do not require to Upload."</span>
+<span style="color: #c770ff; font-weight: bold;">else</span>
+    git commit -m <span style="color: #1cc24b;">"AutoCommit By TERMUX: $(</span><span style="color: #fa8072;">date +'%Y-%m-%d %H:%M:%S'</span><span style="color: #1cc24b;">)"</span>
+<span style="color: #c770ff; font-weight: bold;">fi</span>
 
-git pull --no-rebase || <span style="color: #c66; font-weight: bold;">{</span>
-    <span style="color: #565575;"># </span><span style="color: #96a0aa;">4. if pull conflict found&#65292;prefer the local version
-</span>    <span style="color: #c991e1;">echo</span> <span style="color: #ffe9aa; font-style: italic;">"Conflict Found. We use the local version."</span>
+git pull --no-rebase || <span style="color: #24f6d9;">{</span>
+    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">4. if pull conflict found&#65292;prefer the local version
+</span>    <span style="color: #30b3ff;">echo</span> <span style="color: #1cc24b;">"Conflict Found. We use the local version."</span>
     git checkout --ours .   
     git add -A             
-    git commit -m <span style="color: #ffe9aa; font-style: italic;">"AutoMerge: Keep the mobile version. $(</span><span style="color: #fa8072;">date +'%Y-%m-%d %H:%M:%S'</span><span style="color: #ffe9aa; font-style: italic;">)"</span>
-<span style="color: #c66; font-weight: bold;">}</span>
+    git commit -m <span style="color: #1cc24b;">"AutoMerge: Keep the mobile version. $(</span><span style="color: #fa8072;">date +'%Y-%m-%d %H:%M:%S'</span><span style="color: #1cc24b;">)"</span>
+<span style="color: #24f6d9;">}</span>
 
 git push origin master
 
-<span style="color: #c991e1;">echo</span> <span style="color: #ffe9aa; font-style: italic;">"[$(</span><span style="color: #fa8072;">date</span><span style="color: #ffe9aa; font-style: italic;">)] Git sync executed."</span> &gt;&gt; ~/cron.log
-termux-notification --title <span style="color: #ffe9aa; font-style: italic;">"OrgTODO Sync"</span> --content <span style="color: #ffe9aa; font-style: italic;">"All Sync Done :)"</span> --icon <span style="color: #ffe9aa; font-style: italic;">"check_circle"</span>
+<span style="color: #30b3ff;">echo</span> <span style="color: #1cc24b;">"[$(</span><span style="color: #fa8072;">date</span><span style="color: #1cc24b;">)] Git sync executed."</span> &gt;&gt; ~/cron.log
+termux-notification --title <span style="color: #1cc24b;">"OrgTODO Sync"</span> --content <span style="color: #1cc24b;">"All Sync Done :)"</span> --icon <span style="color: #1cc24b;">"check_circle"</span>
 </pre>
 </div>
 
@@ -311,8 +293,8 @@ Change mod:
 </div>
 </div>
 </div>
-<div id="outline-container-org1980b3d" class="outline-4">
-<h4 id="org1980b3d"><span class="section-number-4">1.1.3.</span> Config Cron in the Termux</h4>
+<div id="outline-container-org45cf1b5" class="outline-4">
+<h4 id="org45cf1b5"><span class="section-number-4">1.1.3.</span> Config Cron in the Termux</h4>
 <div class="outline-text-4" id="text-1-1-3">
 <p>
 <code>crontab -e</code>
@@ -332,7 +314,7 @@ add the following line:
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Wed Apr 23 17:01:29 2025</span> <span class="date">Last modified: 2025-09-27 Sat 19:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Wed Apr 23 17:01:29 2025</span> <span class="date">Last modified: 2026-05-10 Sun 16:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>
