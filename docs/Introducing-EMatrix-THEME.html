@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2026-05-10 Sun 17:17 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Introducing EMatrix — A Matrix-Inspired Emacs Theme</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">Introducing EMatrix — A Matrix-Inspired Emacs Theme</h1>
+
+<div id="org7c49ae4" class="figure">
+<p><img src="./images/screenshot_20260510_164629.png" alt="screenshot_20260510_164629.png">
+</p>
+</div>
+
+
+<div id="org25dbf64" class="figure">
+<p><img src="./images/screenshot_20260510_163951.png" alt="screenshot_20260510_163951.png">
+</p>
+</div>
+
+<p>
+EMatrix is an Emacs theme that replicates the <a href="https://github.com/anomalyco/opencode">OpenCode</a> "Matrix" color scheme.
+</p>
+
+<p>
+Dark green-tinted background with bright green foreground, purple keywords,
+teal functions, orange constants — the classic Matrix hacker aesthetic from
+the OpenCode terminal UI.
+</p>
+<div id="outline-container-org3248c56" class="outline-2">
+<h2 id="org3248c56"><span class="section-number-2">1.</span> Color Palette</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Sourced from <code>packages/ui/src/theme/themes/matrix.json</code> in the OpenCode repository.
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Role</th>
+<th scope="col" class="org-left">Hex</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Background</td>
+<td class="org-left"><code>#0a0e0a</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Foreground</td>
+<td class="org-left"><code>#62ff94</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Comment</td>
+<td class="org-left"><code>#8ca391</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Keyword</td>
+<td class="org-left"><code>#c770ff</code></td>
+</tr>
+
+<tr>
+<td class="org-left">String</td>
+<td class="org-left"><code>#1cc24b</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Function</td>
+<td class="org-left"><code>#24f6d9</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Type</td>
+<td class="org-left"><code>#e6ff57</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Constant</td>
+<td class="org-left"><code>#ffa83d</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Primitive</td>
+<td class="org-left"><code>#30b3ff</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Error</td>
+<td class="org-left"><code>#ff4b4b</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Warning</td>
+<td class="org-left"><code>#e6ff57</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Link</td>
+<td class="org-left"><code>#30b3ff</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Diff added</td>
+<td class="org-left"><code>#77ffaf</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Diff removed</td>
+<td class="org-left"><code>#ff7171</code></td>
+</tr>
+
+<tr>
+<td class="org-left">Mode-line</td>
+<td class="org-left"><code>#0e120e</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>
+<b>Org heading colors:</b>
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-right">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Level</th>
+<th scope="col" class="org-left">Hex</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">1</td>
+<td class="org-left"><code>#00efff</code></td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left"><code>#e6ff57</code></td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left"><code>#24f6d9</code></td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-left"><code>#c770ff</code></td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left"><code>#30b3ff</code></td>
+</tr>
+
+<tr>
+<td class="org-right">6</td>
+<td class="org-left"><code>#ffa83d</code></td>
+</tr>
+
+<tr>
+<td class="org-right">7</td>
+<td class="org-left"><code>#1cc24b</code></td>
+</tr>
+
+<tr>
+<td class="org-right">8</td>
+<td class="org-left"><code>#8ca391</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org85f5079" class="outline-2">
+<h2 id="org85f5079"><span class="section-number-2">2.</span> Why Build a "Matrix" Theme?</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+OpenCode is an AI-powered CLI coding agent with a distinctive green-on-dark
+terminal appearance. After using OpenCode daily, I wanted the same visual
+consistency inside Emacs — where I spend most of my time reading and writing
+code.
+</p>
+
+<p>
+The Matrix aesthetic isn't just cosmetic. The high-contrast green-on-dark
+palette reduces eye strain during long sessions, and the carefully chosen
+semantic colors (purple for keywords, teal for functions, orange for
+constants) make code structure immediately recognizable.
+</p>
+</div>
+</div>
+<div id="outline-container-orgd26c9de" class="outline-2">
+<h2 id="orgd26c9de"><span class="section-number-2">3.</span> Installation</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org920a836" class="outline-3">
+<h3 id="org920a836"><span class="section-number-3">3.1.</span> package-vc-install (Emacs 29+)</h3>
+<div class="outline-text-3" id="text-3-1">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">unless</span> <span style="color: #c770ff;">(</span>package-installed-p 'ematrix<span style="color: #c770ff;">)</span>
+  <span style="color: #c770ff;">(</span>package-vc-install <span style="color: #1cc24b;">"https://github.com/liangzid/ematrix"</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org452f8d8" class="outline-3">
+<h3 id="org452f8d8"><span class="section-number-3">3.2.</span> use-package</h3>
+<div class="outline-text-3" id="text-3-2">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">use-package</span> ematrix
+  <span style="color: #30b3ff;">:vc</span> <span style="color: #c770ff;">(</span><span style="color: #30b3ff;">:url</span> <span style="color: #1cc24b;">"https://github.com/liangzid/ematrix"</span>
+        <span style="color: #30b3ff;">:rev</span> <span style="color: #30b3ff;">:newest</span><span style="color: #c770ff;">)</span>
+  <span style="color: #30b3ff;">:config</span>
+  <span style="color: #c770ff;">(</span>load-theme 'ematrix t<span style="color: #c770ff;">)</span>
+  <span style="color: #c770ff;">(</span>ematrix-set-font<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb26b28d" class="outline-3">
+<h3 id="orgb26b28d"><span class="section-number-3">3.3.</span> Manual</h3>
+<div class="outline-text-3" id="text-3-3">
+<div class="org-src-container">
+<pre class="src src-bash">git clone https://github.com/liangzid/ematrix ~/.emacs.d/elpa/ematrix
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">require</span> '<span style="color: #ffa83d;">ematrix</span><span style="color: #24f6d9;">)</span>
+<span style="color: #24f6d9;">(</span>load-theme 'ematrix t<span style="color: #24f6d9;">)</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org8176711" class="outline-2">
+<h2 id="org8176711"><span class="section-number-2">4.</span> Font</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+EMatrix matches the <a href="https://github.com/anomalyco/opencode/blob/dev/packages/console/app/src/style/token/font.css">OpenCode font stack</a>:
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-right">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Priority</th>
+<th scope="col" class="org-left">Font</th>
+<th scope="col" class="org-left">License</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">1</td>
+<td class="org-left">Berkeley Mono</td>
+<td class="org-left">Commercial ($75)</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">IBM Plex Mono</td>
+<td class="org-left">Open Source (SIL OFL)</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left">Cascadia Code</td>
+<td class="org-left">Open Source (SIL OFL)</td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-left">Fira Code</td>
+<td class="org-left">Open Source (SIL OFL)</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">JetBrains Mono</td>
+<td class="org-left">Open Source (SIL OFL)</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+The first font found on your system is used automatically. On most Linux
+systems, installing <code>fonts-ibm-plex</code> is the quickest way to get a close match:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Debian/Ubuntu
+</span>sudo apt install fonts-ibm-plex
+
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Arch
+</span>sudo pacman -S ttf-ibm-plex
+
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">macOS
+</span>brew install font-ibm-plex
+</pre>
+</div>
+
+<p>
+Set the font manually with <code>M-x ematrix-set-font</code>, or call it from your init:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> ematrix-default-font-size 14<span style="color: #24f6d9;">)</span>
+<span style="color: #24f6d9;">(</span>ematrix-set-font<span style="color: #24f6d9;">)</span>
+</pre>
+</div>
+
+<p>
+Override with a custom font:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> ematrix-default-font <span style="color: #1cc24b;">"Cascadia Code"</span><span style="color: #24f6d9;">)</span>
+<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> ematrix-default-font-size 13<span style="color: #24f6d9;">)</span>
+<span style="color: #24f6d9;">(</span>ematrix-set-font<span style="color: #24f6d9;">)</span>
+</pre>
+</div>
+
+<p>
+The CJK font defaults to <b>LXGW WenKai Mono</b>. Change it:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> ematrix-chinese-font <span style="color: #1cc24b;">"Noto Serif CJK SC"</span><span style="color: #24f6d9;">)</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org4a688dc" class="outline-2">
+<h2 id="org4a688dc"><span class="section-number-2">5.</span> Supported Packages</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+EMatrix provides faces for:
+</p>
+
+<ul class="org-ul">
+<li><b>Syntax</b>: <code>font-lock</code>, <code>rainbow-delimiters</code>, <code>highlight-indentation</code></li>
+<li><b>Completion</b>: <code>company</code>, <code>vertico</code>, <code>ivy</code>, <code>marginalia</code></li>
+<li><b>Org Mode</b>: headings, blocks, code, links, tags, todos, agenda, checkboxes</li>
+<li><b>Markdown</b>: headings, code, links, blockquotes, emphasis</li>
+<li><b>Version Control</b>: <code>diff</code>, <code>magit</code>, <code>git-gutter</code></li>
+<li><b>UI</b>: <code>mode-line</code>, <code>doom-modeline</code>, <code>tab-bar</code>, <code>tab-line</code></li>
+<li><b>Tools</b>: <code>eglot</code>, <code>citre</code>, <code>evil</code>, <code>telega</code>, <code>hl-line</code></li>
+<li><b>Terminal</b>: <code>term</code>, <code>ansi-color</code></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org3f56bb7" class="outline-2">
+<h2 id="org3f56bb7"><span class="section-number-2">6.</span> File Structure</h2>
+<div class="outline-text-2" id="text-6">
+<pre class="example" id="org428e7df">
+ematrix/
+├── ematrix.el          # Package entry point, font setup, customization
+└── ematrix-theme.el    # deftheme with 130+ face definitions
+</pre>
+</div>
+</div>
+<div id="outline-container-orgc092e6c" class="outline-2">
+<h2 id="orgc092e6c"><span class="section-number-2">7.</span> Credits</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+Color scheme sourced from <a href="https://github.com/anomalyco/opencode">OpenCode</a> by AnomalyCo, used under the MIT license.
+</p>
+
+<p>
+The theme is at <a href="https://github.com/liangzid/ematrix">github.com/liangzid/ematrix</a>.
+</p>
+</div>
+</div>
+<div id="outline-container-org4f72c1f" class="outline-2">
+<h2 id="org4f72c1f"><span class="section-number-2">8.</span> License</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+MIT
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Sun May 10 17:00:00 2026</span> <span class="date">Last modified: 2026-05-10 Sun 17:04</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+</div>
+</body>
+</html>

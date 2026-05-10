@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2026-05-10 Sun 17:17 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>My NixOS Configuration!</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">My NixOS Configuration!</h1>
+<p>
+A reproducible, modular NixOS desktop configuration featuring Hyprland,
+Ghostty, Emacs, and a complete development toolchain — all managed via
+flake and home-manager.
+</p>
+
+
+<div id="org34e82db" class="figure">
+<p><img src="./images/screenshot_20260510_171024.png" alt="screenshot_20260510_171024.png">
+</p>
+</div>
+
+
+<div id="org0856804" class="figure">
+<p><img src="./images/screenshot_20260510_171035.png" alt="screenshot_20260510_171035.png">
+</p>
+</div>
+
+
+<div id="org630d9d5" class="figure">
+<p><img src="./images/screenshot_20260509_125220.png" alt="screenshot_20260509_125220.png">
+</p>
+</div>
+
+
+<div id="orgf5a0379" class="figure">
+<p><img src="./images/screenshot_20260509_125139.png" alt="screenshot_20260509_125139.png">
+</p>
+</div>
+
+
+<div id="org02c5aff" class="figure">
+<p><img src="./images/screenshot_20260509_125317.png" alt="screenshot_20260509_125317.png">
+</p>
+</div>
+
+
+<div id="org3824461" class="figure">
+<p><img src="./images/screenshot_20260509_125943.png" alt="screenshot_20260509_125943.png">
+</p>
+</div>
+
+
+<div id="orgeb7fa55" class="figure">
+<p><img src="./images/screenshot_20260509_124026.png" alt="screenshot_20260509_124026.png">
+</p>
+</div>
+
+
+<div id="org5696140" class="figure">
+<p><img src="./images/screenshot_20260510_170940.png" alt="screenshot_20260510_170940.png">
+</p>
+</div>
+
+
+<p>
+I spent two days to move my previous linux configuration and development
+environments into NixOS. This document records the setup and serves as a
+reference for anyone interested in NixOS-based desktop configuration.
+</p>
+<div id="outline-container-org18fd8a1" class="outline-2">
+<h2 id="org18fd8a1"><span class="section-number-2">1.</span> What is NixOS?</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+NixOS is a special Linux distro built upon the <code>Nix</code>.
+</p>
+
+<p>
+So what is Nix?
+</p>
+
+<p>
+Nix is:
+</p>
+<ul class="org-ul">
+<li>A functional programming language, and a DSL for addressing the configuration problems.</li>
+<li>A package management tool.</li>
+<li>An OS.</li>
+</ul>
+
+<p>
+Core idea of Nix/NixOS:
+</p>
+<ul class="org-ul">
+<li>Anything of a SYSTEM can be described, and thus, thanks to the feature of functional definition, it can be easily reproduced.</li>
+<li>Similar to <code>git</code>, Nix/NixOS employ a more efficient way to manage different package versions and corresponding dependencies, where two different version of the same program can be coexistent with each other.</li>
+<li>Different from the snapshot, NixOS allows to boot under any version of the NixOS BUILD, which demonstrate that a man will not be worried about any OS crash.</li>
+</ul>
+
+<p>
+Why I use it:
+</p>
+<ul class="org-ul">
+<li>I'd like to keep the configuration be <code>可积累的</code></li>
+<li>I enjoy this way, just like why I like to use emacs.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org01c945a" class="outline-2">
+<h2 id="org01c945a"><span class="section-number-2">2.</span> What This Configuration Contains?</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+This configuration contains a <b>minimal</b> configuration of my new desktop environment.
+</p>
+
+<p>
+It is a TTY environment by default, BUT providing a very beautiful and
+robust and convenient DESKTOP development environment.
+</p>
+
+<p>
+The schema as list below:
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Component</th>
+<th scope="col" class="org-left">Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">System</td>
+<td class="org-left">NixOS (26.05)</td>
+</tr>
+
+<tr>
+<td class="org-left">Use Flake?</td>
+<td class="org-left">Yes</td>
+</tr>
+
+<tr>
+<td class="org-left">Default OS Env</td>
+<td class="org-left">TTY</td>
+</tr>
+
+<tr>
+<td class="org-left">Desktop Env</td>
+<td class="org-left">Wayland</td>
+</tr>
+
+<tr>
+<td class="org-left">Desktop</td>
+<td class="org-left">Hyprland</td>
+</tr>
+
+<tr>
+<td class="org-left">Launcher</td>
+<td class="org-left">wofi</td>
+</tr>
+
+<tr>
+<td class="org-left">Status Bar</td>
+<td class="org-left">waybar</td>
+</tr>
+
+<tr>
+<td class="org-left">Terminal</td>
+<td class="org-left">ghostty*</td>
+</tr>
+
+<tr>
+<td class="org-left">File Manager</td>
+<td class="org-left">nemo*</td>
+</tr>
+
+<tr>
+<td class="org-left">Notifications</td>
+<td class="org-left">dunst/libnotify</td>
+</tr>
+
+<tr>
+<td class="org-left">GTK</td>
+<td class="org-left">juno-theme</td>
+</tr>
+
+<tr>
+<td class="org-left">Icon</td>
+<td class="org-left">beauty-line-icon</td>
+</tr>
+
+<tr>
+<td class="org-left">Capture</td>
+<td class="org-left">grim/slurp/swappy</td>
+</tr>
+
+<tr>
+<td class="org-left">Wallpaper</td>
+<td class="org-left">awww</td>
+</tr>
+
+<tr>
+<td class="org-left">Editor</td>
+<td class="org-left">emacs/vim</td>
+</tr>
+
+<tr>
+<td class="org-left">Agent</td>
+<td class="org-left">opencode</td>
+</tr>
+
+<tr>
+<td class="org-left">VPN/Proxy</td>
+<td class="org-left">clash-verge-rev</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Note: This list will keep increase and changed dynamically.
+</p>
+</div>
+<div id="outline-container-orgcef3dcb" class="outline-3">
+<h3 id="orgcef3dcb"><span class="section-number-3">2.1.</span> Chinese Input &amp; Communication</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>Input Method: <code>fcitx5</code> with <code>rime</code> and <code>pinyin</code>, theme <code>Material-Color-deepPurple</code></li>
+<li>Communication: <code>wechat-uos</code>, <code>qq</code></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgee1c054" class="outline-3">
+<h3 id="orgee1c054"><span class="section-number-3">2.2.</span> Emacs</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Emacs is pulled from the <a href="https://github.com/nix-community/emacs-overlay">emacs-overlay</a>, providing the latest <code>emacs-unstable-pgtk</code>
+build with native Wayland support. The Emacs configuration is auto-cloned from
+<a href="https://github.com/liangzid/a.emacs.d">a.emacs.d</a> via <code>home.activation</code> during first rebuild.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org977704d" class="outline-2">
+<h2 id="org977704d"><span class="section-number-2">3.</span> Repository Structure</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+The full source is at <a href="https://github.com/liangzid/NixConfig">github.com/liangzid/NixConfig</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">nix-config/
+&#9500;&#9472;&#9472; flake.nix                 # Entry point &#8212; defines inputs and NixOS config
+&#9500;&#9472;&#9472; flake.lock                # Pinned input versions
+&#9500;&#9472;&#9472; bootstrap.sh              # Install / apply / build-ISO
+&#9500;&#9472;&#9472; hosts/
+&#9474;   &#9492;&#9472;&#9472; nixos/
+&#9474;       &#9500;&#9472;&#9472; configuration.nix # System-level config <span style="color: #24f6d9;">(</span>boot, users, packages, ssh<span style="color: #24f6d9;">)</span>
+&#9474;       &#9500;&#9472;&#9472; hardware-configuration.nix
+&#9474;       &#9492;&#9472;&#9472; home.nix          # User-level config <span style="color: #24f6d9;">(</span>packages, env, dotfiles, ssh<span style="color: #24f6d9;">)</span>
+&#9500;&#9472;&#9472; modules/
+&#9474;   &#9500;&#9472;&#9472; system/               # Reusable system modules
+&#9474;   &#9474;   &#9500;&#9472;&#9472; hyprland.nix      # Hyprland WM with xwayland
+&#9474;   &#9474;   &#9500;&#9472;&#9472; nvidia.nix        # NVIDIA GPU + modesetting
+&#9474;   &#9474;   &#9500;&#9472;&#9472; fonts.nix         # CJK + nerd fonts
+&#9474;   &#9474;   &#9500;&#9472;&#9472; input-method.nix  # fcitx5 + rime + cloudpinyin + theme
+&#9474;   &#9474;   &#9500;&#9472;&#9472; pipewire.nix      # Audio: pipewire + alsa + pulse
+&#9474;   &#9474;   &#9500;&#9472;&#9472; portal.nix        # XDG desktop portal for Wayland
+&#9474;   &#9474;   &#9492;&#9472;&#9472; kanata.nix        # CapsLock &#8594; Control remap
+&#9474;   &#9492;&#9472;&#9472; home/                 # Reusable home-manager modules
+&#9474;       &#9500;&#9472;&#9472; emacs.nix          # Emacs + vterm
+&#9474;       &#9500;&#9472;&#9472; waybar.nix        # Status bar with tokyonight theme
+&#9474;       &#9492;&#9472;&#9472; gtk.nix           # GTK theme + dark mode
+&#9492;&#9472;&#9472; dotfiles/                 # Configuration files managed by home-manager
+    &#9500;&#9472;&#9472; hypr/hyprland.conf    # Hyprland keybindings + autostart
+    &#9500;&#9472;&#9472; wofi/<span style="color: #24f6d9;">{</span>config,style.css<span style="color: #24f6d9;">}</span>
+    &#9500;&#9472;&#9472; ghostty/config        # Terminal with Emacs-style keybinds + Aura theme
+    &#9500;&#9472;&#9472; clash/merge-hk.yaml   # GFW bypass rules <span style="color: #24f6d9;">(</span>Hong Kong mode<span style="color: #24f6d9;">)</span>
+    &#9500;&#9472;&#9472; clash/merge-cn.yaml   # GFW bypass rules <span style="color: #24f6d9;">(</span>Mainland mode<span style="color: #24f6d9;">)</span>
+    &#9492;&#9472;&#9472; fcitx5/<span style="color: #24f6d9;">{</span>classicui,pinyin<span style="color: #24f6d9;">}</span>.conf  # Input method theming &amp; behaviour
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orga072399" class="outline-2">
+<h2 id="orga072399"><span class="section-number-2">4.</span> Getting Started</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org7e8455e" class="outline-3">
+<h3 id="org7e8455e"><span class="section-number-3">4.1.</span> On an Existing NixOS Machine</h3>
+<div class="outline-text-3" id="text-4-1">
+<div class="org-src-container">
+<pre class="src src-bash">git clone https://github.com/liangzid/nix-config.git ~/code/NixConfig
+sudo nixos-rebuild switch --flake ~/code/NixConfig#nixos
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgcc3a47c" class="outline-3">
+<h3 id="orgcc3a47c"><span class="section-number-3">4.2.</span> Fresh Install (from NixOS ISO)</h3>
+<div class="outline-text-3" id="text-4-2">
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">1. Partition disks and mount to /mnt
+</span><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">2. Run the installer
+</span>./bootstrap.sh install
+</pre>
+</div>
+
+<p>
+This will generate a hardware config for the new machine, clone the repo,
+and run <code>nixos-install --flake</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-orgdb7141c" class="outline-3">
+<h3 id="orgdb7141c"><span class="section-number-3">4.3.</span> Tip: Quick Rebuild</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Use the <code>update</code> alias:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">update
+</pre>
+</div>
+<p>
+Remember to <code>git add</code> any newly created files before rebuilding, as the flake
+requires all referenced files to be Git-tracked.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org64cfb70" class="outline-2">
+<h2 id="org64cfb70"><span class="section-number-2">5.</span> Hyprland Keybindings</h2>
+<div class="outline-text-2" id="text-5">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Key</th>
+<th scope="col" class="org-left">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>Super + arrows</code></td>
+<td class="org-left">Move focus</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Super + Tab</code></td>
+<td class="org-left">Cycle windows</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Super + 1-0</code></td>
+<td class="org-left">Switch to workspace 1-10</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Super + Shift + 1-0</code></td>
+<td class="org-left">Move window to workspace 1-10</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Super + K</code></td>
+<td class="org-left">Kill active window</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Super + V</code></td>
+<td class="org-left">Toggle floating</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Super + F</code></td>
+<td class="org-left">Toggle fullscreen</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Super + R</code></td>
+<td class="org-left">Enter resize mode (arrows / HJKL)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Super + T</code></td>
+<td class="org-left">Open terminal (<code>ghostty</code>)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Super + X</code></td>
+<td class="org-left">Open launcher (<code>wofi</code>)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Super + E</code></td>
+<td class="org-left">Open file manager (<code>nemo</code>)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Super + L</code></td>
+<td class="org-left">Lock screen (<code>swaylock</code>)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Super + Q</code></td>
+<td class="org-left">Quit Hyprland</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Super + Alt + arrows</code></td>
+<td class="org-left">Move window</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Ctrl + Alt + T</code></td>
+<td class="org-left">Open terminal (alternative)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Print</code></td>
+<td class="org-left">Screenshot region → annotate</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Ctrl + Print</code></td>
+<td class="org-left">Fullscreen screenshot → clipboard</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-org11f8958" class="outline-2">
+<h2 id="org11f8958"><span class="section-number-2">6.</span> Ghostty Keybindings</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Ghostty is the primary terminal emulator, configured with Emacs-style
+keybinding conventions.
+</p>
+
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Key</th>
+<th scope="col" class="org-left">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>C-x 2</code></td>
+<td class="org-left">Split horizontally (down)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-x 3</code></td>
+<td class="org-left">Split vertically (right)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-x 1</code></td>
+<td class="org-left">Zoom (maximize) current split</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-x 0</code></td>
+<td class="org-left">Close current split</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-x o</code></td>
+<td class="org-left">Next split (other-window)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-x k</code></td>
+<td class="org-left">Close current split</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>C-x b</code></td>
+<td class="org-left">Tab overview</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Alt + 1-9</code></td>
+<td class="org-left">Jump to tab 1-9</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Ctrl+Shift+T</code> / <code>C-t</code></td>
+<td class="org-left">New tab</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Ctrl+Shift+W</code></td>
+<td class="org-left">Close surface</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Ctrl+Shift+Enter</code></td>
+<td class="org-left">New split (auto direction)</td>
+</tr>
+
+<tr>
+<td class="org-left"><code>Ctrl+Shift+,</code></td>
+<td class="org-left">Reload config</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Ghostty uses the <code>Aura</code> theme with <code>background-opacity = 0.8</code> and
+<code>term = xterm-256color</code> for full compatibility when SSH-ing to remote servers.
+</p>
+</div>
+</div>
+<div id="outline-container-org5533db8" class="outline-2">
+<h2 id="org5533db8"><span class="section-number-2">7.</span> Laboratory Server Access</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+All SSH servers are defined in the home.nix configuration. Each server has two aliases:
+</p>
+
+<ul class="org-ul">
+<li><code>gsXX</code> / <code>csX</code> — direct connection</li>
+<li><code>gsXXo</code> / <code>csXo</code> — via bastion (jump host: <code>is1.astaple.com</code>)</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-bash">ssh gs14       <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">direct
+</span>ssh gs14o      <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">via jump host
+</span>ssh cs1        <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">direct
+</span>ssh cs2o       <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">via jump host</span>
+</pre>
+</div>
+
+<p>
+SSH keepalive (<code>ServerAliveInterval 60</code>) prevents idle disconnection,
+and <code>AddKeysToAgent yes</code> caches key passphrases in memory.
+</p>
+</div>
+</div>
+<div id="outline-container-org1451a8c" class="outline-2">
+<h2 id="org1451a8c"><span class="section-number-2">8.</span> GFW Bypass (Clash Verge Rev)</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+<a href="https://github.com/clash-verge-rev/clash-verge-rev">clash-verge-rev</a> is installed for proxy management.
+Two merge configs are provided for switching between regions:
+</p>
+
+<ul class="org-ul">
+<li><code>merge-hk.yaml</code>: most traffic → DIRECT, only AI services (ChatGPT, OpenAI,
+Anthropic) → Proxy</li>
+<li><code>merge-cn.yaml</code>: subscription handles default routing, with additional
+rules for lab servers and AI services</li>
+</ul>
+
+<p>
+To switch: Profiles → subscription → Edit Info → Merge → point to the desired yaml.
+</p>
+</div>
+</div>
+<div id="outline-container-org666c9ce" class="outline-2">
+<h2 id="org666c9ce"><span class="section-number-2">9.</span> Input Method</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+Fcitx5 is configured with:
+</p>
+<ul class="org-ul">
+<li>Chinese addons (pinyin + cloud pinyin)</li>
+<li>Rime support</li>
+<li>Theme: <code>Material-Color-deepPurple</code></li>
+<li>Shuangpin: Ziranma profile</li>
+<li>Complete pinyin.conf managed by home-manager</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org09d30fd" class="outline-2">
+<h2 id="org09d30fd"><span class="section-number-2">10.</span> Keyboard Remap</h2>
+<div class="outline-text-2" id="text-10">
+<p>
+<code>CapsLock</code> is remapped to <code>Control</code> via <a href="https://github.com/jtroo/kanata">kanata</a>.
+</p>
+</div>
+</div>
+<div id="outline-container-orge2a887e" class="outline-2">
+<h2 id="orge2a887e"><span class="section-number-2">11.</span> System Aliases</h2>
+<div class="outline-text-2" id="text-11">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Alias</th>
+<th scope="col" class="org-left">Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><code>enw</code></td>
+<td class="org-left"><code>emacs -nw</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>ec</code></td>
+<td class="org-left"><code>emacsclient</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>update</code></td>
+<td class="org-left"><code>sudo nixos-rebuild switch --flake ~/code/NixConfig#nixos</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>latexmain</code></td>
+<td class="org-left"><code>latexmk --pdflatex main.tex</code></td>
+</tr>
+
+<tr>
+<td class="org-left"><code>gui</code></td>
+<td class="org-left"><code>start-hyprland</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="outline-container-orgf24b874" class="outline-2">
+<h2 id="orgf24b874"><span class="section-number-2">12.</span> Notes</h2>
+<div class="outline-text-2" id="text-12">
+</div>
+<div id="outline-container-orgf8608e4" class="outline-3">
+<h3 id="orgf8608e4"><span class="section-number-3">12.1.</span> Super+L and logind</h3>
+<div class="outline-text-3" id="text-12-1">
+<p>
+Systemd-logind intercepts <code>Super+L</code> by default. This config adds
+<code>services.logind.settings</code> to ignore those hardware keys and let Hyprland
+handle them.
+</p>
+</div>
+</div>
+<div id="outline-container-orgffbdd8b" class="outline-3">
+<h3 id="orgffbdd8b"><span class="section-number-3">12.2.</span> Swaylock PAM</h3>
+<div class="outline-text-3" id="text-12-2">
+<p>
+<code>Swaylock</code> is configured as a PAM service (<code>security.pam.services.swaylock</code>)
+so it can unlock the screen without requiring a password policy override.
+</p>
+</div>
+</div>
+<div id="outline-container-orge7b7130" class="outline-3">
+<h3 id="orge7b7130"><span class="section-number-3">12.3.</span> Steam</h3>
+<div class="outline-text-3" id="text-12-3">
+<p>
+Steam is enabled at the system level: <code>programs.steam.enable = true</code>.
+This automatically installs all required 32-bit libraries and the Steam
+package itself.
+</p>
+</div>
+</div>
+<div id="outline-container-org09a9c49" class="outline-3">
+<h3 id="org09a9c49"><span class="section-number-3">12.4.</span> Ghostty Terminfo</h3>
+<div class="outline-text-3" id="text-12-4">
+<p>
+Ghostty's terminfo is made available via
+<code>environment.sessionVariables.TERMINFO_DIRS</code>. Additionally, <code>term = xterm-256color</code>
+in the Ghostty config ensures full compatibility when SSH-ing to remote
+servers that lack the Ghostty terminfo entry.
+</p>
+</div>
+</div>
+<div id="outline-container-org7b5e068" class="outline-3">
+<h3 id="org7b5e068"><span class="section-number-3">12.5.</span> Unfree Packages</h3>
+<div class="outline-text-3" id="text-12-5">
+<p>
+<code>nixpkgs.config.allowUnfreePredicate</code> whitelists only the unfree packages
+actually in use (NVIDIA drivers, Steam, Discord, VS Code, WeChat, QQ, etc.).
+</p>
+</div>
+</div>
+<div id="outline-container-orgbc83655" class="outline-3">
+<h3 id="orgbc83655"><span class="section-number-3">12.6.</span> Git Requirement</h3>
+<div class="outline-text-3" id="text-12-6">
+<p>
+The flake requires all referenced files to be tracked by Git. Before
+rebuilding, run:
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">git -C ~/code/NixConfig add -A
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Sun May 10 16:51:14 2026</span> <span class="date">Last modified: 2026-05-10 Sun 17:10</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+</div>
+</body>
+</html>
