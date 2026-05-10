@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-02-03 Tue 10:49 -->
+<!-- 2026-05-10 Sun 17:17 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Slurm's Configuration and Usage</title>
@@ -199,27 +199,27 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">Slurm's Configuration and Usage</h1>
-<div id="outline-container-orge9e1a3b" class="outline-2">
-<h2 id="orge9e1a3b"><span class="section-number-2">1.</span> Configuration</h2>
+<div id="outline-container-orgc85670b" class="outline-2">
+<h2 id="orgc85670b"><span class="section-number-2">1.</span> Configuration</h2>
 <div class="outline-text-2" id="text-1">
 <div class="org-src-container">
 <pre class="src src-sh">
-<span style="color: #75715E;">## </span><span style="color: #96a0aa;">1. Install
-</span>sudo apt install -y munge libmunge-dev gcc make perl <span style="color: #E6DB74; font-weight: bold;">\</span>
+<span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">1. Install
+</span>sudo apt install -y munge libmunge-dev gcc make perl <span style="color: #1cc24b;">\</span>
 sqlite3 libsqlite3-dev libssl-dev
 
 sudo apt install -y slurm-wlm slurm-wlm-doc
 
 slurmd --version   
 
-<span style="color: #75715E;">## </span><span style="color: #96a0aa;">2. Config Munge
-</span><span style="color: #75715E;"># </span><span style="color: #96a0aa;">gen key
+<span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">2. Config Munge
+</span><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">gen key
 </span>sudo /usr/sbin/create-munge-key -r
 sudo chown munge:munge /etc/munge/munge.key
 sudo chmod 400 /etc/munge/munge.key
 sudo systemctl enable --now munge
 
-<span style="color: #75715E;">## </span><span style="color: #96a0aa;">3. Config slurm.conf
+<span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">3. Config slurm.conf
 </span>sudo mkdir -p /etc/slurm
 sudo vim /etc/slurm/slurm.conf
 </pre>
@@ -230,21 +230,21 @@ Add the configuration of slurm.conf:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #75715E;"># </span><span style="color: #96a0aa;">===GLOBAL ===
-</span><span style="color: #FD971F;">ClusterName</span>=gs14
-<span style="color: #FD971F;">ControlMachine</span>=gs14
-<span style="color: #FD971F;">MpiDefault</span>=none
-<span style="color: #75715E;"># </span><span style="color: #96a0aa;">=== NODES DEF===
-</span><span style="color: #FD971F;">NodeName</span>=gs14 <span style="color: #FD971F;">CPUs</span>=192 <span style="color: #FD971F;">Boards</span>=1 <span style="color: #FD971F;">SocketsPerBoard</span>=2 <span style="color: #FD971F;">CoresPerSocket</span>=48 <span style="color: #FD971F;">ThreadsPerCore</span>=2 <span style="color: #FD971F;">RealMemory</span>=501000 <span style="color: #FD971F;">Gres</span>=gpu:6 <span style="color: #FD971F;">State</span>=UNKNOWN
-<span style="color: #75715E;"># </span><span style="color: #96a0aa;">===QUEUE===
-</span><span style="color: #FD971F;">PartitionName</span>=gpu <span style="color: #FD971F;">Nodes</span>=gs14 <span style="color: #FD971F;">Default</span>=YES <span style="color: #FD971F;">MaxTime</span>=7-00:00:00 <span style="color: #FD971F;">State</span>=UP
-<span style="color: #75715E;"># </span><span style="color: #96a0aa;">=== ACCOUNT==
-</span><span style="color: #FD971F;">AccountingStorageType</span>=accounting_storage/none
-<span style="color: #FD971F;">SelectType</span>=select/cons_res
-<span style="color: #FD971F;">SelectTypeParameters</span>=CR_Core_Memory
-<span style="color: #FD971F;">TaskPlugin</span>=task/none
-<span style="color: #FD971F;">ProctrackType</span>=proctrack/linuxproc
-<span style="color: #FD971F;">GresTypes</span>=gpu
+<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">===GLOBAL ===
+</span><span style="color: #62ff94;">ClusterName</span>=gs14
+<span style="color: #62ff94;">ControlMachine</span>=gs14
+<span style="color: #62ff94;">MpiDefault</span>=none
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">=== NODES DEF===
+</span><span style="color: #62ff94;">NodeName</span>=gs14 <span style="color: #62ff94;">CPUs</span>=192 <span style="color: #62ff94;">Boards</span>=1 <span style="color: #62ff94;">SocketsPerBoard</span>=2 <span style="color: #62ff94;">CoresPerSocket</span>=48 <span style="color: #62ff94;">ThreadsPerCore</span>=2 <span style="color: #62ff94;">RealMemory</span>=501000 <span style="color: #62ff94;">Gres</span>=gpu:6 <span style="color: #62ff94;">State</span>=UNKNOWN
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">===QUEUE===
+</span><span style="color: #62ff94;">PartitionName</span>=gpu <span style="color: #62ff94;">Nodes</span>=gs14 <span style="color: #62ff94;">Default</span>=YES <span style="color: #62ff94;">MaxTime</span>=7-00:00:00 <span style="color: #62ff94;">State</span>=UP
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">=== ACCOUNT==
+</span><span style="color: #62ff94;">AccountingStorageType</span>=accounting_storage/none
+<span style="color: #62ff94;">SelectType</span>=select/cons_res
+<span style="color: #62ff94;">SelectTypeParameters</span>=CR_Core_Memory
+<span style="color: #62ff94;">TaskPlugin</span>=task/none
+<span style="color: #62ff94;">ProctrackType</span>=proctrack/linuxproc
+<span style="color: #62ff94;">GresTypes</span>=gpu
 </pre>
 </div>
 
@@ -262,12 +262,12 @@ fill in:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #FD971F;">NodeName</span>=gs14 <span style="color: #FD971F;">Name</span>=gpu <span style="color: #FD971F;">File</span>=/dev/nvidia0
-<span style="color: #FD971F;">NodeName</span>=gs14 <span style="color: #FD971F;">Name</span>=gpu <span style="color: #FD971F;">File</span>=/dev/nvidia1
-<span style="color: #FD971F;">NodeName</span>=gs14 <span style="color: #FD971F;">Name</span>=gpu <span style="color: #FD971F;">File</span>=/dev/nvidia2
-<span style="color: #FD971F;">NodeName</span>=gs14 <span style="color: #FD971F;">Name</span>=gpu <span style="color: #FD971F;">File</span>=/dev/nvidia3
-<span style="color: #FD971F;">NodeName</span>=gs14 <span style="color: #FD971F;">Name</span>=gpu <span style="color: #FD971F;">File</span>=/dev/nvidia4
-<span style="color: #FD971F;">NodeName</span>=gs14 <span style="color: #FD971F;">Name</span>=gpu <span style="color: #FD971F;">File</span>=/dev/nvidia5
+<pre class="src src-bash"><span style="color: #62ff94;">NodeName</span>=gs14 <span style="color: #62ff94;">Name</span>=gpu <span style="color: #62ff94;">File</span>=/dev/nvidia0
+<span style="color: #62ff94;">NodeName</span>=gs14 <span style="color: #62ff94;">Name</span>=gpu <span style="color: #62ff94;">File</span>=/dev/nvidia1
+<span style="color: #62ff94;">NodeName</span>=gs14 <span style="color: #62ff94;">Name</span>=gpu <span style="color: #62ff94;">File</span>=/dev/nvidia2
+<span style="color: #62ff94;">NodeName</span>=gs14 <span style="color: #62ff94;">Name</span>=gpu <span style="color: #62ff94;">File</span>=/dev/nvidia3
+<span style="color: #62ff94;">NodeName</span>=gs14 <span style="color: #62ff94;">Name</span>=gpu <span style="color: #62ff94;">File</span>=/dev/nvidia4
+<span style="color: #62ff94;">NodeName</span>=gs14 <span style="color: #62ff94;">Name</span>=gpu <span style="color: #62ff94;">File</span>=/dev/nvidia5
 </pre>
 </div>
 <p>
@@ -282,12 +282,12 @@ sinfo
 </div>
 </div>
 </div>
-<div id="outline-container-org3cf3897" class="outline-2">
-<h2 id="org3cf3897"><span class="section-number-2">2.</span> Usage</h2>
+<div id="outline-container-org701f3e9" class="outline-2">
+<h2 id="org701f3e9"><span class="section-number-2">2.</span> Usage</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org05922e6" class="outline-3">
-<h3 id="org05922e6"><span class="section-number-3">2.1.</span> Introduction to Slurm for AI Model Training</h3>
+<div id="outline-container-org8cd6d6f" class="outline-3">
+<h3 id="org8cd6d6f"><span class="section-number-3">2.1.</span> Introduction to Slurm for AI Model Training</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 This document provides a comprehensive guide to Slurm, a popular workload manager used in high-performance computing (HPC) environments. It is particularly useful for training AI models on clusters with multiple nodes and GPUs. We'll cover what Slurm is, its key concepts, basic usage, and advanced features tailored for AI workloads like deep learning training with frameworks such as PyTorch or TensorFlow.
@@ -298,15 +298,15 @@ The guide assumes you have access to a Linux-based HPC cluster where Slurm is in
 </p>
 </div>
 </div>
-<div id="outline-container-org55d0971" class="outline-3">
-<h3 id="org55d0971"><span class="section-number-3">2.2.</span> What is Slurm?</h3>
+<div id="outline-container-org20d848a" class="outline-3">
+<h3 id="org20d848a"><span class="section-number-3">2.2.</span> What is Slurm?</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Slurm (Simple Linux Utility for Resource Management) is an open-source job scheduler and workload manager designed for Linux clusters. It manages the allocation of resources (e.g., CPUs, GPUs, memory) across multiple nodes in a cluster, ensuring efficient use of hardware for compute-intensive tasks.
 </p>
 </div>
-<div id="outline-container-orgb3906fc" class="outline-4">
-<h4 id="orgb3906fc"><span class="section-number-4">2.2.1.</span> Key Features of Slurm</h4>
+<div id="outline-container-orgfdd0083" class="outline-4">
+<h4 id="orgfdd0083"><span class="section-number-4">2.2.1.</span> Key Features of Slurm</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <ul class="org-ul">
 <li><b>Job Scheduling</b>: Queues and schedules jobs based on priorities, resource availability, and user limits.</li>
@@ -321,8 +321,8 @@ Slurm is widely used in supercomputing centers (e.g., on the Top500 list) and is
 </p>
 </div>
 </div>
-<div id="outline-container-org13519a2" class="outline-4">
-<h4 id="org13519a2"><span class="section-number-4">2.2.2.</span> Why Use Slurm for AI Training?</h4>
+<div id="outline-container-orga34a4f9" class="outline-4">
+<h4 id="orga34a4f9"><span class="section-number-4">2.2.2.</span> Why Use Slurm for AI Training?</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <p>
 AI models, especially large language models or computer vision tasks, require significant computational resources. Slurm allows you to:
@@ -340,15 +340,15 @@ Without Slurm, you'd manually manage resources, which is inefficient on shared c
 </div>
 </div>
 </div>
-<div id="outline-container-orga36b30e" class="outline-3">
-<h3 id="orga36b30e"><span class="section-number-3">2.3.</span> Getting Started with Slurm</h3>
+<div id="outline-container-org1e221cd" class="outline-3">
+<h3 id="org1e221cd"><span class="section-number-3">2.3.</span> Getting Started with Slurm</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Before using Slurm, ensure you're logged into the cluster via SSH. Slurm commands are run from the terminal.
 </p>
 </div>
-<div id="outline-container-org37f990b" class="outline-4">
-<h4 id="org37f990b"><span class="section-number-4">2.3.1.</span> Checking if Slurm is Available</h4>
+<div id="outline-container-org39aa08e" class="outline-4">
+<h4 id="org39aa08e"><span class="section-number-4">2.3.1.</span> Checking if Slurm is Available</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <p>
 Run <code>sinfo</code> to view cluster information. If it's not found, Slurm isn't installed or not in your PATH.
@@ -357,7 +357,7 @@ Run <code>sinfo</code> to view cluster information. If it's not found, Slurm isn
 <p>
 Example output:
 </p>
-<pre class="example" id="org72c0062">
+<pre class="example" id="org40c31af">
 PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
 gpu          up   infinite      4   idle gpu[1-4]
 cpu          up   infinite     10   idle cpu[1-10]
@@ -368,8 +368,8 @@ This shows partitions (queues) like "gpu" for GPU jobs.
 </p>
 </div>
 </div>
-<div id="outline-container-org62065d8" class="outline-4">
-<h4 id="org62065d8"><span class="section-number-4">2.3.2.</span> Basic Slurm Concepts</h4>
+<div id="outline-container-org6ba7f74" class="outline-4">
+<h4 id="org6ba7f74"><span class="section-number-4">2.3.2.</span> Basic Slurm Concepts</h4>
 <div class="outline-text-4" id="text-2-3-2">
 <ul class="org-ul">
 <li><b>Job</b>: A unit of work, like running a Python script for model training.</li>
@@ -382,15 +382,15 @@ This shows partitions (queues) like "gpu" for GPU jobs.
 </div>
 </div>
 </div>
-<div id="outline-container-orgb2fde8c" class="outline-3">
-<h3 id="orgb2fde8c"><span class="section-number-3">2.4.</span> Basic Slurm Commands</h3>
+<div id="outline-container-org659938a" class="outline-3">
+<h3 id="org659938a"><span class="section-number-3">2.4.</span> Basic Slurm Commands</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 Slurm provides CLI tools for job management. Here's a quick reference:
 </p>
 </div>
-<div id="outline-container-org138ba53" class="outline-4">
-<h4 id="org138ba53"><span class="section-number-4">2.4.1.</span> Viewing Cluster Status</h4>
+<div id="outline-container-orgb20d7fa" class="outline-4">
+<h4 id="orgb20d7fa"><span class="section-number-4">2.4.1.</span> Viewing Cluster Status</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <ul class="org-ul">
 <li><code>sinfo</code>: Shows partitions, nodes, and their states.
@@ -402,8 +402,8 @@ Output columns: JOBID, PARTITION, NAME, USER, ST (state: R=running, PD=pending),
 </ul>
 </div>
 </div>
-<div id="outline-container-orgf34a2cf" class="outline-4">
-<h4 id="orgf34a2cf"><span class="section-number-4">2.4.2.</span> Submitting Jobs</h4>
+<div id="outline-container-orgf883a5a" class="outline-4">
+<h4 id="orgf883a5a"><span class="section-number-4">2.4.2.</span> Submitting Jobs</h4>
 <div class="outline-text-4" id="text-2-4-2">
 <p>
 There are two main ways: interactive (<code>srun</code>) for testing, and batch (<code>sbatch</code>) for production.
@@ -422,8 +422,8 @@ Returns a JOBID for tracking.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org888a8ff" class="outline-4">
-<h4 id="org888a8ff"><span class="section-number-4">2.4.3.</span> Canceling Jobs</h4>
+<div id="outline-container-orgbac801f" class="outline-4">
+<h4 id="orgbac801f"><span class="section-number-4">2.4.3.</span> Canceling Jobs</h4>
 <div class="outline-text-4" id="text-2-4-3">
 <ul class="org-ul">
 <li><code>scancel JOBID</code>: Cancel a specific job.
@@ -431,8 +431,8 @@ Example: <code>scancel 12345</code></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org6cb33b8" class="outline-4">
-<h4 id="org6cb33b8"><span class="section-number-4">2.4.4.</span> Other Useful Commands</h4>
+<div id="outline-container-orgf0b8dda" class="outline-4">
+<h4 id="orgf0b8dda"><span class="section-number-4">2.4.4.</span> Other Useful Commands</h4>
 <div class="outline-text-4" id="text-2-4-4">
 <ul class="org-ul">
 <li><code>sacct</code>: View accounting info for completed jobs (e.g., <code>sacct -j JOBID</code> for CPU/GPU usage).</li>
@@ -441,16 +441,16 @@ Example: <code>scancel 12345</code></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgcb25a5f" class="outline-4">
-<h4 id="orgcb25a5f"><span class="section-number-4">2.4.5.</span> Writing a Slurm Batch Script</h4>
+<div id="outline-container-org6907ac0" class="outline-4">
+<h4 id="org6907ac0"><span class="section-number-4">2.4.5.</span> Writing a Slurm Batch Script</h4>
 <div class="outline-text-4" id="text-2-4-5">
 <p>
 Batch scripts are shell scripts with #SBATCH directives at the top. These specify resource requests.
 </p>
 </div>
 </div>
-<div id="outline-container-orgba20f63" class="outline-4">
-<h4 id="orgba20f63"><span class="section-number-4">2.4.6.</span> Structure of a Slurm Script</h4>
+<div id="outline-container-orgbafad94" class="outline-4">
+<h4 id="orgbafad94"><span class="section-number-4">2.4.6.</span> Structure of a Slurm Script</h4>
 <div class="outline-text-4" id="text-2-4-6">
 <p>
 Scripts typically start with <code>#!/bin/bash</code>, followed by #SBATCH lines, then your commands.
@@ -460,39 +460,39 @@ Scripts typically start with <code>#!/bin/bash</code>, followed by #SBATCH lines
 Example for AI training (save as <code>train.slurm</code>):
 </p>
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #75715E;">#</span><span style="color: #96a0aa;">!/bin/</span><span style="color: #F92672; font-weight: bold;">bash</span><span style="color: #96a0aa;">
-</span><span style="color: #75715E;">#</span><span style="color: #96a0aa;">SBATCH --job-name=AI_Training     # Job name
-</span><span style="color: #75715E;">#</span><span style="color: #96a0aa;">SBATCH --partition=gpu            # Partition (queue)
-</span><span style="color: #75715E;">#</span><span style="color: #96a0aa;">SBATCH --nodes=1                  # Number of nodes
-</span><span style="color: #75715E;">#</span><span style="color: #96a0aa;">SBATCH --ntasks=1                 # Number of tasks (processes)
-</span><span style="color: #75715E;">#</span><span style="color: #96a0aa;">SBATCH --cpus-per-task=4          # CPUs per task
-</span><span style="color: #75715E;">#</span><span style="color: #96a0aa;">SBATCH --gres=gpu:2               # GPUs per node (e.g., 2 GPUs)
-</span><span style="color: #75715E;">#</span><span style="color: #96a0aa;">SBATCH --mem=16G                  # Memory per node
-</span><span style="color: #75715E;">#</span><span style="color: #96a0aa;">SBATCH --time=04:00:00            # Time limit (HH:MM:SS)
-</span><span style="color: #75715E;">#</span><span style="color: #96a0aa;">SBATCH --output=train_%j.out      # Stdout file (%j = JOBID)
-</span><span style="color: #75715E;">#</span><span style="color: #96a0aa;">SBATCH --error=train_%j.err       # Stderr file
-</span><span style="color: #75715E;">#</span><span style="color: #96a0aa;">SBATCH --mail-type=END,FAIL       # Email notifications
-</span><span style="color: #75715E;">#</span><span style="color: #96a0aa;">SBATCH --mail-user=your@email.com # Your email
+<pre class="src src-bash"><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">!/bin/</span><span style="color: #c770ff; font-weight: bold;">bash</span><span style="color: #8ca391; font-style: italic;">
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --job-name=AI_Training     # Job name
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --partition=gpu            # Partition (queue)
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --nodes=1                  # Number of nodes
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --ntasks=1                 # Number of tasks (processes)
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --cpus-per-task=4          # CPUs per task
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --gres=gpu:2               # GPUs per node (e.g., 2 GPUs)
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --mem=16G                  # Memory per node
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --time=04:00:00            # Time limit (HH:MM:SS)
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --output=train_%j.out      # Stdout file (%j = JOBID)
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --error=train_%j.err       # Stderr file
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --mail-type=END,FAIL       # Email notifications
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --mail-user=your@email.com # Your email
 </span>
-<span style="color: #75715E;"># </span><span style="color: #96a0aa;">Load environment (e.g., modules for Python/PyTorch)
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Load environment (e.g., modules for Python/PyTorch)
 </span>module load python/3.10
 module load cuda/11.8
 module load pytorch/2.0
 
-<span style="color: #75715E;"># </span><span style="color: #96a0aa;">Activate virtual environment if needed
-</span><span style="color: #F92672;">source</span> ~/venv/bin/activate
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Activate virtual environment if needed
+</span><span style="color: #30b3ff;">source</span> ~/venv/bin/activate
 
-<span style="color: #75715E;"># </span><span style="color: #96a0aa;">Run your AI training script
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Run your AI training script
 </span>python train_model.py --epochs 50 --batch-size 32
 
-<span style="color: #75715E;"># </span><span style="color: #96a0aa;">Optional: Post-processing
-</span><span style="color: #F92672;">echo</span> <span style="color: #E6DB74; font-style: italic;">"Training complete!"</span>
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Optional: Post-processing
+</span><span style="color: #30b3ff;">echo</span> <span style="color: #1cc24b;">"Training complete!"</span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orga14e68a" class="outline-4">
-<h4 id="orga14e68a"><span class="section-number-4">2.4.7.</span> Key #SBATCH Directives for AI Training</h4>
+<div id="outline-container-org0c50a07" class="outline-4">
+<h4 id="org0c50a07"><span class="section-number-4">2.4.7.</span> Key #SBATCH Directives for AI Training</h4>
 <div class="outline-text-4" id="text-2-4-7">
 <ul class="org-ul">
 <li><b>&#x2013;gres=gpu:N</b>: Request N GPUs per node. Check available with <code>sinfo</code>.</li>
@@ -509,8 +509,8 @@ For AI, ensure your script handles GPU visibility (e.g., via CUDA_VISIBLE_DEVICE
 </p>
 </div>
 </div>
-<div id="outline-container-orgb257b16" class="outline-4">
-<h4 id="orgb257b16"><span class="section-number-4">2.4.8.</span> Submitting and Monitoring</h4>
+<div id="outline-container-orgfc39ef2" class="outline-4">
+<h4 id="orgfc39ef2"><span class="section-number-4">2.4.8.</span> Submitting and Monitoring</h4>
 <div class="outline-text-4" id="text-2-4-8">
 <ul class="org-ul">
 <li>Submit: <code>sbatch train.slurm</code></li>
@@ -520,15 +520,15 @@ For AI, ensure your script handles GPU visibility (e.g., via CUDA_VISIBLE_DEVICE
 </div>
 </div>
 </div>
-<div id="outline-container-orgf81c5d0" class="outline-3">
-<h3 id="orgf81c5d0"><span class="section-number-3">2.5.</span> AI-Specific Usage: Training Models with Slurm</h3>
+<div id="outline-container-org7591920" class="outline-3">
+<h3 id="org7591920"><span class="section-number-3">2.5.</span> AI-Specific Usage: Training Models with Slurm</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 AI training often involves GPUs and parallelism.
 </p>
 </div>
-<div id="outline-container-org6997773" class="outline-4">
-<h4 id="org6997773"><span class="section-number-4">2.5.1.</span> Single-Node Multi-GPU Training</h4>
+<div id="outline-container-orgd618def" class="outline-4">
+<h4 id="orgd618def"><span class="section-number-4">2.5.1.</span> Single-Node Multi-GPU Training</h4>
 <div class="outline-text-4" id="text-2-5-1">
 <p>
 Use <code>--gres=gpu:4</code> for 4 GPUs. In PyTorch, use <code>torch.nn.DataParallel</code> or <code>DistributedDataParallel</code>.
@@ -546,8 +546,8 @@ Example addition to script:
 </p>
 </div>
 </div>
-<div id="outline-container-org0984e22" class="outline-4">
-<h4 id="org0984e22"><span class="section-number-4">2.5.2.</span> Multi-Node Distributed Training</h4>
+<div id="outline-container-org5665bb1" class="outline-4">
+<h4 id="org5665bb1"><span class="section-number-4">2.5.2.</span> Multi-Node Distributed Training</h4>
 <div class="outline-text-4" id="text-2-5-2">
 <p>
 For large models:
@@ -559,8 +559,8 @@ For large models:
 </ul>
 </div>
 </div>
-<div id="outline-container-org698002a" class="outline-4">
-<h4 id="org698002a"><span class="section-number-4">2.5.3.</span> Environment Setup</h4>
+<div id="outline-container-org817bb8f" class="outline-4">
+<h4 id="org817bb8f"><span class="section-number-4">2.5.3.</span> Environment Setup</h4>
 <div class="outline-text-4" id="text-2-5-3">
 <ul class="org-ul">
 <li>Use modules: <code>module load</code> for software like CUDA, PyTorch.</li>
@@ -569,8 +569,8 @@ Example: <code>srun singularity exec --nv myimage.sif python train.py</code> (&#
 </ul>
 </div>
 </div>
-<div id="outline-container-orgc05f651" class="outline-4">
-<h4 id="orgc05f651"><span class="section-number-4">2.5.4.</span> Handling Data</h4>
+<div id="outline-container-orgd8b7bab" class="outline-4">
+<h4 id="orgd8b7bab"><span class="section-number-4">2.5.4.</span> Handling Data</h4>
 <div class="outline-text-4" id="text-2-5-4">
 <ul class="org-ul">
 <li>Mount shared storage (e.g., /scratch) for datasets.</li>
@@ -579,8 +579,8 @@ Example: <code>srun singularity exec --nv myimage.sif python train.py</code> (&#
 </div>
 </div>
 </div>
-<div id="outline-container-orgc47d534" class="outline-3">
-<h3 id="orgc47d534"><span class="section-number-3">2.6.</span> Monitoring and Debugging Jobs</h3>
+<div id="outline-container-org52d5f14" class="outline-3">
+<h3 id="org52d5f14"><span class="section-number-3">2.6.</span> Monitoring and Debugging Jobs</h3>
 <div class="outline-text-3" id="text-2-6">
 <ul class="org-ul">
 <li><b>Real-Time Monitoring</b>: <code>sstat JOBID</code> for resource usage (CPU, memory, GPU).</li>
@@ -592,35 +592,35 @@ Run: <code>python train.py --seed $SLURM_ARRAY_TASK_ID</code></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org1c9bcc6" class="outline-3">
-<h3 id="org1c9bcc6"><span class="section-number-3">2.7.</span> Advanced Features</h3>
+<div id="outline-container-org8251555" class="outline-3">
+<h3 id="org8251555"><span class="section-number-3">2.7.</span> Advanced Features</h3>
 <div class="outline-text-3" id="text-2-7">
 </div>
-<div id="outline-container-orge22680b" class="outline-4">
-<h4 id="orge22680b"><span class="section-number-4">2.7.1.</span> Job Dependencies</h4>
+<div id="outline-container-org015ace2" class="outline-4">
+<h4 id="org015ace2"><span class="section-number-4">2.7.1.</span> Job Dependencies</h4>
 <div class="outline-text-4" id="text-2-7-1">
 <ul class="org-ul">
 <li>Submit dependent jobs: <code>sbatch --dependency=afterok:JOBID nextjob.slurm</code></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgcb2d170" class="outline-4">
-<h4 id="orgcb2d170"><span class="section-number-4">2.7.2.</span> Job Arrays for Parameter Sweeps</h4>
+<div id="outline-container-orgf976366" class="outline-4">
+<h4 id="orgf976366"><span class="section-number-4">2.7.2.</span> Job Arrays for Parameter Sweeps</h4>
 <div class="outline-text-4" id="text-2-7-2">
 <p>
 Ideal for AI hyperparameter search.
 Example script:
 </p>
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #75715E;">#</span><span style="color: #96a0aa;">SBATCH --array=0-9
-</span><span style="color: #FD971F;">PARAMS</span>=<span style="color: #AE81FF;">(</span>0.001 0.01 0.1 ...<span style="color: #AE81FF;">)</span>  <span style="color: #75715E;"># </span><span style="color: #96a0aa;">Array of learning rates
-</span>python train.py --lr $<span style="color: #AE81FF;">{</span><span style="color: #FD971F;">PARAMS</span><span style="color: #66D9EF;">[</span>$<span style="color: #FD971F;">SLURM_ARRAY_TASK_ID</span><span style="color: #66D9EF;">]</span><span style="color: #AE81FF;">}</span>
+<pre class="src src-bash"><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --array=0-9
+</span><span style="color: #62ff94;">PARAMS</span>=<span style="color: #24f6d9;">(</span>0.001 0.01 0.1 ...<span style="color: #24f6d9;">)</span>  <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Array of learning rates
+</span>python train.py --lr $<span style="color: #24f6d9;">{</span><span style="color: #62ff94;">PARAMS</span><span style="color: #c770ff;">[</span>$<span style="color: #62ff94;">SLURM_ARRAY_TASK_ID</span><span style="color: #c770ff;">]</span><span style="color: #24f6d9;">}</span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgdcf2ebd" class="outline-4">
-<h4 id="orgdcf2ebd"><span class="section-number-4">2.7.3.</span> Reservations and Priorities</h4>
+<div id="outline-container-org70ba664" class="outline-4">
+<h4 id="org70ba664"><span class="section-number-4">2.7.3.</span> Reservations and Priorities</h4>
 <div class="outline-text-4" id="text-2-7-3">
 <ul class="org-ul">
 <li>Check with <code>sacctmgr</code> or admin for QoS.</li>
@@ -628,8 +628,8 @@ Example script:
 </ul>
 </div>
 </div>
-<div id="outline-container-orge115ba3" class="outline-4">
-<h4 id="orge115ba3"><span class="section-number-4">2.7.4.</span> Slurm with Containers</h4>
+<div id="outline-container-org6c3cede" class="outline-4">
+<h4 id="org6c3cede"><span class="section-number-4">2.7.4.</span> Slurm with Containers</h4>
 <div class="outline-text-4" id="text-2-7-4">
 <p>
 For reproducible AI environments:
@@ -641,8 +641,8 @@ For reproducible AI environments:
 </div>
 </div>
 </div>
-<div id="outline-container-orgb46c461" class="outline-3">
-<h3 id="orgb46c461"><span class="section-number-3">2.8.</span> Common Pitfalls and Tips</h3>
+<div id="outline-container-org58c1f59" class="outline-3">
+<h3 id="org58c1f59"><span class="section-number-3">2.8.</span> Common Pitfalls and Tips</h3>
 <div class="outline-text-3" id="text-2-8">
 <ul class="org-ul">
 <li><b>Over-requesting Resources</b>: Request only what you need to avoid queue delays.</li>
@@ -654,8 +654,8 @@ For reproducible AI environments:
 </ul>
 </div>
 </div>
-<div id="outline-container-org901868f" class="outline-3">
-<h3 id="org901868f"><span class="section-number-3">2.9.</span> Conclusion</h3>
+<div id="outline-container-org3e30ba3" class="outline-3">
+<h3 id="org3e30ba3"><span class="section-number-3">2.9.</span> Conclusion</h3>
 <div class="outline-text-3" id="text-2-9">
 <p>
 Slurm streamlines AI training on clusters by managing resources efficiently. Start with simple batch scripts, then scale to distributed setups. Practice on small jobs to avoid wasting allocations. If you encounter issues, consult your cluster admin or Slurm mailing lists. Happy training!
@@ -665,7 +665,7 @@ Slurm streamlines AI training on clusters by managing resources efficiently. Sta
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Wed Sep  3 16:34:48 2025</span> <span class="date">Last modified: 2026-02-03 Tue 10:47</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Wed Sep  3 16:34:48 2025</span> <span class="date">Last modified: 2026-05-10 Sun 16:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>

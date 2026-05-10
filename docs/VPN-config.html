@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2025-09-27 Sat 21:01 -->
+<!-- 2026-05-10 Sun 17:17 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>VPN Configuration to Bypass Some Firewalls.</title>
@@ -195,42 +195,23 @@
 </head>
 <body>
 <div id="preamble" class="status">
-<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
 </div>
 <div id="content" class="content">
 <h1 class="title">VPN Configuration to Bypass Some Firewalls.</h1>
-<div id="table-of-contents" role="doc-toc">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents" role="doc-toc">
-<ul>
-<li><a href="#org58599db">1. Client Side Configuration</a>
-<ul>
-<li><a href="#org113a117">1.1. METHOD 1: With Trojan</a>
-<ul>
-<li><a href="#orgcad32d8">1.1.1. <code>trojan</code></a></li>
-<li><a href="#org321d9b1">1.1.2. <code>systemctl</code></a></li>
-<li><a href="#orgd9ec5e7">1.1.3. <code>proxychains</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="SudoRequired">SudoRequired</span></span></a></li>
-<li><a href="#orgcf99cd0">1.1.4. Test the Configuration</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
 <p>
 This article collects all contents/situations I faced to configure the commandline environment for the whole visiting without limitations. 
 </p>
-<div id="outline-container-org58599db" class="outline-2">
-<h2 id="org58599db"><span class="section-number-2">1.</span> Client Side Configuration</h2>
+<div id="outline-container-org808808d" class="outline-2">
+<h2 id="org808808d"><span class="section-number-2">1.</span> Client Side Configuration</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org113a117" class="outline-3">
-<h3 id="org113a117"><span class="section-number-3">1.1.</span> METHOD 1: With Trojan</h3>
+<div id="outline-container-orgaeac3d5" class="outline-3">
+<h3 id="orgaeac3d5"><span class="section-number-3">1.1.</span> METHOD 1: With Trojan</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-orgcad32d8" class="outline-4">
-<h4 id="orgcad32d8"><span class="section-number-4">1.1.1.</span> <code>trojan</code></h4>
+<div id="outline-container-org63869d3" class="outline-4">
+<h4 id="org63869d3"><span class="section-number-4">1.1.1.</span> <code>trojan</code></h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
 Trojan is a method to bypass XXX. It can be used and configured very easily.
@@ -243,7 +224,7 @@ Step 1: install trojan.
 
 
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #c991e1;">cd</span> path-to-install
+<pre class="src src-sh"><span style="color: #30b3ff;">cd</span> path-to-install
 wget https://github.com/trojan-gfw/trojan/releases/download/v1.16.0/trojan-1.16.0-linux-amd64.tar.xz
 tarxvf tar xvf trojan-1.16.0-linux-amd64.tar.xz
 </pre>
@@ -264,36 +245,36 @@ Simply copy the configuration (with a <code>json</code> format) text into a plac
 
 <div class="org-src-container">
 <pre class="src src-js">
-<span style="color: #c66; font-weight: bold;">{</span>
-    <span style="color: #ffe9aa; font-style: italic;">"run_type"</span>:<span style="color: #ffe9aa; font-style: italic;">"client"</span>,
-    <span style="color: #ffe9aa; font-style: italic;">"local_addr"</span>:<span style="color: #ffe9aa; font-style: italic;">"127.0.0.1"</span>,
-    <span style="color: #ffe9aa; font-style: italic;">"local_port"</span>:1080,
-    <span style="color: #ffe9aa; font-style: italic;">"remote_addr"</span>:<span style="color: #ffe9aa; font-style: italic;">"xxxxxxxxxxxxxxx.com"</span>,
-    <span style="color: #ffe9aa; font-style: italic;">"remote_port"</span>:443,
-    <span style="color: #ffe9aa; font-style: italic;">"password"</span>:<span style="color: #6c6; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">"xxxxxxxxxxxxxxxxxxxxxxxxxx"</span><span style="color: #6c6; font-weight: bold;">]</span>,
-    <span style="color: #ffe9aa; font-style: italic;">"log_level"</span>:1,
-    <span style="color: #ffe9aa; font-style: italic;">"ssl"</span>:
-    <span style="color: #6c6; font-weight: bold;">{</span>
-        <span style="color: #ffe9aa; font-style: italic;">"verify"</span>:<span style="color: #aaffe4;">true</span>,
-        <span style="color: #ffe9aa; font-style: italic;">"verify_hostname"</span>:<span style="color: #aaffe4;">true</span>,
-        <span style="color: #ffe9aa; font-style: italic;">"cert"</span>:<span style="color: #ffe9aa; font-style: italic;">""</span>,
-        <span style="color: #ffe9aa; font-style: italic;">"cipher"</span>:<span style="color: #ffe9aa; font-style: italic;">"ECDHE-ECDSA-xxxxxxxxxxxxxxxxxxxxxxxxxx"</span>,
-        <span style="color: #ffe9aa; font-style: italic;">"cipher_tls13"</span>:<span style="color: #ffe9aa; font-style: italic;">"TLS_AES_xxxxxxxxxxxxxxxxxxxxxxxx"</span>,
-        <span style="color: #ffe9aa; font-style: italic;">"sni"</span>:<span style="color: #ffe9aa; font-style: italic;">""</span>,
-        <span style="color: #ffe9aa; font-style: italic;">"alpn"</span>:<span style="color: #69f; font-weight: bold;">[</span><span style="color: #ffe9aa; font-style: italic;">"h2"</span>,<span style="color: #ffe9aa; font-style: italic;">"http/1.1"</span><span style="color: #69f; font-weight: bold;">]</span>,
-        <span style="color: #ffe9aa; font-style: italic;">"reuse_session"</span>:<span style="color: #aaffe4;">true</span>,
-        <span style="color: #ffe9aa; font-style: italic;">"session_ticket"</span>:<span style="color: #aaffe4;">false</span>,
-        <span style="color: #ffe9aa; font-style: italic;">"curves"</span>:<span style="color: #ffe9aa; font-style: italic;">""</span>
-    <span style="color: #6c6; font-weight: bold;">}</span>,
-    <span style="color: #ffe9aa; font-style: italic;">"tcp"</span>:
-    <span style="color: #6c6; font-weight: bold;">{</span>
-        <span style="color: #ffe9aa; font-style: italic;">"no_delay"</span>:<span style="color: #aaffe4;">true</span>,
-        <span style="color: #ffe9aa; font-style: italic;">"keep_alive"</span>:<span style="color: #aaffe4;">true</span>,
-        <span style="color: #ffe9aa; font-style: italic;">"reuse_port"</span>:<span style="color: #aaffe4;">false</span>,
-        <span style="color: #ffe9aa; font-style: italic;">"fast_open"</span>:<span style="color: #aaffe4;">false</span>,
-        <span style="color: #ffe9aa; font-style: italic;">"fast_open_qlen"</span>:20
-    <span style="color: #6c6; font-weight: bold;">}</span>
-<span style="color: #c66; font-weight: bold;">}</span>
+<span style="color: #24f6d9;">{</span>
+    <span style="color: #1cc24b;">"run_type"</span>:<span style="color: #1cc24b;">"client"</span>,
+    <span style="color: #1cc24b;">"local_addr"</span>:<span style="color: #1cc24b;">"127.0.0.1"</span>,
+    <span style="color: #1cc24b;">"local_port"</span>:1080,
+    <span style="color: #1cc24b;">"remote_addr"</span>:<span style="color: #1cc24b;">"xxxxxxxxxxxxxxx.com"</span>,
+    <span style="color: #1cc24b;">"remote_port"</span>:443,
+    <span style="color: #1cc24b;">"password"</span>:<span style="color: #c770ff;">[</span><span style="color: #1cc24b;">"xxxxxxxxxxxxxxxxxxxxxxxxxx"</span><span style="color: #c770ff;">]</span>,
+    <span style="color: #1cc24b;">"log_level"</span>:1,
+    <span style="color: #1cc24b;">"ssl"</span>:
+    <span style="color: #c770ff;">{</span>
+        <span style="color: #1cc24b;">"verify"</span>:<span style="color: #ffa83d;">true</span>,
+        <span style="color: #1cc24b;">"verify_hostname"</span>:<span style="color: #ffa83d;">true</span>,
+        <span style="color: #1cc24b;">"cert"</span>:<span style="color: #1cc24b;">""</span>,
+        <span style="color: #1cc24b;">"cipher"</span>:<span style="color: #1cc24b;">"ECDHE-ECDSA-xxxxxxxxxxxxxxxxxxxxxxxxxx"</span>,
+        <span style="color: #1cc24b;">"cipher_tls13"</span>:<span style="color: #1cc24b;">"TLS_AES_xxxxxxxxxxxxxxxxxxxxxxxx"</span>,
+        <span style="color: #1cc24b;">"sni"</span>:<span style="color: #1cc24b;">""</span>,
+        <span style="color: #1cc24b;">"alpn"</span>:<span style="color: #e6ff57;">[</span><span style="color: #1cc24b;">"h2"</span>,<span style="color: #1cc24b;">"http/1.1"</span><span style="color: #e6ff57;">]</span>,
+        <span style="color: #1cc24b;">"reuse_session"</span>:<span style="color: #ffa83d;">true</span>,
+        <span style="color: #1cc24b;">"session_ticket"</span>:<span style="color: #ffa83d;">false</span>,
+        <span style="color: #1cc24b;">"curves"</span>:<span style="color: #1cc24b;">""</span>
+    <span style="color: #c770ff;">}</span>,
+    <span style="color: #1cc24b;">"tcp"</span>:
+    <span style="color: #c770ff;">{</span>
+        <span style="color: #1cc24b;">"no_delay"</span>:<span style="color: #ffa83d;">true</span>,
+        <span style="color: #1cc24b;">"keep_alive"</span>:<span style="color: #ffa83d;">true</span>,
+        <span style="color: #1cc24b;">"reuse_port"</span>:<span style="color: #ffa83d;">false</span>,
+        <span style="color: #1cc24b;">"fast_open"</span>:<span style="color: #ffa83d;">false</span>,
+        <span style="color: #1cc24b;">"fast_open_qlen"</span>:20
+    <span style="color: #c770ff;">}</span>
+<span style="color: #24f6d9;">}</span>
 </pre>
 </div>
 
@@ -315,8 +296,8 @@ There exist some convenient tools for a command-line VPN configuration.
 </p>
 </div>
 </div>
-<div id="outline-container-org321d9b1" class="outline-4">
-<h4 id="org321d9b1"><span class="section-number-4">1.1.2.</span> <code>systemctl</code></h4>
+<div id="outline-container-org2cd711d" class="outline-4">
+<h4 id="org2cd711d"><span class="section-number-4">1.1.2.</span> <code>systemctl</code></h4>
 <div class="outline-text-4" id="text-1-1-2">
 <p>
 It allows the machine automatically start a service when necessary.
@@ -363,8 +344,8 @@ You can also check the status of your service by <code>systemctl --user status t
 </p>
 </div>
 </div>
-<div id="outline-container-orgd9ec5e7" class="outline-4">
-<h4 id="orgd9ec5e7"><span class="section-number-4">1.1.3.</span> <code>proxychains</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="SudoRequired">SudoRequired</span></span></h4>
+<div id="outline-container-orgdfc01e4" class="outline-4">
+<h4 id="orgdfc01e4"><span class="section-number-4">1.1.3.</span> <code>proxychains</code>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="SudoRequired">SudoRequired</span></span></h4>
 <div class="outline-text-4" id="text-1-1-3">
 <p>
 <code>proxychains</code> is a useful tool to use the trojan.
@@ -398,19 +379,19 @@ Now you can use it via: <code>proxychains command-yours XXXXXXXXXX</code>.
 </p>
 </div>
 </div>
-<div id="outline-container-orgcf99cd0" class="outline-4">
-<h4 id="orgcf99cd0"><span class="section-number-4">1.1.4.</span> Test the Configuration</h4>
+<div id="outline-container-org59de3a6" class="outline-4">
+<h4 id="org59de3a6"><span class="section-number-4">1.1.4.</span> Test the Configuration</h4>
 <div class="outline-text-4" id="text-1-1-4">
 <div class="org-src-container">
 <pre class="src src-sh">
-<span style="color: #565575;"># </span><span style="color: #96a0aa;">1. test the configuration of trojan:
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">1. test the configuration of trojan:
 </span>curl ip.sb --socks5 127.0.0.1 1080
 
-<span style="color: #565575;"># </span><span style="color: #96a0aa;">2. test the configuration of systemctl
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">2. test the configuration of systemctl
 </span>
 systemctl --user status trojan.service
 
-<span style="color: #565575;"># </span><span style="color: #96a0aa;">3. test the configuration of proxychains
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">3. test the configuration of proxychains
 </span>curl -4 ip.sb
 proxychains curl -4 ip.sb
 
@@ -422,7 +403,7 @@ proxychains curl -4 ip.sb
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Tue Oct 29 20:05:13 2024</span> <span class="date">Last modified: 2025-09-27 Sat 19:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Tue Oct 29 20:05:13 2024</span> <span class="date">Last modified: 2026-05-10 Sun 16:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>
