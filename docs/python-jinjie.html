@@ -1,8 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-05-24 Sun 17:44 -->
-<meta charset="utf-8" />
+<!-- 2026-05-24 Sun 21:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>python进阶使用</title>
 <meta name="author" content="Zi Liang" />
@@ -57,26 +59,26 @@
 可以通过传递参数的名字来告诉文件我在传递哪个参数，模拟C程序的命令行效果。示例如下：
 </p>
 <div class="org-src-container">
-<pre class="src src-python">     <span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">init argparse for better application.
-</span>     <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">you should finally edit this function for better use
-</span>     <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">setup_train_args</span><span style="color: #24f6d9;">()</span>:
+<pre class="src src-python">     ## init argparse for better application.
+     # you should finally edit this function for better use
+     def setup_train_args():
 
-         <span style="color: #62ff94;">parser</span> <span style="color: #24f6d9;">=</span> argparse.ArgumentParser<span style="color: #24f6d9;">()</span>
-         <span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">this line is for logging, please do not delete it.
-</span>         parser.add_argument<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">'--save_log_path'</span>, default<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">'./running_results.log'</span>,
-                             <span style="color: #30b3ff;">type</span><span style="color: #24f6d9;">=</span><span style="color: #30b3ff;">str</span>, required<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span><span style="color: #24f6d9;">)</span>
+         parser = argparse.ArgumentParser()
+         ## this line is for logging, please do not delete it.
+         parser.add_argument('--save_log_path', default='./running_results.log',
+                             type=str, required=False)
 
-         <span style="color: #8ca391;">### </span><span style="color: #8ca391; font-style: italic;">you can change, comment or delete blew sections.
-</span>         parser.add_argument<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"--max_seq_length"</span>, default<span style="color: #24f6d9;">=</span>64,
-                             <span style="color: #30b3ff;">type</span><span style="color: #24f6d9;">=</span><span style="color: #30b3ff;">int</span>, required<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>, <span style="color: #30b3ff;">help</span><span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"max sequence length"</span><span style="color: #24f6d9;">)</span>
-         parser.add_argument<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">'--cuda_num'</span>, default<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">'6'</span>, <span style="color: #30b3ff;">type</span><span style="color: #24f6d9;">=</span><span style="color: #30b3ff;">str</span>, required<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span><span style="color: #24f6d9;">)</span>
-         parser.add_argument<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">'--fraction'</span>, default<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">'0.5'</span>,
-                             <span style="color: #30b3ff;">type</span><span style="color: #24f6d9;">=</span><span style="color: #30b3ff;">float</span>, required<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span><span style="color: #24f6d9;">)</span>
-         parser.add_argument<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">'--no_cuda'</span>, action<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">'store_true'</span><span style="color: #24f6d9;">)</span>
+         ### you can change, comment or delete blew sections.
+         parser.add_argument("--max_seq_length", default=64,
+                             type=int, required=False, help="max sequence length")
+         parser.add_argument('--cuda_num', default='6', type=str, required=False)
+         parser.add_argument('--fraction', default='0.5',
+                             type=float, required=False)
+         parser.add_argument('--no_cuda', action='store_true')
 
-         <span style="color: #c770ff; font-weight: bold;">return</span> parser.parse_args<span style="color: #24f6d9;">()</span>
+         return parser.parse_args()
 
-<span style="color: #62ff94;">args</span><span style="color: #24f6d9;">=</span>setup_train_args<span style="color: #24f6d9;">()</span>
+args=setup_train_args()
 </pre>
 </div>
 <p>
@@ -99,71 +101,71 @@ logging的功能比print稍微复杂一些，当然好处就是看起来更不�
 我自己写了一个万能logging配置，如下：
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">global</span> logger
+<pre class="src src-python">global logger
 
 
-<span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">config logging formatter.
-</span><span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">CustomFormatter</span><span style="color: #24f6d9;">(</span>logging.Formatter<span style="color: #24f6d9;">)</span>:
-         <span style="color: #62ff94;">grey</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[0;37m"</span>
-         <span style="color: #62ff94;">green</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[1;32m"</span>
-         <span style="color: #62ff94;">yellow</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[1;33m"</span>
-         <span style="color: #62ff94;">red</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[1;31m"</span>
-         <span style="color: #62ff94;">purple</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[1;35m"</span>
-         <span style="color: #62ff94;">blue</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[1;34m"</span>
-         <span style="color: #62ff94;">light_blue</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[1;36m"</span>
-         <span style="color: #62ff94;">reset</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[0m"</span>
-         <span style="color: #62ff94;">blink_red</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[5m</span><span style="color: #ffa83d;">\x1b</span><span style="color: #1cc24b;">[1;31m"</span>
+## config logging formatter.
+class CustomFormatter(logging.Formatter):
+         grey = "\x1b[0;37m"
+         green = "\x1b[1;32m"
+         yellow = "\x1b[1;33m"
+         red = "\x1b[1;31m"
+         purple = "\x1b[1;35m"
+         blue = "\x1b[1;34m"
+         light_blue = "\x1b[1;36m"
+         reset = "\x1b[0m"
+         blink_red = "\x1b[5m\x1b[1;31m"
 
-         <span style="color: #30b3ff;">format</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">"%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"</span>
-         <span style="color: #62ff94;">FORMATS</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">{</span>
-             logging.DEBUG: purple <span style="color: #24f6d9;">+</span> <span style="color: #30b3ff;">format</span> <span style="color: #24f6d9;">+</span> reset,
-             logging.INFO: green <span style="color: #24f6d9;">+</span> <span style="color: #30b3ff;">format</span> <span style="color: #24f6d9;">+</span> reset,
-             logging.WARNING: yellow <span style="color: #24f6d9;">+</span> <span style="color: #30b3ff;">format</span> <span style="color: #24f6d9;">+</span> reset,
-             logging.ERROR: red <span style="color: #24f6d9;">+</span> <span style="color: #30b3ff;">format</span> <span style="color: #24f6d9;">+</span> reset,
-             logging.CRITICAL: blink_red <span style="color: #24f6d9;">+</span> <span style="color: #30b3ff;">format</span> <span style="color: #24f6d9;">+</span> reset
-         <span style="color: #24f6d9;">}</span>
+         format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
+         FORMATS = {
+             logging.DEBUG: purple + format + reset,
+             logging.INFO: green + format + reset,
+             logging.WARNING: yellow + format + reset,
+             logging.ERROR: red + format + reset,
+             logging.CRITICAL: blink_red + format + reset
+         }
 
-         <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">format</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">self</span>, record<span style="color: #24f6d9;">)</span>:
-             <span style="color: #62ff94;">log_fmt</span> <span style="color: #24f6d9;">=</span> <span style="color: #c770ff; font-weight: bold;">self</span>.FORMATS.get<span style="color: #24f6d9;">(</span>record.levelno<span style="color: #24f6d9;">)</span>
-             <span style="color: #62ff94;">formatter</span> <span style="color: #24f6d9;">=</span> logging.Formatter<span style="color: #24f6d9;">(</span>log_fmt<span style="color: #24f6d9;">)</span>
-             <span style="color: #c770ff; font-weight: bold;">return</span> formatter.<span style="color: #30b3ff;">format</span><span style="color: #24f6d9;">(</span>record<span style="color: #24f6d9;">)</span>
+         def format(self, record):
+             log_fmt = self.FORMATS.get(record.levelno)
+             formatter = logging.Formatter(log_fmt)
+             return formatter.format(record)
 
-<span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">generate logger
-</span><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">_create_logger</span><span style="color: #24f6d9;">(</span>args<span style="color: #24f6d9;">)</span>:
-
-
-         <span style="color: #62ff94;">logger</span> <span style="color: #24f6d9;">=</span> logging.getLogger<span style="color: #24f6d9;">(</span><span style="color: #30b3ff;">__name__</span><span style="color: #24f6d9;">)</span>
-         logger.setLevel<span style="color: #24f6d9;">(</span>logging.INFO<span style="color: #24f6d9;">)</span>
-
-         <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">formatter = logging.Formatter(
-</span>         <span style="color: #8ca391;">#     </span><span style="color: #8ca391; font-style: italic;">'%(asctime)s - %(levelname)s - %(message)s')
-</span>         <span style="color: #62ff94;">formatter</span><span style="color: #24f6d9;">=</span>CustomFormatter<span style="color: #24f6d9;">()</span>
-
-         <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">construct a handle for file logs.
-</span>         <span style="color: #62ff94;">file_handler</span> <span style="color: #24f6d9;">=</span> logging.FileHandler<span style="color: #24f6d9;">(</span>
-             filename<span style="color: #24f6d9;">=</span>args.save_log_path<span style="color: #24f6d9;">)</span>
-         file_handler.setFormatter<span style="color: #24f6d9;">(</span>formatter<span style="color: #24f6d9;">)</span>
-         file_handler.setLevel<span style="color: #24f6d9;">(</span>logging.INFO<span style="color: #24f6d9;">)</span>
-         logger.addHandler<span style="color: #24f6d9;">(</span>file_handler<span style="color: #24f6d9;">)</span>
-
-         <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">construct a handle for console logs.
-</span>         <span style="color: #62ff94;">console</span> <span style="color: #24f6d9;">=</span> logging.StreamHandler<span style="color: #24f6d9;">()</span>
-         console.setLevel<span style="color: #24f6d9;">(</span>logging.DEBUG<span style="color: #24f6d9;">)</span>
-         console.setFormatter<span style="color: #24f6d9;">(</span>formatter<span style="color: #24f6d9;">)</span>
-         logger.addHandler<span style="color: #24f6d9;">(</span>console<span style="color: #24f6d9;">)</span>
-         <span style="color: #c770ff; font-weight: bold;">return</span> logger
-
-<span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">main function
-</span><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span>:
-         <span style="color: #62ff94;">args</span><span style="color: #24f6d9;">=</span>setup_train_args<span style="color: #24f6d9;">()</span>
-         <span style="color: #62ff94;">logger</span><span style="color: #24f6d9;">=</span>_create_logger<span style="color: #24f6d9;">(</span>args<span style="color: #24f6d9;">)</span>
-         logger.setLevel<span style="color: #24f6d9;">(</span>logging.DEBUG<span style="color: #24f6d9;">)</span>
+## generate logger
+def _create_logger(args):
 
 
-         logger.info<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"aaaaaaaaaaaaaaaa"</span><span style="color: #24f6d9;">)</span>
-         logger.debug<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"bbbbbbbbb"</span><span style="color: #24f6d9;">)</span>
-         logger.error<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"cccccccccccccc"</span><span style="color: #24f6d9;">)</span>
-         logger.critical<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"ddddd"</span><span style="color: #24f6d9;">)</span>
+         logger = logging.getLogger(__name__)
+         logger.setLevel(logging.INFO)
+
+         # formatter = logging.Formatter(
+         #     '%(asctime)s - %(levelname)s - %(message)s')
+         formatter=CustomFormatter()
+
+         # construct a handle for file logs.
+         file_handler = logging.FileHandler(
+             filename=args.save_log_path)
+         file_handler.setFormatter(formatter)
+         file_handler.setLevel(logging.INFO)
+         logger.addHandler(file_handler)
+
+         # construct a handle for console logs.
+         console = logging.StreamHandler()
+         console.setLevel(logging.DEBUG)
+         console.setFormatter(formatter)
+         logger.addHandler(console)
+         return logger
+
+## main function
+def main():
+         args=setup_train_args()
+         logger=_create_logger(args)
+         logger.setLevel(logging.DEBUG)
+
+
+         logger.info("aaaaaaaaaaaaaaaa")
+         logger.debug("bbbbbbbbb")
+         logger.error("cccccccccccccc")
+         logger.critical("ddddd")
 
 </pre>
 </div>
@@ -173,8 +175,8 @@ logging的功能比print稍微复杂一些，当然好处就是看起来更不�
 </p>
 
 
-<div id="org53a9dcd" class="figure">
-<p><img src="./images/screenshot_20211206_155849.png" alt="screenshot_20211206_155849.png">
+<div id="org524552b" class="figure">
+<p><img src="./images/screenshot_20211206_155849.png" alt="screenshot_20211206_155849.png" />
 </p>
 </div>
 
@@ -195,11 +197,11 @@ python身为动态语言，对类型的要求不是很高。但是，如果试�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">from</span> typing <span style="color: #c770ff; font-weight: bold;">import</span> Any, Dict, List, Optional, Tuple, Union, overload
+<pre class="src src-python">from typing import Any, Dict, List, Optional, Tuple, Union, overload
 
-<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">prepare_for_tokenization</span><span style="color: #24f6d9;">(</span>text: <span style="color: #30b3ff;">str</span>,
-                                  is_split_into_words: <span style="color: #30b3ff;">bool</span> <span style="color: #24f6d9;">=</span> <span style="color: #ffa83d;">False</span>,
-                                  <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">-&gt;</span> Tuple<span style="color: #24f6d9;">[</span><span style="color: #30b3ff;">str</span>, Dict<span style="color: #c770ff;">[</span><span style="color: #30b3ff;">str</span>, Any<span style="color: #c770ff;">]</span><span style="color: #24f6d9;">]</span>:
+def prepare_for_tokenization(text: str,
+                                  is_split_into_words: bool = False,
+                                  **kwargs) -&gt; Tuple[str, Dict[str, Any]]:
          blablabla...
 
 </pre>
@@ -208,13 +210,13 @@ python身为动态语言，对类型的要求不是很高。但是，如果试�
 我们从中可以清晰地理解其输入参数的类型和返回值是什么。下表总结了一些常用的类型。
 </p>
 
-<table>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
 <colgroup>
-<col  class="org-left">
+<col  class="org-left" />
 
-<col  class="org-left">
+<col  class="org-left" />
 </colgroup>
 <thead>
 <tr>
@@ -281,12 +283,12 @@ Counter就是计数器，用以统计频率。其输入是一个迭代器对象�
 
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">from</span> collections <span style="color: #c770ff; font-weight: bold;">import</span> Counter
+<pre class="src src-python">from collections import Counter
 
-<span style="color: #62ff94;">a</span><span style="color: #24f6d9;">=</span><span style="color: #24f6d9;">[</span>1,1,1,2,2,2,3,3,1,1,2,4,5,6,7,7,7,7,7,7,7,7,7<span style="color: #24f6d9;">]</span>
-<span style="color: #62ff94;">b</span><span style="color: #24f6d9;">=</span>Counter<span style="color: #24f6d9;">(</span>a<span style="color: #24f6d9;">)</span>
-<span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"a: </span>{a}<span style="color: #ffa83d;">\n</span><span style="color: #1cc24b;">b: </span>{b}<span style="color: #ffa83d;">\n</span><span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
-<span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"b: </span>{b}<span style="color: #ffa83d;">\n</span><span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
+a=[1,1,1,2,2,2,3,3,1,1,2,4,5,6,7,7,7,7,7,7,7,7,7]
+b=Counter(a)
+print(f"a: {a}\nb: {b}\n")
+return (f"b: {b}\n")
 </pre>
 </div>
 
@@ -303,12 +305,12 @@ defualtdict与dict的不同在于，defaultDict对于一个未收录的key，会
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">from</span> collections <span style="color: #c770ff; font-weight: bold;">import</span> defaultdict
+<pre class="src src-python">from collections import defaultdict
 
-<span style="color: #62ff94;">a</span><span style="color: #24f6d9;">=</span>defaultdict<span style="color: #24f6d9;">(</span><span style="color: #30b3ff;">list</span><span style="color: #24f6d9;">)</span>
-a<span style="color: #24f6d9;">[</span><span style="color: #1cc24b;">"test"</span><span style="color: #24f6d9;">]</span>.append<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"test result"</span><span style="color: #24f6d9;">)</span>
+a=defaultdict(list)
+a["test"].append("test result")
 
-<span style="color: #c770ff; font-weight: bold;">return</span> a
+return a
 </pre>
 </div>
 </div>
@@ -321,12 +323,12 @@ OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">import</span> json
-<span style="color: #c770ff; font-weight: bold;">from</span> collections <span style="color: #c770ff; font-weight: bold;">import</span> OrderedDict
+<pre class="src src-python">import json
+from collections import OrderedDict
 
-<span style="color: #62ff94;">filename</span><span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"blablabla"</span>
-<span style="color: #c770ff; font-weight: bold;">with</span> <span style="color: #30b3ff;">open</span><span style="color: #24f6d9;">(</span>filename,<span style="color: #1cc24b;">"r"</span><span style="color: #24f6d9;">)</span> <span style="color: #c770ff; font-weight: bold;">as</span> f:
-          <span style="color: #62ff94;">data</span><span style="color: #24f6d9;">=</span>json.load<span style="color: #24f6d9;">(</span>f, object_pairs_hook<span style="color: #24f6d9;">=</span>OrderedDict<span style="color: #24f6d9;">)</span>
+filename="blablabla"
+with open(filename,"r") as f:
+          data=json.load(f, object_pairs_hook=OrderedDict)
 </pre>
 </div>
 
@@ -353,24 +355,24 @@ OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #62ff94;">p1</span><span style="color: #24f6d9;">=</span>r<span style="color: #1cc24b;">"("</span> <span style="color: #24f6d9;">+</span> r<span style="color: #1cc24b;">"|"</span>.join<span style="color: #24f6d9;">(</span>escaped_special_toks<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">+</span> r<span style="color: #1cc24b;">")|"</span> <span style="color: #24f6d9;">+</span> r<span style="color: #1cc24b;">"(.+?)"</span>
+<pre class="src src-python">p1=r"(" + r"|".join(escaped_special_toks) + r")|" + r"(.+?)"
 </pre>
 </div>
 <p>
-这个pattern的意思时这样的，实现，对于一个列表escaped_special_toks，我用“|”把里面的元素拼接在一起（如“a|b|c”），之后，添加上括号和后面的部分。因此，这里面涉及到几种re符号，|，（），.+?。
+这个pattern的意思时这样的，实现，对于一个列表escaped<sub>special</sub><sub>toks</sub>，我用“|”把里面的元素拼接在一起（如“a|b|c”），之后，添加上括号和后面的部分。因此，这里面涉及到几种re符号，|，（），.+?。
 </p>
 
 <p>
 下面一个表格是简单的介绍。
 </p>
 
-<table>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
 <colgroup>
-<col  class="org-left">
+<col  class="org-left" />
 
-<col  class="org-left">
+<col  class="org-left" />
 </colgroup>
 <thead>
 <tr>
@@ -422,7 +424,7 @@ OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。�
 </table>
 
 <p>
-依照以上知识可以知道，原来p1可以实现：1. 要么进行左侧的匹配，要么进行右侧的匹配。2. 左侧的匹配是：查看字符串是否不好escaped_special_toks里的任何一个元素，如果包含，那么返回该元素；2. 右侧的匹配是：如果左侧匹配失败，那么我把所有内容完全返回。
+依照以上知识可以知道，原来p1可以实现：1. 要么进行左侧的匹配，要么进行右侧的匹配。2. 左侧的匹配是：查看字符串是否不好escaped<sub>special</sub><sub>toks里的任何一个元素</sub>，如果包含，那么返回该元素；2. 右侧的匹配是：如果左侧匹配失败，那么我把所有内容完全返回。
 </p>
 
 <p>
@@ -433,13 +435,13 @@ OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。�
 下面介绍几个re的api。
 </p>
 
-<table>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
 <colgroup>
-<col  class="org-left">
+<col  class="org-left" />
 
-<col  class="org-left">
+<col  class="org-left" />
 </colgroup>
 <tbody>
 <tr>
@@ -458,8 +460,8 @@ OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。�
 </tr>
 
 <tr>
-<td class="org-left">sub（pattern,input, need_replaced）</td>
-<td class="org-left">对于input中符合pattern的用need_repalced替换</td>
+<td class="org-left">sub（pattern,input, need<sub>replaced</sub>）</td>
+<td class="org-left">对于input中符合pattern的用need<sub>repalced替换</sub></td>
 </tr>
 
 <tr>
@@ -487,9 +489,9 @@ OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #62ff94;">result</span><span style="color: #24f6d9;">=</span>12.5
-<span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"result: {}"</span>.<span style="color: #30b3ff;">format</span><span style="color: #c770ff;">(</span>result<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-<span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"result: </span>{result}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
+<pre class="src src-python">result=12.5
+print("result: {}".format(result))
+print(f"result: {result}")
 </pre>
 </div>
 </div>
@@ -512,13 +514,13 @@ OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">fourPrint</span><span style="color: #24f6d9;">(</span>first,<span style="color: #24f6d9;">*</span>args<span style="color: #24f6d9;">)</span>:
-         <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"first: </span>{first}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
-         <span style="color: #c770ff; font-weight: bold;">for</span> i <span style="color: #c770ff; font-weight: bold;">in</span> args:
-             <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"and: </span>{i}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
-         <span style="color: #c770ff; font-weight: bold;">return</span> args<span style="color: #24f6d9;">[</span>0<span style="color: #24f6d9;">]</span> 
+<pre class="src src-python">def fourPrint(first,*args):
+         print(f"first: {first}")
+         for i in args:
+             print(f"and: {i}")
+         return args[0] 
 
-<span style="color: #c770ff; font-weight: bold;">return</span> fourPrint<span style="color: #24f6d9;">(</span>0,1,2,3<span style="color: #24f6d9;">)</span>
+return fourPrint(0,1,2,3)
 
 </pre>
 </div></li>
@@ -526,13 +528,13 @@ OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。�
 
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">fourPrint</span><span style="color: #24f6d9;">(</span>first,<span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span>:
-         <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"first: </span>{first}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
-         <span style="color: #c770ff; font-weight: bold;">for</span> key <span style="color: #c770ff; font-weight: bold;">in</span> kwargs:
-             <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"and: </span>{kwargs[key]}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
-         <span style="color: #c770ff; font-weight: bold;">return</span> kwargs<span style="color: #24f6d9;">[</span>key<span style="color: #24f6d9;">]</span>,key 
+<pre class="src src-python">def fourPrint(first,**kwargs):
+         print(f"first: {first}")
+         for key in kwargs:
+             print(f"and: {kwargs[key]}")
+         return kwargs[key],key 
 
-<span style="color: #c770ff; font-weight: bold;">return</span> fourPrint<span style="color: #24f6d9;">(</span>first<span style="color: #24f6d9;">=</span>0,second<span style="color: #24f6d9;">=</span>1,third<span style="color: #24f6d9;">=</span>2,fourth<span style="color: #24f6d9;">=</span>3<span style="color: #24f6d9;">)</span>
+return fourPrint(first=0,second=1,third=2,fourth=3)
 
 </pre>
 </div>
@@ -542,14 +544,14 @@ OrderedDict与dict的不同在于：它的key-value排列顺序是固定的。�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #62ff94;">mytupe</span><span style="color: #24f6d9;">=</span><span style="color: #24f6d9;">(</span>1,2,3,4<span style="color: #24f6d9;">)</span>
-<span style="color: #62ff94;">mydict</span><span style="color: #24f6d9;">=</span><span style="color: #24f6d9;">{</span><span style="color: #1cc24b;">"first"</span>:1,<span style="color: #1cc24b;">"second"</span>:2,<span style="color: #1cc24b;">"third"</span>:3,<span style="color: #1cc24b;">"fourth"</span>:4<span style="color: #24f6d9;">}</span>
+<pre class="src src-python">mytupe=(1,2,3,4)
+mydict={"first":1,"second":2,"third":3,"fourth":4}
 
-<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">fourPrint</span><span style="color: #24f6d9;">(</span>first,second,third,fourth<span style="color: #24f6d9;">)</span>:
-         <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"first: </span>{first}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
-         <span style="color: #c770ff; font-weight: bold;">return</span> fourth 
+def fourPrint(first,second,third,fourth):
+         print(f"first: {first}")
+         return fourth 
 
-<span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #24f6d9;">(</span>fourPrint<span style="color: #c770ff;">(</span><span style="color: #24f6d9;">*</span>mytupe<span style="color: #c770ff;">)</span>,fourPrint<span style="color: #c770ff;">(</span><span style="color: #24f6d9;">**</span>mydict<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+return (fourPrint(*mytupe),fourPrint(**mydict))
 
 </pre>
 </div>

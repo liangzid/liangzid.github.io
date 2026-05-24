@@ -1,8 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-05-24 Sun 17:44 -->
-<meta charset="utf-8" />
+<!-- 2026-05-24 Sun 21:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Common Lisp notes and thinkings (Part I: Functions)</title>
 <meta name="author" content="Zi Liang" />
@@ -249,11 +251,11 @@ three types of state for this function, as:
 <h3 id="orga1f4e0c"><span class="section-number-3">1.2.</span> Closure: those functions who have <b>undefined</b> variable</h3>
 <div class="outline-text-3" id="text-1-2">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> w
-<span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #e6ff57;">(</span><span style="color: #30b3ff;">(</span>a 3<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
-  <span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">plus-a</span> <span style="color: #30b3ff;">(</span>x<span style="color: #30b3ff;">)</span> <span style="color: #30b3ff;">(</span>+ x a<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
-         <span style="color: #e6ff57;">(</span>plus-a 5<span style="color: #e6ff57;">)</span>
-<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+<pre class="src src-elisp">(setq w
+(let ((a 3))
+  (defun plus-a (x) (+ x a))
+         (plus-a 5)
+))
 </pre>
 </div>
 
@@ -293,14 +295,14 @@ Example:
 
 
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">f</span> <span style="color: #c770ff;">(</span>x<span style="color: #c770ff;">)</span>
-  <span style="color: #c770ff;">(</span>list 'a <span style="color: #e6ff57;">(</span>expt <span style="color: #30b3ff;">(</span>car x<span style="color: #30b3ff;">)</span> 2<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+<pre class="src src-elisp">(defun f (x)
+  (list 'a (expt (car x) 2)))
 
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">f2</span> <span style="color: #c770ff;">(</span>x<span style="color: #c770ff;">)</span>
-  <span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #e6ff57;">(</span>y sqr<span style="color: #e6ff57;">)</span>
-    <span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> y <span style="color: #30b3ff;">(</span>car x<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
-    <span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> sqr <span style="color: #30b3ff;">(</span>expt y 2<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
-    <span style="color: #e6ff57;">(</span>list 'a sqr<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+(defun f2 (x)
+  (let (y sqr)
+    (setq y (car x))
+    (setq sqr (expt y 2))
+    (list 'a sqr)))
 </pre>
 </div>
 
@@ -347,148 +349,148 @@ on our own fields.
 <h3 id="orged19a34"><span class="section-number-3">3.1.</span> Some abstraction examples of functions</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span>proclaim '<span style="color: #c770ff;">(</span>inline last1 single append1 nconc1 mklist<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span> <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">compile it
-</span>
-<span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">git last element
-</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">last1</span> <span style="color: #c770ff;">(</span>ls<span style="color: #c770ff;">)</span> <span style="color: #c770ff;">(</span>car <span style="color: #e6ff57;">(</span>last ls<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-<span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">if single or not
-</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">single</span> <span style="color: #c770ff;">(</span>ls<span style="color: #c770ff;">)</span> <span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">and</span> <span style="color: #e6ff57;">(</span>consp ls<span style="color: #e6ff57;">)</span> <span style="color: #e6ff57;">(</span>not <span style="color: #30b3ff;">(</span>cdr ls<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-<span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">append an element
-</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">append1</span> <span style="color: #c770ff;">(</span>ls obj<span style="color: #c770ff;">)</span> <span style="color: #c770ff;">(</span>append ls <span style="color: #e6ff57;">(</span>list obj<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-<span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">append an element and change the input parameter
-</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">nconc1</span> <span style="color: #c770ff;">(</span>ls obj<span style="color: #c770ff;">)</span> <span style="color: #c770ff;">(</span>nconc ls <span style="color: #e6ff57;">(</span>list obj<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-<span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">construct a list.
-</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">mklist</span> <span style="color: #c770ff;">(</span>obj<span style="color: #c770ff;">)</span> <span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #e6ff57;">(</span>listp obj<span style="color: #e6ff57;">)</span> obj <span style="color: #e6ff57;">(</span>list obj<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+<pre class="src src-emacs-lisp">(proclaim '(inline last1 single append1 nconc1 mklist)) ;; compile it
 
-<span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">whether len(x)&gt;len(y) or not.
-</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">longer</span> <span style="color: #c770ff;">(</span>x y<span style="color: #c770ff;">)</span>
-  <span style="color: #c770ff;">(</span>labels <span style="color: #e6ff57;">(</span><span style="color: #30b3ff;">(</span>compare <span style="color: #ffa83d;">(</span>x y<span style="color: #ffa83d;">)</span>
-                    <span style="color: #ffa83d;">(</span><span style="color: #c770ff; font-weight: bold;">and</span> <span style="color: #1cc24b;">(</span>consp x<span style="color: #1cc24b;">)</span> <span style="color: #1cc24b;">(</span><span style="color: #c770ff; font-weight: bold;">or</span> <span style="color: #24f6d9;">(</span>null y<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">(</span>compare <span style="color: #c770ff;">(</span>cdr x<span style="color: #c770ff;">)</span> <span style="color: #c770ff;">(</span>cdr y<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
-    <span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #30b3ff;">(</span><span style="color: #c770ff; font-weight: bold;">and</span> <span style="color: #ffa83d;">(</span>listp x<span style="color: #ffa83d;">)</span> <span style="color: #ffa83d;">(</span>listp_y<span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span>
-        <span style="color: #30b3ff;">(</span>compare x y<span style="color: #30b3ff;">)</span>
-      <span style="color: #30b3ff;">(</span>&gt; <span style="color: #ffa83d;">(</span>length x<span style="color: #ffa83d;">)</span> <span style="color: #ffa83d;">(</span>length y<span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+;; git last element
+(defun last1 (ls) (car (last ls)))
+;; if single or not
+(defun single (ls) (and (consp ls) (not (cdr ls))))
+;; append an element
+(defun append1 (ls obj) (append ls (list obj)))
+;; append an element and change the input parameter
+(defun nconc1 (ls obj) (nconc ls (list obj)))
+;; construct a list.
+(defun mklist (obj) (if (listp obj) obj (list obj)))
 
-<span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">record the result if true, else do not record.
-</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">filter</span> <span style="color: #c770ff;">(</span>fn ls<span style="color: #c770ff;">)</span>
-  <span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #e6ff57;">(</span><span style="color: #30b3ff;">(</span>acc nil<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
-    <span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">dolist</span> <span style="color: #30b3ff;">(</span>x ls<span style="color: #30b3ff;">)</span>
-      <span style="color: #30b3ff;">(</span><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #ffa83d;">(</span><span style="color: #1cc24b;">(</span>val <span style="color: #24f6d9;">(</span>funcall fn x<span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span>
-        <span style="color: #ffa83d;">(</span><span style="color: #c770ff; font-weight: bold;">if</span> val <span style="color: #1cc24b;">(</span><span style="color: #c770ff; font-weight: bold;">push</span> val acc<span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span>
-      <span style="color: #30b3ff;">(</span>nreverse acc<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+;; whether len(x)&gt;len(y) or not.
+(defun longer (x y)
+  (labels ((compare (x y)
+                    (and (consp x) (or (null y) (compare (cdr x) (cdr y))))))
+    (if (and (listp x) (listp_y))
+        (compare x y)
+      (&gt; (length x) (length y)))))
 
-<span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">group source list into n numbers sub-lists.
-</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">group</span> <span style="color: #c770ff;">(</span>source n<span style="color: #c770ff;">)</span>
-  <span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #e6ff57;">(</span>zerop n<span style="color: #e6ff57;">)</span> <span style="color: #e6ff57;">(</span><span style="color: #e6ff57; font-weight: bold;">error</span> <span style="color: #1cc24b;">"zero length"</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span>
-  <span style="color: #c770ff;">(</span>labels <span style="color: #e6ff57;">(</span><span style="color: #30b3ff;">(</span>rec <span style="color: #ffa83d;">(</span>source acc<span style="color: #ffa83d;">)</span>
-                <span style="color: #ffa83d;">(</span><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #1cc24b;">(</span><span style="color: #24f6d9;">(</span>rest <span style="color: #c770ff;">(</span>nthcdr n source<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span>
-                  <span style="color: #1cc24b;">(</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #24f6d9;">(</span>consp rest<span style="color: #24f6d9;">)</span>
-                      <span style="color: #24f6d9;">(</span>rec rest <span style="color: #c770ff;">(</span>cons <span style="color: #8ca391;">(</span>subseq source 0 n<span style="color: #8ca391;">)</span> acc<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span>
-                  <span style="color: #1cc24b;">(</span>nreverse <span style="color: #24f6d9;">(</span>cons source acc<span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
-    <span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">if</span> source <span style="color: #30b3ff;">(</span>rec source nil<span style="color: #30b3ff;">)</span> nil<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+;; record the result if true, else do not record.
+(defun filter (fn ls)
+  (let ((acc nil))
+    (dolist (x ls)
+      (let ((val (funcall fn x)))
+        (if val (push val acc)))
+      (nreverse acc))))
 
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">flatten</span> <span style="color: #c770ff;">(</span>x<span style="color: #c770ff;">)</span>
-  <span style="color: #c770ff;">(</span>labels <span style="color: #e6ff57;">(</span><span style="color: #30b3ff;">(</span>rec <span style="color: #ffa83d;">(</span>x acc<span style="color: #ffa83d;">)</span>
-                <span style="color: #ffa83d;">(</span><span style="color: #c770ff; font-weight: bold;">cond</span> <span style="color: #1cc24b;">(</span><span style="color: #24f6d9;">(</span>null x<span style="color: #24f6d9;">)</span> acc<span style="color: #1cc24b;">)</span>
-                      <span style="color: #1cc24b;">(</span><span style="color: #24f6d9;">(</span>atom x<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">(</span>cons x acc<span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span>
-                      <span style="color: #1cc24b;">(</span>t <span style="color: #24f6d9;">(</span>rec <span style="color: #c770ff;">(</span>car x<span style="color: #c770ff;">)</span> <span style="color: #c770ff;">(</span>rec <span style="color: #8ca391;">(</span>cdr x<span style="color: #8ca391;">)</span> acc<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
-    <span style="color: #e6ff57;">(</span>rec x nil<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+;; group source list into n numbers sub-lists.
+(defun group (source n)
+  (if (zerop n) (error "zero length"))
+  (labels ((rec (source acc)
+                (let ((rest (nthcdr n source)))
+                  (if (consp rest)
+                      (rec rest (cons (subseq source 0 n) acc)))
+                  (nreverse (cons source acc)))))
+    (if source (rec source nil) nil)))
 
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">prune</span> <span style="color: #c770ff;">(</span>test tree<span style="color: #c770ff;">)</span>
-  <span style="color: #c770ff;">(</span>labels <span style="color: #e6ff57;">(</span><span style="color: #30b3ff;">(</span>rec <span style="color: #ffa83d;">(</span>tree acc<span style="color: #ffa83d;">)</span>
-                <span style="color: #ffa83d;">(</span><span style="color: #c770ff; font-weight: bold;">cond</span> <span style="color: #1cc24b;">(</span><span style="color: #24f6d9;">(</span>null tree<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">(</span>nreverse acc<span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span>
-                      <span style="color: #1cc24b;">(</span><span style="color: #24f6d9;">(</span>consp <span style="color: #c770ff;">(</span>car tree<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-                       <span style="color: #24f6d9;">(</span>rec <span style="color: #c770ff;">(</span>cdr tree<span style="color: #c770ff;">)</span>
-                            <span style="color: #c770ff;">(</span>cons <span style="color: #8ca391;">(</span>rec <span style="color: #24f6d9;">(</span>car tree<span style="color: #24f6d9;">)</span> nil<span style="color: #8ca391;">)</span> acc<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span>
-                      <span style="color: #1cc24b;">(</span>t <span style="color: #24f6d9;">(</span>rec <span style="color: #c770ff;">(</span>cdr tree<span style="color: #c770ff;">)</span>
-                              <span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #8ca391;">(</span>funcall test <span style="color: #24f6d9;">(</span>car tree<span style="color: #24f6d9;">)</span><span style="color: #8ca391;">)</span>
+(defun flatten (x)
+  (labels ((rec (x acc)
+                (cond ((null x) acc)
+                      ((atom x) (cons x acc))
+                      (t (rec (car x) (rec (cdr x) acc))))))
+    (rec x nil)))
+
+(defun prune (test tree)
+  (labels ((rec (tree acc)
+                (cond ((null tree) (nreverse acc))
+                      ((consp (car tree))
+                       (rec (cdr tree)
+                            (cons (rec (car tree) nil) acc)))
+                      (t (rec (cdr tree)
+                              (if (funcall test (car tree))
                                   acc
-                                <span style="color: #8ca391;">(</span>cons <span style="color: #24f6d9;">(</span>car tree<span style="color: #24f6d9;">)</span> acc<span style="color: #8ca391;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
-    <span style="color: #e6ff57;">(</span>rec tree nil<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+                                (cons (car tree) acc)))))))
+    (rec tree nil)))
 
 
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">find2</span> <span style="color: #c770ff;">(</span>fn ls<span style="color: #c770ff;">)</span>
-  <span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #e6ff57;">(</span>null ls<span style="color: #e6ff57;">)</span>
+(defun find2 (fn ls)
+  (if (null ls)
       nil
-    <span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #30b3ff;">(</span><span style="color: #ffa83d;">(</span>val <span style="color: #1cc24b;">(</span>funcall fn <span style="color: #24f6d9;">(</span>car ls<span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span>
-      <span style="color: #30b3ff;">(</span><span style="color: #c770ff; font-weight: bold;">if</span> val<span style="color: #ffa83d;">(</span>values <span style="color: #1cc24b;">(</span>car ls<span style="color: #1cc24b;">)</span> val<span style="color: #ffa83d;">)</span>
-        <span style="color: #ffa83d;">(</span>find2 fn <span style="color: #1cc24b;">(</span>cdr ls<span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+    (let ((val (funcall fn (car ls))))
+      (if val(values (car ls) val)
+        (find2 fn (cdr ls))))))
 
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">before</span> <span style="color: #c770ff;">(</span>x y ls <span style="color: #e6ff57;">&amp;key</span> <span style="color: #e6ff57;">(</span>test #'eql<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span>
-  <span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">and</span> ls
-       <span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #30b3ff;">(</span><span style="color: #ffa83d;">(</span>first <span style="color: #1cc24b;">(</span>car ls<span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span>
-         <span style="color: #30b3ff;">(</span><span style="color: #c770ff; font-weight: bold;">cond</span> <span style="color: #ffa83d;">(</span><span style="color: #1cc24b;">(</span>funcall test y first<span style="color: #1cc24b;">)</span> nil<span style="color: #ffa83d;">)</span>
-               <span style="color: #ffa83d;">(</span><span style="color: #1cc24b;">(</span>funcall test x first<span style="color: #1cc24b;">)</span> nil<span style="color: #ffa83d;">)</span>
-               <span style="color: #ffa83d;">(</span>t <span style="color: #1cc24b;">(</span>before x y <span style="color: #24f6d9;">(</span>cdr ls<span style="color: #24f6d9;">)</span> <span style="color: #30b3ff;">:test</span> test<span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+(defun before (x y ls &amp;key (test #'eql))
+  (and ls
+       (let ((first (car ls)))
+         (cond ((funcall test y first) nil)
+               ((funcall test x first) nil)
+               (t (before x y (cdr ls) :test test))))))
 
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">after</span> <span style="color: #c770ff;">(</span>x y ls <span style="color: #e6ff57;">&amp;key</span> <span style="color: #e6ff57;">(</span>test #' eql<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span>
-  <span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #e6ff57;">(</span><span style="color: #30b3ff;">(</span>rest <span style="color: #ffa83d;">(</span>before y x ls <span style="color: #30b3ff;">:test</span> test<span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
-    <span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">and</span> rest <span style="color: #30b3ff;">(</span>member x rest <span style="color: #30b3ff;">:test</span> test<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+(defun after (x y ls &amp;key (test #' eql))
+  (let ((rest (before y x ls :test test)))
+    (and rest (member x rest :test test))))
 
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">duplicate</span> <span style="color: #c770ff;">(</span>obj ls <span style="color: #e6ff57;">&amp;key</span> <span style="color: #e6ff57;">(</span>test #'eql<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span>
-  <span style="color: #c770ff;">(</span>member obj <span style="color: #e6ff57;">(</span>cdr <span style="color: #30b3ff;">(</span>member obj ls <span style="color: #30b3ff;">:test</span> test<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
-          <span style="color: #30b3ff;">:test</span> test<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+(defun duplicate (obj ls &amp;key (test #'eql))
+  (member obj (cdr (member obj ls :test test))
+          :test test))
 
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">split-if</span> <span style="color: #c770ff;">(</span>fn ls<span style="color: #c770ff;">)</span>
-  <span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #e6ff57;">(</span><span style="color: #30b3ff;">(</span>acc nil<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
-    <span style="color: #e6ff57;">(</span>do <span style="color: #30b3ff;">(</span><span style="color: #ffa83d;">(</span>src ls <span style="color: #1cc24b;">(</span>cdr src<span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span>
-        <span style="color: #30b3ff;">(</span><span style="color: #ffa83d;">(</span><span style="color: #c770ff; font-weight: bold;">or</span> <span style="color: #1cc24b;">(</span>null src<span style="color: #1cc24b;">)</span> <span style="color: #1cc24b;">(</span>funcall fn <span style="color: #24f6d9;">(</span>car src<span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span>
-         <span style="color: #ffa83d;">(</span>values <span style="color: #1cc24b;">(</span>nreverse acc<span style="color: #1cc24b;">)</span> src<span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span>
-      <span style="color: #30b3ff;">(</span><span style="color: #c770ff; font-weight: bold;">push</span> <span style="color: #ffa83d;">(</span>car src<span style="color: #ffa83d;">)</span> acc<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+(defun split-if (fn ls)
+  (let ((acc nil))
+    (do ((src ls (cdr src)))
+        ((or (null src) (funcall fn (car src)))
+         (values (nreverse acc) src))
+      (push (car src) acc))))
 
 
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">most</span> <span style="color: #c770ff;">(</span>fn lst<span style="color: #c770ff;">)(</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #e6ff57;">(</span>null lst<span style="color: #e6ff57;">)</span>
-<span style="color: #e6ff57;">(</span>values nil nil<span style="color: #e6ff57;">)</span>
-<span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">let*</span> <span style="color: #30b3ff;">(</span><span style="color: #ffa83d;">(</span>wins <span style="color: #1cc24b;">(</span>car lst<span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)(</span>max <span style="color: #1cc24b;">(</span>funcall fn wins<span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span>
-<span style="color: #30b3ff;">(</span><span style="color: #c770ff; font-weight: bold;">dolist</span> <span style="color: #ffa83d;">(</span>obj <span style="color: #1cc24b;">(</span>cdr lst<span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)(</span><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #1cc24b;">(</span><span style="color: #24f6d9;">(</span>score <span style="color: #c770ff;">(</span>funcall fn obj<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span>
-<span style="color: #1cc24b;">(</span><span style="color: #c770ff; font-weight: bold;">when</span> <span style="color: #24f6d9;">(</span>&gt; score max<span style="color: #24f6d9;">)(</span><span style="color: #c770ff; font-weight: bold;">setq</span> wins obj
-max score<span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #30b3ff; font-weight: bold;">(</span><span style="color: #e6ff57; font-weight: bold;">values wins max</span><span style="color: #30b3ff; font-weight: bold;">)</span><span style="color: #e6ff57; font-weight: bold;">)</span><span style="color: #c770ff; font-weight: bold;">)</span><span style="color: #24f6d9; font-weight: bold;">)</span>
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">best</span> <span style="color: #c770ff;">(</span>fn lst<span style="color: #c770ff;">)(</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #e6ff57;">(</span>null lst<span style="color: #e6ff57;">)</span>nil<span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #30b3ff;">(</span><span style="color: #ffa83d;">(</span>wins <span style="color: #1cc24b;">(</span>car lst<span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)(</span><span style="color: #c770ff; font-weight: bold;">dolist</span> <span style="color: #ffa83d;">(</span>obj <span style="color: #1cc24b;">(</span>cdr lst<span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span>
-<span style="color: #ffa83d;">(</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #1cc24b;">(</span>funcall fn obj wins<span style="color: #1cc24b;">)</span>
-<span style="color: #1cc24b;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> wins obj<span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57; font-weight: bold;">wins</span><span style="color: #e6ff57; font-weight: bold;">)</span><span style="color: #c770ff; font-weight: bold;">)</span><span style="color: #24f6d9; font-weight: bold;">)</span>
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">mostn</span> <span style="color: #c770ff;">(</span>fn lst<span style="color: #c770ff;">)(</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #e6ff57;">(</span>null lst<span style="color: #e6ff57;">)</span>
-<span style="color: #e6ff57;">(</span>values nil nil<span style="color: #e6ff57;">)</span>
-<span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #30b3ff;">(</span><span style="color: #ffa83d;">(</span>result <span style="color: #1cc24b;">(</span>list <span style="color: #24f6d9;">(</span>car lst<span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)(</span>max <span style="color: #1cc24b;">(</span>funcall fn <span style="color: #24f6d9;">(</span>car lst<span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)(</span><span style="color: #c770ff; font-weight: bold;">dolist</span> <span style="color: #ffa83d;">(</span>obj <span style="color: #1cc24b;">(</span>cdr lst<span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span>
-<span style="color: #ffa83d;">(</span><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #1cc24b;">(</span><span style="color: #24f6d9;">(</span>score <span style="color: #c770ff;">(</span>funcall fn obj<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)(</span><span style="color: #c770ff; font-weight: bold;">cond</span> <span style="color: #24f6d9;">(</span><span style="color: #c770ff;">(</span>&gt; score max<span style="color: #c770ff;">)</span>
-<span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> max score
-result <span style="color: #8ca391;">(</span>list obj<span style="color: #8ca391;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span><span style="color: #24f6d9; font-weight: bold;">(</span><span style="color: #c770ff; font-weight: bold;">(</span><span style="color: #e6ff57; font-weight: bold;">= score max</span><span style="color: #c770ff; font-weight: bold;">)</span>
-<span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">push</span> obj result<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #30b3ff; font-weight: bold;">(</span><span style="color: #e6ff57; font-weight: bold;">values </span><span style="color: #ffa83d; font-weight: bold;">(</span><span style="color: #e6ff57; font-weight: bold;">nreverse result</span><span style="color: #ffa83d; font-weight: bold;">)</span><span style="color: #e6ff57; font-weight: bold;"> max</span><span style="color: #30b3ff; font-weight: bold;">)</span><span style="color: #e6ff57; font-weight: bold;">)</span><span style="color: #c770ff; font-weight: bold;">)</span><span style="color: #24f6d9; font-weight: bold;">)</span>
+(defun most (fn lst)(if (null lst)
+(values nil nil)
+(let* ((wins (car lst))(max (funcall fn wins)))
+(dolist (obj (cdr lst))(let ((score (funcall fn obj)))
+(when (&gt; score max)(setq wins obj
+max score))))(values wins max))))
+(defun best (fn lst)(if (null lst)nil(let ((wins (car lst)))(dolist (obj (cdr lst))
+(if (funcall fn obj wins)
+(setq wins obj)))wins)))
+(defun mostn (fn lst)(if (null lst)
+(values nil nil)
+(let ((result (list (car lst)))(max (funcall fn (car lst))))(dolist (obj (cdr lst))
+(let ((score (funcall fn obj)))(cond ((&gt; score max)
+(setq max score
+result (list obj)))((= score max)
+(push obj result)))))(values (nreverse result) max))))
 
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">map0-n</span> <span style="color: #c770ff;">(</span>fn n<span style="color: #c770ff;">)(</span>mapa-b fn 0 n<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">map1-n</span> <span style="color: #c770ff;">(</span>fn n<span style="color: #c770ff;">)(</span>mapa-b fn 1 n<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">mapa-b</span> <span style="color: #c770ff;">(</span>fn a b <span style="color: #e6ff57;">&amp;optional</span> <span style="color: #e6ff57;">(</span>step 1<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)(</span>do <span style="color: #e6ff57;">(</span><span style="color: #30b3ff;">(</span>i a <span style="color: #ffa83d;">(</span>+ i step<span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span>
-<span style="color: #30b3ff;">(</span>result nil<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
-<span style="color: #e6ff57;">(</span><span style="color: #30b3ff;">(</span>&gt; i b<span style="color: #30b3ff;">)</span> <span style="color: #30b3ff;">(</span>nreverse result<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)(</span><span style="color: #c770ff; font-weight: bold;">push</span> <span style="color: #30b3ff;">(</span>funcall fn i<span style="color: #30b3ff;">)</span> result<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">map-&gt;</span> <span style="color: #c770ff;">(</span>fn start test-fn succ-fn<span style="color: #c770ff;">)(</span>do <span style="color: #e6ff57;">(</span><span style="color: #30b3ff;">(</span>i start <span style="color: #ffa83d;">(</span>funcall succ-fn i<span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span>
-<span style="color: #30b3ff;">(</span>result nil<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
-<span style="color: #e6ff57;">(</span><span style="color: #30b3ff;">(</span>funcall test-fn i<span style="color: #30b3ff;">)</span> <span style="color: #30b3ff;">(</span>nreverse result<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)(</span><span style="color: #c770ff; font-weight: bold;">push</span> <span style="color: #30b3ff;">(</span>funcall fn i<span style="color: #30b3ff;">)</span> result<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">mappend</span> <span style="color: #c770ff;">(</span>fn <span style="color: #e6ff57;">&amp;rest</span> lsts<span style="color: #c770ff;">)</span>
-<span style="color: #c770ff;">(</span>apply #'append <span style="color: #e6ff57;">(</span>apply #'mapcar fn lsts<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">mapcars</span> <span style="color: #c770ff;">(</span>fn <span style="color: #e6ff57;">&amp;rest</span> lsts<span style="color: #c770ff;">)(</span><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #e6ff57;">(</span><span style="color: #30b3ff;">(</span>result nil<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)(</span><span style="color: #c770ff; font-weight: bold;">dolist</span> <span style="color: #30b3ff;">(</span>lst lsts<span style="color: #30b3ff;">)(</span><span style="color: #c770ff; font-weight: bold;">dolist</span> <span style="color: #ffa83d;">(</span>obj lst<span style="color: #ffa83d;">)</span>
-<span style="color: #ffa83d;">(</span><span style="color: #c770ff; font-weight: bold;">push</span> <span style="color: #1cc24b;">(</span>funcall fn obj<span style="color: #1cc24b;">)</span> result<span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #e6ff57; font-weight: bold;">(</span><span style="color: #e6ff57; font-weight: bold;">nreverse result</span><span style="color: #e6ff57; font-weight: bold;">)</span><span style="color: #c770ff; font-weight: bold;">)</span><span style="color: #24f6d9; font-weight: bold;">)</span>
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">rmapcar</span> <span style="color: #c770ff;">(</span>fn <span style="color: #e6ff57;">&amp;rest</span> args<span style="color: #c770ff;">)</span>
-<span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #e6ff57;">(</span>some #'atom args<span style="color: #e6ff57;">)</span>
-<span style="color: #e6ff57;">(</span>apply fn args<span style="color: #e6ff57;">)(</span>apply #'mapcar
-#'<span style="color: #30b3ff;">(</span><span style="color: #c770ff; font-weight: bold;">lambda</span> <span style="color: #ffa83d;">(</span><span style="color: #e6ff57;">&amp;rest</span> args<span style="color: #ffa83d;">)</span>
-    <span style="color: #ffa83d;">(</span>apply #'rmapcar fn args<span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57; font-weight: bold;">args</span><span style="color: #e6ff57; font-weight: bold;">)</span><span style="color: #c770ff; font-weight: bold;">)</span><span style="color: #24f6d9; font-weight: bold;">)</span>
+(defun map0-n (fn n)(mapa-b fn 0 n))
+(defun map1-n (fn n)(mapa-b fn 1 n))
+(defun mapa-b (fn a b &amp;optional (step 1))(do ((i a (+ i step))
+(result nil))
+((&gt; i b) (nreverse result))(push (funcall fn i) result)))
+(defun map-&gt; (fn start test-fn succ-fn)(do ((i start (funcall succ-fn i))
+(result nil))
+((funcall test-fn i) (nreverse result))(push (funcall fn i) result)))
+(defun mappend (fn &amp;rest lsts)
+(apply #'append (apply #'mapcar fn lsts)))
+(defun mapcars (fn &amp;rest lsts)(let ((result nil))(dolist (lst lsts)(dolist (obj lst)
+(push (funcall fn obj) result)))(nreverse result)))
+(defun rmapcar (fn &amp;rest args)
+(if (some #'atom args)
+(apply fn args)(apply #'mapcar
+#'(lambda (&amp;rest args)
+    (apply #'rmapcar fn args))args)))
 
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">readlist</span> <span style="color: #c770ff;">(</span><span style="color: #e6ff57;">&amp;rest</span> args<span style="color: #c770ff;">)(</span>values <span style="color: #e6ff57;">(</span>read-from-string<span style="color: #30b3ff;">(</span>concatenate 'string <span style="color: #1cc24b;">"("</span>
-<span style="color: #ffa83d;">(</span>apply #'read-line args<span style="color: #ffa83d;">)</span><span style="color: #1cc24b;">")"</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">prompt</span> <span style="color: #c770ff;">(</span><span style="color: #e6ff57;">&amp;rest</span> args<span style="color: #c770ff;">)</span>
-<span style="color: #c770ff;">(</span>apply #'format *query-io* args<span style="color: #c770ff;">)(</span>read *query-io*<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">break-loop</span> <span style="color: #c770ff;">(</span>fn quit <span style="color: #e6ff57;">&amp;rest</span> args<span style="color: #c770ff;">)(</span>format *query-io* <span style="color: #1cc24b;">"Entering break-loop.'~%"</span><span style="color: #c770ff;">)(</span>loop
-<span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #30b3ff;">(</span><span style="color: #ffa83d;">(</span>in <span style="color: #1cc24b;">(</span>apply #'prompt args<span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span>
-<span style="color: #30b3ff;">(</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #ffa83d;">(</span>funcall quit in<span style="color: #ffa83d;">)</span>
-<span style="color: #ffa83d;">(</span>return<span style="color: #ffa83d;">)</span>
-<span style="color: #ffa83d;">(</span>format *query-io* <span style="color: #1cc24b;">"~A~%"</span> <span style="color: #1cc24b;">(</span>funcall fn in<span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+(defun readlist (&amp;rest args)(values (read-from-string(concatenate 'string "("
+(apply #'read-line args)")"))))
+(defun prompt (&amp;rest args)
+(apply #'format *query-io* args)(read *query-io*))
+(defun break-loop (fn quit &amp;rest args)(format *query-io* "Entering break-loop.'~%")(loop
+(let ((in (apply #'prompt args)))
+(if (funcall quit in)
+(return)
+(format *query-io* "~A~%" (funcall fn in))))))
 
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">mkstr</span> <span style="color: #c770ff;">(</span><span style="color: #e6ff57;">&amp;rest</span> args<span style="color: #c770ff;">)</span>
-<span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">with-output-to-string</span> <span style="color: #e6ff57;">(</span>s<span style="color: #e6ff57;">)(</span><span style="color: #c770ff; font-weight: bold;">dolist</span> <span style="color: #30b3ff;">(</span>a args<span style="color: #30b3ff;">)</span> <span style="color: #30b3ff;">(</span>princ a s<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">symb</span> <span style="color: #c770ff;">(</span><span style="color: #e6ff57;">&amp;rest</span> args<span style="color: #c770ff;">)</span>
-<span style="color: #c770ff;">(</span>values <span style="color: #e6ff57;">(</span>intern <span style="color: #30b3ff;">(</span>apply #'mkstr args<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">reread</span> <span style="color: #c770ff;">(</span><span style="color: #e6ff57;">&amp;rest</span> args<span style="color: #c770ff;">)</span>
-<span style="color: #c770ff;">(</span>values <span style="color: #e6ff57;">(</span>read-from-string <span style="color: #30b3ff;">(</span>apply #'mkstr args<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">explode</span> <span style="color: #c770ff;">(</span>sym<span style="color: #c770ff;">)(</span>map 'list #'<span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">lambda</span> <span style="color: #30b3ff;">(</span>c<span style="color: #30b3ff;">)</span>
-<span style="color: #30b3ff;">(</span>intern <span style="color: #ffa83d;">(</span>make-string 1:initial-element c<span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #e6ff57; font-weight: bold;">(</span><span style="color: #e6ff57; font-weight: bold;">symbol-name sym</span><span style="color: #e6ff57; font-weight: bold;">)</span><span style="color: #c770ff; font-weight: bold;">)</span><span style="color: #24f6d9; font-weight: bold;">)</span>
+(defun mkstr (&amp;rest args)
+(with-output-to-string (s)(dolist (a args) (princ a s))))
+(defun symb (&amp;rest args)
+(values (intern (apply #'mkstr args))))
+(defun reread (&amp;rest args)
+(values (read-from-string (apply #'mkstr args))))
+(defun explode (sym)(map 'list #'(lambda (c)
+(intern (make-string 1:initial-element c)))(symbol-name sym)))
 </pre>
 </div>
 </div>
@@ -502,12 +504,12 @@ while other languages use <b>loop</b> for a complicated object, lisp prefer <b>r
 
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">similar to len(x)
-</span><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">len</span><span style="color: #24f6d9;">(</span>ls<span style="color: #24f6d9;">)</span>:
-    <span style="color: #62ff94;">i</span><span style="color: #24f6d9;">=</span>0
-    <span style="color: #c770ff; font-weight: bold;">for</span> x <span style="color: #c770ff; font-weight: bold;">in</span> ls:
-        <span style="color: #62ff94;">i</span><span style="color: #24f6d9;">+=</span>1
-    <span style="color: #c770ff; font-weight: bold;">return</span> i
+<pre class="src src-python"># similar to len(x)
+def len(ls):
+    i=0
+    for x in ls:
+        i+=1
+    return i
 </pre>
 </div>
 
@@ -517,8 +519,8 @@ In lisp we may write it as:
 
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">len</span> <span style="color: #c770ff;">(</span>ls<span style="color: #c770ff;">)</span>
-  <span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #e6ff57;">(</span>null ls<span style="color: #e6ff57;">)</span> 0 <span style="color: #e6ff57;">(</span>1+ <span style="color: #30b3ff;">(</span>len <span style="color: #ffa83d;">(</span>cdr ls<span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+<pre class="src src-emacs-lisp">(defun len (ls)
+  (if (null ls) 0 (1+ (len (cdr ls)))))
 </pre>
 </div>
 
@@ -535,12 +537,12 @@ However, we can change such <b>cdr recursion</b> into a <b>tail recursion</b> (a
 </ol>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">len</span> <span style="color: #c770ff;">(</span>ls<span style="color: #c770ff;">)</span>
-  <span style="color: #c770ff;">(</span>labels <span style="color: #e6ff57;">(</span><span style="color: #30b3ff;">(</span>rec <span style="color: #ffa83d;">(</span>ls acc<span style="color: #ffa83d;">)</span>
-                <span style="color: #ffa83d;">(</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #1cc24b;">(</span>null ls<span style="color: #1cc24b;">)</span>
+<pre class="src src-emacs-lisp">(defun len (ls)
+  (labels ((rec (ls acc)
+                (if (null ls)
                     acc
-                  <span style="color: #1cc24b;">(</span>rec <span style="color: #24f6d9;">(</span>cdr ls<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">(</span>1+ acc<span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
-    <span style="color: #e6ff57;">(</span>rec ls 0<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+                  (rec (cdr ls) (1+ acc)))))
+    (rec ls 0)))
 </pre>
 </div>
 

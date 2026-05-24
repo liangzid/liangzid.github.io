@@ -1,8 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-05-24 Sun 17:44 -->
-<meta charset="utf-8" />
+<!-- 2026-05-24 Sun 21:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Access state-of-the-art Large Language Models &amp; APIs</title>
 <meta name="author" content="Zi Liang" />
@@ -231,25 +233,25 @@ It is common to evalute existing LLMs under certain benchmarks. This article is 
 <div id="outline-container-org56828ba" class="outline-2">
 <h2 id="org56828ba"><span class="section-number-2">1.</span> Overview</h2>
 <div class="outline-text-2" id="text-1">
-<table>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
 <colgroup>
-<col  class="org-left">
+<col  class="org-left" />
 
-<col  class="org-left">
+<col  class="org-left" />
 
-<col  class="org-left">
+<col  class="org-left" />
 
-<col  class="org-left">
+<col  class="org-left" />
 
-<col  class="org-left">
+<col  class="org-left" />
 </colgroup>
 <thead>
 <tr>
 <th scope="col" class="org-left">Name</th>
-<th scope="col" class="org-left">is_official</th>
-<th scope="col" class="org-left">is_API</th>
+<th scope="col" class="org-left">is<sub>official</sub></th>
+<th scope="col" class="org-left">is<sub>API</sub></th>
 <th scope="col" class="org-left">Device</th>
 <th scope="col" class="org-left">Proxy</th>
 </tr>
@@ -313,27 +315,27 @@ Usage to evalute the politness:
 
 <div class="org-src-container">
 <pre class="src src-python">
-<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">pip install openai
-</span><span style="color: #c770ff; font-weight: bold;">import</span> openai
-<span style="color: #c770ff; font-weight: bold;">import</span> os
+# pip install openai
+import openai
+import os
 
 
-<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">reference_one_sample</span><span style="color: #24f6d9;">(</span>text<span style="color: #24f6d9;">)</span>:
-    openai.<span style="color: #62ff94;">api_key</span><span style="color: #24f6d9;">=</span>os.getenv<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"OPENAI_KEY"</span><span style="color: #24f6d9;">)</span>
-    <span style="color: #62ff94;">past_msg_ls</span><span style="color: #24f6d9;">=</span><span style="color: #24f6d9;">[]</span>
-    past_msg_ls.append<span style="color: #24f6d9;">(</span><span style="color: #c770ff;">{</span><span style="color: #1cc24b;">"role"</span>:<span style="color: #1cc24b;">"user"</span>,
-                        <span style="color: #1cc24b;">"content"</span>:text<span style="color: #c770ff;">}</span><span style="color: #24f6d9;">)</span>
-    <span style="color: #62ff94;">res</span><span style="color: #24f6d9;">=</span>openai.ChatCompletion.create<span style="color: #24f6d9;">(</span>model<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"gpt-3.5-turbo"</span>,
-                                        messages<span style="color: #24f6d9;">=</span>past_msg_ls,
-                                        <span style="color: #24f6d9;">)</span>
-    <span style="color: #62ff94;">resp</span><span style="color: #24f6d9;">=</span>res<span style="color: #24f6d9;">[</span><span style="color: #1cc24b;">"choices"</span><span style="color: #24f6d9;">][</span>0<span style="color: #24f6d9;">][</span><span style="color: #1cc24b;">'message'</span><span style="color: #24f6d9;">][</span><span style="color: #1cc24b;">'content'</span><span style="color: #24f6d9;">]</span>
-    <span style="color: #c770ff; font-weight: bold;">return</span> resp
+def reference_one_sample(text):
+    openai.api_key=os.getenv("OPENAI_KEY")
+    past_msg_ls=[]
+    past_msg_ls.append({"role":"user",
+                        "content":text})
+    res=openai.ChatCompletion.create(model="gpt-3.5-turbo",
+                                        messages=past_msg_ls,
+                                        )
+    resp=res["choices"][0]['message']['content']
+    return resp
 
 
-<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span>:
-    <span style="color: #62ff94;">res</span><span style="color: #24f6d9;">=</span>reference_one_sample<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"fuck your mother. your son of bitch."</span><span style="color: #24f6d9;">)</span>
-    <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>res<span style="color: #24f6d9;">)</span>
-    <span style="color: #c770ff; font-weight: bold;">return</span> 0
+def main():
+    res=reference_one_sample("fuck your mother. your son of bitch.")
+    print(res)
+    return 0
 
 
 </pre>
@@ -360,39 +362,39 @@ Usages:
 
 <div class="org-src-container">
 <pre class="src src-python">
-<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">pip install bardapi 
-</span><span style="color: #c770ff; font-weight: bold;">from</span> bardapi <span style="color: #c770ff; font-weight: bold;">import</span> Bard
-<span style="color: #c770ff; font-weight: bold;">import</span> os
+# pip install bardapi 
+from bardapi import Bard
+import os
 
-<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">inference_one_sample</span><span style="color: #24f6d9;">(</span>text<span style="color: #24f6d9;">)</span>:
-    <span style="color: #62ff94;">token_bard</span><span style="color: #24f6d9;">=</span>os.getenv<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"BARD_KEY"</span><span style="color: #24f6d9;">)</span>
-    <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>token_bard<span style="color: #24f6d9;">)</span>
+def inference_one_sample(text):
+    token_bard=os.getenv("BARD_KEY")
+    print(token_bard)
 
-    <span style="color: #62ff94;">proxies</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">{</span>
-    <span style="color: #1cc24b;">'http'</span>: <span style="color: #1cc24b;">'http://username:pswd@ip:port'</span>,
-    <span style="color: #1cc24b;">'https'</span>: <span style="color: #1cc24b;">'http://uname:pswd@ip:port'</span>
-    <span style="color: #24f6d9;">}</span>
-    <span style="color: #62ff94;">session</span> <span style="color: #24f6d9;">=</span> requests.Session<span style="color: #24f6d9;">()</span>
-    session.<span style="color: #62ff94;">headers</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">{</span>
-            <span style="color: #1cc24b;">"Host"</span>: <span style="color: #1cc24b;">"bard.google.com"</span>,
-            <span style="color: #1cc24b;">"X-Same-Domain"</span>: <span style="color: #1cc24b;">"1"</span>,
-            <span style="color: #1cc24b;">"User-Agent"</span>: <span style="color: #1cc24b;">"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36"</span>,
-            <span style="color: #1cc24b;">"Content-Type"</span>: <span style="color: #1cc24b;">"application/x-www-form-urlencoded;charset=UTF-8"</span>,
-            <span style="color: #1cc24b;">"Origin"</span>: <span style="color: #1cc24b;">"http://bard.google.com"</span>,
-            <span style="color: #1cc24b;">"Referer"</span>: <span style="color: #1cc24b;">"http://bard.google.com/"</span>,
-        <span style="color: #24f6d9;">}</span>
-    session.cookies.<span style="color: #30b3ff;">set</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"__Secure-1PSID"</span>, os.getenv<span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"BARD_KEY"</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span> 
+    proxies = {
+    'http': 'http://username:pswd@ip:port',
+    'https': 'http://uname:pswd@ip:port'
+    }
+    session = requests.Session()
+    session.headers = {
+            "Host": "bard.google.com",
+            "X-Same-Domain": "1",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+            "Origin": "http://bard.google.com",
+            "Referer": "http://bard.google.com/",
+        }
+    session.cookies.set("__Secure-1PSID", os.getenv("BARD_KEY")) 
 
-    <span style="color: #62ff94;">bard</span> <span style="color: #24f6d9;">=</span> Bard<span style="color: #24f6d9;">(</span>token<span style="color: #24f6d9;">=</span>token_bard,
-                session<span style="color: #24f6d9;">=</span>session,
-                proxies<span style="color: #24f6d9;">=</span>proxies,
-                timeout<span style="color: #24f6d9;">=</span>30<span style="color: #24f6d9;">)</span>
+    bard = Bard(token=token_bard,
+                session=session,
+                proxies=proxies,
+                timeout=30)
 
-    <span style="color: #62ff94;">res</span><span style="color: #24f6d9;">=</span>bard.get_answer<span style="color: #24f6d9;">(</span>text<span style="color: #24f6d9;">)[</span><span style="color: #1cc24b;">'content'</span><span style="color: #24f6d9;">]</span>
-    <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>res<span style="color: #24f6d9;">)</span>
+    res=bard.get_answer(text)['content']
+    print(res)
 
-<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span>:
-    inference_one_sample<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"1+1=?"</span><span style="color: #24f6d9;">)</span>
+def main():
+    inference_one_sample("1+1=?")
 </pre>
 </div>
 
@@ -445,51 +447,51 @@ Usages:
 
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">import</span> os
-<span style="color: #c770ff; font-weight: bold;">import</span> requests
+<pre class="src src-python">import os
+import requests
 
-<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">pip install slack-sdk
-</span><span style="color: #c770ff; font-weight: bold;">from</span> slack_sdk <span style="color: #c770ff; font-weight: bold;">import</span> WebClient
-<span style="color: #c770ff; font-weight: bold;">from</span> slack_sdk.errors <span style="color: #c770ff; font-weight: bold;">import</span> SlackApiError
+# pip install slack-sdk
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
 
-<span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">SlackClient</span><span style="color: #24f6d9;">(</span>WebClient<span style="color: #24f6d9;">)</span>:
-    <span style="color: #62ff94;">CHANNEL_ID</span> <span style="color: #24f6d9;">=</span> <span style="color: #ffa83d;">None</span> 
-    <span style="color: #62ff94;">CLAUDE_BOT_ID</span><span style="color: #24f6d9;">=</span>os.getenv<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"CLAUDE_BOT_ID"</span><span style="color: #24f6d9;">)</span>
+class SlackClient(WebClient):
+    CHANNEL_ID = None 
+    CLAUDE_BOT_ID=os.getenv("CLAUDE_BOT_ID")
 
-    <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">chat</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">self</span>, text<span style="color: #24f6d9;">)</span>:
-        <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #c770ff; font-weight: bold;">not</span> <span style="color: #c770ff; font-weight: bold;">self</span>.CHANNEL_ID:
-            <span style="color: #c770ff; font-weight: bold;">raise</span> <span style="color: #e6ff57;">Exception</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"Channel not found."</span><span style="color: #24f6d9;">)</span>
-        <span style="color: #62ff94;">resp</span> <span style="color: #24f6d9;">=</span> <span style="color: #c770ff; font-weight: bold;">self</span>.chat_postMessage<span style="color: #24f6d9;">(</span>channel<span style="color: #24f6d9;">=</span><span style="color: #c770ff; font-weight: bold;">self</span>.CHANNEL_ID, text<span style="color: #24f6d9;">=</span>text<span style="color: #24f6d9;">)</span>
-        <span style="color: #c770ff; font-weight: bold;">self</span>.<span style="color: #62ff94;">LAST_TS</span> <span style="color: #24f6d9;">=</span> resp<span style="color: #24f6d9;">[</span><span style="color: #1cc24b;">"ts"</span><span style="color: #24f6d9;">]</span>
+    def chat(self, text):
+        if not self.CHANNEL_ID:
+            raise Exception("Channel not found.")
+        resp = self.chat_postMessage(channel=self.CHANNEL_ID, text=text)
+        self.LAST_TS = resp["ts"]
 
-    <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">get_reply</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">self</span><span style="color: #24f6d9;">)</span>:
-        <span style="color: #c770ff; font-weight: bold;">for</span> _ <span style="color: #c770ff; font-weight: bold;">in</span> <span style="color: #30b3ff;">range</span><span style="color: #24f6d9;">(</span>150<span style="color: #24f6d9;">)</span>:
-            <span style="color: #c770ff; font-weight: bold;">try</span>:
-                <span style="color: #62ff94;">resp</span> <span style="color: #24f6d9;">=</span> <span style="color: #c770ff; font-weight: bold;">self</span>.conversations_history<span style="color: #24f6d9;">(</span>channel<span style="color: #24f6d9;">=</span><span style="color: #c770ff; font-weight: bold;">self</span>.CHANNEL_ID, oldest<span style="color: #24f6d9;">=</span><span style="color: #c770ff; font-weight: bold;">self</span>.LAST_TS, limit<span style="color: #24f6d9;">=</span>2<span style="color: #24f6d9;">)</span>
-                <span style="color: #62ff94;">msg</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span>msg<span style="color: #c770ff;">[</span><span style="color: #1cc24b;">"text"</span><span style="color: #c770ff;">]</span> <span style="color: #c770ff; font-weight: bold;">for</span> msg <span style="color: #c770ff; font-weight: bold;">in</span> resp<span style="color: #c770ff;">[</span><span style="color: #1cc24b;">"messages"</span><span style="color: #c770ff;">]</span>\
-                       <span style="color: #c770ff; font-weight: bold;">if</span> msg<span style="color: #c770ff;">[</span><span style="color: #1cc24b;">"user"</span><span style="color: #c770ff;">]</span> <span style="color: #24f6d9;">==</span> <span style="color: #c770ff; font-weight: bold;">self</span>.CLAUDE_BOT_ID<span style="color: #24f6d9;">]</span>
-                <span style="color: #c770ff; font-weight: bold;">if</span> msg <span style="color: #c770ff; font-weight: bold;">and</span> <span style="color: #c770ff; font-weight: bold;">not</span> msg<span style="color: #24f6d9;">[</span><span style="color: #24f6d9;">-</span>1<span style="color: #24f6d9;">]</span>.endswith<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"Typing&#8230;_"</span><span style="color: #24f6d9;">)</span>:
-                    <span style="color: #c770ff; font-weight: bold;">return</span> msg<span style="color: #24f6d9;">[</span><span style="color: #24f6d9;">-</span>1<span style="color: #24f6d9;">]</span>
-            <span style="color: #c770ff; font-weight: bold;">except</span> <span style="color: #24f6d9;">(</span>SlackApiError, <span style="color: #e6ff57;">KeyError</span><span style="color: #24f6d9;">)</span> <span style="color: #c770ff; font-weight: bold;">as</span> e:
-                <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"Get reply error: </span>{e}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
-                <span style="color: #c770ff; font-weight: bold;">raise</span> <span style="color: #e6ff57;">Exception</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"Get replay timeout"</span><span style="color: #24f6d9;">)</span>
+    def get_reply(self):
+        for _ in range(150):
+            try:
+                resp = self.conversations_history(channel=self.CHANNEL_ID, oldest=self.LAST_TS, limit=2)
+                msg = [msg["text"] for msg in resp["messages"]\
+                       if msg["user"] == self.CLAUDE_BOT_ID]
+                if msg and not msg[-1].endswith("Typing…_"):
+                    return msg[-1]
+            except (SlackApiError, KeyError) as e:
+                print(f"Get reply error: {e}")
+                raise Exception("Get replay timeout")
 
-    <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">open_channel</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">self</span><span style="color: #24f6d9;">)</span>:
-        <span style="color: #62ff94;">response</span> <span style="color: #24f6d9;">=</span> <span style="color: #c770ff; font-weight: bold;">self</span>.conversations_open<span style="color: #24f6d9;">(</span>users<span style="color: #24f6d9;">=</span><span style="color: #c770ff; font-weight: bold;">self</span>.CLAUDE_BOT_ID<span style="color: #24f6d9;">)</span>
-        <span style="color: #c770ff; font-weight: bold;">self</span>.<span style="color: #62ff94;">CHANNEL_ID</span> <span style="color: #24f6d9;">=</span> response<span style="color: #24f6d9;">[</span><span style="color: #1cc24b;">"channel"</span><span style="color: #24f6d9;">][</span><span style="color: #1cc24b;">"id"</span><span style="color: #24f6d9;">]</span>
+    def open_channel(self):
+        response = self.conversations_open(users=self.CLAUDE_BOT_ID)
+        self.CHANNEL_ID = response["channel"]["id"]
 
-<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">forward</span><span style="color: #24f6d9;">(</span>text<span style="color: #24f6d9;">)</span>:
-    <span style="color: #62ff94;">client</span> <span style="color: #24f6d9;">=</span> SlackClient<span style="color: #24f6d9;">(</span>token<span style="color: #24f6d9;">=</span>os.getenv<span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"SLACK_USER_TOKEN"</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span> 
-    client.open_channel<span style="color: #24f6d9;">()</span>
-    client.chat<span style="color: #24f6d9;">(</span>text<span style="color: #24f6d9;">)</span>
-    <span style="color: #62ff94;">reply</span> <span style="color: #24f6d9;">=</span> client.get_reply<span style="color: #24f6d9;">()</span>
-    <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"Claude: </span>{reply}<span style="color: #ffa83d;">\n</span><span style="color: #1cc24b;">--------------------"</span><span style="color: #24f6d9;">)</span>
+def forward(text):
+    client = SlackClient(token=os.getenv("SLACK_USER_TOKEN")) 
+    client.open_channel()
+    client.chat(text)
+    reply = client.get_reply()
+    print(f"Claude: {reply}\n--------------------")
 
-<span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">running entry
-</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #30b3ff;">__name__</span><span style="color: #24f6d9;">==</span><span style="color: #1cc24b;">"__main__"</span>:
-    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">infer_one("hello! nice to meet you!")
-</span>    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">infer_one("hello! nice to meet you!")
-</span>    forward<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"do you know budda?"</span><span style="color: #24f6d9;">)</span>
+## running entry
+if __name__=="__main__":
+    # infer_one("hello! nice to meet you!")
+    # infer_one("hello! nice to meet you!")
+    forward("do you know budda?")
 </pre>
 </div>
 
@@ -528,21 +530,21 @@ First compile this repository in your device:
 
 
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">clone to local
-</span>git clone  https://github.com/ggerganov/llama.cpp
+<pre class="src src-sh"># clone to local
+git clone  https://github.com/ggerganov/llama.cpp
 
-<span style="color: #30b3ff;">cd</span> llama.cpp
+cd llama.cpp
 
-<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">vanilla compile
-</span>make
+# vanilla compile
+make
 
-<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">other types of compile to supports GPU.
-</span>
-<span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">cuda
-</span><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">make LLAMA_CUBLAS=1
-</span>
-<span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">Apple device
-</span><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">LLAMA_METAL=1 make</span>
+# other types of compile to supports GPU.
+
+## cuda
+# make LLAMA_CUBLAS=1
+
+## Apple device
+# LLAMA_METAL=1 make
 </pre>
 </div>
 
@@ -574,12 +576,12 @@ While the make procedure is DONE, then you will find a execute file named <code>
 
 <div class="org-src-container">
 <pre class="src src-sh">
-<span style="color: #30b3ff;">export</span> <span style="color: #62ff94;">model_path</span>=<span style="color: #1cc24b;">"your llama model path"</span>
-<span style="color: #30b3ff;">export</span> <span style="color: #62ff94;">llama_path</span>=<span style="color: #1cc24b;">"your main file path"</span>
+export model_path="your llama model path"
+export llama_path="your main file path"
 
-<span style="color: #30b3ff;">export</span> <span style="color: #62ff94;">query</span>=<span style="color: #1cc24b;">"hello, whats your name?"</span>
+export query="hello, whats your name?"
 
-$<span style="color: #62ff94;">llama_path</span> -m $<span style="color: #62ff94;">model_path</span> -p $<span style="color: #62ff94;">query</span>
+$llama_path -m $model_path -p $query
 </pre>
 </div>
 
@@ -589,86 +591,86 @@ using <code>${llama_path} --help</code> to lookup all options:
 
 
 <div class="org-src-container">
-<pre class="src src-sh">usage: ./main <span style="color: #24f6d9;">[</span>options<span style="color: #24f6d9;">]</span>
+<pre class="src src-sh">usage: ./main [options]
 
 options:
   -h, --help            show this help message and exit
-  -i, --interactive     run<span style="color: #c770ff; font-weight: bold;"> in</span> interactive mode
-  --interactive-first   run<span style="color: #c770ff; font-weight: bold;"> in</span> interactive mode and wait for input right away
-  -ins, --instruct      run<span style="color: #c770ff; font-weight: bold;"> in</span> instruction mode <span style="color: #24f6d9;">(</span>use with Alpaca models<span style="color: #24f6d9;">)</span>
-  --multiline-input     allows you to write or paste multiple lines without ending each<span style="color: #c770ff; font-weight: bold;"> in</span> <span style="color: #1cc24b;">'\'</span>
+  -i, --interactive     run in interactive mode
+  --interactive-first   run in interactive mode and wait for input right away
+  -ins, --instruct      run in instruction mode (use with Alpaca models)
+  --multiline-input     allows you to write or paste multiple lines without ending each in '\'
   -r PROMPT, --reverse-prompt PROMPT
-                        halt generation at PROMPT, return control<span style="color: #c770ff; font-weight: bold;"> in</span> interactive mode
-                        <span style="color: #24f6d9;">(</span>can be specified more than once for multiple prompts<span style="color: #24f6d9;">)</span><span style="color: #30b3ff;">.</span>
+                        halt generation at PROMPT, return control in interactive mode
+                        (can be specified more than once for multiple prompts).
   --color               colorise output to distinguish prompt and user input from generations
-  -s SEED, --seed SEED  RNG seed <span style="color: #24f6d9;">(</span>default: -1, use random seed for &lt; 0<span style="color: #24f6d9;">)</span>
-  -t N, --threads N     number of threads to use during computation <span style="color: #24f6d9;">(</span>default: 40<span style="color: #24f6d9;">)</span>
+  -s SEED, --seed SEED  RNG seed (default: -1, use random seed for &lt; 0)
+  -t N, --threads N     number of threads to use during computation (default: 40)
   -p PROMPT, --prompt PROMPT
-                        prompt to start generation with <span style="color: #24f6d9;">(</span>default: empty<span style="color: #24f6d9;">)</span>
-  -e                    process prompt escapes sequences <span style="color: #24f6d9;">(</span>\n, \r, \t, <span style="color: #1cc24b;">\'</span>, <span style="color: #1cc24b;">\"</span>, <span style="color: #1cc24b;">\\</span><span style="color: #24f6d9;">)</span>
-  --prompt-cache FNAME  file to cache prompt state for faster startup <span style="color: #24f6d9;">(</span>default: none<span style="color: #24f6d9;">)</span>
+                        prompt to start generation with (default: empty)
+  -e                    process prompt escapes sequences (\n, \r, \t, \', \", \\)
+  --prompt-cache FNAME  file to cache prompt state for faster startup (default: none)
   --prompt-cache-all    if specified, saves user input and generations to cache as well.
                         not supported with --interactive or other interactive options
   --prompt-cache-ro     if specified, uses the prompt cache but does not update it.
   --random-prompt       start with a randomized prompt.
-  --in-prefix-bos       prefix BOS to user inputs, preceding the <span style="color: #fa8072;">`--in-prefix`</span> string
-  --in-prefix STRING    string to prefix user inputs with <span style="color: #24f6d9;">(</span>default: empty<span style="color: #24f6d9;">)</span>
-  --in-suffix STRING    string to suffix after user inputs with <span style="color: #24f6d9;">(</span>default: empty<span style="color: #24f6d9;">)</span>
+  --in-prefix-bos       prefix BOS to user inputs, preceding the `--in-prefix` string
+  --in-prefix STRING    string to prefix user inputs with (default: empty)
+  --in-suffix STRING    string to suffix after user inputs with (default: empty)
   -f FNAME, --file FNAME
                         prompt file to start generation.
-  -n N, --n-predict N   number of tokens to predict <span style="color: #24f6d9;">(</span>default: -1, -1 = infinity, -2 = until context filled<span style="color: #24f6d9;">)</span>
-  -c N, --ctx-size N    size of the prompt context <span style="color: #24f6d9;">(</span>default: 512<span style="color: #24f6d9;">)</span>
-  -b N, --batch-size N  batch size for prompt processing <span style="color: #24f6d9;">(</span>default: 512<span style="color: #24f6d9;">)</span>
-  -gqa N, --gqa N       grouped-query attention factor <span style="color: #24f6d9;">(</span>TEMP!!! use 8 for LLaMAv2 70B<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">(</span>default: 1<span style="color: #24f6d9;">)</span>
-  -eps N, --rms-norm-eps N rms norm eps <span style="color: #24f6d9;">(</span>TEMP!!! use 1e-5 for LLaMAv2<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">(</span>default: 5.0e-06<span style="color: #24f6d9;">)</span>
-  --top-k N             top-k sampling <span style="color: #24f6d9;">(</span>default: 40, 0 = disabled<span style="color: #24f6d9;">)</span>
-  --top-p N             top-p sampling <span style="color: #24f6d9;">(</span>default: 0.9, 1.0 = disabled<span style="color: #24f6d9;">)</span>
-  --tfs N               tail free sampling, parameter z <span style="color: #24f6d9;">(</span>default: 1.0, 1.0 = disabled<span style="color: #24f6d9;">)</span>
-  --typical N           locally typical sampling, parameter p <span style="color: #24f6d9;">(</span>default: 1.0, 1.0 = disabled<span style="color: #24f6d9;">)</span>
-  --repeat-last-n N     last n tokens to consider for penalize <span style="color: #24f6d9;">(</span>default: 64, 0 = disabled, -1 = ctx_size<span style="color: #24f6d9;">)</span>
-  --repeat-penalty N    penalize repeat sequence of tokens <span style="color: #24f6d9;">(</span>default: 1.1, 1.0 = disabled<span style="color: #24f6d9;">)</span>
-  --presence-penalty N  repeat alpha presence penalty <span style="color: #24f6d9;">(</span>default: 0.0, 0.0 = disabled<span style="color: #24f6d9;">)</span>
-  --frequency-penalty N repeat alpha frequency penalty <span style="color: #24f6d9;">(</span>default: 0.0, 0.0 = disabled<span style="color: #24f6d9;">)</span>
+  -n N, --n-predict N   number of tokens to predict (default: -1, -1 = infinity, -2 = until context filled)
+  -c N, --ctx-size N    size of the prompt context (default: 512)
+  -b N, --batch-size N  batch size for prompt processing (default: 512)
+  -gqa N, --gqa N       grouped-query attention factor (TEMP!!! use 8 for LLaMAv2 70B) (default: 1)
+  -eps N, --rms-norm-eps N rms norm eps (TEMP!!! use 1e-5 for LLaMAv2) (default: 5.0e-06)
+  --top-k N             top-k sampling (default: 40, 0 = disabled)
+  --top-p N             top-p sampling (default: 0.9, 1.0 = disabled)
+  --tfs N               tail free sampling, parameter z (default: 1.0, 1.0 = disabled)
+  --typical N           locally typical sampling, parameter p (default: 1.0, 1.0 = disabled)
+  --repeat-last-n N     last n tokens to consider for penalize (default: 64, 0 = disabled, -1 = ctx_size)
+  --repeat-penalty N    penalize repeat sequence of tokens (default: 1.1, 1.0 = disabled)
+  --presence-penalty N  repeat alpha presence penalty (default: 0.0, 0.0 = disabled)
+  --frequency-penalty N repeat alpha frequency penalty (default: 0.0, 0.0 = disabled)
   --mirostat N          use Mirostat sampling.
                         Top K, Nucleus, Tail Free and Locally Typical samplers are ignored if used.
-                        <span style="color: #24f6d9;">(</span>default: 0, 0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0<span style="color: #24f6d9;">)</span>
-  --mirostat-lr N       Mirostat learning rate, parameter eta <span style="color: #24f6d9;">(</span>default: 0.1<span style="color: #24f6d9;">)</span>
-  --mirostat-ent N      Mirostat target entropy, parameter tau <span style="color: #24f6d9;">(</span>default: 5.0<span style="color: #24f6d9;">)</span>
-  -l TOKEN_ID<span style="color: #24f6d9;">(</span>+/-<span style="color: #24f6d9;">)</span>BIAS, --logit-bias TOKEN_ID<span style="color: #24f6d9;">(</span>+/-<span style="color: #24f6d9;">)</span>BIAS
-                        modifies the likelihood of token appearing<span style="color: #c770ff; font-weight: bold;"> in</span> the completion,
-                        i.e. <span style="color: #fa8072;">`--logit-bias 15043+1`</span> to increase likelihood of token <span style="color: #1cc24b;">' Hello'</span>,
-                        or <span style="color: #fa8072;">`--logit-bias 15043-1`</span> to decrease likelihood of token <span style="color: #1cc24b;">' Hello'</span>
-  --grammar GRAMMAR     BNF-like grammar to constrain generations <span style="color: #24f6d9;">(</span>see samples<span style="color: #c770ff; font-weight: bold;"> in</span> grammars/ dir<span style="color: #24f6d9;">)</span>
+                        (default: 0, 0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0)
+  --mirostat-lr N       Mirostat learning rate, parameter eta (default: 0.1)
+  --mirostat-ent N      Mirostat target entropy, parameter tau (default: 5.0)
+  -l TOKEN_ID(+/-)BIAS, --logit-bias TOKEN_ID(+/-)BIAS
+                        modifies the likelihood of token appearing in the completion,
+                        i.e. `--logit-bias 15043+1` to increase likelihood of token ' Hello',
+                        or `--logit-bias 15043-1` to decrease likelihood of token ' Hello'
+  --grammar GRAMMAR     BNF-like grammar to constrain generations (see samples in grammars/ dir)
   --grammar-file FNAME  file to read grammar from
   --cfg-negative-prompt PROMPT
-                        negative prompt to use for guidance. <span style="color: #24f6d9;">(</span>default: empty<span style="color: #24f6d9;">)</span>
-  --cfg-scale N         strength of guidance <span style="color: #24f6d9;">(</span>default: 1.000000, 1.0 = disable<span style="color: #24f6d9;">)</span>
-  --rope-scale N        RoPE context linear scaling factor, inverse of --rope-freq-scale <span style="color: #24f6d9;">(</span>default: 1<span style="color: #24f6d9;">)</span>
-  --rope-freq-base N    RoPE base frequency, used by NTK-aware scaling <span style="color: #24f6d9;">(</span>default: 10000.0<span style="color: #24f6d9;">)</span>
-  --rope-freq-scale N   RoPE frequency linear scaling factor, inverse of --rope-scale <span style="color: #24f6d9;">(</span>default: 1<span style="color: #24f6d9;">)</span>
-  --ignore-eos          ignore end of stream token and continue generating <span style="color: #24f6d9;">(</span>implies --logit-bias 2-inf<span style="color: #24f6d9;">)</span>
-  --no-penalize-nl     <span style="color: #c770ff; font-weight: bold;"> do</span> not penalize newline token
-  --memory-f32          use f32 instead of f16 for memory key+value <span style="color: #24f6d9;">(</span>default: disabled<span style="color: #24f6d9;">)</span>
-                        not recommended: doubles context memory required and no measurable increase<span style="color: #c770ff; font-weight: bold;"> in</span> quality
-  --temp N              temperature <span style="color: #24f6d9;">(</span>default: 0.8<span style="color: #24f6d9;">)</span>
+                        negative prompt to use for guidance. (default: empty)
+  --cfg-scale N         strength of guidance (default: 1.000000, 1.0 = disable)
+  --rope-scale N        RoPE context linear scaling factor, inverse of --rope-freq-scale (default: 1)
+  --rope-freq-base N    RoPE base frequency, used by NTK-aware scaling (default: 10000.0)
+  --rope-freq-scale N   RoPE frequency linear scaling factor, inverse of --rope-scale (default: 1)
+  --ignore-eos          ignore end of stream token and continue generating (implies --logit-bias 2-inf)
+  --no-penalize-nl      do not penalize newline token
+  --memory-f32          use f32 instead of f16 for memory key+value (default: disabled)
+                        not recommended: doubles context memory required and no measurable increase in quality
+  --temp N              temperature (default: 0.8)
   --perplexity          compute perplexity over each ctx window of the prompt
   --hellaswag           compute HellaSwag score over random tasks from datafile supplied with -f
-  --hellaswag-tasks N   number of tasks to use when computing the HellaSwag score <span style="color: #24f6d9;">(</span>default: 400<span style="color: #24f6d9;">)</span>
-  --keep N              number of tokens to keep from the initial prompt <span style="color: #24f6d9;">(</span>default: 0, -1 = all<span style="color: #24f6d9;">)</span>
-  --chunks N            max number of chunks to process <span style="color: #24f6d9;">(</span>default: -1, -1 = all<span style="color: #24f6d9;">)</span>
-  --mlock               force system to keep model<span style="color: #c770ff; font-weight: bold;"> in</span> RAM rather than swapping or compressing
-  --no-mmap            <span style="color: #c770ff; font-weight: bold;"> do</span> not memory-map model <span style="color: #24f6d9;">(</span>slower load but may reduce pageouts if not using mlock<span style="color: #24f6d9;">)</span>
+  --hellaswag-tasks N   number of tasks to use when computing the HellaSwag score (default: 400)
+  --keep N              number of tokens to keep from the initial prompt (default: 0, -1 = all)
+  --chunks N            max number of chunks to process (default: -1, -1 = all)
+  --mlock               force system to keep model in RAM rather than swapping or compressing
+  --no-mmap             do not memory-map model (slower load but may reduce pageouts if not using mlock)
   --numa                attempt optimizations that help on some NUMA systems
-                        <span style="color: #c770ff; font-weight: bold;">if</span> run without this previously, it is recommended to drop the system page cache before using this
+                        if run without this previously, it is recommended to drop the system page cache before using this
                         see https://github.com/ggerganov/llama.cpp/issues/1437
   --mtest               compute maximum memory usage
-  --export              export the computation graph to <span style="color: #1cc24b;">'llama.ggml'</span>
+  --export              export the computation graph to 'llama.ggml'
   --verbose-prompt      print prompt before generation
-  --simple-io           use basic IO for better compatibility<span style="color: #c770ff; font-weight: bold;"> in</span> subprocesses and limited consoles
-  --lora FNAME          apply LoRA adapter <span style="color: #24f6d9;">(</span>implies --no-mmap<span style="color: #24f6d9;">)</span>
+  --simple-io           use basic IO for better compatibility in subprocesses and limited consoles
+  --lora FNAME          apply LoRA adapter (implies --no-mmap)
   --lora-base FNAME     optional model to use as a base for the layers modified by the LoRA adapter
   -m FNAME, --model FNAME
-                        model path <span style="color: #24f6d9;">(</span>default: models/7B/ggml-model.bin<span style="color: #24f6d9;">)</span>
+                        model path (default: models/7B/ggml-model.bin)
 </pre>
 </div>
 
@@ -677,8 +679,8 @@ If you have no LLAMA checkpoints, you can access from the LLAMA page, or downloa
 </p>
 
 
-<div id="org6253bfc" class="figure">
-<p><img src="./images/screenshot_20230816_180642.png" alt="screenshot_20230816_180642.png">
+<div id="org44cf0e1" class="figure">
+<p><img src="./images/screenshot_20230816_180642.png" alt="screenshot_20230816_180642.png" />
 </p>
 </div>
 
@@ -689,21 +691,21 @@ Beyond the interactive mode of llama.cpp, you might hope to use it as a API, it 
 
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">import</span> subprocess
+<pre class="src src-python">import subprocess
 
-<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">inference_llama2</span><span style="color: #24f6d9;">(</span>sent<span style="color: #24f6d9;">)</span>:
-    <span style="color: #62ff94;">llama</span><span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"/home/liangzi/llama.cpp/main"</span>
-    <span style="color: #62ff94;">model</span><span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"/home/liangzi/models/llama2/llama-2-7b-chat.ggmlv3.q8_0.bin"</span>
-    <span style="color: #62ff94;">scripts</span><span style="color: #24f6d9;">=</span>f<span style="color: #1cc24b;">"""
-    </span>{llama}<span style="color: #1cc24b;"> -m </span>{model}<span style="color: #1cc24b;"> -p "Please response to the question of user. User: </span>{sent}<span style="color: #1cc24b;"> Answer: "
-    """</span>
-    <span style="color: #62ff94;">result</span> <span style="color: #24f6d9;">=</span> subprocess.run<span style="color: #24f6d9;">(</span>scripts, shell<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>, capture_output<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span><span style="color: #24f6d9;">)</span>.stdout.decode<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"utf8"</span><span style="color: #24f6d9;">)</span>
-    <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #1cc24b;">"Answer: "</span> <span style="color: #c770ff; font-weight: bold;">in</span> result:
-        <span style="color: #62ff94;">result</span><span style="color: #24f6d9;">=</span>result.split<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"Answer: "</span><span style="color: #24f6d9;">)[</span>1<span style="color: #24f6d9;">]</span>
-    <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #1cc24b;">"User"</span> <span style="color: #c770ff; font-weight: bold;">in</span> result:
-        <span style="color: #62ff94;">result</span><span style="color: #24f6d9;">=</span>result.split<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"User"</span><span style="color: #24f6d9;">)[</span>0<span style="color: #24f6d9;">]</span>
-    <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>result<span style="color: #24f6d9;">)</span>
-    <span style="color: #c770ff; font-weight: bold;">return</span> result
+def inference_llama2(sent):
+    llama="/home/liangzi/llama.cpp/main"
+    model="/home/liangzi/models/llama2/llama-2-7b-chat.ggmlv3.q8_0.bin"
+    scripts=f"""
+    {llama} -m {model} -p "Please response to the question of user. User: {sent} Answer: "
+    """
+    result = subprocess.run(scripts, shell=True, capture_output=True).stdout.decode("utf8")
+    if "Answer: " in result:
+        result=result.split("Answer: ")[1]
+    if "User" in result:
+        result=result.split("User")[0]
+    print(result)
+    return result
 </pre>
 </div>
 
@@ -744,7 +746,7 @@ cargo run --example llama --release
 cargo run --example falcon --release
 cargo run --example bert --release
 cargo run --example bigcode --release
-cargo run --example stable-diffusion --release --features image -- --prompt <span style="color: #1cc24b;">"a rusty robot holding a fire torch"</span>
+cargo run --example stable-diffusion --release --features image -- --prompt "a rusty robot holding a fire torch"
 </pre>
 </div>
 
@@ -771,8 +773,8 @@ Take llama2 as an example, you may should first acess this model in <a href="htt
 </p>
 
 
-<div id="orgb4970f2" class="figure">
-<p><img src="./images/screenshot_20230816_181741.png" alt="screenshot_20230816_181741.png">
+<div id="org03a2e8b" class="figure">
+<p><img src="./images/screenshot_20230816_181741.png" alt="screenshot_20230816_181741.png" />
 </p>
 </div>
 

@@ -1,8 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-05-24 Sun 17:44 -->
-<meta charset="utf-8" />
+<!-- 2026-05-24 Sun 21:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>【低质量】rust是如何适配并发的？</title>
 <meta name="author" content="Zi Liang" />
@@ -240,24 +242,24 @@
 
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #c770ff; font-weight: bold;">use</span> <span style="color: #ffa83d;">std</span>::thread;
-<span style="color: #c770ff; font-weight: bold;">use</span> <span style="color: #ffa83d;">std</span>::<span style="color: #ffa83d;">time</span>::<span style="color: #e6ff57;">Duration</span>;
+<pre class="src src-rust">use std::thread;
+use std::time::Duration;
 
-<span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span> <span style="color: #24f6d9;">{</span>
-         <span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">handle</span> = <span style="color: #ffa83d;">thread</span>::spawn<span style="color: #c770ff;">(</span>|| <span style="color: #e6ff57;">{</span>
-             <span style="color: #c770ff; font-weight: bold;">for</span> <span style="color: #62ff94;">i</span> <span style="color: #c770ff; font-weight: bold;">in</span> 1..10 <span style="color: #30b3ff;">{</span>
-                 <span style="color: #30b3ff;">println!</span><span style="color: #ffa83d;">(</span><span style="color: #1cc24b;">"hi number </span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;"> from the spawned thread!"</span>, i<span style="color: #ffa83d;">)</span>;
-                 <span style="color: #ffa83d;">thread</span>::sleep<span style="color: #ffa83d;">(</span><span style="color: #e6ff57;">Duration</span>::from_millis<span style="color: #1cc24b;">(</span>1<span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span>;
-             <span style="color: #30b3ff;">}</span>
-         <span style="color: #e6ff57;">}</span><span style="color: #c770ff;">)</span>;
+fn main() {
+         let handle = thread::spawn(|| {
+             for i in 1..10 {
+                 println!("hi number {} from the spawned thread!", i);
+                 thread::sleep(Duration::from_millis(1));
+             }
+         });
 
-         handle.join<span style="color: #c770ff;">()</span>.unwrap<span style="color: #c770ff;">()</span>;
+         handle.join().unwrap();
 
-         <span style="color: #c770ff; font-weight: bold;">for</span> <span style="color: #62ff94;">i</span> <span style="color: #c770ff; font-weight: bold;">in</span> 1..5 <span style="color: #c770ff;">{</span>
-             <span style="color: #30b3ff;">println!</span><span style="color: #e6ff57;">(</span><span style="color: #1cc24b;">"hi number </span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;"> from the main thread!"</span>, i<span style="color: #e6ff57;">)</span>;
-             <span style="color: #ffa83d;">thread</span>::sleep<span style="color: #e6ff57;">(</span><span style="color: #e6ff57;">Duration</span>::from_millis<span style="color: #30b3ff;">(</span>1<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>;
-         <span style="color: #c770ff;">}</span>
-<span style="color: #24f6d9;">}</span>
+         for i in 1..5 {
+             println!("hi number {} from the main thread!", i);
+             thread::sleep(Duration::from_millis(1));
+         }
+}
 </pre>
 </div>
 <p>
@@ -272,16 +274,16 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust">   <span style="color: #c770ff; font-weight: bold;">use</span> <span style="color: #ffa83d;">std</span>::thread;
-<span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span> <span style="color: #24f6d9;">{</span>
-    <span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">v</span> = <span style="color: #ffa83d;">vec!</span><span style="color: #c770ff;">[</span>1, 2, 3<span style="color: #c770ff;">]</span>;
+<pre class="src src-rust">   use std::thread;
+fn main() {
+    let v = vec![1, 2, 3];
 
-    <span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">handle</span> = <span style="color: #ffa83d;">thread</span>::spawn<span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">move</span> || <span style="color: #e6ff57;">{</span>
-        <span style="color: #30b3ff;">println!</span><span style="color: #30b3ff;">(</span><span style="color: #1cc24b;">"Here's a vector: </span><span style="color: #1cc24b; font-style: italic;">{:?}</span><span style="color: #1cc24b;">"</span>, v<span style="color: #30b3ff;">)</span>;
-    <span style="color: #e6ff57;">}</span><span style="color: #c770ff;">)</span>;
+    let handle = thread::spawn(move || {
+        println!("Here's a vector: {:?}", v);
+    });
 
-    handle.join<span style="color: #c770ff;">()</span>.unwrap<span style="color: #c770ff;">()</span>;
-<span style="color: #24f6d9;">}</span>
+    handle.join().unwrap();
+}
 </pre>
 </div>
 <p>

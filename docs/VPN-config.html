@@ -1,8 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-05-24 Sun 17:44 -->
-<meta charset="utf-8" />
+<!-- 2026-05-24 Sun 21:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>VPN Configuration to Bypass Some Firewalls.</title>
 <meta name="author" content="Zi Liang" />
@@ -243,7 +245,7 @@ Step 1: install trojan.
 
 
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #30b3ff;">cd</span> path-to-install
+<pre class="src src-sh">cd path-to-install
 wget https://github.com/trojan-gfw/trojan/releases/download/v1.16.0/trojan-1.16.0-linux-amd64.tar.xz
 tarxvf tar xvf trojan-1.16.0-linux-amd64.tar.xz
 </pre>
@@ -264,36 +266,36 @@ Simply copy the configuration (with a <code>json</code> format) text into a plac
 
 <div class="org-src-container">
 <pre class="src src-js">
-<span style="color: #24f6d9;">{</span>
-    <span style="color: #1cc24b;">"run_type"</span>:<span style="color: #1cc24b;">"client"</span>,
-    <span style="color: #1cc24b;">"local_addr"</span>:<span style="color: #1cc24b;">"127.0.0.1"</span>,
-    <span style="color: #1cc24b;">"local_port"</span>:1080,
-    <span style="color: #1cc24b;">"remote_addr"</span>:<span style="color: #1cc24b;">"xxxxxxxxxxxxxxx.com"</span>,
-    <span style="color: #1cc24b;">"remote_port"</span>:443,
-    <span style="color: #1cc24b;">"password"</span>:<span style="color: #c770ff;">[</span><span style="color: #1cc24b;">"xxxxxxxxxxxxxxxxxxxxxxxxxx"</span><span style="color: #c770ff;">]</span>,
-    <span style="color: #1cc24b;">"log_level"</span>:1,
-    <span style="color: #1cc24b;">"ssl"</span>:
-    <span style="color: #c770ff;">{</span>
-        <span style="color: #1cc24b;">"verify"</span>:<span style="color: #ffa83d;">true</span>,
-        <span style="color: #1cc24b;">"verify_hostname"</span>:<span style="color: #ffa83d;">true</span>,
-        <span style="color: #1cc24b;">"cert"</span>:<span style="color: #1cc24b;">""</span>,
-        <span style="color: #1cc24b;">"cipher"</span>:<span style="color: #1cc24b;">"ECDHE-ECDSA-xxxxxxxxxxxxxxxxxxxxxxxxxx"</span>,
-        <span style="color: #1cc24b;">"cipher_tls13"</span>:<span style="color: #1cc24b;">"TLS_AES_xxxxxxxxxxxxxxxxxxxxxxxx"</span>,
-        <span style="color: #1cc24b;">"sni"</span>:<span style="color: #1cc24b;">""</span>,
-        <span style="color: #1cc24b;">"alpn"</span>:<span style="color: #e6ff57;">[</span><span style="color: #1cc24b;">"h2"</span>,<span style="color: #1cc24b;">"http/1.1"</span><span style="color: #e6ff57;">]</span>,
-        <span style="color: #1cc24b;">"reuse_session"</span>:<span style="color: #ffa83d;">true</span>,
-        <span style="color: #1cc24b;">"session_ticket"</span>:<span style="color: #ffa83d;">false</span>,
-        <span style="color: #1cc24b;">"curves"</span>:<span style="color: #1cc24b;">""</span>
-    <span style="color: #c770ff;">}</span>,
-    <span style="color: #1cc24b;">"tcp"</span>:
-    <span style="color: #c770ff;">{</span>
-        <span style="color: #1cc24b;">"no_delay"</span>:<span style="color: #ffa83d;">true</span>,
-        <span style="color: #1cc24b;">"keep_alive"</span>:<span style="color: #ffa83d;">true</span>,
-        <span style="color: #1cc24b;">"reuse_port"</span>:<span style="color: #ffa83d;">false</span>,
-        <span style="color: #1cc24b;">"fast_open"</span>:<span style="color: #ffa83d;">false</span>,
-        <span style="color: #1cc24b;">"fast_open_qlen"</span>:20
-    <span style="color: #c770ff;">}</span>
-<span style="color: #24f6d9;">}</span>
+{
+    "run_type":"client",
+    "local_addr":"127.0.0.1",
+    "local_port":1080,
+    "remote_addr":"xxxxxxxxxxxxxxx.com",
+    "remote_port":443,
+    "password":["xxxxxxxxxxxxxxxxxxxxxxxxxx"],
+    "log_level":1,
+    "ssl":
+    {
+        "verify":true,
+        "verify_hostname":true,
+        "cert":"",
+        "cipher":"ECDHE-ECDSA-xxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "cipher_tls13":"TLS_AES_xxxxxxxxxxxxxxxxxxxxxxxx",
+        "sni":"",
+        "alpn":["h2","http/1.1"],
+        "reuse_session":true,
+        "session_ticket":false,
+        "curves":""
+    },
+    "tcp":
+    {
+        "no_delay":true,
+        "keep_alive":true,
+        "reuse_port":false,
+        "fast_open":false,
+        "fast_open_qlen":20
+    }
+}
 </pre>
 </div>
 
@@ -403,15 +405,15 @@ Now you can use it via: <code>proxychains command-yours XXXXXXXXXX</code>.
 <div class="outline-text-4" id="text-1-1-4">
 <div class="org-src-container">
 <pre class="src src-sh">
-<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">1. test the configuration of trojan:
-</span>curl ip.sb --socks5 127.0.0.1 1080
+# 1. test the configuration of trojan:
+curl ip.sb --socks5 127.0.0.1 1080
 
-<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">2. test the configuration of systemctl
-</span>
+# 2. test the configuration of systemctl
+
 systemctl --user status trojan.service
 
-<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">3. test the configuration of proxychains
-</span>curl -4 ip.sb
+# 3. test the configuration of proxychains
+curl -4 ip.sb
 proxychains curl -4 ip.sb
 
 </pre>

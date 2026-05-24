@@ -1,8 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-05-24 Sun 17:44 -->
-<meta charset="utf-8" />
+<!-- 2026-05-24 Sun 21:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OpenClaw 设计细节（三）：会话管理、定时任务、节点系统、配置系统</title>
 <meta name="author" content="Zi Liang" />
@@ -349,7 +351,7 @@ JSONL 格式的好处是：
 <li>**计算会话新鲜度**：判断是否需要新建会话</li>
 <li>**构建 session entry**：合并旧状态和新设置</li>
 <li>**持久化到 store**：更新会话索引文件</li>
-<li>**触发插件钩子**：=session_start=、=session_end=</li>
+<li>**触发插件钩子**：=session<sub>start</sub>=、=session<sub>end</sub>=</li>
 </ol>
 
 <p>
@@ -1121,13 +1123,13 @@ export type ConfigFileSnapshot = {
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#35206;&#30422;&#27169;&#22411;&#25552;&#20379;&#21830;&#30340; API key
-</span><span style="color: #62ff94;">OPENCLAW__models__providers__anthropic__apiKey</span>=sk-ant-... openclaw
+<pre class="src src-bash"># 覆盖模型提供商的 API key
+OPENCLAW__models__providers__anthropic__apiKey=sk-ant-... openclaw
 </pre>
 </div>
 
 <p>
-格式是 =OPENCLAW__path__to__field=value=。
+格式是 =OPENCLAW_<sub>path</sub>_<sub>to</sub>_<sub>field</sub>=value=。
 </p>
 
 <p>

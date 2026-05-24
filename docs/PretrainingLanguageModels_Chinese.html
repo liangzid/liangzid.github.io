@@ -1,8 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-05-24 Sun 17:44 -->
-<meta charset="utf-8" />
+<!-- 2026-05-24 Sun 21:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>中文预训练模型汇总</title>
 <meta name="author" content="Liang Zi" />
@@ -248,11 +250,11 @@
 <div class="outline-text-4" id="text-1-1-2">
 </div>
 <ol class="org-ol">
-<li><a id="org06246ef"></a>下载词汇表和配置文件<br>
+<li><a id="org06246ef"></a>下载词汇表和配置文件<br />
 <div class="outline-text-5" id="text-1-1-2-1">
 <p>
 在下图所示的地方可以看见huggingface维护的整体的git仓库。
-<img src="./images/20210524191253.png" alt="20210524191253.png">
+<img src="./images/20210524191253.png" alt="20210524191253.png" />
 </p>
 
 <p>
@@ -263,34 +265,34 @@
 </pre>
 </div>
 <p>
-注意，如果没有lfs支持的话，这样无法下载pytorch_model.bin文件。
+注意，如果没有lfs支持的话，这样无法下载pytorch<sub>model.bin文件</sub>。
 </p>
 </div>
 </li>
-<li><a id="org04a9c07"></a>下载预训练模型库<br>
+<li><a id="org04a9c07"></a>下载预训练模型库<br />
 <div class="outline-text-5" id="text-1-1-2-2">
 <p>
 可以在浏览器中通过点击，或者其他的一些方法，下载该二进制文件，然后覆盖到该目录之下。
 </p>
 </div>
 </li>
-<li><a id="orge065bd8"></a>加载模型的思路<br>
+<li><a id="orge065bd8"></a>加载模型的思路<br />
 <ol class="org-ol">
-<li><a id="orgfca4b58"></a>加载tokenizer<br>
+<li><a id="orgfca4b58"></a>加载tokenizer<br />
 <div class="outline-text-6" id="text-1-1-2-3-1">
 <p>
-不建议用自动加载，建议自己写一下加载方式，主要语法就是MoumouTokenizer.from_pretrained(dirpath)这种格式。注意记得添加自定义的特殊token
+不建议用自动加载，建议自己写一下加载方式，主要语法就是MoumouTokenizer.from<sub>pretrained</sub>(dirpath)这种格式。注意记得添加自定义的特殊token
 </p>
 </div>
 </li>
-<li><a id="orgad0a167"></a>加载预训练模型<br>
+<li><a id="orgad0a167"></a>加载预训练模型<br />
 <div class="outline-text-6" id="text-1-1-2-3-2">
 <p>
-不建议自动加载，主要语法是MoumouXingshiModel.from_pretrained(dirpath)这种。
+不建议自动加载，主要语法是MoumouXingshiModel.from<sub>pretrained</sub>(dirpath)这种。
 </p>
 </div>
 </li>
-<li><a id="org55aa8fe"></a>基于任务设置合理的模型<br>
+<li><a id="org55aa8fe"></a>基于任务设置合理的模型<br />
 <div class="outline-text-6" id="text-1-1-2-3-3">
 <p>
 上述的预训练模型，可以被不同的类引用，如BERT，可能就可以用在句子分类、token分类、回归问题等等各种领域。
@@ -323,8 +325,8 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #62ff94;">model</span> <span style="color: #24f6d9;">=</span> ElectraForTokenClassification.from_pretrained<span style="color: #24f6d9;">(</span>args.import_model_path, num_labels<span style="color: #24f6d9;">=</span>102<span style="color: #24f6d9;">)</span>
-model.resize_token_embeddings<span style="color: #24f6d9;">(</span><span style="color: #30b3ff;">len</span><span style="color: #c770ff;">(</span>tokenizer<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+<pre class="src src-python">model = ElectraForTokenClassification.from_pretrained(args.import_model_path, num_labels=102)
+model.resize_token_embeddings(len(tokenizer))
 </pre>
 </div>
 

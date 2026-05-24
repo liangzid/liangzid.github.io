@@ -1,8 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-05-24 Sun 17:44 -->
-<meta charset="utf-8" />
+<!-- 2026-05-24 Sun 21:56 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>为什么rust是安全的？从泛型的角度进一步解析</title>
 <meta name="author" content="Zi Liang" />
@@ -49,83 +51,83 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust">              <span style="color: #c770ff; font-weight: bold;">struct</span> <span style="color: #e6ff57;">Point</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">T</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #24f6d9;">{</span>
-                  <span style="color: #62ff94;">x</span>: <span style="color: #e6ff57;">T</span>,
-                  <span style="color: #62ff94;">y</span>: <span style="color: #e6ff57;">T</span>,
-              <span style="color: #24f6d9;">}</span>
+<pre class="src src-rust">              struct Point&lt;T&gt; {
+                  x: T,
+                  y: T,
+              }
 
-            <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span> <span style="color: #24f6d9;">{</span>
-                <span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">integer</span> = <span style="color: #e6ff57;">Point</span> <span style="color: #c770ff;">{</span> <span style="color: #62ff94;">x</span>: 5, <span style="color: #62ff94;">y</span>: 10 <span style="color: #c770ff;">}</span>;
-                <span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">float</span> = <span style="color: #e6ff57;">Point</span> <span style="color: #c770ff;">{</span> <span style="color: #62ff94;">x</span>: 1.0, <span style="color: #62ff94;">y</span>: 4.0 <span style="color: #c770ff;">}</span>;
-            <span style="color: #24f6d9;">}</span>
+            fn main() {
+                let integer = Point { x: 5, y: 10 };
+                let float = Point { x: 1.0, y: 4.0 };
+            }
 
-          <span style="color: #8ca391;">//</span><span style="color: #8ca391; font-style: italic;">============================================
-</span>
-        <span style="color: #c770ff; font-weight: bold;">struct</span> <span style="color: #e6ff57;">Point</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">T</span>, <span style="color: #e6ff57;">U</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #24f6d9;">{</span>
-            <span style="color: #62ff94;">x</span>: <span style="color: #e6ff57;">T</span>,
-            <span style="color: #62ff94;">y</span>: <span style="color: #e6ff57;">U</span>,
-        <span style="color: #24f6d9;">}</span>
+          //============================================
 
-        <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span> <span style="color: #24f6d9;">{</span>
-            <span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">both_integer</span> = <span style="color: #e6ff57;">Point</span> <span style="color: #c770ff;">{</span> <span style="color: #62ff94;">x</span>: 5, <span style="color: #62ff94;">y</span>: 10 <span style="color: #c770ff;">}</span>;
-            <span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">both_float</span> = <span style="color: #e6ff57;">Point</span> <span style="color: #c770ff;">{</span> <span style="color: #62ff94;">x</span>: 1.0, <span style="color: #62ff94;">y</span>: 4.0 <span style="color: #c770ff;">}</span>;
-            <span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">integer_and_float</span> = <span style="color: #e6ff57;">Point</span> <span style="color: #c770ff;">{</span> <span style="color: #62ff94;">x</span>: 5, <span style="color: #62ff94;">y</span>: 4.0 <span style="color: #c770ff;">}</span>;
-        <span style="color: #24f6d9;">}</span>
+        struct Point&lt;T, U&gt; {
+            x: T,
+            y: U,
+        }
 
-          <span style="color: #8ca391;">//</span><span style="color: #8ca391; font-style: italic;">============================================
-</span>
-      <span style="color: #c770ff; font-weight: bold;">enum</span> <span style="color: #e6ff57;">Option</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">T</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #24f6d9;">{</span>
-          <span style="color: #e6ff57;">Some</span><span style="color: #c770ff;">(</span><span style="color: #e6ff57;">T</span><span style="color: #c770ff;">)</span>,
-          <span style="color: #e6ff57;">None</span>,
-      <span style="color: #24f6d9;">}</span>
+        fn main() {
+            let both_integer = Point { x: 5, y: 10 };
+            let both_float = Point { x: 1.0, y: 4.0 };
+            let integer_and_float = Point { x: 5, y: 4.0 };
+        }
 
-          <span style="color: #8ca391;">//</span><span style="color: #8ca391; font-style: italic;">============================================
-</span>
-    <span style="color: #c770ff; font-weight: bold;">enum</span> <span style="color: #e6ff57;">Result</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">T</span>, <span style="color: #e6ff57;">E</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #24f6d9;">{</span>
-        <span style="color: #e6ff57;">Ok</span><span style="color: #c770ff;">(</span><span style="color: #e6ff57;">T</span><span style="color: #c770ff;">)</span>,
-        <span style="color: #e6ff57;">Err</span><span style="color: #c770ff;">(</span><span style="color: #e6ff57;">E</span><span style="color: #c770ff;">)</span>,
-    <span style="color: #24f6d9;">}</span>
-          <span style="color: #8ca391;">//</span><span style="color: #8ca391; font-style: italic;">============================================
-</span>
-  <span style="color: #c770ff; font-weight: bold;">struct</span> <span style="color: #e6ff57;">Point</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">T</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #24f6d9;">{</span>
-      <span style="color: #62ff94;">x</span>: <span style="color: #e6ff57;">T</span>,
-      <span style="color: #62ff94;">y</span>: <span style="color: #e6ff57;">T</span>,
-  <span style="color: #24f6d9;">}</span>
+          //============================================
 
-  <span style="color: #c770ff; font-weight: bold;">impl</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">T</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #e6ff57;">Point</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">T</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #24f6d9;">{</span>
-      <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">x</span><span style="color: #c770ff;">(</span><span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #c770ff; font-weight: bold;">self</span><span style="color: #c770ff;">)</span> -&gt; <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #e6ff57;">T</span> <span style="color: #c770ff;">{</span>
-          <span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #c770ff; font-weight: bold;">self</span>.x
-      <span style="color: #c770ff;">}</span>
-  <span style="color: #24f6d9;">}</span>
+      enum Option&lt;T&gt; {
+          Some(T),
+          None,
+      }
 
-  <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span> <span style="color: #24f6d9;">{</span>
-      <span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">p</span> = <span style="color: #e6ff57;">Point</span> <span style="color: #c770ff;">{</span> <span style="color: #62ff94;">x</span>: 5, <span style="color: #62ff94;">y</span>: 10 <span style="color: #c770ff;">}</span>;
+          //============================================
 
-      <span style="color: #30b3ff;">println!</span><span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"p.x = </span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;">"</span>, p.x<span style="color: #e6ff57;">()</span><span style="color: #c770ff;">)</span>;
-  <span style="color: #24f6d9;">}</span>
-  <span style="color: #8ca391;">//</span><span style="color: #8ca391; font-style: italic;">==========&#26368;&#22797;&#26434;&#30340;&#20363;&#23376;=====================================
-</span><span style="color: #c770ff; font-weight: bold;">struct</span> <span style="color: #e6ff57;">Point</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">T</span>, <span style="color: #e6ff57;">U</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #24f6d9;">{</span>
-    <span style="color: #62ff94;">x</span>: <span style="color: #e6ff57;">T</span>,
-    <span style="color: #62ff94;">y</span>: <span style="color: #e6ff57;">U</span>,
-<span style="color: #24f6d9;">}</span>
+    enum Result&lt;T, E&gt; {
+        Ok(T),
+        Err(E),
+    }
+          //============================================
 
-<span style="color: #c770ff; font-weight: bold;">impl</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">T</span>, <span style="color: #e6ff57;">U</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #e6ff57;">Point</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">T</span>, <span style="color: #e6ff57;">U</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #24f6d9;">{</span>
-    <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">mixup</span><span style="color: #c770ff;">&lt;</span><span style="color: #e6ff57;">V</span>, <span style="color: #e6ff57;">W</span><span style="color: #c770ff;">&gt;(</span><span style="color: #c770ff; font-weight: bold;">self</span>, <span style="color: #62ff94;">other</span>: <span style="color: #e6ff57;">Point</span><span style="color: #e6ff57;">&lt;</span><span style="color: #e6ff57;">V</span>, <span style="color: #e6ff57;">W</span><span style="color: #e6ff57;">&gt;</span><span style="color: #c770ff;">)</span> -&gt; <span style="color: #e6ff57;">Point</span><span style="color: #c770ff;">&lt;</span><span style="color: #e6ff57;">T</span>, <span style="color: #e6ff57;">W</span><span style="color: #c770ff;">&gt;</span> <span style="color: #c770ff;">{</span>
-        <span style="color: #e6ff57;">Point</span> <span style="color: #e6ff57;">{</span>
-            <span style="color: #62ff94;">x</span>: <span style="color: #c770ff; font-weight: bold;">self</span>.x,
-            <span style="color: #62ff94;">y</span>: other.y,
-        <span style="color: #e6ff57;">}</span>
-    <span style="color: #c770ff;">}</span>
-<span style="color: #24f6d9;">}</span>
+  struct Point&lt;T&gt; {
+      x: T,
+      y: T,
+  }
 
-<span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span> <span style="color: #24f6d9;">{</span>
-    <span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">p1</span> = <span style="color: #e6ff57;">Point</span> <span style="color: #c770ff;">{</span> <span style="color: #62ff94;">x</span>: 5, <span style="color: #62ff94;">y</span>: 10.4 <span style="color: #c770ff;">}</span>;
-    <span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">p2</span> = <span style="color: #e6ff57;">Point</span> <span style="color: #c770ff;">{</span> <span style="color: #62ff94;">x</span>: <span style="color: #1cc24b;">"Hello"</span>, <span style="color: #62ff94;">y</span>: <span style="color: #1cc24b;">'c'</span><span style="color: #c770ff;">}</span>;
+  impl&lt;T&gt; Point&lt;T&gt; {
+      fn x(&amp;self) -&gt; &amp;T {
+          &amp;self.x
+      }
+  }
 
-    <span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">p3</span> = p1.mixup<span style="color: #c770ff;">(</span>p2<span style="color: #c770ff;">)</span>;
+  fn main() {
+      let p = Point { x: 5, y: 10 };
 
-    <span style="color: #30b3ff;">println!</span><span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"p3.x = </span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;">, p3.y = </span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;">"</span>, p3.x, p3.y<span style="color: #c770ff;">)</span>;
-<span style="color: #24f6d9;">}</span>
+      println!("p.x = {}", p.x());
+  }
+  //==========最复杂的例子=====================================
+struct Point&lt;T, U&gt; {
+    x: T,
+    y: U,
+}
+
+impl&lt;T, U&gt; Point&lt;T, U&gt; {
+    fn mixup&lt;V, W&gt;(self, other: Point&lt;V, W&gt;) -&gt; Point&lt;T, W&gt; {
+        Point {
+            x: self.x,
+            y: other.y,
+        }
+    }
+}
+
+fn main() {
+    let p1 = Point { x: 5, y: 10.4 };
+    let p2 = Point { x: "Hello", y: 'c'};
+
+    let p3 = p1.mixup(p2);
+
+    println!("p3.x = {}, p3.y = {}", p3.x, p3.y);
+}
 </pre>
 </div>
 
@@ -176,9 +178,9 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 先定义一个trait。
 </p>
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">trait</span> <span style="color: #e6ff57;">Summary</span> <span style="color: #24f6d9;">{</span>
-    <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">summarize</span><span style="color: #c770ff;">(</span><span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #c770ff; font-weight: bold;">self</span><span style="color: #c770ff;">)</span> -&gt; <span style="color: #e6ff57;">String</span>;
-<span style="color: #24f6d9;">}</span>
+<pre class="src src-rust">pub trait Summary {
+    fn summarize(&amp;self) -&gt; String;
+}
 
 </pre>
 </div>
@@ -190,38 +192,38 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 
 <div class="org-src-container">
 <pre class="src src-rust">
-<span style="color: #ffa83d;">#!</span><span style="color: #24f6d9;">[</span><span style="color: #ffa83d;">allow</span><span style="color: #c770ff;">(</span><span style="color: #ffa83d;">unused</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">]</span>
-<span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span> <span style="color: #24f6d9;">{</span>
-<span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">trait</span> <span style="color: #e6ff57;">Summary</span> <span style="color: #c770ff;">{</span>
-    <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">summarize</span><span style="color: #e6ff57;">(</span><span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #c770ff; font-weight: bold;">self</span><span style="color: #e6ff57;">)</span> -&gt; <span style="color: #e6ff57;">String</span>;
-<span style="color: #c770ff;">}</span>
+#![allow(unused)]
+fn main() {
+pub trait Summary {
+    fn summarize(&amp;self) -&gt; String;
+}
 
-<span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">struct</span> <span style="color: #e6ff57;">NewsArticle</span> <span style="color: #c770ff;">{</span>
-    <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #62ff94;">headline</span>: <span style="color: #e6ff57;">String</span>,
-    <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #62ff94;">location</span>: <span style="color: #e6ff57;">String</span>,
-    <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #62ff94;">author</span>: <span style="color: #e6ff57;">String</span>,
-    <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #62ff94;">content</span>: <span style="color: #e6ff57;">String</span>,
-<span style="color: #c770ff;">}</span>
+pub struct NewsArticle {
+    pub headline: String,
+    pub location: String,
+    pub author: String,
+    pub content: String,
+}
 
-<span style="color: #c770ff; font-weight: bold;">impl</span> <span style="color: #e6ff57;">Summary</span> <span style="color: #c770ff; font-weight: bold;">for</span> <span style="color: #e6ff57;">NewsArticle</span> <span style="color: #c770ff;">{</span>
-    <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">summarize</span><span style="color: #e6ff57;">(</span><span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #c770ff; font-weight: bold;">self</span><span style="color: #e6ff57;">)</span> -&gt; <span style="color: #e6ff57;">String</span> <span style="color: #e6ff57;">{</span>
-          <span style="color: #30b3ff;">format!</span><span style="color: #30b3ff;">(</span><span style="color: #1cc24b;">"</span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;">, by </span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;"> (</span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;">)"</span>, <span style="color: #c770ff; font-weight: bold;">self</span>.headline, <span style="color: #c770ff; font-weight: bold;">self</span>.author, <span style="color: #c770ff; font-weight: bold;">self</span>.location<span style="color: #30b3ff;">)</span>
-    <span style="color: #e6ff57;">}</span>
-<span style="color: #c770ff;">}</span>
+impl Summary for NewsArticle {
+    fn summarize(&amp;self) -&gt; String {
+          format!("{}, by {} ({})", self.headline, self.author, self.location)
+    }
+}
 
-<span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">struct</span> <span style="color: #e6ff57;">Tweet</span> <span style="color: #c770ff;">{</span>
-    <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #62ff94;">username</span>: <span style="color: #e6ff57;">String</span>,
-    <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #62ff94;">content</span>: <span style="color: #e6ff57;">String</span>,
-    <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #62ff94;">reply</span>: <span style="color: #e6ff57;">bool</span>,
-    <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #62ff94;">retweet</span>: <span style="color: #e6ff57;">bool</span>,
-<span style="color: #c770ff;">}</span>
+pub struct Tweet {
+    pub username: String,
+    pub content: String,
+    pub reply: bool,
+    pub retweet: bool,
+}
 
-<span style="color: #c770ff; font-weight: bold;">impl</span> <span style="color: #e6ff57;">Summary</span> <span style="color: #c770ff; font-weight: bold;">for</span> <span style="color: #e6ff57;">Tweet</span> <span style="color: #c770ff;">{</span>
-    <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">summarize</span><span style="color: #e6ff57;">(</span><span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #c770ff; font-weight: bold;">self</span><span style="color: #e6ff57;">)</span> -&gt; <span style="color: #e6ff57;">String</span> <span style="color: #e6ff57;">{</span>
-          <span style="color: #30b3ff;">format!</span><span style="color: #30b3ff;">(</span><span style="color: #1cc24b;">"</span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;">: </span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;">"</span>, <span style="color: #c770ff; font-weight: bold;">self</span>.username, <span style="color: #c770ff; font-weight: bold;">self</span>.content<span style="color: #30b3ff;">)</span>
-    <span style="color: #e6ff57;">}</span>
-<span style="color: #c770ff;">}</span>
-<span style="color: #24f6d9;">}</span>
+impl Summary for Tweet {
+    fn summarize(&amp;self) -&gt; String {
+          format!("{}: {}", self.username, self.content)
+    }
+}
+}
 
 </pre>
 </div>
@@ -233,14 +235,14 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">tweet</span> = <span style="color: #e6ff57;">Tweet</span> <span style="color: #24f6d9;">{</span>
-    <span style="color: #62ff94;">username</span>: <span style="color: #e6ff57;">String</span>::from<span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"horse_ebooks"</span><span style="color: #c770ff;">)</span>,
-    <span style="color: #62ff94;">content</span>: <span style="color: #e6ff57;">String</span>::from<span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"of course, as you probably already know, people"</span><span style="color: #c770ff;">)</span>,
-    <span style="color: #62ff94;">reply</span>: <span style="color: #c770ff; font-weight: bold;">false</span>,
-    <span style="color: #62ff94;">retweet</span>: <span style="color: #c770ff; font-weight: bold;">false</span>,
-<span style="color: #24f6d9;">}</span>;
+<pre class="src src-rust">let tweet = Tweet {
+    username: String::from("horse_ebooks"),
+    content: String::from("of course, as you probably already know, people"),
+    reply: false,
+    retweet: false,
+};
 
-<span style="color: #30b3ff;">println!</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"1 new tweet: </span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;">"</span>, tweet.summarize<span style="color: #c770ff;">()</span><span style="color: #24f6d9;">)</span>;
+println!("1 new tweet: {}", tweet.summarize());
 </pre>
 </div>
 
@@ -251,14 +253,14 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 
 <div class="org-src-container">
 <pre class="src src-rust">
-<span style="color: #ffa83d;">#!</span><span style="color: #24f6d9;">[</span><span style="color: #ffa83d;">allow</span><span style="color: #c770ff;">(</span><span style="color: #ffa83d;">unused</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">]</span>
-<span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span> <span style="color: #24f6d9;">{</span>
-<span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">trait</span> <span style="color: #e6ff57;">Summary</span> <span style="color: #c770ff;">{</span>
-    <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">summarize</span><span style="color: #e6ff57;">(</span><span style="color: #62ff94; background-color: #0a0e0a;">&amp;</span><span style="color: #c770ff; font-weight: bold;">self</span><span style="color: #e6ff57;">)</span> -&gt; <span style="color: #e6ff57;">String</span> <span style="color: #e6ff57;">{</span>
-          <span style="color: #e6ff57;">String</span>::from<span style="color: #30b3ff;">(</span><span style="color: #1cc24b;">"(Read more...)"</span><span style="color: #30b3ff;">)</span>
-    <span style="color: #e6ff57;">}</span>
-<span style="color: #c770ff;">}</span>
-<span style="color: #24f6d9;">}</span>
+#![allow(unused)]
+fn main() {
+pub trait Summary {
+    fn summarize(&amp;self) -&gt; String {
+          String::from("(Read more...)")
+    }
+}
+}
 
 </pre>
 </div>
@@ -281,9 +283,9 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">notify</span><span style="color: #24f6d9;">(</span><span style="color: #62ff94;">item</span>: <span style="color: #c770ff; font-weight: bold;">impl</span> <span style="color: #e6ff57;">Summary</span><span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">{</span>
-          <span style="color: #30b3ff;">println!</span><span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"Breaking news! </span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;">"</span>, item.summarize<span style="color: #e6ff57;">()</span><span style="color: #c770ff;">)</span>;
-<span style="color: #24f6d9;">}</span>
+<pre class="src src-rust">pub fn notify(item: impl Summary) {
+          println!("Breaking news! {}", item.summarize());
+}
 
 </pre>
 </div>
@@ -293,9 +295,9 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">notify</span><span style="color: #24f6d9;">&lt;</span><span style="color: #62ff94;">T</span>: <span style="color: #e6ff57;">Summary</span><span style="color: #24f6d9;">&gt;(</span><span style="color: #62ff94;">item</span>: <span style="color: #e6ff57;">T</span><span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">{</span>
-    <span style="color: #30b3ff;">println!</span><span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"Breaking news! </span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;">"</span>, item.summarize<span style="color: #e6ff57;">()</span><span style="color: #c770ff;">)</span>;
-<span style="color: #24f6d9;">}</span>
+<pre class="src src-rust">pub fn notify&lt;T: Summary&gt;(item: T) {
+    println!("Breaking news! {}", item.summarize());
+}
 </pre>
 </div>
 
@@ -303,16 +305,16 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 但如果较为复杂的泛型就简化不了了，如多个类型：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">notify</span><span style="color: #24f6d9;">&lt;</span><span style="color: #62ff94;">T</span>: <span style="color: #e6ff57;">Summary</span><span style="color: #24f6d9;">&gt;(</span><span style="color: #62ff94;">item1</span>: <span style="color: #e6ff57;">T</span>, <span style="color: #62ff94;">item2</span>: <span style="color: #e6ff57;">T</span><span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">{</span>
-<span style="color: #24f6d9;">}</span>
+<pre class="src src-rust">pub fn notify&lt;T: Summary&gt;(item1: T, item2: T) {
+}
 </pre>
 </div>
 <p>
 多个trait的话，同样地，也有两种形式：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">notify</span><span style="color: #24f6d9;">(</span><span style="color: #62ff94;">item</span>: <span style="color: #c770ff; font-weight: bold;">impl</span> <span style="color: #e6ff57;">Summary</span> + <span style="color: #e6ff57;">Display</span><span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">{}</span>
-<span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">notify</span><span style="color: #24f6d9;">&lt;</span><span style="color: #62ff94;">T</span>: <span style="color: #e6ff57;">Summary</span> + <span style="color: #e6ff57;">Display</span><span style="color: #24f6d9;">&gt;(</span><span style="color: #62ff94;">item</span>: <span style="color: #e6ff57;">T</span><span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">{}</span>
+<pre class="src src-rust">pub fn notify(item: impl Summary + Display) {}
+pub fn notify&lt;T: Summary + Display&gt;(item: T) {}
 
 </pre>
 </div>
@@ -321,13 +323,13 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 如果是不同类型的，就不能简化了：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust">      <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">some_function</span><span style="color: #24f6d9;">&lt;</span><span style="color: #62ff94;">T</span>: <span style="color: #e6ff57;">Display</span> + <span style="color: #e6ff57;">Clone</span>, <span style="color: #62ff94;">U</span>: <span style="color: #e6ff57;">Clone</span> + <span style="color: #e6ff57;">Debug</span><span style="color: #24f6d9;">&gt;(</span><span style="color: #62ff94;">t</span>: <span style="color: #e6ff57;">T</span>, <span style="color: #62ff94;">u</span>: <span style="color: #e6ff57;">U</span><span style="color: #24f6d9;">)</span> -&gt; <span style="color: #e6ff57;">i32</span> <span style="color: #24f6d9;">{</span>
-<span style="color: #24f6d9;">}</span>
-<span style="color: #8ca391;">//</span><span style="color: #8ca391; font-style: italic;">&#31532;&#20108;&#31181;&#20889;&#27861;
-</span><span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">some_function</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">T</span>, <span style="color: #e6ff57;">U</span><span style="color: #24f6d9;">&gt;(</span><span style="color: #62ff94;">t</span>: <span style="color: #e6ff57;">T</span>, <span style="color: #62ff94;">u</span>: <span style="color: #e6ff57;">U</span><span style="color: #24f6d9;">)</span> -&gt; <span style="color: #e6ff57;">i32</span>
-    <span style="color: #c770ff; font-weight: bold;">where</span> <span style="color: #62ff94;">T</span>: <span style="color: #e6ff57;">Display</span> + <span style="color: #e6ff57;">Clone</span>,
-          <span style="color: #62ff94;">U</span>: <span style="color: #e6ff57;">Clone</span> + <span style="color: #e6ff57;">Debug</span>
-<span style="color: #24f6d9;">{</span>
+<pre class="src src-rust">      fn some_function&lt;T: Display + Clone, U: Clone + Debug&gt;(t: T, u: U) -&gt; i32 {
+}
+//第二种写法
+fn some_function&lt;T, U&gt;(t: T, u: U) -&gt; i32
+    where T: Display + Clone,
+          U: Clone + Debug
+{
 
 </pre>
 </div>
@@ -337,14 +339,14 @@ trait就是定义和规定了：这么一些类型可以进行什么样子的操
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">returns_summarizable</span><span style="color: #24f6d9;">()</span> -&gt; <span style="color: #c770ff; font-weight: bold;">impl</span> <span style="color: #e6ff57;">Summary</span> <span style="color: #24f6d9;">{</span>
-          <span style="color: #e6ff57;">Tweet</span> <span style="color: #c770ff;">{</span>
-              <span style="color: #62ff94;">username</span>: <span style="color: #e6ff57;">String</span>::from<span style="color: #e6ff57;">(</span><span style="color: #1cc24b;">"horse_ebooks"</span><span style="color: #e6ff57;">)</span>,
-              <span style="color: #62ff94;">content</span>: <span style="color: #e6ff57;">String</span>::from<span style="color: #e6ff57;">(</span><span style="color: #1cc24b;">"of course, as you probably already know, people"</span><span style="color: #e6ff57;">)</span>,
-              <span style="color: #62ff94;">reply</span>: <span style="color: #c770ff; font-weight: bold;">false</span>,
-              <span style="color: #62ff94;">retweet</span>: <span style="color: #c770ff; font-weight: bold;">false</span>,
-          <span style="color: #c770ff;">}</span>
-<span style="color: #24f6d9;">}</span>
+<pre class="src src-rust">fn returns_summarizable() -&gt; impl Summary {
+          Tweet {
+              username: String::from("horse_ebooks"),
+              content: String::from("of course, as you probably already know, people"),
+              reply: false,
+              retweet: false,
+          }
+}
 
 </pre>
 </div>
