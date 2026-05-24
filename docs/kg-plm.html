@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-24 Sun 16:34 -->
+<!-- 2026-05-24 Sun 16:53 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>知识图谱增强的预训练模型</title>
@@ -47,6 +47,40 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">知识图谱增强的预训练模型</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org0f6fbd2">1. 0 前言</a></li>
+<li><a href="#org9f4c894">2. 1 为什么要用知识图谱去增强预训练模型？</a></li>
+<li><a href="#org37d103c">3. 2 知识图谱与预训练模型结合时的常见问题</a></li>
+<li><a href="#org01ac495">4. 3 相关工作</a>
+<ul>
+<li><a href="#org2cf5726">4.1. 3.1 隐式融合——使用embedding在模型内部融合</a>
+<ul>
+<li><a href="#org6d5d7a8">4.1.1. ERNIE</a></li>
+<li><a href="#org81226b3">4.1.2. KnowBERT</a></li>
+</ul>
+</li>
+<li><a href="#org23bdc47">4.2. 3.2 显式融合——不改变模型结构的融合方式</a>
+<ul>
+<li><a href="#org565061f">4.2.1. K-BERT</a></li>
+<li><a href="#org19e5ea0">4.2.2. CoLAKE</a></li>
+</ul>
+</li>
+<li><a href="#org70ec7ce">4.3. 3.3 知识图谱与预训练模型的共同学习</a>
+<ul>
+<li><a href="#org417b1ec">4.3.1. KEPLER</a></li>
+<li><a href="#orgce90b31">4.3.2. JAKET</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org319bc61">5. 4 总结与未来展望</a></li>
+<li><a href="#orgd6aba00">6. 参考文献</a></li>
+</ul>
+</div>
+</div>
 <div id="outline-container-org0f6fbd2" class="outline-2">
 <h2 id="org0f6fbd2"><span class="section-number-2">1.</span> 0 前言</h2>
 <div class="outline-text-2" id="text-1">
@@ -113,7 +147,7 @@ ERNIE算得上是该领域的较早工作，其知识融合方法可通过下图
 </p>
 
 
-<div id="orge472e5e" class="figure">
+<div id="orge020a1e" class="figure">
 <p><img src="./images/screenshot_20211121_163217.png" alt="screenshot_20211121_163217.png">
 </p>
 </div>
@@ -128,7 +162,7 @@ ERNIE中知识主要指实体，即从待理解的输入语句中提取的一些
 </p>
 
 
-<div id="org84cc6f5" class="figure">
+<div id="org503d43b" class="figure">
 <p><img src="./images/screenshot_20211121_163314.png" alt="screenshot_20211121_163314.png">
 </p>
 </div>
@@ -138,7 +172,7 @@ ERNIE中知识主要指实体，即从待理解的输入语句中提取的一些
 </p>
 
 
-<div id="org5cc5f72" class="figure">
+<div id="org527e3e4" class="figure">
 <p><img src="./images/screenshot_20211121_163325.png" alt="screenshot_20211121_163325.png">
 </p>
 </div>
@@ -160,7 +194,7 @@ ERNIE中知识主要指实体，即从待理解的输入语句中提取的一些
 </p>
 
 
-<div id="org2d0dd65" class="figure">
+<div id="org83cc07f" class="figure">
 <p><img src="./images/screenshot_20211121_163339.png" alt="screenshot_20211121_163339.png"> 
 </p>
 </div>
@@ -184,7 +218,7 @@ ERNIE中知识主要指实体，即从待理解的输入语句中提取的一些
 </p>
 
 
-<div id="orge0ce09d" class="figure">
+<div id="org9e57c19" class="figure">
 <p><img src="./images/screenshot_20211121_163354.png" alt="screenshot_20211121_163354.png">
 </p>
 </div>
@@ -200,7 +234,7 @@ KG-BART
 </p>
 
 
-<div id="orgda8b5b0" class="figure">
+<div id="orga52bc93" class="figure">
 <p><img src="./images/screenshot_20211121_163414.png" alt="screenshot_20211121_163414.png">
 </p>
 </div>
@@ -212,7 +246,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="org657d449" class="figure">
+<div id="orgdf911ed" class="figure">
 <p><img src="./images/screenshot_20211121_163426.png" alt="screenshot_20211121_163426.png">
 </p>
 </div>
@@ -223,7 +257,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="orgc1ee0dd" class="figure">
+<div id="org78092ec" class="figure">
 <p><img src="./images/screenshot_20211121_163437.png" alt="screenshot_20211121_163437.png">
 </p>
 </div>
@@ -234,7 +268,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="orge455b41" class="figure">
+<div id="orgdacce5d" class="figure">
 <p><img src="./images/screenshot_20211121_163449.png" alt="screenshot_20211121_163449.png">
 </p>
 </div>
@@ -244,7 +278,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="org35fcfa6" class="figure">
+<div id="org4b525fd" class="figure">
 <p><img src="./images/screenshot_20211121_163500.png" alt="screenshot_20211121_163500.png">
 </p>
 </div>
@@ -254,7 +288,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="orga1c8d43" class="figure">
+<div id="org35466ff" class="figure">
 <p><img src="./images/screenshot_20211121_163521.png" alt="screenshot_20211121_163521.png"> 
 </p>
 </div>
@@ -264,7 +298,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="orgb1d7fb2" class="figure">
+<div id="orgf7a3164" class="figure">
 <p><img src="./images/screenshot_20211121_163538.png" alt="screenshot_20211121_163538.png">
 </p>
 </div>
@@ -274,7 +308,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="org3fcb634" class="figure">
+<div id="org194ffbb" class="figure">
 <p><img src="./images/screenshot_20211121_163555.png" alt="screenshot_20211121_163555.png"> 
 </p>
 </div>
@@ -314,7 +348,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="org7361ccd" class="figure">
+<div id="org93f27a7" class="figure">
 <p><img src="./images/screenshot_20211121_163613.png" alt="screenshot_20211121_163613.png">
 </p>
 </div>
@@ -340,7 +374,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="org86bc761" class="figure">
+<div id="orge1d4914" class="figure">
 <p><img src="./images/screenshot_20211121_163627.png" alt="screenshot_20211121_163627.png">
 </p>
 </div>
@@ -350,7 +384,7 @@ Encoder部分的框图如下图所示：
 </p>
 
 
-<div id="org479a6f6" class="figure">
+<div id="org9c8819d" class="figure">
 <p><img src="./images/screenshot_20211121_163637.png" alt="screenshot_20211121_163637.png">
 </p>
 </div>
@@ -377,7 +411,7 @@ KEPLER是借用此种思路的较简单的工作。其基本框架可以用下�
 </p>
 
 
-<div id="org11c36d4" class="figure">
+<div id="orgfb20a90" class="figure">
 <p><img src="./images/screenshot_20211121_163650.png" alt="screenshot_20211121_163650.png">
 </p>
 </div>
@@ -387,7 +421,7 @@ KEPLER是借用此种思路的较简单的工作。其基本框架可以用下�
 </p>
 
 
-<div id="org6963e27" class="figure">
+<div id="org66c7178" class="figure">
 <p><img src="./images/screenshot_20211121_163701.png" alt="screenshot_20211121_163701.png">
 </p>
 </div>
@@ -397,7 +431,7 @@ KEPLER是借用此种思路的较简单的工作。其基本框架可以用下�
 </p>
 
 
-<div id="org0f1f0f6" class="figure">
+<div id="org048325c" class="figure">
 <p><img src="./images/screenshot_20211121_163711.png" alt="screenshot_20211121_163711.png">
 </p>
 </div>

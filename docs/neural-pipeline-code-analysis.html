@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-24 Sun 16:34 -->
+<!-- 2026-05-24 Sun 16:53 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>任务型对话系统中Neural Pipeline系列源码剖析</title>
@@ -15,6 +15,35 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">任务型对话系统中Neural Pipeline系列源码剖析</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgfa668c2">1. 总体结构</a></li>
+<li><a href="#orga6a9376">2. Data部分</a>
+<ul>
+<li><a href="#orgffd741b">2.1. GPT-2的输入形态</a></li>
+<li><a href="#orge534314">2.2. Neural Pipeline中的文本输入与输出</a></li>
+<li><a href="#org58aa90b">2.3. neural pipline与GPT-2的结合</a></li>
+<li><a href="#org5473186">2.4. 再坚持一下: 为什么说一个TOD很复杂?</a>
+<ul>
+<li><a href="#orgafbf14c">2.4.1. 如何预处理任务型对话系统数据集?</a></li>
+<li><a href="#org1077d68">2.4.2. TOD的层级结构以及各个常见的数据对象</a></li>
+<li><a href="#org65590a2">2.4.3. 如何解析tod数据集?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgfa85b5b">3. Model的设计</a>
+<ul>
+<li><a href="#orga76d736">3.1. train- forward</a></li>
+</ul>
+</li>
+<li><a href="#org9c19fe9">4. 训练流程</a></li>
+<li><a href="#orgcfc95c0">5. 推理流程</a></li>
+</ul>
+</div>
+</div>
 <p>
 本文于<span class="timestamp-wrapper"><span class="timestamp">&lt;2022-03-26 Sat&gt;</span></span>进行了修改.
 </p>
@@ -268,7 +297,7 @@ GPT-2的输入严格而言主要包括三部分:
 </p>
 
 
-<div id="org13a4e21" class="figure">
+<div id="org7409ca1" class="figure">
 <p><img src="./images/screenshot_20220326_173041.png" alt="screenshot_20220326_173041.png">
 </p>
 </div>

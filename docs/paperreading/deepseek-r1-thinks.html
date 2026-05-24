@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-24 Sun 16:34 -->
+<!-- 2026-05-24 Sun 16:53 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Thoughts of Deepseek R1</title>
@@ -231,6 +231,38 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">Thoughts of Deepseek R1</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org01a44ac">1. Overview</a></li>
+<li><a href="#org36cee55">2. Methodology</a>
+<ul>
+<li><a href="#org8f7015d">2.1. RL algorithm: GRPO (Group Relative Policy Optimization)</a></li>
+<li><a href="#org3762fb2">2.2. Reward Model</a></li>
+<li><a href="#orgb684777">2.3. Prompts during RL</a></li>
+<li><a href="#org29c4468">2.4. Test-time Scaling can be Automatically Learned during RL; "Self-evolution Process"</a></li>
+<li><a href="#orgc7d9a0a">2.5. "Aha Moment"</a></li>
+<li><a href="#org49d0aa8">2.6. R1's training-stage I: cold start</a></li>
+<li><a href="#org42b477e">2.7. R1's training-stage II: another SFT to enhance model's general-purpose abilities</a></li>
+<li><a href="#org799f9c0">2.8. R1's final further RL</a></li>
+<li><a href="#org3b929ab">2.9. Distillation</a></li>
+</ul>
+</li>
+<li><a href="#orga64a8a7">3. Unsuccessful Attempts</a></li>
+<li><a href="#orga90d3b4">4. Source Code Reading: HF's Open R1</a>
+<ul>
+<li><a href="#orgf645ab2">4.1. Accuracy Reward</a></li>
+<li><a href="#org2701766">4.2. Format Reward</a></li>
+<li><a href="#orgab35018">4.3. Step by Step reward. (NOT USED in the PAPER)</a></li>
+<li><a href="#orgc6aa862">4.4. Len Reward (NOT USED in the PAPER, it is kimi 1.5's.)</a></li>
+<li><a href="#org748212e">4.5. Cosine Scaled Reward (NOT USED in the PAPER)</a></li>
+<li><a href="#org8a8b612">4.6. Repetition Penalty Reward (NOT Used in the Paper, but promising)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <div id="outline-container-org01a44ac" class="outline-2">
 <h2 id="org01a44ac"><span class="section-number-2">1.</span> Overview</h2>
 <div class="outline-text-2" id="text-1">
@@ -289,7 +321,7 @@ Objective Formula (to maximize):
 </p>
 
 
-<div id="orgdd469c3" class="figure">
+<div id="org619f5f5" class="figure">
 <p><img src="./images/screenshot_20250216_112842.png" alt="screenshot_20250216_112842.png">
 </p>
 </div>
@@ -317,7 +349,7 @@ A's formular:
 </p>
 
 
-<div id="orgfebca91" class="figure">
+<div id="org48bc82a" class="figure">
 <p><img src="./images/screenshot_20250216_113518.png" alt="screenshot_20250216_113518.png">
 </p>
 </div>
@@ -372,13 +404,13 @@ During RL training, the increase of performance is consistent with the increase 
 </p>
 
 
-<div id="orgc9f89f9" class="figure">
+<div id="orgf990ab5" class="figure">
 <p><img src="./images/screenshot_20250216_114913.png" alt="screenshot_20250216_114913.png">
 </p>
 </div>
 
 
-<div id="orgcddc80a" class="figure">
+<div id="org3fedde6" class="figure">
 <p><img src="./images/screenshot_20250216_114925.png" alt="screenshot_20250216_114925.png">
 </p>
 </div>
@@ -396,7 +428,7 @@ An example here:
 </p>
 
 
-<div id="org54d077d" class="figure">
+<div id="org8ac1ffb" class="figure">
 <p><img src="./images/screenshot_20250216_115420.png" alt="screenshot_20250216_115420.png">
 </p>
 </div>
@@ -469,7 +501,7 @@ The results are impressive:
 </p>
 
 
-<div id="org561aa73" class="figure">
+<div id="org1756a0e" class="figure">
 <p><img src="./images/screenshot_20250216_122632.png" alt="screenshot_20250216_122632.png">
 </p>
 </div>

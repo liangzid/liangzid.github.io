@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-24 Sun 16:34 -->
+<!-- 2026-05-24 Sun 16:53 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Slurm's Configuration and Usage</title>
@@ -199,6 +199,62 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">Slurm's Configuration and Usage</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org241e08c">1. Configuration</a></li>
+<li><a href="#org554f825">2. Usage</a>
+<ul>
+<li><a href="#org2ba1b92">2.1. Introduction to Slurm for AI Model Training</a></li>
+<li><a href="#orge1a0c7b">2.2. What is Slurm?</a>
+<ul>
+<li><a href="#org8dfb84c">2.2.1. Key Features of Slurm</a></li>
+<li><a href="#orgbdfb580">2.2.2. Why Use Slurm for AI Training?</a></li>
+</ul>
+</li>
+<li><a href="#org8086863">2.3. Getting Started with Slurm</a>
+<ul>
+<li><a href="#org54f67cf">2.3.1. Checking if Slurm is Available</a></li>
+<li><a href="#org4cf13d9">2.3.2. Basic Slurm Concepts</a></li>
+</ul>
+</li>
+<li><a href="#org7df7fc4">2.4. Basic Slurm Commands</a>
+<ul>
+<li><a href="#orgd333558">2.4.1. Viewing Cluster Status</a></li>
+<li><a href="#org1a57656">2.4.2. Submitting Jobs</a></li>
+<li><a href="#org4681057">2.4.3. Canceling Jobs</a></li>
+<li><a href="#org7c2e48b">2.4.4. Other Useful Commands</a></li>
+<li><a href="#org61ced2d">2.4.5. Writing a Slurm Batch Script</a></li>
+<li><a href="#orgd9a5454">2.4.6. Structure of a Slurm Script</a></li>
+<li><a href="#orgb65efb8">2.4.7. Key #SBATCH Directives for AI Training</a></li>
+<li><a href="#org80da717">2.4.8. Submitting and Monitoring</a></li>
+</ul>
+</li>
+<li><a href="#orgab8f3e9">2.5. AI-Specific Usage: Training Models with Slurm</a>
+<ul>
+<li><a href="#org3a86ef5">2.5.1. Single-Node Multi-GPU Training</a></li>
+<li><a href="#org9e02648">2.5.2. Multi-Node Distributed Training</a></li>
+<li><a href="#org2db0310">2.5.3. Environment Setup</a></li>
+<li><a href="#org60014c9">2.5.4. Handling Data</a></li>
+</ul>
+</li>
+<li><a href="#orgfb723e2">2.6. Monitoring and Debugging Jobs</a></li>
+<li><a href="#orgec23728">2.7. Advanced Features</a>
+<ul>
+<li><a href="#orgb650f24">2.7.1. Job Dependencies</a></li>
+<li><a href="#org4458f18">2.7.2. Job Arrays for Parameter Sweeps</a></li>
+<li><a href="#org93fd174">2.7.3. Reservations and Priorities</a></li>
+<li><a href="#org3c732e6">2.7.4. Slurm with Containers</a></li>
+</ul>
+</li>
+<li><a href="#org535869d">2.8. Common Pitfalls and Tips</a></li>
+<li><a href="#org66536b6">2.9. Conclusion</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <div id="outline-container-org241e08c" class="outline-2">
 <h2 id="org241e08c"><span class="section-number-2">1.</span> Configuration</h2>
 <div class="outline-text-2" id="text-1">
@@ -357,7 +413,7 @@ Run <code>sinfo</code> to view cluster information. If it's not found, Slurm isn
 <p>
 Example output:
 </p>
-<pre class="example" id="orga4cf040">
+<pre class="example" id="org2095fb1">
 PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
 gpu          up   infinite      4   idle gpu[1-4]
 cpu          up   infinite     10   idle cpu[1-10]

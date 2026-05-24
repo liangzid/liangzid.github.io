@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-24 Sun 16:34 -->
+<!-- 2026-05-24 Sun 16:53 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OpenClaw 代码乱读笔记1</title>
@@ -200,6 +200,95 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">OpenClaw 代码乱读笔记1</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orga9f3b86">1. 前言：我为什么要读这个代码？</a>
+<ul>
+<li><a href="#orgcbc451d">1.1. 免责声明</a></li>
+<li><a href="#org6fb73aa">1.2. 我的装备</a></li>
+</ul>
+</li>
+<li><a href="#orgf0b9a52">2. 第一章：哇，文件夹好多 —— 先随便看看结构</a>
+<ul>
+<li><a href="#org9b726de">2.1. 1.1 根目录都有啥？</a></li>
+<li><a href="#org24d6dde">2.2. 1.2 先看看 package.json —— 这项目是干嘛的？</a></li>
+<li><a href="#org51188a7">2.3. 1.3 重头戏：src/ 目录里面有啥？</a></li>
+<li><a href="#org89fe118">2.4. 1.4 这章看完的感觉</a></li>
+</ul>
+</li>
+<li><a href="#org8ac54d5">3. 第二章：Gateway 是怎么启动的？—— 我来追踪一下 <code>openclaw gateway</code></a>
+<ul>
+<li><a href="#orgf4206b7">3.1. 2.1 先看看入口：openclaw.mjs</a></li>
+<li><a href="#orgfba61f0">3.2. 2.2 CLI 命令是怎么注册的？</a></li>
+<li><a href="#orgee7057b">3.3. 2.3 找到了！启动函数在这：src/gateway/server.impl.ts</a>
+<ul>
+<li><a href="#org23bd80b">3.3.1. 2.3.1 第一步：先把配置读了，还要迁移旧配置</a></li>
+<li><a href="#orga7320ed">3.3.2. 2.3.2 第二步：初始化运行时状态</a></li>
+<li><a href="#orgc530b03">3.3.3. 2.3.3 第三步：启动 HTTP 和 WebSocket 服务器</a></li>
+<li><a href="#orgb507978">3.3.4. 2.3.4 第四步：加载插件</a></li>
+<li><a href="#org49960a7">3.3.5. 2.3.5 第五步：启动各个渠道</a></li>
+<li><a href="#org96d2d49">3.3.6. 2.3.6 第六步：启动各种杂七杂八的服务</a></li>
+<li><a href="#orgbc14042">3.3.7. 2.3.7 第七步：健康检查和日志</a></li>
+</ul>
+</li>
+<li><a href="#orga58518d">3.4. 2.4 启动时都能配什么？GatewayServerOptions</a></li>
+<li><a href="#org212958f">3.5. 2.5 这章看完的感觉</a></li>
+</ul>
+</li>
+<li><a href="#orge861d46">4. 第三章：Gateway 服务器里面都有啥？—— HTTP、WebSocket 和认证</a>
+<ul>
+<li><a href="#orgb9e47dd">4.1. 3.1 HTTP 服务器：src/gateway/server-http.ts</a></li>
+<li><a href="#orgcd91bed">4.2. 3.2 认证系统：src/gateway/auth.ts</a>
+<ul>
+<li><a href="#org346c23a">4.2.1. 3.2.1 都支持哪几种认证方式？</a></li>
+<li><a href="#org789f2e9">4.2.2. 3.2.2 认证流程：authorizeGatewayConnect()</a></li>
+<li><a href="#orgd263dd2">4.2.3. 3.2.3 什么算是"本地直接请求"？</a></li>
+</ul>
+</li>
+<li><a href="#org10d84bc">4.3. 3.3 WebSocket 服务器：src/gateway/server/ws-connection.ts</a></li>
+<li><a href="#orge5968da">4.4. 3.4 Gateway 方法：src/gateway/server-methods/</a></li>
+<li><a href="#orge187f1e">4.5. 3.5 网络绑定：src/gateway/net.ts</a>
+<ul>
+<li><a href="#org4e2e578">4.5.1. 3.5.1 都有哪几种绑定模式？</a></li>
+</ul>
+</li>
+<li><a href="#orgdfbc6f8">4.6. 3.6 这章看完的感觉</a></li>
+</ul>
+</li>
+<li><a href="#org0eadf75">5. 第四章：渠道（Channels）是怎么工作的？—— WhatsApp、Telegram 等逐个看</a>
+<ul>
+<li><a href="#orga3210fa">5.1. 4.1 先看整体结构</a></li>
+<li><a href="#org51ebcfc">5.2. 4.2 WhatsApp 渠道：src/web/</a>
+<ul>
+<li><a href="#org9a724dc">5.2.1. 4.2.1 访问控制：src/web/inbound/access-control.ts</a></li>
+</ul>
+</li>
+<li><a href="#org4ad4703">5.3. 4.3 Telegram 渠道：src/telegram/</a></li>
+<li><a href="#org8dac42e">5.4. 4.4 其他渠道</a></li>
+<li><a href="#orgbbd0ece">5.5. 4.5 几个通用概念</a></li>
+<li><a href="#org92c86cf">5.6. 4.6 这章看完的感觉</a></li>
+</ul>
+</li>
+<li><a href="#org25dbdc5">6. 第五章：安全审计工具 —— <code>openclaw security audit</code> 是怎么实现的？</a>
+<ul>
+<li><a href="#orgf04171c">6.1. 5.1 先看审计结果类型</a></li>
+<li><a href="#org7fc51ed">6.2. 5.2 都检查哪些东西？</a>
+<ul>
+<li><a href="#orgd4183db">6.2.1. 5.2.1 文件系统权限检查</a></li>
+<li><a href="#org7a6c038">6.2.2. 5.2.2 Gateway 配置检查</a></li>
+<li><a href="#org7c0d1e9">6.2.3. 5.2.3 还有更多检查项</a></li>
+</ul>
+</li>
+<li><a href="#org7b89c08">6.3. 5.3 怎么运行审计？</a></li>
+<li><a href="#org0a3c6fc">6.4. 5.4 这章看完的感觉</a></li>
+</ul>
+</li>
+<li><a href="#org0422fd9">7. 暂时写到这里</a></li>
+</ul>
+</div>
+</div>
 <blockquote>
 <p>
 警告：这不是官方文档，是我的个人笔记，可能理解有误！
@@ -257,7 +346,7 @@
 先 <code>ls -la</code> 一下（我只列重要的）：
 </p>
 
-<pre class="example" id="org5c15cb1">
+<pre class="example" id="org1e04658">
 openclaw/
 ├── src/              ← 这个看起来是主要代码
 ├── apps/             ← 看来还有手机/电脑客户端
@@ -367,7 +456,7 @@ openclaw/
 让我们 <code>ls src/</code> 看看（我挑重要的列）：
 </p>
 
-<pre class="example" id="orgfc47e77">
+<pre class="example" id="orga149eb6">
 src/
 ├── agents/            ← AI 代理相关？
 ├── auto-reply/        ← 自动回复？
@@ -1209,7 +1298,7 @@ WebSocket 是 Gateway 的主要通信方式。毕竟 HTTP 是一问一答，而 
 在 OpenClaw 中，每个渠道都是相对独立的模块，但它们共享一些公共的抽象。先看看渠道相关的目录：
 </p>
 
-<pre class="example" id="org75962d2">
+<pre class="example" id="org8837d23">
 src/
 ├── channels/           # 渠道抽象和公共代码
 ├── discord/            # Discord 具体实现
@@ -1242,7 +1331,7 @@ WhatsApp 是通过 WhatsApp Web 实现的，用的是 <code>@whiskeysockets/bail
 先看看 <code>src/web/</code> 的目录结构：
 </p>
 
-<pre class="example" id="org7e984e9">
+<pre class="example" id="orgf20d140">
 src/web/
 ├── inbound/              # 入站消息处理
 │   ├── access-control.ts # 访问控制！这个很重要

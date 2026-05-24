@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-24 Sun 16:34 -->
+<!-- 2026-05-24 Sun 16:53 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>org mode 简略指南（个人翻译版）</title>
@@ -47,6 +47,143 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">org mode 简略指南（个人翻译版）</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org789edc2">1. <span class="todo INPROGRESS">INPROGRESS</span> working with source code 在笔记里插入源码<code>[%]</code></a>
+<ul>
+<li><a href="#orgdb421ba">1.1. <span class="todo TODO">TODO</span> using header arguments</a></li>
+<li><a href="#org00f1c9b">1.2. <span class="todo TODO">TODO</span> evaluating code blocks</a></li>
+<li><a href="#org62766d0">1.3. <span class="todo TODO">TODO</span> results of evaluation</a></li>
+<li><a href="#org6d7ad02">1.4. <span class="todo TODO">TODO</span> exporting code blocks</a></li>
+<li><a href="#orgb606402">1.5. <span class="todo TODO">TODO</span> extracting source code</a></li>
+</ul>
+</li>
+<li><a href="#orgc1df5ee">2. <span class="done DONE">DONE</span> introduction: a welcome of org mode</a>
+<ul>
+<li><a href="#orgdce5d2c">2.1. 激活</a></li>
+</ul>
+</li>
+<li><a href="#org0acc104">3. <span class="done DONE">DONE</span> document structure 文档结构</a>
+<ul>
+<li><a href="#org65af79e">3.1. headlines</a></li>
+<li><a href="#org9230a71">3.2. 在可见度上的遮盖与打开 visibility cycling</a></li>
+<li><a href="#orgf342c91">3.3. 在headline之间的跳动</a></li>
+<li><a href="#orge8eb764">3.4. 结构编辑 structure editing</a></li>
+<li><a href="#orgb3d0ac8">3.5. sparse trees</a></li>
+<li><a href="#orge74af0b">3.6. plain list 简单的列表</a></li>
+</ul>
+</li>
+<li><a href="#org2fe28bc">4. <span class="done DONE">DONE</span> table 表格的使用</a>
+<ul>
+<li><a href="#org5815909">4.1. 使用C-c | 形成一个新的表格</a></li>
+<li><a href="#org4846e9e">4.2. cell基本变换</a></li>
+<li><a href="#orgb198baf">4.3. <span class="done DONE">DONE</span> 行与列的变化</a></li>
+</ul>
+</li>
+<li><a href="#orga5f75f0">5. <span class="done DONE">DONE</span> hyperlinks 超链接</a>
+<ul>
+<li><a href="#org5a2d535">5.1. 内部链接</a></li>
+<li><a href="#org29a9169">5.2. 外部链接</a></li>
+<li><a href="#org7f5f80b">5.3. handling links, 处理链接</a></li>
+</ul>
+</li>
+<li><a href="#org1477556">6. <span class="done DONE">DONE</span> todo iteems  待办项目</a>
+<ul>
+<li><a href="#org31e5524">6.1. 有关todo的基本操作</a></li>
+<li><a href="#org1357deb">6.2. <span class="done DONE">DONE</span> muti-state workflow  多态工作流</a></li>
+<li><a href="#orgddafbd0">6.3. Progress Logging 进展记录</a>
+<ul>
+<li><a href="#org7716baf">6.3.1. <span class="todo TODO">TODO</span> 阅读clocking working time</a></li>
+<li><a href="#org25da33d">6.3.2. closing items 关闭项目</a></li>
+<li><a href="#orga461375">6.3.3. tracking todo state changes</a></li>
+</ul>
+</li>
+<li><a href="#orgdc8d427">6.4. Priorities 优先级</a></li>
+<li><a href="#orgede8a7d">6.5. break tasks down into subtasks 将任务分解为子任务</a></li>
+<li><a href="#org0487035">6.6. checkboxes 复选框</a></li>
+</ul>
+</li>
+<li><a href="#orgeb51438">7. <span class="done DONE">DONE</span> Tags 标签</a>
+<ul>
+<li><a href="#orgea27e08">7.1. tag inheritance 标签层级</a></li>
+<li><a href="#org728de89">7.2. 设置标签&#xa0;&#xa0;&#xa0;<span class="tag"><span class="test">test</span></span></a></li>
+<li><a href="#org2e83c56">7.3. 标签组</a></li>
+<li><a href="#org7630ae5">7.4. 标签的搜索</a></li>
+</ul>
+</li>
+<li><a href="#orga6dd5ea">8. <span class="done DONE">DONE</span> Properties</a></li>
+<li><a href="#orgbe728e4">9. <span class="done DONE">DONE</span> dates and times</a>
+<ul>
+<li><a href="#org9eb0625">9.1. timestamps 时间戳</a>
+<ul>
+<li><a href="#orgeba4b1c">9.1.1. C-c . 插入时间戳</a></li>
+<li><a href="#org1eb72d8">9.1.2. C-c ! 插入非活动类型时间戳</a></li>
+<li><a href="#org65a3295">9.1.3. S-方向键</a></li>
+</ul>
+</li>
+<li><a href="#org98f7af2">9.2. deadline and scheduling 截止日期与时间表</a>
+<ul>
+<li><a href="#org3ba87a2">9.2.1. C-c C-d</a></li>
+<li><a href="#org37079d0">9.2.2. C-c C-s</a></li>
+</ul>
+</li>
+<li><a href="#org1a4ba69">9.3. clocking work time 记录在特定项目上消耗的时间</a></li>
+</ul>
+</li>
+<li><a href="#org453c4ec">10. <span class="todo INPROGRESS">INPROGRESS</span> capture, refile, archive</a>
+<ul>
+<li><a href="#orgbcb6a9a">10.1. capture</a>
+<ul>
+<li><a href="#orgc83f929">10.1.1. setting up capture 设置capture</a></li>
+<li><a href="#orgf580dad">10.1.2. using capture 使用capture</a></li>
+<li><a href="#orgd909e52">10.1.3. <span class="done DONE">DONE</span> capture templates</a></li>
+</ul>
+</li>
+<li><a href="#org4affa04">10.2. refile and copy 文件重归档与复制</a></li>
+</ul>
+</li>
+<li><a href="#org3478224">11. <span class="todo INPROGRESS">INPROGRESS</span> agenda views</a>
+<ul>
+<li><a href="#org9c82afe">11.1. agenda files</a></li>
+<li><a href="#org3dc1cd7">11.2. The Agenda Dispatcher 日程调度分配器</a></li>
+<li><a href="#org6709010">11.3. The Weekly /Daily  Agenda</a></li>
+<li><a href="#org26dfd2a">11.4. the global todo list 全局todo列表</a></li>
+<li><a href="#org11e9b2f">11.5. Matching Tags and Properties 匹配标签和属性</a></li>
+</ul>
+</li>
+<li><a href="#orgf63e57a">12. <span class="done DONE">DONE</span> markup for rich contents</a>
+<ul>
+<li><a href="#org9aa754d">12.1. paragraphs 段落</a></li>
+<li><a href="#org9ee81b4">12.2. Emphasis and Monospace 强调与等宽字体</a></li>
+<li><a href="#org03cf74c">12.3. embedded latex</a></li>
+<li><a href="#org0e62068">12.4. literal examples 一些例子</a></li>
+<li><a href="#org47638cc">12.5. Images 插入图片的问题</a></li>
+<li><a href="#orgd05bbe5">12.6. creating footnotes 插入脚注</a></li>
+</ul>
+</li>
+<li><a href="#orgc82980b">13. <span class="done DONE">DONE</span> exporting</a>
+<ul>
+<li><a href="#orgcbc65ec">13.1. 导出时需要的一些特殊信息</a></li>
+<li><a href="#org80a855b">13.2. table of contents 内容目录</a></li>
+<li><a href="#org36fd82e">13.3. include files 导入其他文件</a></li>
+<li><a href="#org7822cef">13.4. comment lines 注释行</a></li>
+<li><a href="#org5511654">13.5. 正文开始:导出成不同格式的文件</a>
+<ul>
+<li><a href="#orgdc4abca">13.5.1. ASCII UTF-8</a></li>
+<li><a href="#org2381b31">13.5.2. HTML</a></li>
+<li><a href="#org4d039ff">13.5.3. latex export</a></li>
+<li><a href="#org6a486b1">13.5.4. iCalendar export</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgfc50efc">14. <span class="done DONE">DONE</span> publishing</a></li>
+<li><a href="#orgc7992be">15. <span class="todo TODO">TODO</span> miscellaneous</a></li>
+</ul>
+</div>
+</div>
 <p>
 这篇笔记是我用org写的，在学习org的过程中进行的一个简单的记录。
 这篇笔记里所有的内容都来自于<a href="https://orgmode.org/guide/">orgmode compact guide</a>.
@@ -204,7 +341,7 @@ org 在编辑源码,运行源码,tangling源码与导出源码上都有一些贡
 </ol>
 
 
-<div id="org5fad73a" class="figure">
+<div id="org4cd945b" class="figure">
 <p><img src="./images/20200629171147.png" alt="20200629171147.png">
 </p>
 </div>
@@ -1109,7 +1246,7 @@ Some example from a text file.
 </p>
 
 
-<div id="org95edb9a" class="figure">
+<div id="org1fbf316" class="figure">
 <p><img src="./images/20200616184304.png" alt="20200616184304.png">
 </p>
 </div>
