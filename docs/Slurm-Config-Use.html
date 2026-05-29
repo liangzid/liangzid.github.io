@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<!-- 2026-05-24 Sun 21:56 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2026-05-29 Fri 10:11 -->
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Slurm's Configuration and Usage</title>
 <meta name="author" content="Zi Liang" />
@@ -262,23 +260,23 @@
 <div class="outline-text-2" id="text-1">
 <div class="org-src-container">
 <pre class="src src-sh">
-## 1. Install
-sudo apt install -y munge libmunge-dev gcc make perl \
+<span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">1. Install
+</span>sudo apt install -y munge libmunge-dev gcc make perl <span style="color: #1cc24b;">\</span>
 sqlite3 libsqlite3-dev libssl-dev
 
 sudo apt install -y slurm-wlm slurm-wlm-doc
 
 slurmd --version   
 
-## 2. Config Munge
-# gen key
-sudo /usr/sbin/create-munge-key -r
+<span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">2. Config Munge
+</span><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">gen key
+</span>sudo /usr/sbin/create-munge-key -r
 sudo chown munge:munge /etc/munge/munge.key
 sudo chmod 400 /etc/munge/munge.key
 sudo systemctl enable --now munge
 
-## 3. Config slurm.conf
-sudo mkdir -p /etc/slurm
+<span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">3. Config slurm.conf
+</span>sudo mkdir -p /etc/slurm
 sudo vim /etc/slurm/slurm.conf
 </pre>
 </div>
@@ -288,21 +286,21 @@ Add the configuration of slurm.conf:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"># ===GLOBAL ===
-ClusterName=gs14
-ControlMachine=gs14
-MpiDefault=none
-# === NODES DEF===
-NodeName=gs14 CPUs=192 Boards=1 SocketsPerBoard=2 CoresPerSocket=48 ThreadsPerCore=2 RealMemory=501000 Gres=gpu:6 State=UNKNOWN
-# ===QUEUE===
-PartitionName=gpu Nodes=gs14 Default=YES MaxTime=7-00:00:00 State=UP
-# === ACCOUNT==
-AccountingStorageType=accounting_storage/none
-SelectType=select/cons_res
-SelectTypeParameters=CR_Core_Memory
-TaskPlugin=task/none
-ProctrackType=proctrack/linuxproc
-GresTypes=gpu
+<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">===GLOBAL ===
+</span><span style="color: #62ff94;">ClusterName</span>=gs14
+<span style="color: #62ff94;">ControlMachine</span>=gs14
+<span style="color: #62ff94;">MpiDefault</span>=none
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">=== NODES DEF===
+</span><span style="color: #62ff94;">NodeName</span>=gs14 <span style="color: #62ff94;">CPUs</span>=192 <span style="color: #62ff94;">Boards</span>=1 <span style="color: #62ff94;">SocketsPerBoard</span>=2 <span style="color: #62ff94;">CoresPerSocket</span>=48 <span style="color: #62ff94;">ThreadsPerCore</span>=2 <span style="color: #62ff94;">RealMemory</span>=501000 <span style="color: #62ff94;">Gres</span>=gpu:6 <span style="color: #62ff94;">State</span>=UNKNOWN
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">===QUEUE===
+</span><span style="color: #62ff94;">PartitionName</span>=gpu <span style="color: #62ff94;">Nodes</span>=gs14 <span style="color: #62ff94;">Default</span>=YES <span style="color: #62ff94;">MaxTime</span>=7-00:00:00 <span style="color: #62ff94;">State</span>=UP
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">=== ACCOUNT==
+</span><span style="color: #62ff94;">AccountingStorageType</span>=accounting_storage/none
+<span style="color: #62ff94;">SelectType</span>=select/cons_res
+<span style="color: #62ff94;">SelectTypeParameters</span>=CR_Core_Memory
+<span style="color: #62ff94;">TaskPlugin</span>=task/none
+<span style="color: #62ff94;">ProctrackType</span>=proctrack/linuxproc
+<span style="color: #62ff94;">GresTypes</span>=gpu
 </pre>
 </div>
 
@@ -320,12 +318,12 @@ fill in:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash">NodeName=gs14 Name=gpu File=/dev/nvidia0
-NodeName=gs14 Name=gpu File=/dev/nvidia1
-NodeName=gs14 Name=gpu File=/dev/nvidia2
-NodeName=gs14 Name=gpu File=/dev/nvidia3
-NodeName=gs14 Name=gpu File=/dev/nvidia4
-NodeName=gs14 Name=gpu File=/dev/nvidia5
+<pre class="src src-bash"><span style="color: #62ff94;">NodeName</span>=gs14 <span style="color: #62ff94;">Name</span>=gpu <span style="color: #62ff94;">File</span>=/dev/nvidia0
+<span style="color: #62ff94;">NodeName</span>=gs14 <span style="color: #62ff94;">Name</span>=gpu <span style="color: #62ff94;">File</span>=/dev/nvidia1
+<span style="color: #62ff94;">NodeName</span>=gs14 <span style="color: #62ff94;">Name</span>=gpu <span style="color: #62ff94;">File</span>=/dev/nvidia2
+<span style="color: #62ff94;">NodeName</span>=gs14 <span style="color: #62ff94;">Name</span>=gpu <span style="color: #62ff94;">File</span>=/dev/nvidia3
+<span style="color: #62ff94;">NodeName</span>=gs14 <span style="color: #62ff94;">Name</span>=gpu <span style="color: #62ff94;">File</span>=/dev/nvidia4
+<span style="color: #62ff94;">NodeName</span>=gs14 <span style="color: #62ff94;">Name</span>=gpu <span style="color: #62ff94;">File</span>=/dev/nvidia5
 </pre>
 </div>
 <p>
@@ -415,7 +413,7 @@ Run <code>sinfo</code> to view cluster information. If it's not found, Slurm isn
 <p>
 Example output:
 </p>
-<pre class="example" id="orgbdaa135">
+<pre class="example" id="org8afec10">
 PARTITION AVAIL  TIMELIMIT  NODES  STATE NODELIST
 gpu          up   infinite      4   idle gpu[1-4]
 cpu          up   infinite     10   idle cpu[1-10]
@@ -518,33 +516,33 @@ Scripts typically start with <code>#!/bin/bash</code>, followed by #SBATCH lines
 Example for AI training (save as <code>train.slurm</code>):
 </p>
 <div class="org-src-container">
-<pre class="src src-bash">#!/bin/bash
-#SBATCH --job-name=AI_Training     # Job name
-#SBATCH --partition=gpu            # Partition (queue)
-#SBATCH --nodes=1                  # Number of nodes
-#SBATCH --ntasks=1                 # Number of tasks (processes)
-#SBATCH --cpus-per-task=4          # CPUs per task
-#SBATCH --gres=gpu:2               # GPUs per node (e.g., 2 GPUs)
-#SBATCH --mem=16G                  # Memory per node
-#SBATCH --time=04:00:00            # Time limit (HH:MM:SS)
-#SBATCH --output=train_%j.out      # Stdout file (%j = JOBID)
-#SBATCH --error=train_%j.err       # Stderr file
-#SBATCH --mail-type=END,FAIL       # Email notifications
-#SBATCH --mail-user=your@email.com # Your email
-
-# Load environment (e.g., modules for Python/PyTorch)
-module load python/3.10
+<pre class="src src-bash"><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">!/bin/</span><span style="color: #c770ff; font-weight: bold;">bash</span><span style="color: #8ca391; font-style: italic;">
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --job-name=AI_Training     # Job name
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --partition=gpu            # Partition (queue)
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --nodes=1                  # Number of nodes
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --ntasks=1                 # Number of tasks (processes)
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --cpus-per-task=4          # CPUs per task
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --gres=gpu:2               # GPUs per node (e.g., 2 GPUs)
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --mem=16G                  # Memory per node
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --time=04:00:00            # Time limit (HH:MM:SS)
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --output=train_%j.out      # Stdout file (%j = JOBID)
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --error=train_%j.err       # Stderr file
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --mail-type=END,FAIL       # Email notifications
+</span><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --mail-user=your@email.com # Your email
+</span>
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Load environment (e.g., modules for Python/PyTorch)
+</span>module load python/3.10
 module load cuda/11.8
 module load pytorch/2.0
 
-# Activate virtual environment if needed
-source ~/venv/bin/activate
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Activate virtual environment if needed
+</span><span style="color: #30b3ff;">source</span> ~/venv/bin/activate
 
-# Run your AI training script
-python train_model.py --epochs 50 --batch-size 32
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Run your AI training script
+</span>python train_model.py --epochs 50 --batch-size 32
 
-# Optional: Post-processing
-echo "Training complete!"
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Optional: Post-processing
+</span><span style="color: #30b3ff;">echo</span> <span style="color: #1cc24b;">"Training complete!"</span>
 </pre>
 </div>
 </div>
@@ -563,7 +561,7 @@ echo "Training complete!"
 </ul>
 
 <p>
-For AI, ensure your script handles GPU visibility (e.g., via CUDA<sub>VISIBLE</sub><sub>DEVICES</sub>, but Slurm sets it automatically with &#x2013;gres).
+For AI, ensure your script handles GPU visibility (e.g., via CUDA_VISIBLE_DEVICES, but Slurm sets it automatically with &#x2013;gres).
 </p>
 </div>
 </div>
@@ -670,9 +668,9 @@ Ideal for AI hyperparameter search.
 Example script:
 </p>
 <div class="org-src-container">
-<pre class="src src-bash">#SBATCH --array=0-9
-PARAMS=(0.001 0.01 0.1 ...)  # Array of learning rates
-python train.py --lr ${PARAMS[$SLURM_ARRAY_TASK_ID]}
+<pre class="src src-bash"><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">SBATCH --array=0-9
+</span><span style="color: #62ff94;">PARAMS</span>=<span style="color: #24f6d9;">(</span>0.001 0.01 0.1 ...<span style="color: #24f6d9;">)</span>  <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Array of learning rates
+</span>python train.py --lr $<span style="color: #24f6d9;">{</span><span style="color: #62ff94;">PARAMS</span><span style="color: #c770ff;">[</span>$<span style="color: #62ff94;">SLURM_ARRAY_TASK_ID</span><span style="color: #c770ff;">]</span><span style="color: #24f6d9;">}</span>
 </pre>
 </div>
 </div>

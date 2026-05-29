@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<!-- 2026-05-24 Sun 21:56 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2026-05-29 Fri 10:11 -->
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>半自动手残拯救器：PC端微信跳一跳的解决方案</title>
 <meta name="author" content="Zi Liang" />
@@ -49,8 +47,8 @@
 </p>
 
 
-<div id="org8fd9865" class="figure">
-<p><img src="./images/screenshot_20220107_200653.png" alt="screenshot_20220107_200653.png" /> 
+<div id="org8cba12c" class="figure">
+<p><img src="./images/screenshot_20220107_200653.png" alt="screenshot_20220107_200653.png"> 
 </p>
 </div>
 
@@ -128,29 +126,29 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">from pymouse import *
-# import time
-import win32api
-import pyautogui
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">from</span> pymouse <span style="color: #c770ff; font-weight: bold;">import</span> <span style="color: #24f6d9;">*</span>
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">import time
+</span><span style="color: #c770ff; font-weight: bold;">import</span> win32api
+<span style="color: #c770ff; font-weight: bold;">import</span> pyautogui
 
-def press(x, y, button=1):
-         buttonAction = 2 ** ((2 * button) - 1)
-         win32api.mouse_event(buttonAction, x, y)
-
-
-def release(x, y, button=1):
-         buttonAction = 2 ** ((2 * button))
-         win32api.mouse_event(buttonAction, x, y)
+<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">press</span><span style="color: #24f6d9;">(</span>x, y, button<span style="color: #24f6d9;">=</span>1<span style="color: #24f6d9;">)</span>:
+         <span style="color: #62ff94;">buttonAction</span> <span style="color: #24f6d9;">=</span> 2 <span style="color: #24f6d9;">**</span> <span style="color: #24f6d9;">(</span><span style="color: #c770ff;">(</span>2 <span style="color: #24f6d9;">*</span> button<span style="color: #c770ff;">)</span> <span style="color: #24f6d9;">-</span> 1<span style="color: #24f6d9;">)</span>
+         win32api.mouse_event<span style="color: #24f6d9;">(</span>buttonAction, x, y<span style="color: #24f6d9;">)</span>
 
 
-def click(x, y, button=1):
-         press(x, y, button)
-         release(x, y, button)
+<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">release</span><span style="color: #24f6d9;">(</span>x, y, button<span style="color: #24f6d9;">=</span>1<span style="color: #24f6d9;">)</span>:
+         <span style="color: #62ff94;">buttonAction</span> <span style="color: #24f6d9;">=</span> 2 <span style="color: #24f6d9;">**</span> <span style="color: #24f6d9;">(</span><span style="color: #c770ff;">(</span>2 <span style="color: #24f6d9;">*</span> button<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+         win32api.mouse_event<span style="color: #24f6d9;">(</span>buttonAction, x, y<span style="color: #24f6d9;">)</span>
 
-def getPosition():
-         m=PyMouse()
-         print(m.position())
-         return m.position()
+
+<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">click</span><span style="color: #24f6d9;">(</span>x, y, button<span style="color: #24f6d9;">=</span>1<span style="color: #24f6d9;">)</span>:
+         press<span style="color: #24f6d9;">(</span>x, y, button<span style="color: #24f6d9;">)</span>
+         release<span style="color: #24f6d9;">(</span>x, y, button<span style="color: #24f6d9;">)</span>
+
+<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">getPosition</span><span style="color: #24f6d9;">()</span>:
+         <span style="color: #62ff94;">m</span><span style="color: #24f6d9;">=</span>PyMouse<span style="color: #24f6d9;">()</span>
+         <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>m.position<span style="color: #c770ff;">()</span><span style="color: #24f6d9;">)</span>
+         <span style="color: #c770ff; font-weight: bold;">return</span> m.position<span style="color: #24f6d9;">()</span>
 
 </pre>
 </div>
@@ -163,18 +161,18 @@ def getPosition():
 
 <div class="org-src-container">
 <pre class="src src-python">
-# (x,y) position mouse to hold
-# t: seconds mouse to hold.
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">(x,y) position mouse to hold
+</span><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">t: seconds mouse to hold.
+</span>
+<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">autoguiHoldOn</span><span style="color: #24f6d9;">(</span>x,y,t<span style="color: #24f6d9;">)</span>:
+    pyautogui.moveTo<span style="color: #24f6d9;">(</span>x,y<span style="color: #24f6d9;">)</span>
+    goOneStepWithTime<span style="color: #24f6d9;">(</span>x,y,t<span style="color: #24f6d9;">)</span>
 
-def autoguiHoldOn(x,y,t):
-    pyautogui.moveTo(x,y)
-    goOneStepWithTime(x,y,t)
-
-def goOneStepWithTime(x,y,t):
-    press(x,y)
-    time.sleep(t)
-    release(x,y)
-    print(f"running one step done. Position: ({x},{y}); for {t} s.")
+<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">goOneStepWithTime</span><span style="color: #24f6d9;">(</span>x,y,t<span style="color: #24f6d9;">)</span>:
+    press<span style="color: #24f6d9;">(</span>x,y<span style="color: #24f6d9;">)</span>
+    time.sleep<span style="color: #24f6d9;">(</span>t<span style="color: #24f6d9;">)</span>
+    release<span style="color: #24f6d9;">(</span>x,y<span style="color: #24f6d9;">)</span>
+    <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"running one step done. Position: (</span>{x}<span style="color: #1cc24b;">,</span>{y}<span style="color: #1cc24b;">); for </span>{t}<span style="color: #1cc24b;"> s."</span><span style="color: #24f6d9;">)</span>
 
 </pre>
 </div>
@@ -189,28 +187,28 @@ def goOneStepWithTime(x,y,t):
 
 
 <div class="org-src-container">
-<pre class="src src-python"># screen capture
-def getScreenArray():
-    img = ImageGrab.grab(bbox=(0, 0, 2048, 2048))
-    img = np.array(img.getdata(), np.uint8).reshape(img.size[1], img.size[0], 3)
-    # cv2.imshow("222",img)
-    cv2.waitKey(0)
-    return img
+<pre class="src src-python"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">screen capture
+</span><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">getScreenArray</span><span style="color: #24f6d9;">()</span>:
+    <span style="color: #62ff94;">img</span> <span style="color: #24f6d9;">=</span> ImageGrab.grab<span style="color: #24f6d9;">(</span>bbox<span style="color: #24f6d9;">=</span><span style="color: #c770ff;">(</span>0, 0, 2048, 2048<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+    <span style="color: #62ff94;">img</span> <span style="color: #24f6d9;">=</span> np.array<span style="color: #24f6d9;">(</span>img.getdata<span style="color: #c770ff;">()</span>, np.uint8<span style="color: #24f6d9;">)</span>.reshape<span style="color: #24f6d9;">(</span>img.size<span style="color: #c770ff;">[</span>1<span style="color: #c770ff;">]</span>, img.size<span style="color: #c770ff;">[</span>0<span style="color: #c770ff;">]</span>, 3<span style="color: #24f6d9;">)</span>
+    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">cv2.imshow("222",img)
+</span>    cv2.waitKey<span style="color: #24f6d9;">(</span>0<span style="color: #24f6d9;">)</span>
+    <span style="color: #c770ff; font-weight: bold;">return</span> img
 
-# match templates
-# where all_array denotes the array matched, and window_array is the template.
-# It will return two tuples, including the position of top-left point and bottom-right point.
-def getWindowPosition(all_array, window_array):
-    print("shape of window array：", window_array.shape)
-    h,w=window_array.shape
+<span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">match templates
+</span><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">where all_array denotes the array matched, and window_array is the template.
+</span><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">It will return two tuples, including the position of top-left point and bottom-right point.
+</span><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">getWindowPosition</span><span style="color: #24f6d9;">(</span>all_array, window_array<span style="color: #24f6d9;">)</span>:
+    <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"shape of window array&#65306;"</span>, window_array.shape<span style="color: #24f6d9;">)</span>
+    <span style="color: #62ff94;">h</span>,<span style="color: #62ff94;">w</span><span style="color: #24f6d9;">=</span>window_array.shape
 
-    meth="cv2.TM_CCOEFF"
-    method=eval(meth)
-    results=cv2.matchTemplate(all_array,window_array,method)
-    min_val,max_val,min_loc,top_left=cv2.minMaxLoc(results)
-    bottom_right=(top_left[0] + w, top_left[1] + h)
+    <span style="color: #62ff94;">meth</span><span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"cv2.TM_CCOEFF"</span>
+    <span style="color: #62ff94;">method</span><span style="color: #24f6d9;">=</span><span style="color: #30b3ff;">eval</span><span style="color: #24f6d9;">(</span>meth<span style="color: #24f6d9;">)</span>
+    <span style="color: #62ff94;">results</span><span style="color: #24f6d9;">=</span>cv2.matchTemplate<span style="color: #24f6d9;">(</span>all_array,window_array,method<span style="color: #24f6d9;">)</span>
+    <span style="color: #62ff94;">min_val</span>,<span style="color: #62ff94;">max_val</span>,<span style="color: #62ff94;">min_loc</span>,<span style="color: #62ff94;">top_left</span><span style="color: #24f6d9;">=</span>cv2.minMaxLoc<span style="color: #24f6d9;">(</span>results<span style="color: #24f6d9;">)</span>
+    <span style="color: #62ff94;">bottom_right</span><span style="color: #24f6d9;">=</span><span style="color: #24f6d9;">(</span>top_left<span style="color: #c770ff;">[</span>0<span style="color: #c770ff;">]</span> <span style="color: #24f6d9;">+</span> w, top_left<span style="color: #c770ff;">[</span>1<span style="color: #c770ff;">]</span> <span style="color: #24f6d9;">+</span> h<span style="color: #24f6d9;">)</span>
 
-    return top_left, bottom_right
+    <span style="color: #c770ff; font-weight: bold;">return</span> top_left, bottom_right
 
 </pre>
 </div>
@@ -227,46 +225,46 @@ def getWindowPosition(all_array, window_array):
 <div class="org-src-container">
 <pre class="src src-python">
 
-def handwork(centerx,centery):
-    # get all screen
-    screen_array=getScreenArray()
-    screen_array = cv2.cvtColor(screen_array, cv2.COLOR_BGR2GRAY)
+<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">handwork</span><span style="color: #24f6d9;">(</span>centerx,centery<span style="color: #24f6d9;">)</span>:
+    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">get all screen
+</span>    <span style="color: #62ff94;">screen_array</span><span style="color: #24f6d9;">=</span>getScreenArray<span style="color: #24f6d9;">()</span>
+    <span style="color: #62ff94;">screen_array</span> <span style="color: #24f6d9;">=</span> cv2.cvtColor<span style="color: #24f6d9;">(</span>screen_array, cv2.COLOR_BGR2GRAY<span style="color: #24f6d9;">)</span>
 
-    ## get game position
-    screen=cv2.imread("./screen.png")
-    screen= cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
-    screen_p_tl,screen_p_br=getWindowPosition(screen_array,screen)
+    <span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">get game position
+</span>    <span style="color: #62ff94;">screen</span><span style="color: #24f6d9;">=</span>cv2.imread<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"./screen.png"</span><span style="color: #24f6d9;">)</span>
+    <span style="color: #62ff94;">screen</span><span style="color: #24f6d9;">=</span> cv2.cvtColor<span style="color: #24f6d9;">(</span>screen, cv2.COLOR_BGR2GRAY<span style="color: #24f6d9;">)</span>
+    <span style="color: #62ff94;">screen_p_tl</span>,<span style="color: #62ff94;">screen_p_br</span><span style="color: #24f6d9;">=</span>getWindowPosition<span style="color: #24f6d9;">(</span>screen_array,screen<span style="color: #24f6d9;">)</span>
 
-    print(f"Window top-left posotion: {screen_p_tl}")
-    print(f"Window bottom-right posotion: {screen_p_br}")
-    screen_p_tl=(735,142)
-    screen_p_br=(1185,941)
-    # centerx=int((screen_p_tl[0]+screen_p_br[0])/2)
-    # centery=int((screen_p_tl[1]+screen_p_br[1])/2)
-    # centerx+=200
-    # centery+=100
+    <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"Window top-left posotion: </span>{screen_p_tl}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
+    <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"Window bottom-right posotion: </span>{screen_p_br}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
+    <span style="color: #62ff94;">screen_p_tl</span><span style="color: #24f6d9;">=</span><span style="color: #24f6d9;">(</span>735,142<span style="color: #24f6d9;">)</span>
+    <span style="color: #62ff94;">screen_p_br</span><span style="color: #24f6d9;">=</span><span style="color: #24f6d9;">(</span>1185,941<span style="color: #24f6d9;">)</span>
+    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">centerx=int((screen_p_tl[0]+screen_p_br[0])/2)
+</span>    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">centery=int((screen_p_tl[1]+screen_p_br[1])/2)
+</span>    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">centerx+=200
+</span>    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">centery+=100
+</span>
+    <span style="color: #62ff94;">person</span><span style="color: #24f6d9;">=</span>cv2.imread<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"./person.png"</span><span style="color: #24f6d9;">)</span>
+    <span style="color: #62ff94;">person</span> <span style="color: #24f6d9;">=</span> cv2.cvtColor<span style="color: #24f6d9;">(</span>person, cv2.COLOR_BGR2GRAY<span style="color: #24f6d9;">)</span>
+    <span style="color: #62ff94;">per_p_tl</span>,<span style="color: #62ff94;">per_p_br</span><span style="color: #24f6d9;">=</span>getWindowPosition<span style="color: #24f6d9;">(</span>screen_array,person<span style="color: #24f6d9;">)</span>
 
-    person=cv2.imread("./person.png")
-    person = cv2.cvtColor(person, cv2.COLOR_BGR2GRAY)
-    per_p_tl,per_p_br=getWindowPosition(screen_array,person)
+    <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"person top-left posotion: </span>{per_p_tl}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
+    <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"person bottom-right posotion: </span>{per_p_br}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
 
-    print(f"person top-left posotion: {per_p_tl}")
-    print(f"person bottom-right posotion: {per_p_br}")
+    <span style="color: #62ff94;">srcx</span><span style="color: #24f6d9;">=</span>per_p_tl<span style="color: #24f6d9;">[</span>0<span style="color: #24f6d9;">]</span><span style="color: #24f6d9;">+</span>16
+    <span style="color: #62ff94;">srcy</span><span style="color: #24f6d9;">=</span>per_p_tl<span style="color: #24f6d9;">[</span>1<span style="color: #24f6d9;">]</span><span style="color: #24f6d9;">+</span>79
 
-    srcx=per_p_tl[0]+16
-    srcy=per_p_tl[1]+79
+    <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"person position: (</span>{srcx}<span style="color: #1cc24b;">,</span>{srcy}<span style="color: #1cc24b;">)"</span><span style="color: #24f6d9;">)</span>
 
-    print(f"person position: ({srcx},{srcy})")
+    <span style="color: #62ff94;">point</span><span style="color: #24f6d9;">=</span>np.array<span style="color: #24f6d9;">(</span><span style="color: #c770ff;">[</span>srcx<span style="color: #24f6d9;">-</span>centerx,srcy<span style="color: #24f6d9;">-</span>centery<span style="color: #c770ff;">]</span><span style="color: #24f6d9;">)</span>
 
-    point=np.array([srcx-centerx,srcy-centery])
+    <span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">calculate distance
+</span>    <span style="color: #62ff94;">distance</span><span style="color: #24f6d9;">=</span>np.linalg.norm<span style="color: #24f6d9;">(</span>point<span style="color: #24f6d9;">)</span>
+    <span style="color: #62ff94;">t</span><span style="color: #24f6d9;">=</span>getTimefromDistance<span style="color: #24f6d9;">(</span>distance<span style="color: #24f6d9;">)</span><span style="color: #24f6d9;">/</span>1000
+    <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"planning time: </span>{t}<span style="color: #1cc24b;">"</span><span style="color: #24f6d9;">)</span>
 
-    ## calculate distance
-    distance=np.linalg.norm(point)
-    t=getTimefromDistance(distance)/1000
-    print(f"planning time: {t}")
-
-    # goOneStepWithTime(centerx,centery,t)
-    autoguiHoldOn(srcx,srcy,t)
+    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">goOneStepWithTime(centerx,centery,t)
+</span>    autoguiHoldOn<span style="color: #24f6d9;">(</span>srcx,srcy,t<span style="color: #24f6d9;">)</span>
 
 </pre>
 </div>
@@ -276,21 +274,21 @@ def handwork(centerx,centery):
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">def main1():
-    i=0
-    while True:
-          print("please set your persition")
-          y=input("enter &lt;RET&gt; to set done. and q to exit.")
-          if y=="":
-              persition=getPosition()
-              handwork(persition[0],persition[1])
-          else:
-              return 0
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">main1</span><span style="color: #24f6d9;">()</span>:
+    <span style="color: #62ff94;">i</span><span style="color: #24f6d9;">=</span>0
+    <span style="color: #c770ff; font-weight: bold;">while</span> <span style="color: #ffa83d;">True</span>:
+          <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"please set your persition"</span><span style="color: #24f6d9;">)</span>
+          <span style="color: #62ff94;">y</span><span style="color: #24f6d9;">=</span><span style="color: #30b3ff;">input</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"enter &lt;RET&gt; to set done. and q to exit."</span><span style="color: #24f6d9;">)</span>
+          <span style="color: #c770ff; font-weight: bold;">if</span> y<span style="color: #24f6d9;">==</span><span style="color: #1cc24b;">""</span>:
+              <span style="color: #62ff94;">persition</span><span style="color: #24f6d9;">=</span>getPosition<span style="color: #24f6d9;">()</span>
+              handwork<span style="color: #24f6d9;">(</span>persition<span style="color: #c770ff;">[</span>0<span style="color: #c770ff;">]</span>,persition<span style="color: #c770ff;">[</span>1<span style="color: #c770ff;">]</span><span style="color: #24f6d9;">)</span>
+          <span style="color: #c770ff; font-weight: bold;">else</span>:
+              <span style="color: #c770ff; font-weight: bold;">return</span> 0
 
-          if i&gt;5000000:
-              break
-          # mymain()
-          i+=1
+          <span style="color: #c770ff; font-weight: bold;">if</span> i<span style="color: #24f6d9;">&gt;</span>5000000:
+              <span style="color: #c770ff; font-weight: bold;">break</span>
+          <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">mymain()
+</span>          <span style="color: #62ff94;">i</span><span style="color: #24f6d9;">+=</span>1
 
 </pre>
 </div>

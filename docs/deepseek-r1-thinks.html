@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<!-- 2026-05-24 Sun 21:56 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2026-05-29 Fri 10:11 -->
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Thoughts of Deepseek R1</title>
 <meta name="author" content="Zi Liang" />
@@ -323,8 +321,8 @@ Objective Formula (to maximize):
 </p>
 
 
-<div id="orgba1108f" class="figure">
-<p><img src="./images/screenshot_20250216_112842.png" alt="screenshot_20250216_112842.png" />
+<div id="org1492818" class="figure">
+<p><img src="./images/screenshot_20250216_112842.png" alt="screenshot_20250216_112842.png">
 </p>
 </div>
 
@@ -336,10 +334,10 @@ where:
 <li>q: query question text</li>
 <li>\(\pi\): policy</li>
 <li>O: output distribution</li>
-<li>o<sub>i</sub>: i-th output set</li>
+<li>o_i: i-th output set</li>
 <li>G: group number</li>
-<li>A<sub>i</sub>: Normalized "debiased reward", also named as "supervise" or "advantage". (will shown later).</li>
-<li>D<sub>KL</sub>: KL-divergence</li>
+<li>A_i: Normalized "debiased reward", also named as "supervise" or "advantage". (will shown later).</li>
+<li>D_{KL}: KL-divergence</li>
 </ul>
 
 <p>
@@ -351,8 +349,8 @@ A's formular:
 </p>
 
 
-<div id="org6e96026" class="figure">
-<p><img src="./images/screenshot_20250216_113518.png" alt="screenshot_20250216_113518.png" />
+<div id="org10ba6d2" class="figure">
+<p><img src="./images/screenshot_20250216_113518.png" alt="screenshot_20250216_113518.png">
 </p>
 </div>
 
@@ -406,14 +404,14 @@ During RL training, the increase of performance is consistent with the increase 
 </p>
 
 
-<div id="orgdaca7e9" class="figure">
-<p><img src="./images/screenshot_20250216_114913.png" alt="screenshot_20250216_114913.png" />
+<div id="org96d16e0" class="figure">
+<p><img src="./images/screenshot_20250216_114913.png" alt="screenshot_20250216_114913.png">
 </p>
 </div>
 
 
-<div id="orgeb3255f" class="figure">
-<p><img src="./images/screenshot_20250216_114925.png" alt="screenshot_20250216_114925.png" />
+<div id="orgcb46889" class="figure">
+<p><img src="./images/screenshot_20250216_114925.png" alt="screenshot_20250216_114925.png">
 </p>
 </div>
 </div>
@@ -430,8 +428,8 @@ An example here:
 </p>
 
 
-<div id="org3fa3bf5" class="figure">
-<p><img src="./images/screenshot_20250216_115420.png" alt="screenshot_20250216_115420.png" />
+<div id="org32b91b0" class="figure">
+<p><img src="./images/screenshot_20250216_115420.png" alt="screenshot_20250216_115420.png">
 </p>
 </div>
 </div>
@@ -503,8 +501,8 @@ The results are impressive:
 </p>
 
 
-<div id="org82ff3f3" class="figure">
-<p><img src="./images/screenshot_20250216_122632.png" alt="screenshot_20250216_122632.png" />
+<div id="org2d4a93a" class="figure">
+<p><img src="./images/screenshot_20250216_122632.png" alt="screenshot_20250216_122632.png">
 </p>
 </div>
 </div>
@@ -530,46 +528,46 @@ GRPO: use <code>trl</code>'s standard implementation.
 <h3 id="orgd182689"><span class="section-number-3">4.1.</span> Accuracy Reward</h3>
 <div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
-<pre class="src src-python">def accuracy_reward(completions, solution, **kwargs):
-    """Reward function that checks if the completion is the same as the ground truth."""
-    contents = [completion[0]["content"] for completion in completions]
-    rewards = []
-    for content, sol in zip(contents, solution):
-        gold_parsed = parse(
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">accuracy_reward</span><span style="color: #24f6d9;">(</span>completions, solution, <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span>:
+    <span style="color: #8ca391; font-style: italic;">"""Reward function that checks if the completion is the same as the ground truth."""</span>
+    <span style="color: #62ff94;">contents</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span>completion<span style="color: #c770ff;">[</span>0<span style="color: #c770ff;">][</span><span style="color: #1cc24b;">"content"</span><span style="color: #c770ff;">]</span> <span style="color: #c770ff; font-weight: bold;">for</span> completion <span style="color: #c770ff; font-weight: bold;">in</span> completions<span style="color: #24f6d9;">]</span>
+    <span style="color: #62ff94;">rewards</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[]</span>
+    <span style="color: #c770ff; font-weight: bold;">for</span> content, sol <span style="color: #c770ff; font-weight: bold;">in</span> <span style="color: #30b3ff;">zip</span><span style="color: #24f6d9;">(</span>contents, solution<span style="color: #24f6d9;">)</span>:
+        <span style="color: #62ff94;">gold_parsed</span> <span style="color: #24f6d9;">=</span> parse<span style="color: #24f6d9;">(</span>
             sol,
-            extraction_mode="first_match",
-            extraction_config=[LatexExtractionConfig()],
-        )
-        if len(gold_parsed) != 0:
-            # We require the answer to be provided in correct latex (no malformed operators)
-            answer_parsed = parse(
+            extraction_mode<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"first_match"</span>,
+            extraction_config<span style="color: #24f6d9;">=</span><span style="color: #c770ff;">[</span>LatexExtractionConfig<span style="color: #e6ff57;">()</span><span style="color: #c770ff;">]</span>,
+        <span style="color: #24f6d9;">)</span>
+        <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #30b3ff;">len</span><span style="color: #24f6d9;">(</span>gold_parsed<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">!=</span> 0:
+            <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">We require the answer to be provided in correct latex (no malformed operators)
+</span>            <span style="color: #62ff94;">answer_parsed</span> <span style="color: #24f6d9;">=</span> parse<span style="color: #24f6d9;">(</span>
                 content,
-                extraction_config=[
-                    LatexExtractionConfig(
-                        normalization_config=NormalizationConfig(
-                            nits=False,
-                            malformed_operators=False,
-                            basic_latex=True,
-                            equations=True,
-                            boxed="all",
-                            units=True,
-                        ),
-                        # Ensures that boxed is tried first
-                        boxed_match_priority=0,
-                        try_extract_without_anchor=False,
-                    )
-                ],
-                extraction_mode="first_match",
-            )
-            # Reward 1 if the content is the same as the ground truth, 0 otherwise
-            reward = float(verify(answer_parsed, gold_parsed))
-        else:
-            # If the gold solution is not parseable, we reward 1 to skip this example
-            reward = 1.0
-            print("Failed to parse gold solution: ", sol)
-        rewards.append(reward)
+                extraction_config<span style="color: #24f6d9;">=</span><span style="color: #c770ff;">[</span>
+                    LatexExtractionConfig<span style="color: #e6ff57;">(</span>
+                        normalization_config<span style="color: #24f6d9;">=</span>NormalizationConfig<span style="color: #30b3ff;">(</span>
+                            nits<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
+                            malformed_operators<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
+                            basic_latex<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
+                            equations<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
+                            boxed<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"all"</span>,
+                            units<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
+                        <span style="color: #30b3ff;">)</span>,
+                        <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Ensures that boxed is tried first
+</span>                        boxed_match_priority<span style="color: #24f6d9;">=</span>0,
+                        try_extract_without_anchor<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
+                    <span style="color: #e6ff57;">)</span>
+                <span style="color: #c770ff;">]</span>,
+                extraction_mode<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"first_match"</span>,
+            <span style="color: #24f6d9;">)</span>
+            <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Reward 1 if the content is the same as the ground truth, 0 otherwise
+</span>            <span style="color: #62ff94;">reward</span> <span style="color: #24f6d9;">=</span> <span style="color: #30b3ff;">float</span><span style="color: #24f6d9;">(</span>verify<span style="color: #c770ff;">(</span>answer_parsed, gold_parsed<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+        <span style="color: #c770ff; font-weight: bold;">else</span>:
+            <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">If the gold solution is not parseable, we reward 1 to skip this example
+</span>            <span style="color: #62ff94;">reward</span> <span style="color: #24f6d9;">=</span> 1.0
+            <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"Failed to parse gold solution: "</span>, sol<span style="color: #24f6d9;">)</span>
+        rewards.append<span style="color: #24f6d9;">(</span>reward<span style="color: #24f6d9;">)</span>
 
-    return rewards
+    <span style="color: #c770ff; font-weight: bold;">return</span> rewards
 </pre>
 </div>
 </div>
@@ -578,12 +576,12 @@ GRPO: use <code>trl</code>'s standard implementation.
 <h3 id="orgd029bc0"><span class="section-number-3">4.2.</span> Format Reward</h3>
 <div class="outline-text-3" id="text-4-2">
 <div class="org-src-container">
-<pre class="src src-python">def format_reward(completions, **kwargs):
-    """Reward function that checks if the completion has a specific format."""
-    pattern = r"^&lt;think&gt;.*?&lt;/think&gt;\s*&lt;answer&gt;.*?&lt;/answer&gt;$"
-    completion_contents = [completion[0]["content"] for completion in completions]
-    matches = [re.match(pattern, content, re.DOTALL | re.MULTILINE) for content in completion_contents]
-    return [1.0 if match else 0.0 for match in matches]
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">format_reward</span><span style="color: #24f6d9;">(</span>completions, <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span>:
+    <span style="color: #8ca391; font-style: italic;">"""Reward function that checks if the completion has a specific format."""</span>
+    <span style="color: #62ff94;">pattern</span> <span style="color: #24f6d9;">=</span> r<span style="color: #1cc24b;">"^&lt;think&gt;.*?&lt;/think&gt;\s*&lt;answer&gt;.*?&lt;/answer&gt;$"</span>
+    <span style="color: #62ff94;">completion_contents</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span>completion<span style="color: #c770ff;">[</span>0<span style="color: #c770ff;">][</span><span style="color: #1cc24b;">"content"</span><span style="color: #c770ff;">]</span> <span style="color: #c770ff; font-weight: bold;">for</span> completion <span style="color: #c770ff; font-weight: bold;">in</span> completions<span style="color: #24f6d9;">]</span>
+    <span style="color: #62ff94;">matches</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span>re.<span style="color: #c770ff; font-weight: bold;">match</span><span style="color: #c770ff;">(</span>pattern, content, re.DOTALL <span style="color: #24f6d9;">|</span> re.MULTILINE<span style="color: #c770ff;">)</span> <span style="color: #c770ff; font-weight: bold;">for</span> content <span style="color: #c770ff; font-weight: bold;">in</span> completion_contents<span style="color: #24f6d9;">]</span>
+    <span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #24f6d9;">[</span>1.0 <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #c770ff; font-weight: bold;">match</span> <span style="color: #c770ff; font-weight: bold;">else</span> 0.0 <span style="color: #c770ff; font-weight: bold;">for</span> <span style="color: #c770ff; font-weight: bold;">match</span> <span style="color: #c770ff; font-weight: bold;">in</span> matches<span style="color: #24f6d9;">]</span>
 </pre>
 </div>
 </div>
@@ -598,21 +596,21 @@ GRPO: use <code>trl</code>'s standard implementation.
 
 
 <div class="org-src-container">
-<pre class="src src-python">def reasoning_steps_reward(completions, **kwargs):
-    r"""Reward function that checks for clear step-by-step reasoning.
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">reasoning_steps_reward</span><span style="color: #24f6d9;">(</span>completions, <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span>:
+    r<span style="color: #8ca391; font-style: italic;">"""Reward function that checks for clear step-by-step reasoning.
     Regex pattern:
         Step \d+: - matches "Step 1:", "Step 2:", etc.
         ^\d+\. - matches numbered lists like "1.", "2.", etc. at start of line
         \n- - matches bullet points with hyphens
         \n\* - matches bullet points with asterisks
         First,|Second,|Next,|Finally, - matches transition words
-    """
-    pattern = r"(Step \d+:|^\d+\.|\n-|\n\*|First,|Second,|Next,|Finally,)"
-    completion_contents = [completion[0]["content"] for completion in completions]
-    matches = [len(re.findall(pattern, content)) for content in completion_contents]
+    """</span>
+    <span style="color: #62ff94;">pattern</span> <span style="color: #24f6d9;">=</span> r<span style="color: #1cc24b;">"(Step \d+:|^\d+\.|\n-|\n\*|First,|Second,|Next,|Finally,)"</span>
+    <span style="color: #62ff94;">completion_contents</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span>completion<span style="color: #c770ff;">[</span>0<span style="color: #c770ff;">][</span><span style="color: #1cc24b;">"content"</span><span style="color: #c770ff;">]</span> <span style="color: #c770ff; font-weight: bold;">for</span> completion <span style="color: #c770ff; font-weight: bold;">in</span> completions<span style="color: #24f6d9;">]</span>
+    <span style="color: #62ff94;">matches</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span><span style="color: #30b3ff;">len</span><span style="color: #c770ff;">(</span>re.findall<span style="color: #e6ff57;">(</span>pattern, content<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span> <span style="color: #c770ff; font-weight: bold;">for</span> content <span style="color: #c770ff; font-weight: bold;">in</span> completion_contents<span style="color: #24f6d9;">]</span>
 
-    # Magic nubmer 3 to encourage 3 steps and more, otherwise partial reward
-    return [min(1.0, count / 3) for count in matches]
+    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Magic nubmer 3 to encourage 3 steps and more, otherwise partial reward
+</span>    <span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #24f6d9;">[</span><span style="color: #30b3ff;">min</span><span style="color: #c770ff;">(</span>1.0, count <span style="color: #24f6d9;">/</span> 3<span style="color: #c770ff;">)</span> <span style="color: #c770ff; font-weight: bold;">for</span> count <span style="color: #c770ff; font-weight: bold;">in</span> matches<span style="color: #24f6d9;">]</span>
 </pre>
 </div>
 </div>
@@ -625,8 +623,8 @@ constrain the length of chain-of-thought.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">def len_reward(completions: list[Dict[str, str]], solutions: list[str], **kwargs) -&gt; float:
-    """Compute length-based rewards to discourage overthinking and promote token efficiency.
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">len_reward</span><span style="color: #24f6d9;">(</span>completions: <span style="color: #30b3ff;">list</span><span style="color: #c770ff;">[</span>Dict<span style="color: #e6ff57;">[</span><span style="color: #30b3ff;">str</span>, <span style="color: #30b3ff;">str</span><span style="color: #e6ff57;">]</span><span style="color: #c770ff;">]</span>, solutions: <span style="color: #30b3ff;">list</span><span style="color: #c770ff;">[</span><span style="color: #30b3ff;">str</span><span style="color: #c770ff;">]</span>, <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">-&gt;</span> <span style="color: #30b3ff;">float</span>:
+    <span style="color: #8ca391; font-style: italic;">"""Compute length-based rewards to discourage overthinking and promote token efficiency.
 
     Taken from from the Kimi 1.5 tech report: https://arxiv.org/abs/2501.12599
 
@@ -638,64 +636,64 @@ constrain the length of chain-of-thought.
         List of rewards where:
         - For correct answers: reward = 0.5 - (len - min_len)/(max_len - min_len)
         - For incorrect answers: reward = min(0, 0.5 - (len - min_len)/(max_len - min_len))
-    """
-    contents = [completion[0]["content"] for completion in completions]
+    """</span>
+    <span style="color: #62ff94;">contents</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span>completion<span style="color: #c770ff;">[</span>0<span style="color: #c770ff;">][</span><span style="color: #1cc24b;">"content"</span><span style="color: #c770ff;">]</span> <span style="color: #c770ff; font-weight: bold;">for</span> completion <span style="color: #c770ff; font-weight: bold;">in</span> completions<span style="color: #24f6d9;">]</span>
 
-    # First check correctness of answers
-    correctness = []
-    for content, sol in zip(contents, solutions):
-        gold_parsed = parse(
+    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">First check correctness of answers
+</span>    <span style="color: #62ff94;">correctness</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[]</span>
+    <span style="color: #c770ff; font-weight: bold;">for</span> content, sol <span style="color: #c770ff; font-weight: bold;">in</span> <span style="color: #30b3ff;">zip</span><span style="color: #24f6d9;">(</span>contents, solutions<span style="color: #24f6d9;">)</span>:
+        <span style="color: #62ff94;">gold_parsed</span> <span style="color: #24f6d9;">=</span> parse<span style="color: #24f6d9;">(</span>
             sol,
-            extraction_mode="first_match",
-            extraction_config=[LatexExtractionConfig()],
-        )
-        if len(gold_parsed) == 0:
-            # Skip unparseable examples
-            correctness.append(True)  # Treat as correct to avoid penalizing
-            print("Failed to parse gold solution: ", sol)
-            continue
+            extraction_mode<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"first_match"</span>,
+            extraction_config<span style="color: #24f6d9;">=</span><span style="color: #c770ff;">[</span>LatexExtractionConfig<span style="color: #e6ff57;">()</span><span style="color: #c770ff;">]</span>,
+        <span style="color: #24f6d9;">)</span>
+        <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #30b3ff;">len</span><span style="color: #24f6d9;">(</span>gold_parsed<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">==</span> 0:
+            <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Skip unparseable examples
+</span>            correctness.append<span style="color: #24f6d9;">(</span><span style="color: #ffa83d;">True</span><span style="color: #24f6d9;">)</span>  <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Treat as correct to avoid penalizing
+</span>            <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"Failed to parse gold solution: "</span>, sol<span style="color: #24f6d9;">)</span>
+            <span style="color: #c770ff; font-weight: bold;">continue</span>
 
-        answer_parsed = parse(
+        <span style="color: #62ff94;">answer_parsed</span> <span style="color: #24f6d9;">=</span> parse<span style="color: #24f6d9;">(</span>
             content,
-            extraction_config=[
-                LatexExtractionConfig(
-                    normalization_config=NormalizationConfig(
-                        nits=False,
-                        malformed_operators=False,
-                        basic_latex=True,
-                        equations=True,
-                        boxed=True,
-                        units=True,
-                    ),
-                    boxed_match_priority=0,
-                    try_extract_without_anchor=False,
-                )
-            ],
-            extraction_mode="first_match",
-        )
-        correctness.append(verify(answer_parsed, gold_parsed))
+            extraction_config<span style="color: #24f6d9;">=</span><span style="color: #c770ff;">[</span>
+                LatexExtractionConfig<span style="color: #e6ff57;">(</span>
+                    normalization_config<span style="color: #24f6d9;">=</span>NormalizationConfig<span style="color: #30b3ff;">(</span>
+                        nits<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
+                        malformed_operators<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
+                        basic_latex<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
+                        equations<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
+                        boxed<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
+                        units<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
+                    <span style="color: #30b3ff;">)</span>,
+                    boxed_match_priority<span style="color: #24f6d9;">=</span>0,
+                    try_extract_without_anchor<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
+                <span style="color: #e6ff57;">)</span>
+            <span style="color: #c770ff;">]</span>,
+            extraction_mode<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"first_match"</span>,
+        <span style="color: #24f6d9;">)</span>
+        correctness.append<span style="color: #24f6d9;">(</span>verify<span style="color: #c770ff;">(</span>answer_parsed, gold_parsed<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
 
-    # Calculate lengths
-    lengths = [len(content) for content in contents]
-    min_len = min(lengths)
-    max_len = max(lengths)
+    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Calculate lengths
+</span>    <span style="color: #62ff94;">lengths</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span><span style="color: #30b3ff;">len</span><span style="color: #c770ff;">(</span>content<span style="color: #c770ff;">)</span> <span style="color: #c770ff; font-weight: bold;">for</span> content <span style="color: #c770ff; font-weight: bold;">in</span> contents<span style="color: #24f6d9;">]</span>
+    <span style="color: #62ff94;">min_len</span> <span style="color: #24f6d9;">=</span> <span style="color: #30b3ff;">min</span><span style="color: #24f6d9;">(</span>lengths<span style="color: #24f6d9;">)</span>
+    <span style="color: #62ff94;">max_len</span> <span style="color: #24f6d9;">=</span> <span style="color: #30b3ff;">max</span><span style="color: #24f6d9;">(</span>lengths<span style="color: #24f6d9;">)</span>
 
-    # If all responses have the same length, return zero rewards
-    if max_len == min_len:
-        return [0.0] * len(completions)
+    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">If all responses have the same length, return zero rewards
+</span>    <span style="color: #c770ff; font-weight: bold;">if</span> max_len <span style="color: #24f6d9;">==</span> min_len:
+        <span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #24f6d9;">[</span>0.0<span style="color: #24f6d9;">]</span> <span style="color: #24f6d9;">*</span> <span style="color: #30b3ff;">len</span><span style="color: #24f6d9;">(</span>completions<span style="color: #24f6d9;">)</span>
 
-    rewards = []
-    for length, is_correct in zip(lengths, correctness):
-        lambda_val = 0.5 - (length - min_len) / (max_len - min_len)
+    <span style="color: #62ff94;">rewards</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[]</span>
+    <span style="color: #c770ff; font-weight: bold;">for</span> length, is_correct <span style="color: #c770ff; font-weight: bold;">in</span> <span style="color: #30b3ff;">zip</span><span style="color: #24f6d9;">(</span>lengths, correctness<span style="color: #24f6d9;">)</span>:
+        <span style="color: #62ff94;">lambda_val</span> <span style="color: #24f6d9;">=</span> 0.5 <span style="color: #24f6d9;">-</span> <span style="color: #24f6d9;">(</span>length <span style="color: #24f6d9;">-</span> min_len<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">/</span> <span style="color: #24f6d9;">(</span>max_len <span style="color: #24f6d9;">-</span> min_len<span style="color: #24f6d9;">)</span>
 
-        if is_correct:
-            reward = lambda_val
-        else:
-            reward = min(0, lambda_val)
+        <span style="color: #c770ff; font-weight: bold;">if</span> is_correct:
+            <span style="color: #62ff94;">reward</span> <span style="color: #24f6d9;">=</span> lambda_val
+        <span style="color: #c770ff; font-weight: bold;">else</span>:
+            <span style="color: #62ff94;">reward</span> <span style="color: #24f6d9;">=</span> <span style="color: #30b3ff;">min</span><span style="color: #24f6d9;">(</span>0, lambda_val<span style="color: #24f6d9;">)</span>
 
-        rewards.append(float(reward))
+        rewards.append<span style="color: #24f6d9;">(</span><span style="color: #30b3ff;">float</span><span style="color: #c770ff;">(</span>reward<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
 
-    return rewards
+    <span style="color: #c770ff; font-weight: bold;">return</span> rewards
 </pre>
 </div>
 </div>
@@ -711,15 +709,15 @@ Longer incorrect solutions are penalized less than shorter ones.
 
 <div class="org-src-container">
 <pre class="src src-python">
-def get_cosine_scaled_reward(
-    min_value_wrong: float = -1.0,
-    max_value_wrong: float = -0.5,
-    min_value_correct: float = 0.5,
-    max_value_correct: float = 1.0,
-    max_len: int = 1000,
-):
-    def cosine_scaled_reward(completions, solution, **kwargs):
-        """Reward function that scales based on completion length using a cosine schedule.
+<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">get_cosine_scaled_reward</span><span style="color: #24f6d9;">(</span>
+    min_value_wrong: <span style="color: #30b3ff;">float</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">-</span>1.0,
+    max_value_wrong: <span style="color: #30b3ff;">float</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">-</span>0.5,
+    min_value_correct: <span style="color: #30b3ff;">float</span> <span style="color: #24f6d9;">=</span> 0.5,
+    max_value_correct: <span style="color: #30b3ff;">float</span> <span style="color: #24f6d9;">=</span> 1.0,
+    max_len: <span style="color: #30b3ff;">int</span> <span style="color: #24f6d9;">=</span> 1000,
+<span style="color: #24f6d9;">)</span>:
+    <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">cosine_scaled_reward</span><span style="color: #24f6d9;">(</span>completions, solution, <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span>:
+        <span style="color: #8ca391; font-style: italic;">"""Reward function that scales based on completion length using a cosine schedule.
 
         Shorter correct solutions are rewarded more than longer ones.
         Longer incorrect solutions are penalized less than shorter ones.
@@ -734,57 +732,57 @@ def get_cosine_scaled_reward(
             min_value_correct: Minimum reward for correct answers
             max_value_correct: Maximum reward for correct answers
             max_len: Maximum length for scaling
-        """
-        contents = [completion[0]["content"] for completion in completions]
-        rewards = []
+        """</span>
+        <span style="color: #62ff94;">contents</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span>completion<span style="color: #c770ff;">[</span>0<span style="color: #c770ff;">][</span><span style="color: #1cc24b;">"content"</span><span style="color: #c770ff;">]</span> <span style="color: #c770ff; font-weight: bold;">for</span> completion <span style="color: #c770ff; font-weight: bold;">in</span> completions<span style="color: #24f6d9;">]</span>
+        <span style="color: #62ff94;">rewards</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[]</span>
 
-        for content, sol in zip(contents, solution):
-            gold_parsed = parse(sol, extraction_mode="first_match", extraction_config=[LatexExtractionConfig()])
-            if len(gold_parsed) == 0:
-                rewards.append(1.0)  # Skip unparseable examples
-                print("Failed to parse gold solution: ", sol)
-                continue
+        <span style="color: #c770ff; font-weight: bold;">for</span> content, sol <span style="color: #c770ff; font-weight: bold;">in</span> <span style="color: #30b3ff;">zip</span><span style="color: #24f6d9;">(</span>contents, solution<span style="color: #24f6d9;">)</span>:
+            <span style="color: #62ff94;">gold_parsed</span> <span style="color: #24f6d9;">=</span> parse<span style="color: #24f6d9;">(</span>sol, extraction_mode<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"first_match"</span>, extraction_config<span style="color: #24f6d9;">=</span><span style="color: #c770ff;">[</span>LatexExtractionConfig<span style="color: #e6ff57;">()</span><span style="color: #c770ff;">]</span><span style="color: #24f6d9;">)</span>
+            <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #30b3ff;">len</span><span style="color: #24f6d9;">(</span>gold_parsed<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">==</span> 0:
+                rewards.append<span style="color: #24f6d9;">(</span>1.0<span style="color: #24f6d9;">)</span>  <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Skip unparseable examples
+</span>                <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"Failed to parse gold solution: "</span>, sol<span style="color: #24f6d9;">)</span>
+                <span style="color: #c770ff; font-weight: bold;">continue</span>
 
-            answer_parsed = parse(
+            <span style="color: #62ff94;">answer_parsed</span> <span style="color: #24f6d9;">=</span> parse<span style="color: #24f6d9;">(</span>
                 content,
-                extraction_config=[
-                    LatexExtractionConfig(
-                        normalization_config=NormalizationConfig(
-                            nits=False,
-                            malformed_operators=False,
-                            basic_latex=True,
-                            equations=True,
-                            boxed=True,
-                            units=True,
-                        ),
-                        boxed_match_priority=0,
-                        try_extract_without_anchor=False,
-                    )
-                ],
-                extraction_mode="first_match",
-            )
+                extraction_config<span style="color: #24f6d9;">=</span><span style="color: #c770ff;">[</span>
+                    LatexExtractionConfig<span style="color: #e6ff57;">(</span>
+                        normalization_config<span style="color: #24f6d9;">=</span>NormalizationConfig<span style="color: #30b3ff;">(</span>
+                            nits<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
+                            malformed_operators<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
+                            basic_latex<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
+                            equations<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
+                            boxed<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
+                            units<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
+                        <span style="color: #30b3ff;">)</span>,
+                        boxed_match_priority<span style="color: #24f6d9;">=</span>0,
+                        try_extract_without_anchor<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
+                    <span style="color: #e6ff57;">)</span>
+                <span style="color: #c770ff;">]</span>,
+                extraction_mode<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"first_match"</span>,
+            <span style="color: #24f6d9;">)</span>
 
-            is_correct = verify(answer_parsed, gold_parsed)
-            gen_len = len(content)
+            <span style="color: #62ff94;">is_correct</span> <span style="color: #24f6d9;">=</span> verify<span style="color: #24f6d9;">(</span>answer_parsed, gold_parsed<span style="color: #24f6d9;">)</span>
+            <span style="color: #62ff94;">gen_len</span> <span style="color: #24f6d9;">=</span> <span style="color: #30b3ff;">len</span><span style="color: #24f6d9;">(</span>content<span style="color: #24f6d9;">)</span>
 
-            # Apply cosine scaling based on length
-            progress = gen_len / max_len
-            cosine = math.cos(progress * math.pi)
+            <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Apply cosine scaling based on length
+</span>            <span style="color: #62ff94;">progress</span> <span style="color: #24f6d9;">=</span> gen_len <span style="color: #24f6d9;">/</span> max_len
+            <span style="color: #62ff94;">cosine</span> <span style="color: #24f6d9;">=</span> math.cos<span style="color: #24f6d9;">(</span>progress <span style="color: #24f6d9;">*</span> math.pi<span style="color: #24f6d9;">)</span>
 
-            if is_correct:
-                min_value = min_value_correct
-                max_value = max_value_correct
-            else:
-                # Swap min/max for incorrect answers
-                min_value = max_value_wrong
-                max_value = min_value_wrong
+            <span style="color: #c770ff; font-weight: bold;">if</span> is_correct:
+                <span style="color: #62ff94;">min_value</span> <span style="color: #24f6d9;">=</span> min_value_correct
+                <span style="color: #62ff94;">max_value</span> <span style="color: #24f6d9;">=</span> max_value_correct
+            <span style="color: #c770ff; font-weight: bold;">else</span>:
+                <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Swap min/max for incorrect answers
+</span>                <span style="color: #62ff94;">min_value</span> <span style="color: #24f6d9;">=</span> max_value_wrong
+                <span style="color: #62ff94;">max_value</span> <span style="color: #24f6d9;">=</span> min_value_wrong
 
-            reward = min_value + 0.5 * (max_value - min_value) * (1.0 + cosine)
-            rewards.append(float(reward))
+            <span style="color: #62ff94;">reward</span> <span style="color: #24f6d9;">=</span> min_value <span style="color: #24f6d9;">+</span> 0.5 <span style="color: #24f6d9;">*</span> <span style="color: #24f6d9;">(</span>max_value <span style="color: #24f6d9;">-</span> min_value<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">*</span> <span style="color: #24f6d9;">(</span>1.0 <span style="color: #24f6d9;">+</span> cosine<span style="color: #24f6d9;">)</span>
+            rewards.append<span style="color: #24f6d9;">(</span><span style="color: #30b3ff;">float</span><span style="color: #c770ff;">(</span>reward<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
 
-        return rewards
+        <span style="color: #c770ff; font-weight: bold;">return</span> rewards
 
-    return cosine_scaled_reward
+    <span style="color: #c770ff; font-weight: bold;">return</span> cosine_scaled_reward
 </pre>
 </div>
 </div>
@@ -793,53 +791,53 @@ def get_cosine_scaled_reward(
 <h3 id="org8684003"><span class="section-number-3">4.6.</span> Repetition Penalty Reward (NOT Used in the Paper, but promising)</h3>
 <div class="outline-text-3" id="text-4-6">
 <div class="org-src-container">
-<pre class="src src-python">def get_repetition_penalty_reward(ngram_size: int, max_penalty: float):
-    """
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">get_repetition_penalty_reward</span><span style="color: #24f6d9;">(</span>ngram_size: <span style="color: #30b3ff;">int</span>, max_penalty: <span style="color: #30b3ff;">float</span><span style="color: #24f6d9;">)</span>:
+    <span style="color: #8ca391; font-style: italic;">"""
     Computes N-gram repetition penalty as described in Appendix C.2 of https://arxiv.org/abs/2502.03373.
     Reference implementation from: https://github.com/eddycmu/demystify-long-cot/blob/release/openrlhf/openrlhf/reward/repetition.py
 
     Args:
     ngram_size: size of the n-grams
     max_penalty: Maximum (negative) penalty for wrong answers
-    """
-    if max_penalty &gt; 0:
-        raise ValueError(f"max_penalty {max_penalty} should not be positive")
+    """</span>
+    <span style="color: #c770ff; font-weight: bold;">if</span> max_penalty <span style="color: #24f6d9;">&gt;</span> 0:
+        <span style="color: #c770ff; font-weight: bold;">raise</span> <span style="color: #e6ff57;">ValueError</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"max_penalty </span>{max_penalty}<span style="color: #1cc24b;"> should not be positive"</span><span style="color: #24f6d9;">)</span>
 
-    def zipngram(text: str, ngram_size: int):
-        words = text.lower().split()
-        return zip(*[words[i:] for i in range(ngram_size)])
+    <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">zipngram</span><span style="color: #24f6d9;">(</span>text: <span style="color: #30b3ff;">str</span>, ngram_size: <span style="color: #30b3ff;">int</span><span style="color: #24f6d9;">)</span>:
+        <span style="color: #62ff94;">words</span> <span style="color: #24f6d9;">=</span> text.lower<span style="color: #24f6d9;">()</span>.split<span style="color: #24f6d9;">()</span>
+        <span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #30b3ff;">zip</span><span style="color: #24f6d9;">(</span><span style="color: #24f6d9;">*</span><span style="color: #c770ff;">[</span>words<span style="color: #e6ff57;">[</span>i:<span style="color: #e6ff57;">]</span> <span style="color: #c770ff; font-weight: bold;">for</span> i <span style="color: #c770ff; font-weight: bold;">in</span> <span style="color: #30b3ff;">range</span><span style="color: #e6ff57;">(</span>ngram_size<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">]</span><span style="color: #24f6d9;">)</span>
 
-    def repetition_penalty_reward(completions, **kwargs) -&gt; float:
-        """
+    <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">repetition_penalty_reward</span><span style="color: #24f6d9;">(</span>completions, <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">-&gt;</span> <span style="color: #30b3ff;">float</span>:
+        <span style="color: #8ca391; font-style: italic;">"""
         reward function the penalizes repetitions
         ref implementation: https://github.com/eddycmu/demystify-long-cot/blob/release/openrlhf/openrlhf/reward/repetition.py
 
         Args:
             completions: List of model completions
-        """
+        """</span>
 
-        contents = [completion[0]["content"] for completion in completions]
-        rewards = []
-        for completion in contents:
-            if completion == "":
-                rewards.append(0.0)
-                continue
-            if len(completion.split()) &lt; ngram_size:
-                rewards.append(0.0)
-                continue
+        <span style="color: #62ff94;">contents</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span>completion<span style="color: #c770ff;">[</span>0<span style="color: #c770ff;">][</span><span style="color: #1cc24b;">"content"</span><span style="color: #c770ff;">]</span> <span style="color: #c770ff; font-weight: bold;">for</span> completion <span style="color: #c770ff; font-weight: bold;">in</span> completions<span style="color: #24f6d9;">]</span>
+        <span style="color: #62ff94;">rewards</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[]</span>
+        <span style="color: #c770ff; font-weight: bold;">for</span> completion <span style="color: #c770ff; font-weight: bold;">in</span> contents:
+            <span style="color: #c770ff; font-weight: bold;">if</span> completion <span style="color: #24f6d9;">==</span> <span style="color: #1cc24b;">""</span>:
+                rewards.append<span style="color: #24f6d9;">(</span>0.0<span style="color: #24f6d9;">)</span>
+                <span style="color: #c770ff; font-weight: bold;">continue</span>
+            <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #30b3ff;">len</span><span style="color: #24f6d9;">(</span>completion.split<span style="color: #c770ff;">()</span><span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">&lt;</span> ngram_size:
+                rewards.append<span style="color: #24f6d9;">(</span>0.0<span style="color: #24f6d9;">)</span>
+                <span style="color: #c770ff; font-weight: bold;">continue</span>
 
-            ngrams = set()
-            total = 0
-            for ng in zipngram(completion, ngram_size):
-                ngrams.add(ng)
-                total += 1
+            <span style="color: #62ff94;">ngrams</span> <span style="color: #24f6d9;">=</span> <span style="color: #30b3ff;">set</span><span style="color: #24f6d9;">()</span>
+            <span style="color: #62ff94;">total</span> <span style="color: #24f6d9;">=</span> 0
+            <span style="color: #c770ff; font-weight: bold;">for</span> ng <span style="color: #c770ff; font-weight: bold;">in</span> zipngram<span style="color: #24f6d9;">(</span>completion, ngram_size<span style="color: #24f6d9;">)</span>:
+                ngrams.add<span style="color: #24f6d9;">(</span>ng<span style="color: #24f6d9;">)</span>
+                <span style="color: #62ff94;">total</span> <span style="color: #24f6d9;">+=</span> 1
 
-            scaling = 1 - len(ngrams) / total
-            reward = scaling * max_penalty
-            rewards.append(reward)
-        return rewards
+            <span style="color: #62ff94;">scaling</span> <span style="color: #24f6d9;">=</span> 1 <span style="color: #24f6d9;">-</span> <span style="color: #30b3ff;">len</span><span style="color: #24f6d9;">(</span>ngrams<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">/</span> total
+            <span style="color: #62ff94;">reward</span> <span style="color: #24f6d9;">=</span> scaling <span style="color: #24f6d9;">*</span> max_penalty
+            rewards.append<span style="color: #24f6d9;">(</span>reward<span style="color: #24f6d9;">)</span>
+        <span style="color: #c770ff; font-weight: bold;">return</span> rewards
 
-    return repetition_penalty_reward
+    <span style="color: #c770ff; font-weight: bold;">return</span> repetition_penalty_reward
 </pre>
 </div>
 </div>

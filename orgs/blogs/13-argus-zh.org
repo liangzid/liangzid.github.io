@@ -1,0 +1,27 @@
+#+title: Argus：多Agent协作的安全漏洞检测
+#+author: Zi Liang (团长)
+#+date: 2026-05-27
+#+options: toc:nil
+
+* 背景：静态分析工具的"孤岛问题"
+
+静态分析是软件安全中的基础技术——不运行代码，直接分析源码来发现漏洞。但现有的静态分析工具各有所长：有的擅长检测内存错误，有的擅长检测注入漏洞，有的擅长数据流分析。问题是它们互不通信。
+
+如果能把它们"编排"起来呢？
+
+* Argus：多Agent Ensemble
+
+Argus的核心思想是用一个multi-agent ensemble来编排多种静态分析工具。每个Agent专精于一种分析技术，它们之间通过一个协调器通信——类似于一个"安全分析团队"，每个人负责自己擅长的部分，但信息共享。
+
+这种方式可以检测完整攻击链上的漏洞——比如从注入漏洞到权限提升再到数据泄露的整个链条。
+
+* 实践效果
+
+在真实世界的软件项目上，Argus比单一工具发现了更多的漏洞，误报率也更低。特别在跨组件、跨阶段的复杂漏洞检测上，multi-agent协作的优势非常明显。
+
+* 论文信息
+
+- 标题: Argus: Reorchestrating Static Analysis via a Multi-Agent Ensemble for Full-Chain Security Vulnerability Detection
+- 作者: Zi Liang, Qipeng Xie, Jun He, Bohuan Xue, Weizheng Wang, Yuandao Cai, Fei Luo, Boxian Zhang, Haibo Hu, Kaishun Wu
+- 状态: Preprint 2026
+- 论文: https://arxiv.org/abs/2604.06633

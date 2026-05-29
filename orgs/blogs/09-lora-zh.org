@@ -1,0 +1,29 @@
+#+title: LoRA的安全性：轻量微调的"阿喀琉斯之踵"？
+#+author: Zi Liang (团长)
+#+date: 2026-05-27
+#+options: toc:nil
+
+* 背景：LoRA已经无处不在
+
+LoRA（Low-Rank Adaptation）现在是大模型微调的事实标准——加几个低秩矩阵，不用动原始权重，就能让模型适应新任务。效率极高。
+
+但没人系统性地研究过：LoRA微调出来的模型，安全性怎么样？
+
+* 我们的分析框架：NTK视角
+
+我们用NTK（Neural Tangent Kernel）来建模LoRA和全量微调在kernel函数层面的差异。NTK的好处是它可以把训练过程近似为一个kernel regression，从而让我们能解析地分析攻击的影响。
+
+* 两个反直觉的发现
+
+1. *对无目标poisoning：LoRA更脆弱*。原因：LoRA的低秩约束限制了模型"纠正"毒化影响的能力。全量微调有更多的自由度去"覆盖"毒化带来的异常信号。
+
+2. *对后门攻击（backdoor）：LoRA反而更鲁棒*。原因：LoRA的低秩特性使得后门触发模式难以在低秩子空间中"存活"——后门本质上是一种高秩的信号，LoRA的约束反而削弱了它。
+
+此外，我们还发现LoRA的rank和初始化方差对鲁棒性有显著影响——rank越高越鲁棒，但初始化的影响是非单调的。
+
+* 论文信息
+
+- 标题: Does Low Rank Adaptation Lead to Lower Robustness against Training-Time Attacks?
+- 作者: Zi Liang, Haibo Hu, Qingqing Ye, Yaxin Xiao, Ronghua Li
+- 状态: ICML 2025
+- 代码: https://github.com/liangzid/LoRA-sSecurity

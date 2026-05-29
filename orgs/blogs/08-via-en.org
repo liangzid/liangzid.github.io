@@ -1,0 +1,32 @@
+#+title: VIA: When Poisoning Meets Synthetic Data—A "Virus Infection"
+#+author: Zi Liang
+#+date: 2026-05-27
+#+options: toc:nil
+
+* Background: The Hidden Risk of Synthetic Data
+
+Modern LLM training heavily relies on synthetic data—using large models to generate data, then using that data to train or distill smaller models. It is a highly efficient paradigm. But is it secure?
+
+In VIA, we conducted the first systematic study of this question. The answer: traditional attacks mostly fail, but we found something far more dangerous.
+
+* Finding One: Synthetic Data Naturally Resists Poisoning
+
+We first tested mainstream poisoning attacks under the synthetic data paradigm. The results were interesting: the distributional properties of synthetic data effectively "dilute" poisoned samples during generation—the poison signal becomes negligible amid a sea of normal synthetic data.
+
+Good news. But do not celebrate yet.
+
+* Finding Two: VIA—Making Poison "Infectious"
+
+We proposed the Virus Infection Attack (VIA), a new attack paradigm. The core idea: make poisoned samples "self-replicate" and "mutate" during the synthetic data generation process, so they achieve sufficient prevalence in the downstream training data.
+
+VIA's infectious capability means: if an adversary plants poison in an open-source base model, that poison can propagate through synthetic data to every model distilled from it. This is a supply-chain-level security threat.
+
+* Paper Info
+
+- Title: Virus Infection Attack on LLMs: Your Poisoning Can Spread "VIA" Synthetic Data
+- Authors: Zi Liang, Qingqing Ye, Xuan Liu, Yanyun Wang, Jianliang Xu, Haibo Hu
+- Status: NeurIPS 2025 Spotlight
+- Code: https://github.com/liangzid/VirusInfectionAttack
+
+#+ATTR_HTML: :width 70%
+[[file:../images/screenshot_20250927_201328.png]]

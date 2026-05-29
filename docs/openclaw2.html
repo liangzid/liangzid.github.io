@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<!-- 2026-05-24 Sun 21:56 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2026-05-29 Fri 10:11 -->
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OpenClaw 代码乱读笔记 2</title>
 <meta name="author" content="Zi Liang" />
@@ -370,7 +368,7 @@
 系统提示词里有一个 Safety 部分：
 </p>
 
-<pre class="example" id="orgd9a447a">
+<pre class="example" id="orgdc51963">
 ## Safety
 You have no independent goals: do not pursue self-preservation, replication, resource acquisition, or power-seeking; avoid long-term plans beyond the user's request.
 Prioritize safety and human oversight over completion; if instructions conflict, pause and ask; comply with stop/pause/audit requests and never bypass safeguards. (Inspired by Anthropic's constitution.)
@@ -389,7 +387,7 @@ Do not manipulate or persuade anyone to expand access or disable safeguards. Do 
 Skills 部分的提示词是这样的：
 </p>
 
-<pre class="example" id="org2da8e5c">
+<pre class="example" id="orgf36d301">
 ## Skills (mandatory)
 Before replying: scan &lt;available_skills&gt; &lt;description&gt; entries.
 - If exactly one skill clearly applies: read its SKILL.md at &lt;location&gt; with `read`, then follow it.
@@ -417,7 +415,7 @@ Constraints: never read more than one skill up front; only read after selecting.
 Memory 部分的提示词：
 </p>
 
-<pre class="example" id="org95b15ea">
+<pre class="example" id="orgf75d28c">
 ## Memory Recall
 Before answering anything about prior work, decisions, dates, people, preferences, or todos: run memory_search on MEMORY.md + memory/*.md; then use memory_get to pull only the needed lines. If low confidence after search, say you checked.
 Citations: include Source: &lt;path#line&gt; when it helps the user verify memory snippets.
@@ -454,60 +452,60 @@ Citations: include Source: &lt;path#line&gt; when it helps the user verify memor
 </p>
 
 <div class="org-src-container">
-<pre class="src src-markdown">---
-name: weather
-description: Get current weather and forecasts (no API key required).
-homepage: https://wttr.in/:help
-metadata: { "openclaw": { "emoji": "🌤️", "requires": { "bins": ["curl"] } }
----
+<pre class="src src-markdown"><span style="color: #8ca391;">---</span>
+<span style="color: #62ff94;">name</span><span style="color: #8ca391;">: </span><span style="color: #1cc24b;">weather</span>
+<span style="color: #62ff94;">description</span><span style="color: #8ca391;">: </span><span style="color: #1cc24b;">Get current weather and forecasts </span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">no API key required</span><span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">.</span>
+<span style="color: #62ff94;">homepage</span><span style="color: #8ca391;">: </span><span style="color: #1cc24b;">https://wttr.in/:help</span>
+<span style="color: #62ff94;">metadata</span><span style="color: #8ca391;">: </span><span style="color: #24f6d9;">{</span><span style="color: #1cc24b;"> "openclaw": </span><span style="color: #c770ff;">{</span><span style="color: #1cc24b;"> "emoji": "&#127780;&#65039;", "requires": </span><span style="color: #e6ff57;">{</span><span style="color: #1cc24b;"> "bins": </span><span style="color: #30b3ff;">[</span><span style="color: #1cc24b;">"curl"</span><span style="color: #30b3ff;">]</span><span style="color: #1cc24b;"> </span><span style="color: #e6ff57;">}</span><span style="color: #1cc24b;"> </span><span style="color: #c770ff;">}</span>
+<span style="color: #8ca391;">---</span>
 
-# Weather
+<span style="color: #8ca391;"># </span><span style="color: #00efff; font-size: 140%; font-weight: bold;">Weather</span>
 
 Two free services, no API keys needed.
 
-## wttr.in (primary)
+<span style="color: #8ca391;">## </span><span style="color: #e6ff57; font-size: 130%; font-weight: bold;">wttr.in </span><span style="color: #c770ff; font-size: 130%; font-weight: bold;">(</span><span style="color: #e6ff57; font-size: 130%; font-weight: bold;">primary</span><span style="color: #c770ff; font-size: 130%; font-weight: bold;">)</span>
 
 Quick one-liner:
 
-```bash
-curl -s "wttr.in/London?format=3"
-# Output: London: ⛅️ +8°C
-```
-
+<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
+</span><span style="background-color: #0e120e;">curl -s "wttr.in/London?format=3"
+# Output: London: &#9925;&#65039; +8&#176;C
+</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+</span>
 Compact format:
 
-```bash
-curl -s "wttr.in/London?format=%l:+%c+%t+%h+%w"
-# Output: London: ⛅️ +8°C 71% ↙5km/h
-```
-
+<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
+</span><span style="background-color: #0e120e;">curl -s "wttr.in/London?format=%l:+%c+%t+%h+%w"
+# Output: London: &#9925;&#65039; +8&#176;C 71% &#8601;5km/h
+</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+</span>
 Full forecast:
 
-```bash
-curl -s "wttr.in/London?T"
-```
-
-Format codes: `%c` condition · `%t` temp · `%h` humidity · `%w` wind · `%l` location · `%m` moon
+<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
+</span><span style="background-color: #0e120e;">curl -s "wttr.in/London?T"
+</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+</span>
+Format codes: <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">%c</span><span style="color: #8ca391;">`</span> condition &#183; <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">%t</span><span style="color: #8ca391;">`</span> temp &#183; <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">%h</span><span style="color: #8ca391;">`</span> humidity &#183; <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">%w</span><span style="color: #8ca391;">`</span> wind &#183; <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">%l</span><span style="color: #8ca391;">`</span> location &#183; <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">%m</span><span style="color: #8ca391;">`</span> moon
 
 Tips:
 
-- URL-encode spaces: `wttr.in/New+York`
-- Airport codes: `wttr.in/JFK`
-- Units: `?m` (metric) `?u` (USCS)
-- Today only: `?1` · Current only: `?0`
-- PNG: `curl -s "wttr.in/Berlin.png" -o /tmp/weather.png`
+<span style="color: #30b3ff;">-</span> URL-encode spaces: <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">wttr.in/New+York</span><span style="color: #8ca391;">`</span>
+<span style="color: #30b3ff;">-</span> Airport codes: <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">wttr.in/JFK</span><span style="color: #8ca391;">`</span>
+<span style="color: #30b3ff;">-</span> Units: <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">?m</span><span style="color: #8ca391;">`</span> <span style="color: #c770ff;">(</span>metric<span style="color: #c770ff;">)</span> <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">?u</span><span style="color: #8ca391;">`</span> <span style="color: #c770ff;">(</span>USCS<span style="color: #c770ff;">)</span>
+<span style="color: #30b3ff;">-</span> Today only: <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">?1</span><span style="color: #8ca391;">`</span> &#183; Current only: <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">?0</span><span style="color: #8ca391;">`</span>
+<span style="color: #30b3ff;">-</span> PNG: <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">curl -s "wttr.in/Berlin.png" -o /tmp/weather.png</span><span style="color: #8ca391;">`</span>
 
-## Open-Meteo (fallback, JSON)
+<span style="color: #8ca391;">## </span><span style="color: #e6ff57; font-size: 130%; font-weight: bold;">Open-Meteo </span><span style="color: #c770ff; font-size: 130%; font-weight: bold;">(</span><span style="color: #e6ff57; font-size: 130%; font-weight: bold;">fallback, JSON</span><span style="color: #c770ff; font-size: 130%; font-weight: bold;">)</span>
 
 Free, no key, good for programmatic use:
 
-```bash
-curl -s "https://api.open-meteo.com/v1/forecast?latitude=51.5&amp;longitude=-0.12&amp;current_weather=true"
-```
-
+<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
+</span><span style="background-color: #0e120e;">curl -s "https://api.open-meteo.com/v1/forecast?latitude=51.5&amp;longitude=-0.12&amp;current_weather=true"
+</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+</span>
 Find coordinates for a city, then query. Returns JSON with temp, windspeed, weathercode.
 
-Docs: https://open-meteo.com/en/docs
+Docs: <span style="color: #30b3ff; text-decoration: underline;">https://open-meteo.com/en/docs</span>
 </pre>
 </div>
 
@@ -534,83 +532,83 @@ Docs: https://open-meteo.com/en/docs
 </p>
 
 <div class="org-src-container">
-<pre class="src src-markdown">---
-name: github
-description: "Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries."
-metadata:
-  {
+<pre class="src src-markdown"><span style="color: #8ca391;">---</span>
+<span style="color: #62ff94;">name</span><span style="color: #8ca391;">: </span><span style="color: #1cc24b;">github</span>
+<span style="color: #62ff94;">description</span><span style="color: #8ca391;">: </span><span style="color: #1cc24b;">"Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries."</span>
+<span style="color: #62ff94;">metadata</span><span style="color: #8ca391;">:</span>
+  <span style="color: #24f6d9;">{</span>
     "openclaw":
-      {
-        "emoji": "🐙",
-        "requires": { "bins": ["gh"] },
+      <span style="color: #c770ff;">{</span>
+        "emoji": "&#128025;",
+        "requires": <span style="color: #e6ff57;">{</span> "bins": <span style="color: #30b3ff;">[</span>"gh"<span style="color: #30b3ff;">]</span> <span style="color: #e6ff57;">}</span>,
         "install":
-          [
-            {
+          <span style="color: #e6ff57;">[</span>
+            <span style="color: #30b3ff;">{</span>
               "id": "brew",
               "kind": "brew",
               "formula": "gh",
-              "bins": ["gh"],
-              "label": "Install GitHub CLI (brew)",
-            },
-            {
+              "bins": <span style="color: #ffa83d;">[</span>"gh"<span style="color: #ffa83d;">]</span>,
+              "label": "Install GitHub CLI <span style="color: #ffa83d;">(</span>brew<span style="color: #ffa83d;">)</span>",
+            <span style="color: #30b3ff;">}</span>,
+            <span style="color: #30b3ff;">{</span>
               "id": "apt",
               "kind": "apt",
               "package": "gh",
-              "bins": ["gh"],
-              "label": "Install GitHub CLI (apt)",
-            },
-          ],
-      },
-  }
----
+              "bins": <span style="color: #ffa83d;">[</span>"gh"<span style="color: #ffa83d;">]</span>,
+              "label": "Install GitHub CLI <span style="color: #ffa83d;">(</span>apt<span style="color: #ffa83d;">)</span>",
+            <span style="color: #30b3ff;">}</span>,
+          <span style="color: #e6ff57;">]</span>,
+      <span style="color: #c770ff;">}</span>,
+  <span style="color: #24f6d9;">}</span>
+<span style="color: #8ca391;">---</span>
 
-# GitHub Skill
+<span style="color: #8ca391;"># </span><span style="color: #00efff; font-size: 140%; font-weight: bold;">GitHub Skill</span>
 
-Use the `gh` CLI to interact with GitHub. Always specify `--repo owner/repo` when not in a git directory, or use URLs directly.
+Use the <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">gh</span><span style="color: #8ca391;">`</span> CLI to interact with GitHub. Always specify <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">--repo owner/repo</span><span style="color: #8ca391;">`</span> when not in a git directory, or use URLs directly.
 
-## Pull Requests
+<span style="color: #8ca391;">## </span><span style="color: #e6ff57; font-size: 130%; font-weight: bold;">Pull Requests</span>
 
 Check CI status on a PR:
 
-```bash
-gh pr checks 55 --repo owner/repo
-```
-
+<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
+</span><span style="background-color: #0e120e;">gh pr checks 55 --repo owner/repo
+</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+</span>
 List recent workflow runs:
 
-```bash
-gh run list --repo owner/repo --limit 10
-```
-
+<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
+</span><span style="background-color: #0e120e;">gh run list --repo owner/repo --limit 10
+</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+</span>
 View a run and see which steps failed:
 
-```bash
-gh run view &lt;run-id&gt; --repo owner/repo
-```
-
+<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
+</span><span style="background-color: #0e120e;">gh run view &lt;run-id&gt; --repo owner/repo
+</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+</span>
 View logs for failed steps only:
 
-```bash
-gh run view &lt;run-id&gt; --repo owner/repo --log-failed
-```
+<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
+</span><span style="background-color: #0e120e;">gh run view &lt;run-id&gt; --repo owner/repo --log-failed
+</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+</span>
+<span style="color: #8ca391;">## </span><span style="color: #e6ff57; font-size: 130%; font-weight: bold;">API for Advanced Queries</span>
 
-## API for Advanced Queries
-
-The `gh api` command is useful for accessing data not available through other subcommands.
+The <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">gh api</span><span style="color: #8ca391;">`</span> command is useful for accessing data not available through other subcommands.
 
 Get PR with specific fields:
 
-```bash
-gh api repos/owner/repo/pulls/55 --jq '.title, .state, .user.login'
-```
+<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
+</span><span style="background-color: #0e120e;">gh api repos/owner/repo/pulls/55 --jq '.title, .state, .user.login'
+</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+</span>
+<span style="color: #8ca391;">## </span><span style="color: #e6ff57; font-size: 130%; font-weight: bold;">JSON Output</span>
 
-## JSON Output
+Most commands support <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">--json</span><span style="color: #8ca391;">`</span> for structured output. You can use <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">--jq</span><span style="color: #8ca391;">`</span> to filter:
 
-Most commands support `--json` for structured output. You can use `--jq` to filter:
-
-```bash
-gh issue list --repo owner/repo --json number,title --jq '.[] | "\(.number): \(.title)"'
-```
+<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
+</span><span style="background-color: #0e120e;">gh issue list --repo owner/repo --json number,title --jq '.</span><span style="color: #24f6d9; background-color: #0e120e;">[]</span><span style="background-color: #0e120e;"> | "\</span><span style="color: #24f6d9; background-color: #0e120e;">(</span><span style="background-color: #0e120e;">.number</span><span style="color: #24f6d9; background-color: #0e120e;">)</span><span style="background-color: #0e120e;">: \</span><span style="color: #24f6d9; background-color: #0e120e;">(</span><span style="background-color: #0e120e;">.title</span><span style="color: #24f6d9; background-color: #0e120e;">)</span><span style="background-color: #0e120e;">"'
+</span><span style="color: #8ca391; background-color: #0e120e;">```</span>
 </pre>
 </div>
 
@@ -675,13 +673,13 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 文件路径：=src/memory/=
 </p>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table>
 
 
 <colgroup>
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 </colgroup>
 <thead>
 <tr>
@@ -876,13 +874,13 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 数据库里有这几个关键表，我从代码里挖出来的：
 </p>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table>
 
 
 <colgroup>
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 </colgroup>
 <thead>
 <tr>
@@ -987,15 +985,15 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 两者的核心区别：
 </p>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table>
 
 
 <colgroup>
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 </colgroup>
 <thead>
 <tr>
@@ -1114,15 +1112,15 @@ metadata:
 从这两个例子我们可以看出 frontmatter 包含这些字段：
 </p>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table>
 
 
 <colgroup>
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 </colgroup>
 <thead>
 <tr>
@@ -1183,13 +1181,13 @@ metadata:
 插件系统的核心代码在 <code>src/plugins/</code> 目录里。让我们看看这个目录里都有什么：
 </p>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table>
 
 
 <colgroup>
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 </colgroup>
 <thead>
 <tr>

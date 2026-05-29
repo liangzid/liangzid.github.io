@@ -1,0 +1,32 @@
+#+title: VIA：当毒化攻击遇上合成数据——一场"病毒感染"
+#+author: Zi Liang (团长)
+#+date: 2026-05-27
+#+options: toc:nil
+
+* 背景：合成数据时代的隐忧
+
+现在的LLM训练高度依赖合成数据（synthetic data）——用大模型生成数据，再用这些数据训练或蒸馏小模型。这是一个非常高效的范式，但它安全吗？
+
+在VIA这篇工作中，我们第一次系统性地研究了这个问题。答案是：传统的攻击基本失效了，但我们发现了一种更危险的攻击方式。
+
+* 发现一：合成数据天然抗毒
+
+我们首先测试了主流的poisoning attack在合成数据范式下的效果。结果很有意思：合成数据的分布特性使得毒化样本在生成过程中被"稀释"了——毒化信号在大量正常合成样本的包围下变得微不足道。
+
+这是个好消息。但别高兴太早。
+
+* 发现二：VIA——让毒化"感染"下游模型
+
+我们提出了Virus Infection Attack（VIA），一种新的攻击范式。核心思想是：让毒化样本在合成数据的生成过程中"自我复制"和"变异"，从而在目标模型的训练数据中获得足够的占比。
+
+VIA的"感染能力"意味着：如果攻击者在一个开源基础模型里埋了毒，这个毒可以通过合成数据传播到所有用这个模型蒸馏出来的下游模型。供应链级别的安全威胁。
+
+* 论文信息
+
+- 标题: Virus Infection Attack on LLMs: Your Poisoning Can Spread "VIA" Synthetic Data
+- 作者: Zi Liang, Qingqing Ye, Xuan Liu, Yanyun Wang, Jianliang Xu, Haibo Hu
+- 状态: NeurIPS 2025 Spotlight
+- 代码: https://github.com/liangzid/VirusInfectionAttack
+
+#+ATTR_HTML: :width 70%
+[[file:../images/screenshot_20250927_201328.png]]

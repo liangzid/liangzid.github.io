@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<!-- 2026-05-24 Sun 21:56 -->
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<!-- 2026-05-29 Fri 10:11 -->
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OpenClaw 代码乱读笔记1</title>
 <meta name="author" content="Zi Liang" />
@@ -348,7 +346,7 @@
 先 <code>ls -la</code> 一下（我只列重要的）：
 </p>
 
-<pre class="example" id="orgf4d035d">
+<pre class="example" id="org3f874fd">
 openclaw/
 ├── src/              ← 这个看起来是主要代码
 ├── apps/             ← 看来还有手机/电脑客户端
@@ -458,7 +456,7 @@ openclaw/
 让我们 <code>ls src/</code> 看看（我挑重要的列）：
 </p>
 
-<pre class="example" id="org367b0bc">
+<pre class="example" id="org366c418">
 src/
 ├── agents/            ← AI 代理相关？
 ├── auto-reply/        ← 自动回复？
@@ -548,29 +546,29 @@ src/
 </p>
 
 <div class="org-src-container">
-<pre class="src src-javascript">#!/usr/bin/env node
+<pre class="src src-javascript"><span style="color: #8ca391; font-style: italic;">#!/usr/bin/env node
+</span>
+<span style="color: #c770ff; font-weight: bold;">import</span> module from <span style="color: #1cc24b;">"node:module"</span>;
 
-import module from "node:module";
+<span style="color: #8ca391;">// </span><span style="color: #8ca391; font-style: italic;">&#21551;&#29992;&#32534;&#35793;&#32531;&#23384;
+</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #24f6d9;">(</span>module.enableCompileCache &amp;&amp; !process.env.NODE_DISABLE_COMPILE_CACHE<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">{</span>
+  <span style="color: #c770ff; font-weight: bold;">try</span> <span style="color: #c770ff;">{</span>
+    module.enableCompileCache<span style="color: #e6ff57;">()</span>;
+  <span style="color: #c770ff;">}</span> <span style="color: #c770ff; font-weight: bold;">catch</span> <span style="color: #c770ff;">{</span>
+    <span style="color: #8ca391;">// </span><span style="color: #8ca391; font-style: italic;">Ignore errors
+</span>  <span style="color: #c770ff;">}</span>
+<span style="color: #24f6d9;">}</span>
 
-// 启用编译缓存
-if (module.enableCompileCache &amp;&amp; !process.env.NODE_DISABLE_COMPILE_CACHE) {
-  try {
-    module.enableCompileCache();
-  } catch {
-    // Ignore errors
-  }
-}
-
-// ... 一些警告过滤的代码 ...
-
-// 尝试导入编译后的入口文件
-if (await tryImport("./dist/entry.js")) {
-  // OK
-} else if (await tryImport("./dist/entry.mjs")) {
-  // OK
-} else {
-  throw new Error("openclaw: missing dist/entry.(m)js (build output).");
-}
+<span style="color: #8ca391;">// </span><span style="color: #8ca391; font-style: italic;">... &#19968;&#20123;&#35686;&#21578;&#36807;&#28388;&#30340;&#20195;&#30721; ...
+</span>
+<span style="color: #8ca391;">// </span><span style="color: #8ca391; font-style: italic;">&#23581;&#35797;&#23548;&#20837;&#32534;&#35793;&#21518;&#30340;&#20837;&#21475;&#25991;&#20214;
+</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">await</span> tryImport<span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"./dist/entry.js"</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">{</span>
+  <span style="color: #8ca391;">// </span><span style="color: #8ca391; font-style: italic;">OK
+</span><span style="color: #24f6d9;">}</span> <span style="color: #c770ff; font-weight: bold;">else</span> <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">await</span> tryImport<span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"./dist/entry.mjs"</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">{</span>
+  <span style="color: #8ca391;">// </span><span style="color: #8ca391; font-style: italic;">OK
+</span><span style="color: #24f6d9;">}</span> <span style="color: #c770ff; font-weight: bold;">else</span> <span style="color: #24f6d9;">{</span>
+  <span style="color: #c770ff; font-weight: bold;">throw</span> <span style="color: #c770ff; font-weight: bold;">new</span> <span style="color: #e6ff57;">Error</span><span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"openclaw: missing dist/entry.(m)js (build output)."</span><span style="color: #c770ff;">)</span>;
+<span style="color: #24f6d9;">}</span>
 </pre>
 </div>
 
@@ -888,15 +886,15 @@ refreshGatewayHealthSnapshot({ ... });
 这个文件定义了 HTTP 服务器的行为。我翻了一下，它处理的路由还挺多的，让我整理一下：
 </p>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table>
 
 
 <colgroup>
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 </colgroup>
 <thead>
 <tr>
@@ -1132,15 +1130,15 @@ WebSocket 是 Gateway 的主要通信方式。毕竟 HTTP 是一问一答，而 
 这是 Gateway 的"API 端点"目录，每个文件对应一组方法。我数了一下，还挺多的：
 </p>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table>
 
 
 <colgroup>
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 </colgroup>
 <thead>
 <tr>
@@ -1300,7 +1298,7 @@ WebSocket 是 Gateway 的主要通信方式。毕竟 HTTP 是一问一答，而 
 在 OpenClaw 中，每个渠道都是相对独立的模块，但它们共享一些公共的抽象。先看看渠道相关的目录：
 </p>
 
-<pre class="example" id="orgdbf2960">
+<pre class="example" id="org6554c28">
 src/
 ├── channels/           # 渠道抽象和公共代码
 ├── discord/            # Discord 具体实现
@@ -1333,7 +1331,7 @@ WhatsApp 是通过 WhatsApp Web 实现的，用的是 <code>@whiskeysockets/bail
 先看看 <code>src/web/</code> 的目录结构：
 </p>
 
-<pre class="example" id="org1f43a65">
+<pre class="example" id="org33c0727">
 src/web/
 ├── inbound/              # 入站消息处理
 │   ├── access-control.ts # 访问控制！这个很重要
@@ -1596,15 +1594,15 @@ export type SecurityAuditReport = {
 在 <code>collectFilesystemFindings()</code> 函数里，检查这些：
 </p>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table>
 
 
 <colgroup>
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 
-<col  class="org-left" />
+<col  class="org-left">
 </colgroup>
 <thead>
 <tr>

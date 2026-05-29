@@ -1,0 +1,30 @@
+#+title: MERGE: Fast Private Text Generation—Protecting AI Privacy with Cryptography
+#+author: Zi Liang
+#+date: 2026-05-27
+#+options: toc:nil
+
+* Background: The Privacy Dilemma of LLM Inference
+
+When you use a cloud LLM service like ChatGPT, your input is sent to the server, computed there, and results are returned. This means the service provider can see everything you type—your questions, your data, even your trade secrets.
+
+Is it possible to perform inference without revealing the user's input or the model's parameters? This is the problem of private inference.
+
+* MERGE: The First Private Inference Framework for NLG
+
+MERGE is built on Secret Sharing and Multi-Party Computation (MPC). The core idea: split both the user input and model parameters into multiple "shares," distributed across multiple non-colluding parties. Each party sees only their own share—like shredded paper, meaningless in isolation. But together, the parties can collaboratively perform the full inference computation.
+
+Prior work focused on classification models. MERGE is the first private inference framework specifically designed for Natural Language Generation (NLG) models.
+
+* Speed Matters
+
+The cost of MPC is computational overhead. Through a series of optimizations—including customized Transformer operators, communication compression, and pipeline parallelism—we achieved a 10x speedup.
+
+* Paper Info
+
+- Title: MERGE: Fast Private Text Generation
+- Authors: Zi Liang, Pinghui Wang, Ruofei Zhang, Nuo Xu, Shuo Zhang, Lifeng Xing...
+- Status: AAAI 2024
+- Code: https://github.com/liangzid/MERGE
+
+#+ATTR_HTML: :width 70%
+[[file:../images/screenshot_20250309_221412.png]]
