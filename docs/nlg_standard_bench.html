@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-10 Sun 17:17 -->
+<!-- 2026-07-07 Tue 20:50 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>A standard evaluation bench for NLG evaluations</title>
@@ -55,6 +55,7 @@
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
   pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -69,7 +70,7 @@
   pre.src-haskell:before { content: 'Haskell'; }
   pre.src-hledger:before { content: 'hledger'; }
   pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
+  pre.src-js:before { content: 'JavaScript'; }
   pre.src-latex:before { content: 'LaTeX'; }
   pre.src-ledger:before { content: 'Ledger'; }
   pre.src-lisp:before { content: 'Lisp'; }
@@ -199,8 +200,34 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">A standard evaluation bench for NLG evaluations</h1>
-<div id="outline-container-org2e92043" class="outline-2">
-<h2 id="org2e92043"><span class="section-number-2">1.</span> Downstream Datasets</h2>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgd4ab52e">1. Downstream Datasets</a>
+<ul>
+<li><a href="#orgafb18f5">1.1. Downstream Tasks: Status</a>
+<ul>
+<li><a href="#org013d239">1.1.1. Translation</a></li>
+<li><a href="#orge7e1ad6">1.1.2. Summarization</a></li>
+<li><a href="#org84fa7f0">1.1.3. Structure Text generation</a></li>
+<li><a href="#org48129b7">1.1.4. Data-to-Text</a></li>
+<li><a href="#orgb2fb4fe">1.1.5. Question Answering</a></li>
+</ul>
+</li>
+<li><a href="#orgdc1b28f">1.2. Generalized Ability: Status</a>
+<ul>
+<li><a href="#org36c1293">1.2.1. Safety</a></li>
+<li><a href="#org8e36373">1.2.2. Reasoning (math)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgd4ab52e" class="outline-2">
+<h2 id="orgd4ab52e"><span class="section-number-2">1.</span> Downstream Datasets</h2>
 <div class="outline-text-2" id="text-1">
 <table>
 
@@ -223,26 +250,26 @@
 <tr>
 <td class="org-left">wikisql</td>
 <td class="org-right">512</td>
-<td class="org-left">&#xa0;</td>
+<td class="org-left">&nbsp;</td>
 </tr>
 
 <tr>
 <td class="org-left">spider</td>
 <td class="org-right">512</td>
-<td class="org-left">&#xa0;</td>
+<td class="org-left">&nbsp;</td>
 </tr>
 </tbody>
 <tbody>
 <tr>
 <td class="org-left">allenai/common_gen</td>
 <td class="org-right">256</td>
-<td class="org-left">&#xa0;</td>
+<td class="org-left">&nbsp;</td>
 </tr>
 
 <tr>
 <td class="org-left">e2e_nlg</td>
 <td class="org-right">512</td>
-<td class="org-left">&#xa0;</td>
+<td class="org-left">&nbsp;</td>
 </tr>
 </tbody>
 <tbody>
@@ -268,102 +295,102 @@
 <tr>
 <td class="org-left">piqa</td>
 <td class="org-right">256</td>
-<td class="org-left">&#xa0;</td>
+<td class="org-left">&nbsp;</td>
 </tr>
 
 <tr>
 <td class="org-left">truthful_qa</td>
 <td class="org-right">256</td>
-<td class="org-left">&#xa0;</td>
+<td class="org-left">&nbsp;</td>
 </tr>
 
 <tr>
 <td class="org-left">allenai/ai2_arc</td>
 <td class="org-right">256</td>
-<td class="org-left">&#xa0;</td>
+<td class="org-left">&nbsp;</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="outline-container-orgfe1ba3e" class="outline-3">
-<h3 id="orgfe1ba3e"><span class="section-number-3">1.1.</span> Downstream Tasks: Status</h3>
+<div id="outline-container-orgafb18f5" class="outline-3">
+<h3 id="orgafb18f5"><span class="section-number-3">1.1.</span> Downstream Tasks: Status</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-org7f48919" class="outline-4">
-<h4 id="org7f48919"><span class="section-number-4">1.1.1.</span> Translation</h4>
+<div id="outline-container-org013d239" class="outline-4">
+<h4 id="org013d239"><span class="section-number-4">1.1.1.</span> Translation</h4>
 <div class="outline-text-4" id="text-1-1-1">
 </div>
 <ol class="org-ol">
-<li><a id="org353cc01"></a><span class="todo REVIEW">REVIEW</span> WMT16: cs-en<br></li>
-<li><a id="org6c0046b"></a><span class="todo REVIEW">REVIEW</span> WMT16: de-en<br></li>
-<li><a id="org9a9b5b0"></a><span class="todo REVIEW">REVIEW</span> WMT16: fi-en<br></li>
+<li><a id="org4f3cb50"></a><span class="todo REVIEW">REVIEW</span> WMT16: cs-en<br></li>
+<li><a id="org1e2c6c6"></a><span class="todo REVIEW">REVIEW</span> WMT16: de-en<br></li>
+<li><a id="org58428b8"></a><span class="todo REVIEW">REVIEW</span> WMT16: fi-en<br></li>
 </ol>
 </div>
-<div id="outline-container-org646dd0c" class="outline-4">
-<h4 id="org646dd0c"><span class="section-number-4">1.1.2.</span> Summarization</h4>
+<div id="outline-container-orge7e1ad6" class="outline-4">
+<h4 id="orge7e1ad6"><span class="section-number-4">1.1.2.</span> Summarization</h4>
 <div class="outline-text-4" id="text-1-1-2">
 </div>
 <ol class="org-ol">
-<li><a id="org59c0f3f"></a><span class="todo TODO">TODO</span> TLDR<br></li>
-<li><a id="orgbc9d1d3"></a><span class="todo TODO">TODO</span> cnn_dailymail ? <b>too long</b><br></li>
-<li><a id="orgd72d299"></a><span class="todo TODO">TODO</span> samsum<br></li>
+<li><a id="org146b55b"></a><span class="todo TODO">TODO</span> TLDR<br></li>
+<li><a id="org92cf850"></a><span class="todo TODO">TODO</span> cnn_dailymail ? <b>too long</b><br></li>
+<li><a id="orgfad099f"></a><span class="todo TODO">TODO</span> samsum<br></li>
 </ol>
 </div>
-<div id="outline-container-org611b71b" class="outline-4">
-<h4 id="org611b71b"><span class="section-number-4">1.1.3.</span> Structure Text generation</h4>
+<div id="outline-container-org84fa7f0" class="outline-4">
+<h4 id="org84fa7f0"><span class="section-number-4">1.1.3.</span> Structure Text generation</h4>
 <div class="outline-text-4" id="text-1-1-3">
 </div>
 <ol class="org-ol">
-<li><a id="org340f8e0"></a><span class="todo TODO">TODO</span> WikiSQL<br></li>
-<li><a id="orge436bc9"></a><span class="todo TODO">TODO</span> Spider<br></li>
+<li><a id="org202f1fe"></a><span class="todo TODO">TODO</span> WikiSQL<br></li>
+<li><a id="org7051f39"></a><span class="todo TODO">TODO</span> Spider<br></li>
 </ol>
 </div>
-<div id="outline-container-orgc9304f8" class="outline-4">
-<h4 id="orgc9304f8"><span class="section-number-4">1.1.4.</span> Data-to-Text</h4>
+<div id="outline-container-org48129b7" class="outline-4">
+<h4 id="org48129b7"><span class="section-number-4">1.1.4.</span> Data-to-Text</h4>
 <div class="outline-text-4" id="text-1-1-4">
 </div>
 <ol class="org-ol">
-<li><a id="org492258e"></a><span class="todo TODO">TODO</span> e2e_nlg<br></li>
-<li><a id="org14f62f9"></a><span class="todo TODO">TODO</span> CommonGen<br></li>
+<li><a id="orgab063f4"></a><span class="todo TODO">TODO</span> e2e_nlg<br></li>
+<li><a id="org981b5b9"></a><span class="todo TODO">TODO</span> CommonGen<br></li>
 </ol>
 </div>
-<div id="outline-container-orgeb61dc5" class="outline-4">
-<h4 id="orgeb61dc5"><span class="section-number-4">1.1.5.</span> Question Answering</h4>
+<div id="outline-container-orgb2fb4fe" class="outline-4">
+<h4 id="orgb2fb4fe"><span class="section-number-4">1.1.5.</span> Question Answering</h4>
 <div class="outline-text-4" id="text-1-1-5">
 </div>
 <ol class="org-ol">
-<li><a id="orgdda387d"></a><span class="todo TODO">TODO</span> piqa<br></li>
-<li><a id="orgfbed982"></a><span class="todo TODO">TODO</span> truthful_qa<br></li>
-<li><a id="org71379e8"></a><span class="todo TODO">TODO</span> allenai/ai2_arc<br></li>
+<li><a id="org6e409f8"></a><span class="todo TODO">TODO</span> piqa<br></li>
+<li><a id="orgb3aee51"></a><span class="todo TODO">TODO</span> truthful_qa<br></li>
+<li><a id="org6068295"></a><span class="todo TODO">TODO</span> allenai/ai2_arc<br></li>
 </ol>
 </div>
 </div>
-<div id="outline-container-org796c2fa" class="outline-3">
-<h3 id="org796c2fa"><span class="section-number-3">1.2.</span> Generalized Ability: Status</h3>
+<div id="outline-container-orgdc1b28f" class="outline-3">
+<h3 id="orgdc1b28f"><span class="section-number-3">1.2.</span> Generalized Ability: Status</h3>
 <div class="outline-text-3" id="text-1-2">
 </div>
-<div id="outline-container-orgf560f24" class="outline-4">
-<h4 id="orgf560f24"><span class="section-number-4">1.2.1.</span> Safety</h4>
+<div id="outline-container-org36c1293" class="outline-4">
+<h4 id="org36c1293"><span class="section-number-4">1.2.1.</span> Safety</h4>
 <div class="outline-text-4" id="text-1-2-1">
 </div>
 <ol class="org-ol">
-<li><a id="org430cef7"></a><span class="todo TODO">TODO</span> HELM: bias, toxicity, fairness<br></li>
-<li><a id="org17fab1a"></a><span class="todo TODO">TODO</span> &#x2026;<br></li>
+<li><a id="org3f785bf"></a><span class="todo TODO">TODO</span> HELM: bias, toxicity, fairness<br></li>
+<li><a id="orgde298e7"></a><span class="todo TODO">TODO</span> &hellip;<br></li>
 </ol>
 </div>
-<div id="outline-container-org63a209d" class="outline-4">
-<h4 id="org63a209d"><span class="section-number-4">1.2.2.</span> Reasoning (math)</h4>
+<div id="outline-container-org8e36373" class="outline-4">
+<h4 id="org8e36373"><span class="section-number-4">1.2.2.</span> Reasoning (math)</h4>
 <div class="outline-text-4" id="text-1-2-2">
 </div>
 <ol class="org-ol">
-<li><a id="org80be4c1"></a><span class="todo TODO">TODO</span> MMLU (59 subsets)<br></li>
+<li><a id="orgb71a48f"></a><span class="todo TODO">TODO</span> MMLU (59 subsets)<br></li>
 </ol>
 </div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Tue Mar 26 11:08:33 2024</span> <span class="date">Last modified: 2026-05-10 Sun 16:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Tue Mar 26 11:08:33 2024</span> <span class="date">Last modified: 2026-05-10 Sun 16:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
 </div>
 </body>
 </html>

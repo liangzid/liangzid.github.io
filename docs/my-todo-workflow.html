@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-10 Sun 17:14 -->
+<!-- 2026-07-07 Tue 20:50 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>My Attempt of a Potentially New TODO Workflow: How to sync Mobile Phone with My Computer.</title>
@@ -55,6 +55,7 @@
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
   pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -69,7 +70,7 @@
   pre.src-haskell:before { content: 'Haskell'; }
   pre.src-hledger:before { content: 'hledger'; }
   pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
+  pre.src-js:before { content: 'JavaScript'; }
   pre.src-latex:before { content: 'LaTeX'; }
   pre.src-ledger:before { content: 'Ledger'; }
   pre.src-lisp:before { content: 'Lisp'; }
@@ -199,6 +200,24 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">My Attempt of a Potentially New TODO Workflow: How to sync Mobile Phone with My Computer.</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org164f112">1. Configuration of My Phone</a>
+<ul>
+<li><a href="#org07e7c39">1.1. Configuration of termux</a>
+<ul>
+<li><a href="#orgcff5b96">1.1.1. Basic <code>git</code> configuration in termux:</a></li>
+<li><a href="#orgb7e8564">1.1.2. Config My TODOs</a></li>
+<li><a href="#org28ebed6">1.1.3. Config Cron in the Termux</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <p>
 <b>Basic idea:</b> I use my computer for most of the TODO plans, but make sure this
 changes can be obtained and edited by my phone. Besides, I need to ensure
@@ -209,19 +228,19 @@ such a communication is free and has no extra requirements of OS, and so on.
 <b>Solution:</b> I use <code>termux</code> to manage my doc communication from my phone to the computer,
 and use <code>git</code> and corresponding hubs to play the role of "bridge".
 </p>
-<div id="outline-container-org1a27fd2" class="outline-2">
-<h2 id="org1a27fd2"><span class="section-number-2">1.</span> Configuration of My Phone</h2>
+<div id="outline-container-org164f112" class="outline-2">
+<h2 id="org164f112"><span class="section-number-2">1.</span> Configuration of My Phone</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org2dac96a" class="outline-3">
-<h3 id="org2dac96a"><span class="section-number-3">1.1.</span> Configuration of termux</h3>
+<div id="outline-container-org07e7c39" class="outline-3">
+<h3 id="org07e7c39"><span class="section-number-3">1.1.</span> Configuration of termux</h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-orgbb273c6" class="outline-4">
-<h4 id="orgbb273c6"><span class="section-number-4">1.1.1.</span> Basic <code>git</code> configuration in termux:</h4>
+<div id="outline-container-orgcff5b96" class="outline-4">
+<h4 id="orgcff5b96"><span class="section-number-4">1.1.1.</span> Basic <code>git</code> configuration in termux:</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <div class="org-src-container">
-<pre class="src src-sh">pkg update -y &amp;&amp; pkg upgrade -y
+<pre class="src src-sh"><code>pkg update -y &amp;&amp; pkg upgrade -y
 pkg install termux-api
 
 pkg install git cronie openssh -y
@@ -234,21 +253,21 @@ git config --global user.email <span style="color: #1cc24b;">"2273067585@qq.com"
 ssh-keygen -t ed25519 -C <span style="color: #1cc24b;">"GitHub Key"</span>
 <span style="color: #30b3ff;">echo</span> <span style="color: #1cc24b;">"--------------------------Key----------------------------------"</span>
 cat ~/.ssh/id_ed25519.pub
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org6cc0e07" class="outline-4">
-<h4 id="org6cc0e07"><span class="section-number-4">1.1.2.</span> Config My TODOs</h4>
+<div id="outline-container-orgb7e8564" class="outline-4">
+<h4 id="orgb7e8564"><span class="section-number-4">1.1.2.</span> Config My TODOs</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <p>
 Download it:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">git clone git@github.com:liangzid/orgtodo.git ~/orgtodo
+<pre class="src src-sh"><code>git clone git@github.com:liangzid/orgtodo.git ~/orgtodo
 <span style="color: #30b3ff;">cd</span> ~/orgtodo
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -256,7 +275,7 @@ Configuration the automatic shell script (<code>~/sync_orgtodo.sh</code>):
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">!/bin/</span><span style="color: #c770ff; font-weight: bold;">bash</span><span style="color: #8ca391; font-style: italic;">
+<pre class="src src-sh"><code><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">!/bin/</span><span style="color: #c770ff; font-weight: bold;">bash</span><span style="color: #8ca391; font-style: italic;">
 </span>
 <span style="color: #30b3ff;">cd</span> ~/orgtodo || <span style="color: #c770ff; font-weight: bold;">exit</span> 1
 
@@ -280,7 +299,7 @@ git push origin master
 
 <span style="color: #30b3ff;">echo</span> <span style="color: #1cc24b;">"[$(</span><span style="color: #fa8072;">date</span><span style="color: #1cc24b;">)] Git sync executed."</span> &gt;&gt; ~/cron.log
 termux-notification --title <span style="color: #1cc24b;">"OrgTODO Sync"</span> --content <span style="color: #1cc24b;">"All Sync Done :)"</span> --icon <span style="color: #1cc24b;">"check_circle"</span>
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -288,13 +307,13 @@ Change mod:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">chmod +x ~/sync_orgtodo.sh
-</pre>
+<pre class="src src-sh"><code>chmod +x ~/sync_orgtodo.sh
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org45cf1b5" class="outline-4">
-<h4 id="org45cf1b5"><span class="section-number-4">1.1.3.</span> Config Cron in the Termux</h4>
+<div id="outline-container-org28ebed6" class="outline-4">
+<h4 id="org28ebed6"><span class="section-number-4">1.1.3.</span> Config Cron in the Termux</h4>
 <div class="outline-text-4" id="text-1-1-3">
 <p>
 <code>crontab -e</code>
@@ -305,8 +324,8 @@ add the following line:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-nil">*/60 * * * * /data/data/com.termux/files/home/sync_orgtodo.sh
-</pre>
+<pre class="src src-nil"><code>*/60 * * * * /data/data/com.termux/files/home/sync_orgtodo.sh
+</code></pre>
 </div>
 </div>
 </div>
@@ -314,7 +333,7 @@ add the following line:
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Wed Apr 23 17:01:29 2025</span> <span class="date">Last modified: 2026-05-10 Sun 16:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Wed Apr 23 17:01:29 2025</span> <span class="date">Last modified: 2026-05-10 Sun 16:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
 </div>
 </body>
 </html>

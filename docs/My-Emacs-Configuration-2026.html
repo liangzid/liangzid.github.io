@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-10 Sun 17:14 -->
+<!-- 2026-07-07 Tue 20:50 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>我的emacs配置介绍-2026版</title>
@@ -55,6 +55,7 @@
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
   pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -69,7 +70,7 @@
   pre.src-haskell:before { content: 'Haskell'; }
   pre.src-hledger:before { content: 'hledger'; }
   pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
+  pre.src-js:before { content: 'JavaScript'; }
   pre.src-latex:before { content: 'LaTeX'; }
   pre.src-ledger:before { content: 'Ledger'; }
   pre.src-lisp:before { content: 'Lisp'; }
@@ -199,15 +200,246 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">我的emacs配置介绍-2026版</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org167206b">1. Installation &amp; Setup</a>
+<ul>
+<li><a href="#org0b8be13">1.1. Prerequisites</a></li>
+<li><a href="#org2e96166">1.2. Installation</a></li>
+<li><a href="#orga62b2c2">1.3. First-Time Setup</a></li>
+<li><a href="#org3a11e21">1.4. Setup Scripts (doc/)</a>
+<ul>
+<li><a href="#org4c9fc8f">1.4.1. Ubuntu/Debian Setup Scripts</a></li>
+<li><a href="#orgf31fc15">1.4.2. Recommended Installation Order</a></li>
+<li><a href="#org22e64c7">1.4.3. Arch Linux</a></li>
+<li><a href="#org1415d4b">1.4.4. Other Setup Files</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgeb9df11">2. Project Structure</a>
+<ul>
+<li><a href="#org9bf182c">2.1. Module Loading Order (init.el)</a></li>
+</ul>
+</li>
+<li><a href="#orga16af4e">3. Core Features Overview</a></li>
+<li><a href="#org3a2f770">4. Keybindings Reference</a>
+<ul>
+<li><a href="#org581e8c5">4.1. Global Keybindings</a></li>
+<li><a href="#org9112e2b">4.2. Evil Mode Leader Key (SPC)</a>
+<ul>
+<li><a href="#org3b41103">4.2.1. File &amp; Buffer Management</a></li>
+<li><a href="#orge528fe4">4.2.2. Window Management</a></li>
+<li><a href="#org28569d5">4.2.3. Help &amp; Documentation</a></li>
+<li><a href="#org64e75e4">4.2.4. Code Navigation &amp; Editing</a></li>
+<li><a href="#org3daff5e">4.2.5. Citre Code Navigation</a></li>
+<li><a href="#org2ea7c88">4.2.6. Anaconda Mode (Python)</a></li>
+<li><a href="#org667760b">4.2.7. Python Scripts (F5 / nohup)</a></li>
+<li><a href="#orgd0b4c24">4.2.8. SSH Connections</a></li>
+<li><a href="#org79ee955">4.2.9. Clipboard &amp; WSL</a></li>
+<li><a href="#org76fe390">4.2.10. Shell</a></li>
+<li><a href="#org3f5f8d0">4.2.11. English &amp; Spell</a></li>
+<li><a href="#org6d7e855">4.2.12. Org Mode</a></li>
+<li><a href="#org8cbfba5">4.2.13. Hide/Show Code</a></li>
+<li><a href="#org0c1eda8">4.2.14. Collections</a></li>
+</ul>
+</li>
+<li><a href="#org7b74c69">4.3. Evil State Navigation</a></li>
+<li><a href="#orgeb42b0d">4.4. Evil Escape</a></li>
+<li><a href="#orgcadceec">4.5. Window Navigation (winum)</a></li>
+<li><a href="#org5f02f34">4.6. Ivy/Counsel Search</a></li>
+<li><a href="#orgf2de5b7">4.7. Org Mode Keybindings</a></li>
+<li><a href="#org4dff0d6">4.8. Python Development</a></li>
+<li><a href="#orgd77cff6">4.9. Citre Code Navigation</a></li>
+<li><a href="#org2d7a03c">4.10. AI/LLM Keybindings</a></li>
+<li><a href="#org26f8880">4.11. UI Scaling</a></li>
+<li><a href="#org80d4c74">4.12. Flymake Diagnostics</a></li>
+</ul>
+</li>
+<li><a href="#orgc415343">5. Package List</a>
+<ul>
+<li><a href="#org6261ec2">5.1. Core Infrastructure</a></li>
+<li><a href="#org365ddf8">5.2. Vim Emulation (Evil)</a></li>
+<li><a href="#org8b55638">5.3. UI &amp; Themes</a></li>
+<li><a href="#org5aad5df">5.4. Python Development</a></li>
+<li><a href="#org263ce3d">5.5. Language Server Protocol</a></li>
+<li><a href="#org627b55b">5.6. Code Navigation</a></li>
+<li><a href="#org69740b7">5.7. Org Mode</a></li>
+<li><a href="#org99631a4">5.8. Snippets &amp; Templates</a></li>
+<li><a href="#org733064a">5.9. AI/LLM Integration</a></li>
+<li><a href="#org10ca13f">5.10. Shell &amp; Terminal</a></li>
+<li><a href="#orgf8ac0b2">5.11. Version Control</a></li>
+<li><a href="#org7229133">5.12. Web Development</a></li>
+<li><a href="#orgfaf72cb">5.13. Other Languages</a></li>
+<li><a href="#orgdb1690e">5.14. Productivity</a></li>
+<li><a href="#org83263c5">5.15. Utilities</a></li>
+</ul>
+</li>
+<li><a href="#orgd72eef7">6. Configuration Files</a>
+<ul>
+<li><a href="#orgc43b1e3">6.1. init-ai.el - AI/LLM Integration</a></li>
+<li><a href="#org6728afa">6.2. init-openai.el - Aider (DeepSeek)</a></li>
+<li><a href="#orgc988516">6.3. init-lsp.el - Language Server Protocol</a></li>
+<li><a href="#org06f6009">6.4. init-org.el - Org Mode</a></li>
+<li><a href="#orga460230">6.5. init-evil.el - Vim Emulation</a></li>
+<li><a href="#org2f763e9">6.6. init-ui.el - Visual Configuration</a></li>
+<li><a href="#org27f0059">6.7. init-python.el - Python Development</a></li>
+<li><a href="#orgf9b19e4">6.8. init-ssh.el - SSH Connections</a></li>
+</ul>
+</li>
+<li><a href="#org5f3cf81">7. Custom Functions</a>
+<ul>
+<li><a href="#orgd55fbfd">7.1. Core Utilities (init-self-config-function.el)</a></li>
+<li><a href="#orgb86ac3d">7.2. Python Scripts (init-python.el)</a></li>
+<li><a href="#orgb275cd0">7.3. Buffer Management (init-buffer.el)</a></li>
+<li><a href="#org7b8c498">7.4. WSL Utilities (init-wsl.el)</a></li>
+<li><a href="#org0bc515d">7.5. SSH Connections (init-ssh.el)</a></li>
+<li><a href="#orgef40441">7.6. Org Mode (init-org.el)</a></li>
+<li><a href="#org0259072">7.7. Blog Publishing (init-blog.el)</a></li>
+<li><a href="#org36f5221">7.8. LaTeX (init-latex.el)</a></li>
+</ul>
+</li>
+<li><a href="#org0da2ad9">8. Platform-Specific Features</a>
+<ul>
+<li><a href="#org0f02d5c">8.1. Windows (WSL)</a></li>
+<li><a href="#org8132ccb">8.2. macOS</a></li>
+<li><a href="#orgd612742">8.3. Linux</a></li>
+<li><a href="#org4dcfef2">8.4. WSL (Windows Subsystem for Linux)</a></li>
+</ul>
+</li>
+<li><a href="#org170102b">9. Environment Variables</a></li>
+<li><a href="#orgb390c9c">10. Custom Themes &amp; Colors</a>
+<ul>
+<li><a href="#org9f67f14">10.1. doom-dracula Theme</a></li>
+<li><a href="#org412c5b5">10.2. Font Configuration</a></li>
+</ul>
+</li>
+<li><a href="#org674f5ce">11. Troubleshooting</a>
+<ul>
+<li><a href="#org35d7955">11.1. Package Installation Fails</a></li>
+<li><a href="#org7e03761">11.2. LSP Not Working</a></li>
+<li><a href="#org9dfa182">11.3. AI Features Not Working</a></li>
+<li><a href="#org3b26dc6">11.4. SSH Connection Issues</a></li>
+<li><a href="#orgbd8dbd0">11.5. Performance Issues</a></li>
+</ul>
+</li>
+<li><a href="#org3659e2c">12. Acknowledgments</a></li>
+<li><a href="#org902d0c7">13. 中文翻译</a>
+<ul>
+<li><a href="#org4e73e30">13.1. 安装与设置</a>
+<ul>
+<li><a href="#orgf91a1bf">13.1.1. 前置要求</a></li>
+<li><a href="#org83426b3">13.1.2. 安装</a></li>
+<li><a href="#orgbffb936">13.1.3. 首次设置</a></li>
+<li><a href="#org044ae06">13.1.4. 设置脚本 (doc/)</a></li>
+</ul>
+</li>
+<li><a href="#org6dc9f63">13.2. 项目结构</a>
+<ul>
+<li><a href="#orge77a6a1">13.2.1. 模块加载顺序 (init.el)</a></li>
+</ul>
+</li>
+<li><a href="#org6a3f7dc">13.3. 核心功能概览</a></li>
+<li><a href="#orgdcaab48">13.4. 快捷键参考</a>
+<ul>
+<li><a href="#org6d77e3a">13.4.1. 全局快捷键</a></li>
+<li><a href="#orge83c9dd">13.4.2. Evil 模式 Leader 键 (SPC)</a></li>
+<li><a href="#org32f91f8">13.4.3. Evil 状态导航</a></li>
+<li><a href="#org0caeb35">13.4.4. Evil 转义</a></li>
+<li><a href="#org9893ae5">13.4.5. 窗口导航 (winum)</a></li>
+<li><a href="#orgb5f99c4">13.4.6. Ivy/Counsel 搜索</a></li>
+<li><a href="#org5bd5325">13.4.7. Org 模式快捷键</a></li>
+<li><a href="#org10588d4">13.4.8. Python 开发</a></li>
+<li><a href="#orgc3a31e7">13.4.9. Citre 代码导航</a></li>
+<li><a href="#orgf1765cc">13.4.10. AI/LLM 快捷键</a></li>
+<li><a href="#org9f7dba2">13.4.11. UI 缩放</a></li>
+<li><a href="#org3984993">13.4.12. Flymake 诊断</a></li>
+</ul>
+</li>
+<li><a href="#org950c574">13.5. 包列表</a>
+<ul>
+<li><a href="#org758ffa5">13.5.1. 核心基础设施</a></li>
+<li><a href="#org0d39708">13.5.2. Vim 模拟 (Evil)</a></li>
+<li><a href="#org0a3aad4">13.5.3. UI 和主题</a></li>
+<li><a href="#orga1b1e83">13.5.4. Python 开发</a></li>
+<li><a href="#org1a91c83">13.5.5. 语言服务器协议</a></li>
+<li><a href="#orge51dc9c">13.5.6. 代码导航</a></li>
+<li><a href="#org4107f0e">13.5.7. Org Mode</a></li>
+<li><a href="#orgc72fa28">13.5.8. 代码片段和模板</a></li>
+<li><a href="#org5458451">13.5.9. AI/LLM 集成</a></li>
+<li><a href="#orgc3e78ce">13.5.10. Shell 和终端</a></li>
+<li><a href="#org60dcd60">13.5.11. 版本控制</a></li>
+<li><a href="#orgf17be28">13.5.12. Web 开发</a></li>
+<li><a href="#orga9d423f">13.5.13. 其他语言</a></li>
+<li><a href="#org0b00025">13.5.14. 生产力工具</a></li>
+<li><a href="#org23ab203">13.5.15. 实用工具</a></li>
+</ul>
+</li>
+<li><a href="#orgee5f940">13.6. 配置文件</a>
+<ul>
+<li><a href="#orga3ba2e1">13.6.1. init-ai.el - AI/LLM 集成</a></li>
+<li><a href="#orgc99e9b2">13.6.2. init-openai.el - Aider (DeepSeek)</a></li>
+<li><a href="#org04b5a66">13.6.3. init-lsp.el - 语言服务器协议</a></li>
+<li><a href="#org6f272ff">13.6.4. init-org.el - Org Mode</a></li>
+<li><a href="#orga6bc8cd">13.6.5. init-evil.el - Vim 模拟</a></li>
+<li><a href="#org32fa66b">13.6.6. init-ui.el - 视觉配置</a></li>
+<li><a href="#orgc97f0b6">13.6.7. init-python.el - Python 开发</a></li>
+<li><a href="#org9ab00d1">13.6.8. init-ssh.el - SSH 连接</a></li>
+</ul>
+</li>
+<li><a href="#org8c1b4ca">13.7. 自定义函数</a>
+<ul>
+<li><a href="#org296b7bd">13.7.1. 核心工具 (init-self-config-function.el)</a></li>
+<li><a href="#org3efed11">13.7.2. Python 脚本 (init-python.el)</a></li>
+<li><a href="#org266046d">13.7.3. 缓冲区管理 (init-buffer.el)</a></li>
+<li><a href="#org4b78d44">13.7.4. WSL 工具 (init-wsl.el)</a></li>
+<li><a href="#org08525e9">13.7.5. SSH 连接 (init-ssh.el)</a></li>
+<li><a href="#org24fc649">13.7.6. Org 模式 (init-org.el)</a></li>
+<li><a href="#orgddfa3e5">13.7.7. 博客发布 (init-blog.el)</a></li>
+<li><a href="#org933b8dd">13.7.8. LaTeX (init-latex.el)</a></li>
+</ul>
+</li>
+<li><a href="#org79bd23d">13.8. 平台特定功能</a>
+<ul>
+<li><a href="#org66eecf7">13.8.1. Windows (WSL)</a></li>
+<li><a href="#org782f1a4">13.8.2. macOS</a></li>
+<li><a href="#org52e597b">13.8.3. Linux</a></li>
+<li><a href="#orge702887">13.8.4. WSL (Windows Subsystem for Linux)</a></li>
+</ul>
+</li>
+<li><a href="#org9468ac0">13.9. 环境变量</a></li>
+<li><a href="#org1b34fba">13.10. 自定义主题和颜色</a>
+<ul>
+<li><a href="#orgd0ac9c1">13.10.1. doom-dracula 主题</a></li>
+<li><a href="#orgc6ca9be">13.10.2. 字体配置</a></li>
+</ul>
+</li>
+<li><a href="#org7de405d">13.11. 故障排除</a>
+<ul>
+<li><a href="#orgb3d8ecf">13.11.1. 包安装失败</a></li>
+<li><a href="#orgc41056d">13.11.2. LSP 不工作</a></li>
+<li><a href="#org6e5ad89">13.11.3. AI 功能不工作</a></li>
+<li><a href="#org7a44b4f">13.11.4. SSH 连接问题</a></li>
+<li><a href="#orgd2ca1ba">13.11.5. 性能问题</a></li>
+</ul>
+</li>
+<li><a href="#orgd1c2da3">13.12. 致谢</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <p>
 A comprehensive, modular Emacs configuration with AI/LLM integration, Python development tools, Org-mode for notes and publishing, and Vim-style editing via Evil mode.
 </p>
-<div id="outline-container-org1f0f629" class="outline-2">
-<h2 id="org1f0f629"><span class="section-number-2">1.</span> Installation &amp; Setup</h2>
+<div id="outline-container-org167206b" class="outline-2">
+<h2 id="org167206b"><span class="section-number-2">1.</span> Installation &amp; Setup</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org1056d39" class="outline-3">
-<h3 id="org1056d39"><span class="section-number-3">1.1.</span> Prerequisites</h3>
+<div id="outline-container-org0b8be13" class="outline-3">
+<h3 id="org0b8be13"><span class="section-number-3">1.1.</span> Prerequisites</h3>
 <div class="outline-text-3" id="text-1-1">
 <ul class="org-ul">
 <li><b>Emacs</b> 27+ recommended</li>
@@ -219,11 +451,11 @@ A comprehensive, modular Emacs configuration with AI/LLM integration, Python dev
 </ul>
 </div>
 </div>
-<div id="outline-container-org709c66c" class="outline-3">
-<h3 id="org709c66c"><span class="section-number-3">1.2.</span> Installation</h3>
+<div id="outline-container-org2e96166" class="outline-3">
+<h3 id="org2e96166"><span class="section-number-3">1.2.</span> Installation</h3>
 <div class="outline-text-3" id="text-1-2">
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Clone the configuration
+<pre class="src src-bash"><code><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Clone the configuration
 </span>git clone https://github.com/ziLiang3845/.emacs.d.git ~/.emacs.d
 
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Install required external tools
@@ -236,12 +468,12 @@ A comprehensive, modular Emacs configuration with AI/LLM integration, Python dev
 
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Launch Emacs
 </span>emacs
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org92481c1" class="outline-3">
-<h3 id="org92481c1"><span class="section-number-3">1.3.</span> First-Time Setup</h3>
+<div id="outline-container-orga62b2c2" class="outline-3">
+<h3 id="orga62b2c2"><span class="section-number-3">1.3.</span> First-Time Setup</h3>
 <div class="outline-text-3" id="text-1-3">
 <ol class="org-ol">
 <li>Launch Emacs - packages will be automatically installed</li>
@@ -250,15 +482,15 @@ A comprehensive, modular Emacs configuration with AI/LLM integration, Python dev
 </ol>
 </div>
 </div>
-<div id="outline-container-org230730a" class="outline-3">
-<h3 id="org230730a"><span class="section-number-3">1.4.</span> Setup Scripts (doc/)</h3>
+<div id="outline-container-org3a11e21" class="outline-3">
+<h3 id="org3a11e21"><span class="section-number-3">1.4.</span> Setup Scripts (doc/)</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 The <code>doc/</code> directory contains shell scripts to automate the installation of system dependencies. Run these scripts in order before launching Emacs for the first time.
 </p>
 </div>
-<div id="outline-container-orgf0678a2" class="outline-4">
-<h4 id="orgf0678a2"><span class="section-number-4">1.4.1.</span> Ubuntu/Debian Setup Scripts</h4>
+<div id="outline-container-org4c9fc8f" class="outline-4">
+<h4 id="org4c9fc8f"><span class="section-number-4">1.4.1.</span> Ubuntu/Debian Setup Scripts</h4>
 <div class="outline-text-4" id="text-1-4-1">
 <table>
 
@@ -313,11 +545,11 @@ The <code>doc/</code> directory contains shell scripts to automate the installat
 </table>
 </div>
 </div>
-<div id="outline-container-org4cf06fb" class="outline-4">
-<h4 id="org4cf06fb"><span class="section-number-4">1.4.2.</span> Recommended Installation Order</h4>
+<div id="outline-container-orgf31fc15" class="outline-4">
+<h4 id="orgf31fc15"><span class="section-number-4">1.4.2.</span> Recommended Installation Order</h4>
 <div class="outline-text-4" id="text-1-4-2">
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #30b3ff;">cd</span> ~/.emacs.d/doc/
+<pre class="src src-bash"><code><span style="color: #30b3ff;">cd</span> ~/.emacs.d/doc/
 
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">1. Install system packages (Ubuntu/Debian)
 </span>sudo bash 2.run_ubuntu_shell_sudo.sh
@@ -336,12 +568,12 @@ The <code>doc/</code> directory contains shell scripts to automate the installat
 
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">6. Git configuration
 </span>bash 6.initial_setup.sh
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org7cc609c" class="outline-4">
-<h4 id="org7cc609c"><span class="section-number-4">1.4.3.</span> Arch Linux</h4>
+<div id="outline-container-org22e64c7" class="outline-4">
+<h4 id="org22e64c7"><span class="section-number-4">1.4.3.</span> Arch Linux</h4>
 <div class="outline-text-4" id="text-1-4-3">
 <table>
 
@@ -371,8 +603,8 @@ The <code>doc/</code> directory contains shell scripts to automate the installat
 </table>
 </div>
 </div>
-<div id="outline-container-org46c2b3d" class="outline-4">
-<h4 id="org46c2b3d"><span class="section-number-4">1.4.4.</span> Other Setup Files</h4>
+<div id="outline-container-org1415d4b" class="outline-4">
+<h4 id="org1415d4b"><span class="section-number-4">1.4.4.</span> Other Setup Files</h4>
 <div class="outline-text-4" id="text-1-4-4">
 <table>
 
@@ -424,10 +656,10 @@ The <code>doc/</code> directory contains shell scripts to automate the installat
 </div>
 </div>
 </div>
-<div id="outline-container-org44e3ad4" class="outline-2">
-<h2 id="org44e3ad4"><span class="section-number-2">2.</span> Project Structure</h2>
+<div id="outline-container-orgeb9df11" class="outline-2">
+<h2 id="orgeb9df11"><span class="section-number-2">2.</span> Project Structure</h2>
 <div class="outline-text-2" id="text-2">
-<pre class="example" id="org06499fe">
+<pre class="example" id="org3656b66">
 .emacs.d/
 ├── init.el                    # Main entry point
 ├── lisp/
@@ -440,8 +672,8 @@ The <code>doc/</code> directory contains shell scripts to automate the installat
 └── feeds/                    # RSS feed configuration (elfeed)
 </pre>
 </div>
-<div id="outline-container-orgaafef28" class="outline-3">
-<h3 id="orgaafef28"><span class="section-number-3">2.1.</span> Module Loading Order (init.el)</h3>
+<div id="outline-container-org9bf182c" class="outline-3">
+<h3 id="org9bf182c"><span class="section-number-3">2.1.</span> Module Loading Order (init.el)</h3>
 <div class="outline-text-3" id="text-2-1">
 <ul class="org-ul">
 <li>init-self-config-function  → Platform detection, core utilities</li>
@@ -487,8 +719,8 @@ The <code>doc/</code> directory contains shell scripts to automate the installat
 </div>
 </div>
 </div>
-<div id="outline-container-org74cef3d" class="outline-2">
-<h2 id="org74cef3d"><span class="section-number-2">3.</span> Core Features Overview</h2>
+<div id="outline-container-orga16af4e" class="outline-2">
+<h2 id="orga16af4e"><span class="section-number-2">3.</span> Core Features Overview</h2>
 <div class="outline-text-2" id="text-3">
 <table>
 
@@ -558,12 +790,12 @@ The <code>doc/</code> directory contains shell scripts to automate the installat
 </table>
 </div>
 </div>
-<div id="outline-container-org49259f5" class="outline-2">
-<h2 id="org49259f5"><span class="section-number-2">4.</span> Keybindings Reference</h2>
+<div id="outline-container-org3a2f770" class="outline-2">
+<h2 id="org3a2f770"><span class="section-number-2">4.</span> Keybindings Reference</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orga96af05" class="outline-3">
-<h3 id="orga96af05"><span class="section-number-3">4.1.</span> Global Keybindings</h3>
+<div id="outline-container-org581e8c5" class="outline-3">
+<h3 id="org581e8c5"><span class="section-number-3">4.1.</span> Global Keybindings</h3>
 <div class="outline-text-3" id="text-4-1">
 <table>
 
@@ -688,15 +920,15 @@ The <code>doc/</code> directory contains shell scripts to automate the installat
 </table>
 </div>
 </div>
-<div id="outline-container-orgab8fdcb" class="outline-3">
-<h3 id="orgab8fdcb"><span class="section-number-3">4.2.</span> Evil Mode Leader Key (SPC)</h3>
+<div id="outline-container-org9112e2b" class="outline-3">
+<h3 id="org9112e2b"><span class="section-number-3">4.2.</span> Evil Mode Leader Key (SPC)</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual mode.
 </p>
 </div>
-<div id="outline-container-orge79ae54" class="outline-4">
-<h4 id="orge79ae54"><span class="section-number-4">4.2.1.</span> File &amp; Buffer Management</h4>
+<div id="outline-container-org3b41103" class="outline-4">
+<h4 id="org3b41103"><span class="section-number-4">4.2.1.</span> File &amp; Buffer Management</h4>
 <div class="outline-text-4" id="text-4-2-1">
 <table>
 
@@ -767,8 +999,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-orgaa595b3" class="outline-4">
-<h4 id="orgaa595b3"><span class="section-number-4">4.2.2.</span> Window Management</h4>
+<div id="outline-container-orge528fe4" class="outline-4">
+<h4 id="orge528fe4"><span class="section-number-4">4.2.2.</span> Window Management</h4>
 <div class="outline-text-4" id="text-4-2-2">
 <table>
 
@@ -833,8 +1065,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-orgbf602c3" class="outline-4">
-<h4 id="orgbf602c3"><span class="section-number-4">4.2.3.</span> Help &amp; Documentation</h4>
+<div id="outline-container-org28569d5" class="outline-4">
+<h4 id="org28569d5"><span class="section-number-4">4.2.3.</span> Help &amp; Documentation</h4>
 <div class="outline-text-4" id="text-4-2-3">
 <table>
 
@@ -881,8 +1113,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org99282c8" class="outline-4">
-<h4 id="org99282c8"><span class="section-number-4">4.2.4.</span> Code Navigation &amp; Editing</h4>
+<div id="outline-container-org64e75e4" class="outline-4">
+<h4 id="org64e75e4"><span class="section-number-4">4.2.4.</span> Code Navigation &amp; Editing</h4>
 <div class="outline-text-4" id="text-4-2-4">
 <table>
 
@@ -947,8 +1179,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org797e970" class="outline-4">
-<h4 id="org797e970"><span class="section-number-4">4.2.5.</span> Citre Code Navigation</h4>
+<div id="outline-container-org3daff5e" class="outline-4">
+<h4 id="org3daff5e"><span class="section-number-4">4.2.5.</span> Citre Code Navigation</h4>
 <div class="outline-text-4" id="text-4-2-5">
 <table>
 
@@ -995,8 +1227,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-orga312cd7" class="outline-4">
-<h4 id="orga312cd7"><span class="section-number-4">4.2.6.</span> Anaconda Mode (Python)</h4>
+<div id="outline-container-org2ea7c88" class="outline-4">
+<h4 id="org2ea7c88"><span class="section-number-4">4.2.6.</span> Anaconda Mode (Python)</h4>
 <div class="outline-text-4" id="text-4-2-6">
 <table>
 
@@ -1055,8 +1287,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org07de2f4" class="outline-4">
-<h4 id="org07de2f4"><span class="section-number-4">4.2.7.</span> Python Scripts (F5 / nohup)</h4>
+<div id="outline-container-org667760b" class="outline-4">
+<h4 id="org667760b"><span class="section-number-4">4.2.7.</span> Python Scripts (F5 / nohup)</h4>
 <div class="outline-text-4" id="text-4-2-7">
 <table>
 
@@ -1109,8 +1341,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-orgfb6a1c4" class="outline-4">
-<h4 id="orgfb6a1c4"><span class="section-number-4">4.2.8.</span> SSH Connections</h4>
+<div id="outline-container-orgd0b4c24" class="outline-4">
+<h4 id="orgd0b4c24"><span class="section-number-4">4.2.8.</span> SSH Connections</h4>
 <div class="outline-text-4" id="text-4-2-8">
 <table>
 
@@ -1175,8 +1407,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-orgec33d28" class="outline-4">
-<h4 id="orgec33d28"><span class="section-number-4">4.2.9.</span> Clipboard &amp; WSL</h4>
+<div id="outline-container-org79ee955" class="outline-4">
+<h4 id="org79ee955"><span class="section-number-4">4.2.9.</span> Clipboard &amp; WSL</h4>
 <div class="outline-text-4" id="text-4-2-9">
 <table>
 
@@ -1217,8 +1449,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org7c17beb" class="outline-4">
-<h4 id="org7c17beb"><span class="section-number-4">4.2.10.</span> Shell</h4>
+<div id="outline-container-org76fe390" class="outline-4">
+<h4 id="org76fe390"><span class="section-number-4">4.2.10.</span> Shell</h4>
 <div class="outline-text-4" id="text-4-2-10">
 <table>
 
@@ -1253,8 +1485,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org282817f" class="outline-4">
-<h4 id="org282817f"><span class="section-number-4">4.2.11.</span> English &amp; Spell</h4>
+<div id="outline-container-org3f5f8d0" class="outline-4">
+<h4 id="org3f5f8d0"><span class="section-number-4">4.2.11.</span> English &amp; Spell</h4>
 <div class="outline-text-4" id="text-4-2-11">
 <table>
 
@@ -1301,8 +1533,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-orgd9e8e88" class="outline-4">
-<h4 id="orgd9e8e88"><span class="section-number-4">4.2.12.</span> Org Mode</h4>
+<div id="outline-container-org6d7e855" class="outline-4">
+<h4 id="org6d7e855"><span class="section-number-4">4.2.12.</span> Org Mode</h4>
 <div class="outline-text-4" id="text-4-2-12">
 <table>
 
@@ -1361,8 +1593,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-orge850778" class="outline-4">
-<h4 id="orge850778"><span class="section-number-4">4.2.13.</span> Hide/Show Code</h4>
+<div id="outline-container-org8cbfba5" class="outline-4">
+<h4 id="org8cbfba5"><span class="section-number-4">4.2.13.</span> Hide/Show Code</h4>
 <div class="outline-text-4" id="text-4-2-13">
 <table>
 
@@ -1391,8 +1623,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org6480e6e" class="outline-4">
-<h4 id="org6480e6e"><span class="section-number-4">4.2.14.</span> Collections</h4>
+<div id="outline-container-org0c1eda8" class="outline-4">
+<h4 id="org0c1eda8"><span class="section-number-4">4.2.14.</span> Collections</h4>
 <div class="outline-text-4" id="text-4-2-14">
 <table>
 
@@ -1422,8 +1654,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </div>
 </div>
 </div>
-<div id="outline-container-org70b7f3d" class="outline-3">
-<h3 id="org70b7f3d"><span class="section-number-3">4.3.</span> Evil State Navigation</h3>
+<div id="outline-container-org7b74c69" class="outline-3">
+<h3 id="org7b74c69"><span class="section-number-3">4.3.</span> Evil State Navigation</h3>
 <div class="outline-text-3" id="text-4-3">
 <table>
 
@@ -1482,8 +1714,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org6ff8640" class="outline-3">
-<h3 id="org6ff8640"><span class="section-number-3">4.4.</span> Evil Escape</h3>
+<div id="outline-container-orgeb42b0d" class="outline-3">
+<h3 id="orgeb42b0d"><span class="section-number-3">4.4.</span> Evil Escape</h3>
 <div class="outline-text-3" id="text-4-4">
 <table>
 
@@ -1512,8 +1744,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org212d8a3" class="outline-3">
-<h3 id="org212d8a3"><span class="section-number-3">4.5.</span> Window Navigation (winum)</h3>
+<div id="outline-container-orgcadceec" class="outline-3">
+<h3 id="orgcadceec"><span class="section-number-3">4.5.</span> Window Navigation (winum)</h3>
 <div class="outline-text-3" id="text-4-5">
 <table>
 
@@ -1590,8 +1822,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org94626eb" class="outline-3">
-<h3 id="org94626eb"><span class="section-number-3">4.6.</span> Ivy/Counsel Search</h3>
+<div id="outline-container-org5f02f34" class="outline-3">
+<h3 id="org5f02f34"><span class="section-number-3">4.6.</span> Ivy/Counsel Search</h3>
 <div class="outline-text-3" id="text-4-6">
 <table>
 
@@ -1668,8 +1900,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org00ae0bb" class="outline-3">
-<h3 id="org00ae0bb"><span class="section-number-3">4.7.</span> Org Mode Keybindings</h3>
+<div id="outline-container-orgf2de5b7" class="outline-3">
+<h3 id="orgf2de5b7"><span class="section-number-3">4.7.</span> Org Mode Keybindings</h3>
 <div class="outline-text-3" id="text-4-7">
 <table>
 
@@ -1716,8 +1948,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-orgdf30434" class="outline-3">
-<h3 id="orgdf30434"><span class="section-number-3">4.8.</span> Python Development</h3>
+<div id="outline-container-org4dff0d6" class="outline-3">
+<h3 id="org4dff0d6"><span class="section-number-3">4.8.</span> Python Development</h3>
 <div class="outline-text-3" id="text-4-8">
 <table>
 
@@ -1746,8 +1978,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org465e4e2" class="outline-3">
-<h3 id="org465e4e2"><span class="section-number-3">4.9.</span> Citre Code Navigation</h3>
+<div id="outline-container-orgd77cff6" class="outline-3">
+<h3 id="orgd77cff6"><span class="section-number-3">4.9.</span> Citre Code Navigation</h3>
 <div class="outline-text-3" id="text-4-9">
 <table>
 
@@ -1794,8 +2026,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org8a1d989" class="outline-3">
-<h3 id="org8a1d989"><span class="section-number-3">4.10.</span> AI/LLM Keybindings</h3>
+<div id="outline-container-org2d7a03c" class="outline-3">
+<h3 id="org2d7a03c"><span class="section-number-3">4.10.</span> AI/LLM Keybindings</h3>
 <div class="outline-text-3" id="text-4-10">
 <table>
 
@@ -1830,8 +2062,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org15f6b89" class="outline-3">
-<h3 id="org15f6b89"><span class="section-number-3">4.11.</span> UI Scaling</h3>
+<div id="outline-container-org26f8880" class="outline-3">
+<h3 id="org26f8880"><span class="section-number-3">4.11.</span> UI Scaling</h3>
 <div class="outline-text-3" id="text-4-11">
 <table>
 
@@ -1884,8 +2116,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org4613b61" class="outline-3">
-<h3 id="org4613b61"><span class="section-number-3">4.12.</span> Flymake Diagnostics</h3>
+<div id="outline-container-org80d4c74" class="outline-3">
+<h3 id="org80d4c74"><span class="section-number-3">4.12.</span> Flymake Diagnostics</h3>
 <div class="outline-text-3" id="text-4-12">
 <table>
 
@@ -1927,12 +2159,12 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </div>
 </div>
 </div>
-<div id="outline-container-org8759d40" class="outline-2">
-<h2 id="org8759d40"><span class="section-number-2">5.</span> Package List</h2>
+<div id="outline-container-orgc415343" class="outline-2">
+<h2 id="orgc415343"><span class="section-number-2">5.</span> Package List</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-orgc587234" class="outline-3">
-<h3 id="orgc587234"><span class="section-number-3">5.1.</span> Core Infrastructure</h3>
+<div id="outline-container-org6261ec2" class="outline-3">
+<h3 id="org6261ec2"><span class="section-number-3">5.1.</span> Core Infrastructure</h3>
 <div class="outline-text-3" id="text-5-1">
 <table>
 
@@ -1962,8 +2194,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org183b0af" class="outline-3">
-<h3 id="org183b0af"><span class="section-number-3">5.2.</span> Vim Emulation (Evil)</h3>
+<div id="outline-container-org365ddf8" class="outline-3">
+<h3 id="org365ddf8"><span class="section-number-3">5.2.</span> Vim Emulation (Evil)</h3>
 <div class="outline-text-3" id="text-5-2">
 <table>
 
@@ -2018,8 +2250,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-orgbb3bb9a" class="outline-3">
-<h3 id="orgbb3bb9a"><span class="section-number-3">5.3.</span> UI &amp; Themes</h3>
+<div id="outline-container-org8b55638" class="outline-3">
+<h3 id="org8b55638"><span class="section-number-3">5.3.</span> UI &amp; Themes</h3>
 <div class="outline-text-3" id="text-5-3">
 <table>
 
@@ -2104,8 +2336,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org8e29f60" class="outline-3">
-<h3 id="org8e29f60"><span class="section-number-3">5.4.</span> Python Development</h3>
+<div id="outline-container-org5aad5df" class="outline-3">
+<h3 id="org5aad5df"><span class="section-number-3">5.4.</span> Python Development</h3>
 <div class="outline-text-3" id="text-5-4">
 <table>
 
@@ -2155,8 +2387,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-orgb82a06d" class="outline-3">
-<h3 id="orgb82a06d"><span class="section-number-3">5.5.</span> Language Server Protocol</h3>
+<div id="outline-container-org263ce3d" class="outline-3">
+<h3 id="org263ce3d"><span class="section-number-3">5.5.</span> Language Server Protocol</h3>
 <div class="outline-text-3" id="text-5-5">
 <table>
 
@@ -2191,8 +2423,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-orge488435" class="outline-3">
-<h3 id="orge488435"><span class="section-number-3">5.6.</span> Code Navigation</h3>
+<div id="outline-container-org627b55b" class="outline-3">
+<h3 id="org627b55b"><span class="section-number-3">5.6.</span> Code Navigation</h3>
 <div class="outline-text-3" id="text-5-6">
 <table>
 
@@ -2232,8 +2464,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-orgc8977ca" class="outline-3">
-<h3 id="orgc8977ca"><span class="section-number-3">5.7.</span> Org Mode</h3>
+<div id="outline-container-org69740b7" class="outline-3">
+<h3 id="org69740b7"><span class="section-number-3">5.7.</span> Org Mode</h3>
 <div class="outline-text-3" id="text-5-7">
 <table>
 
@@ -2293,8 +2525,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org9b3ae2c" class="outline-3">
-<h3 id="org9b3ae2c"><span class="section-number-3">5.8.</span> Snippets &amp; Templates</h3>
+<div id="outline-container-org99631a4" class="outline-3">
+<h3 id="org99631a4"><span class="section-number-3">5.8.</span> Snippets &amp; Templates</h3>
 <div class="outline-text-3" id="text-5-8">
 <table>
 
@@ -2329,8 +2561,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-orga1abae1" class="outline-3">
-<h3 id="orga1abae1"><span class="section-number-3">5.9.</span> AI/LLM Integration</h3>
+<div id="outline-container-org733064a" class="outline-3">
+<h3 id="org733064a"><span class="section-number-3">5.9.</span> AI/LLM Integration</h3>
 <div class="outline-text-3" id="text-5-9">
 <table>
 
@@ -2365,8 +2597,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-orgaf3322e" class="outline-3">
-<h3 id="orgaf3322e"><span class="section-number-3">5.10.</span> Shell &amp; Terminal</h3>
+<div id="outline-container-org10ca13f" class="outline-3">
+<h3 id="org10ca13f"><span class="section-number-3">5.10.</span> Shell &amp; Terminal</h3>
 <div class="outline-text-3" id="text-5-10">
 <table>
 
@@ -2406,8 +2638,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-orgf2ffa12" class="outline-3">
-<h3 id="orgf2ffa12"><span class="section-number-3">5.11.</span> Version Control</h3>
+<div id="outline-container-orgf8ac0b2" class="outline-3">
+<h3 id="orgf8ac0b2"><span class="section-number-3">5.11.</span> Version Control</h3>
 <div class="outline-text-3" id="text-5-11">
 <table>
 
@@ -2437,8 +2669,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org33d4513" class="outline-3">
-<h3 id="org33d4513"><span class="section-number-3">5.12.</span> Web Development</h3>
+<div id="outline-container-org7229133" class="outline-3">
+<h3 id="org7229133"><span class="section-number-3">5.12.</span> Web Development</h3>
 <div class="outline-text-3" id="text-5-12">
 <table>
 
@@ -2478,8 +2710,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org1f1da29" class="outline-3">
-<h3 id="org1f1da29"><span class="section-number-3">5.13.</span> Other Languages</h3>
+<div id="outline-container-orgfaf72cb" class="outline-3">
+<h3 id="orgfaf72cb"><span class="section-number-3">5.13.</span> Other Languages</h3>
 <div class="outline-text-3" id="text-5-13">
 <table>
 
@@ -2539,8 +2771,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-orgaaf725c" class="outline-3">
-<h3 id="orgaaf725c"><span class="section-number-3">5.14.</span> Productivity</h3>
+<div id="outline-container-orgdb1690e" class="outline-3">
+<h3 id="orgdb1690e"><span class="section-number-3">5.14.</span> Productivity</h3>
 <div class="outline-text-3" id="text-5-14">
 <table>
 
@@ -2615,8 +2847,8 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </table>
 </div>
 </div>
-<div id="outline-container-org6b8a51b" class="outline-3">
-<h3 id="org6b8a51b"><span class="section-number-3">5.15.</span> Utilities</h3>
+<div id="outline-container-org83263c5" class="outline-3">
+<h3 id="org83263c5"><span class="section-number-3">5.15.</span> Utilities</h3>
 <div class="outline-text-3" id="text-5-15">
 <table>
 
@@ -2672,15 +2904,15 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </div>
 </div>
 </div>
-<div id="outline-container-orgf6842ac" class="outline-2">
-<h2 id="orgf6842ac"><span class="section-number-2">6.</span> Configuration Files</h2>
+<div id="outline-container-orgd72eef7" class="outline-2">
+<h2 id="orgd72eef7"><span class="section-number-2">6.</span> Configuration Files</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-orgde74648" class="outline-3">
-<h3 id="orgde74648"><span class="section-number-3">6.1.</span> init-ai.el - AI/LLM Integration</h3>
+<div id="outline-container-orgc43b1e3" class="outline-3">
+<h3 id="orgc43b1e3"><span class="section-number-3">6.1.</span> init-ai.el - AI/LLM Integration</h3>
 <div class="outline-text-3" id="text-6-1">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">GPTEL (OpenRouter)
+<pre class="src src-elisp"><code><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">GPTEL (OpenRouter)
 </span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> gptel-model <span style="color: #1cc24b;">"qwen/qwen3.6-plus-preview:free"</span><span style="color: #24f6d9;">)</span>
 <span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> gptel-backend
       <span style="color: #c770ff;">(</span>gptel-make-openai <span style="color: #1cc24b;">"OpenRouter"</span>
@@ -2695,15 +2927,15 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
   <span style="color: #30b3ff;">:bind</span> <span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"C-c C-'"</span> . claude-code-ide-menu<span style="color: #c770ff;">)</span>
   <span style="color: #30b3ff;">:config</span>
   <span style="color: #c770ff;">(</span>claude-code-ide-emacs-tools-setup<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org287a6ed" class="outline-3">
-<h3 id="org287a6ed"><span class="section-number-3">6.2.</span> init-openai.el - Aider (DeepSeek)</h3>
+<div id="outline-container-org6728afa" class="outline-3">
+<h3 id="org6728afa"><span class="section-number-3">6.2.</span> init-openai.el - Aider (DeepSeek)</h3>
 <div class="outline-text-3" id="text-6-2">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">use-package</span> aidermacs
+<pre class="src src-elisp"><code><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">use-package</span> aidermacs
   <span style="color: #30b3ff;">:bind</span> <span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"C-c a"</span> . aidermacs-transient-menu<span style="color: #c770ff;">)</span>
   <span style="color: #30b3ff;">:custom</span>
   <span style="color: #c770ff;">(</span>aidermacs-default-model <span style="color: #1cc24b;">"deepseek"</span><span style="color: #c770ff;">)</span>
@@ -2711,15 +2943,15 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
   <span style="color: #c770ff;">(</span>aidermacs-editor-model <span style="color: #1cc24b;">"deepseek/deepseek-chat"</span><span style="color: #c770ff;">)</span>
   <span style="color: #c770ff;">(</span>aidermacs-backend 'vterm<span style="color: #c770ff;">)</span>
   <span style="color: #c770ff;">(</span>aidermacs-watch-files t<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org9fa54f9" class="outline-3">
-<h3 id="org9fa54f9"><span class="section-number-3">6.3.</span> init-lsp.el - Language Server Protocol</h3>
+<div id="outline-container-orgc988516" class="outline-3">
+<h3 id="orgc988516"><span class="section-number-3">6.3.</span> init-lsp.el - Language Server Protocol</h3>
 <div class="outline-text-3" id="text-6-3">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Eglot auto-starts for rust-mode and python-mode
+<pre class="src src-elisp"><code><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Eglot auto-starts for rust-mode and python-mode
 </span><span style="color: #24f6d9;">(</span>add-hook 'rust-mode-hook 'eglot-ensure<span style="color: #24f6d9;">)</span>
 <span style="color: #24f6d9;">(</span>add-hook 'python-mode-hook 'eglot-ensure<span style="color: #24f6d9;">)</span>
 
@@ -2728,15 +2960,15 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
   <span style="color: #30b3ff;">:vc</span> <span style="color: #c770ff;">(</span><span style="color: #30b3ff;">:url</span> <span style="color: #1cc24b;">"https://github.com/copilot-emacs/copilot.el"</span> <span style="color: #30b3ff;">:branch</span> <span style="color: #1cc24b;">"main"</span><span style="color: #c770ff;">)</span>
   <span style="color: #30b3ff;">:config</span>
   <span style="color: #c770ff;">(</span>global-copilot-mode<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgc48cec9" class="outline-3">
-<h3 id="orgc48cec9"><span class="section-number-3">6.4.</span> init-org.el - Org Mode</h3>
+<div id="outline-container-org06f6009" class="outline-3">
+<h3 id="org06f6009"><span class="section-number-3">6.4.</span> init-org.el - Org Mode</h3>
 <div class="outline-text-3" id="text-6-4">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Custom tags
+<pre class="src src-elisp"><code><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Custom tags
 </span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> org-tag-alist '<span style="color: #c770ff;">(</span><span style="color: #e6ff57;">(</span><span style="color: #1cc24b;">"@Research"</span> . ?r<span style="color: #e6ff57;">)</span> <span style="color: #e6ff57;">(</span><span style="color: #1cc24b;">"@Literature"</span> . ?l<span style="color: #e6ff57;">)</span> <span style="color: #e6ff57;">(</span><span style="color: #1cc24b;">"@Book"</span> . ?b<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
 
 <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Babel languages
@@ -2747,15 +2979,15 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">PlantUML
 </span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> org-plantuml-jar-path <span style="color: #1cc24b;">"~/.emacs.d/software/plantuml.jar"</span><span style="color: #24f6d9;">)</span>
 <span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> org-confirm-babel-evaluate nil<span style="color: #24f6d9;">)</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org9f60586" class="outline-3">
-<h3 id="org9f60586"><span class="section-number-3">6.5.</span> init-evil.el - Vim Emulation</h3>
+<div id="outline-container-orga460230" class="outline-3">
+<h3 id="orga460230"><span class="section-number-3">6.5.</span> init-evil.el - Vim Emulation</h3>
 <div class="outline-text-3" id="text-6-5">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Evil escape
+<pre class="src src-elisp"><code><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Evil escape
 </span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq-default</span> evil-escape-delay 0.3<span style="color: #24f6d9;">)</span>
 <span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq-default</span> evil-escape-key-sequence <span style="color: #1cc24b;">"kj"</span><span style="color: #24f6d9;">)</span>
 
@@ -2767,15 +2999,15 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 </span><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Org: [ &#8594; [[]], = &#8594; ==
 </span><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Emacs-lisp: ( &#8594; ( ), ` &#8594; `'
 </span><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Generic: / &#8594; //</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgaad5da5" class="outline-3">
-<h3 id="orgaad5da5"><span class="section-number-3">6.6.</span> init-ui.el - Visual Configuration</h3>
+<div id="outline-container-org2f763e9" class="outline-3">
+<h3 id="org2f763e9"><span class="section-number-3">6.6.</span> init-ui.el - Visual Configuration</h3>
 <div class="outline-text-3" id="text-6-6">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Theme
+<pre class="src src-elisp"><code><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Theme
 </span><span style="color: #24f6d9;">(</span>load-theme 'doom-dracula t<span style="color: #24f6d9;">)</span>
 
 <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Font
@@ -2792,15 +3024,15 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Line numbers
 </span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">when</span> <span style="color: #c770ff;">(</span>fboundp 'display-line-numbers-mode<span style="color: #c770ff;">)</span>
   <span style="color: #c770ff;">(</span>global-display-line-numbers-mode<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgf8006df" class="outline-3">
-<h3 id="orgf8006df"><span class="section-number-3">6.7.</span> init-python.el - Python Development</h3>
+<div id="outline-container-org27f0059" class="outline-3">
+<h3 id="org27f0059"><span class="section-number-3">6.7.</span> init-python.el - Python Development</h3>
 <div class="outline-text-3" id="text-6-7">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Run scripts with nohup
+<pre class="src src-elisp"><code><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Run scripts with nohup
 </span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">lz/running-current-bash-with-nohup</span> <span style="color: #c770ff;">()</span>
   <span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">interactive</span><span style="color: #c770ff;">)</span>
   <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Runs: nohup bash &lt;file&gt; &gt; timestamp-identify---runfile.log &amp;
@@ -2817,15 +3049,15 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 <span style="color: #30b3ff;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">lz/open-tensorboard-in-current-buffer</span> <span style="color: #ffa83d;">()</span>
   <span style="color: #ffa83d;">(</span><span style="color: #c770ff; font-weight: bold;">interactive</span><span style="color: #ffa83d;">)</span>
   <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Open TensorBoard in project directory</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org3d6d629" class="outline-3">
-<h3 id="org3d6d629"><span class="section-number-3">6.8.</span> init-ssh.el - SSH Connections</h3>
+<div id="outline-container-orgf9b19e4" class="outline-3">
+<h3 id="orgf9b19e4"><span class="section-number-3">6.8.</span> init-ssh.el - SSH Connections</h3>
 <div class="outline-text-3" id="text-6-8">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Direct connections
+<pre class="src src-elisp"><code><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Direct connections
 </span>ssh-connect-141    <span style="color: #8ca391;">; </span><span style="color: #8ca391; font-style: italic;">10.21.20.141
 </span>ssh-connect-142    <span style="color: #8ca391;">; </span><span style="color: #8ca391; font-style: italic;">10.21.20.142
 </span>ssh-connect-cs1    <span style="color: #8ca391;">; </span><span style="color: #8ca391; font-style: italic;">cs1.astaple.com
@@ -2835,17 +3067,17 @@ All keybindings below are prefixed with <code>SPC</code> in Evil Normal/Visual m
 <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Via jump host (is1.astaple.com)
 </span>ssh-connect-fromout-cs1-2
 ssh-connect-fromout-gs9-16
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgf3ecc67" class="outline-2">
-<h2 id="orgf3ecc67"><span class="section-number-2">7.</span> Custom Functions</h2>
+<div id="outline-container-org5f3cf81" class="outline-2">
+<h2 id="org5f3cf81"><span class="section-number-2">7.</span> Custom Functions</h2>
 <div class="outline-text-2" id="text-7">
 </div>
-<div id="outline-container-orgaf7ca7b" class="outline-3">
-<h3 id="orgaf7ca7b"><span class="section-number-3">7.1.</span> Core Utilities (init-self-config-function.el)</h3>
+<div id="outline-container-orgd55fbfd" class="outline-3">
+<h3 id="orgd55fbfd"><span class="section-number-3">7.1.</span> Core Utilities (init-self-config-function.el)</h3>
 <div class="outline-text-3" id="text-7-1">
 <table>
 
@@ -2875,8 +3107,8 @@ ssh-connect-fromout-gs9-16
 </table>
 </div>
 </div>
-<div id="outline-container-org295f446" class="outline-3">
-<h3 id="org295f446"><span class="section-number-3">7.2.</span> Python Scripts (init-python.el)</h3>
+<div id="outline-container-orgb86ac3d" class="outline-3">
+<h3 id="orgb86ac3d"><span class="section-number-3">7.2.</span> Python Scripts (init-python.el)</h3>
 <div class="outline-text-3" id="text-7-2">
 <table>
 
@@ -2926,8 +3158,8 @@ ssh-connect-fromout-gs9-16
 </table>
 </div>
 </div>
-<div id="outline-container-org0c00be9" class="outline-3">
-<h3 id="org0c00be9"><span class="section-number-3">7.3.</span> Buffer Management (init-buffer.el)</h3>
+<div id="outline-container-orgb275cd0" class="outline-3">
+<h3 id="orgb275cd0"><span class="section-number-3">7.3.</span> Buffer Management (init-buffer.el)</h3>
 <div class="outline-text-3" id="text-7-3">
 <table>
 
@@ -2952,8 +3184,8 @@ ssh-connect-fromout-gs9-16
 </table>
 </div>
 </div>
-<div id="outline-container-org56a814d" class="outline-3">
-<h3 id="org56a814d"><span class="section-number-3">7.4.</span> WSL Utilities (init-wsl.el)</h3>
+<div id="outline-container-org7b8c498" class="outline-3">
+<h3 id="org7b8c498"><span class="section-number-3">7.4.</span> WSL Utilities (init-wsl.el)</h3>
 <div class="outline-text-3" id="text-7-4">
 <table>
 
@@ -2993,8 +3225,8 @@ ssh-connect-fromout-gs9-16
 </table>
 </div>
 </div>
-<div id="outline-container-org3f25950" class="outline-3">
-<h3 id="org3f25950"><span class="section-number-3">7.5.</span> SSH Connections (init-ssh.el)</h3>
+<div id="outline-container-org0bc515d" class="outline-3">
+<h3 id="org0bc515d"><span class="section-number-3">7.5.</span> SSH Connections (init-ssh.el)</h3>
 <div class="outline-text-3" id="text-7-5">
 <table>
 
@@ -3039,8 +3271,8 @@ ssh-connect-fromout-gs9-16
 </table>
 </div>
 </div>
-<div id="outline-container-orga2a553d" class="outline-3">
-<h3 id="orga2a553d"><span class="section-number-3">7.6.</span> Org Mode (init-org.el)</h3>
+<div id="outline-container-orgef40441" class="outline-3">
+<h3 id="orgef40441"><span class="section-number-3">7.6.</span> Org Mode (init-org.el)</h3>
 <div class="outline-text-3" id="text-7-6">
 <table>
 
@@ -3085,8 +3317,8 @@ ssh-connect-fromout-gs9-16
 </table>
 </div>
 </div>
-<div id="outline-container-org8f89ccc" class="outline-3">
-<h3 id="org8f89ccc"><span class="section-number-3">7.7.</span> Blog Publishing (init-blog.el)</h3>
+<div id="outline-container-org0259072" class="outline-3">
+<h3 id="org0259072"><span class="section-number-3">7.7.</span> Blog Publishing (init-blog.el)</h3>
 <div class="outline-text-3" id="text-7-7">
 <table>
 
@@ -3111,8 +3343,8 @@ ssh-connect-fromout-gs9-16
 </table>
 </div>
 </div>
-<div id="outline-container-org0528b7a" class="outline-3">
-<h3 id="org0528b7a"><span class="section-number-3">7.8.</span> LaTeX (init-latex.el)</h3>
+<div id="outline-container-org36f5221" class="outline-3">
+<h3 id="org36f5221"><span class="section-number-3">7.8.</span> LaTeX (init-latex.el)</h3>
 <div class="outline-text-3" id="text-7-8">
 <table>
 
@@ -3138,12 +3370,12 @@ ssh-connect-fromout-gs9-16
 </div>
 </div>
 </div>
-<div id="outline-container-orga11a7dc" class="outline-2">
-<h2 id="orga11a7dc"><span class="section-number-2">8.</span> Platform-Specific Features</h2>
+<div id="outline-container-org0da2ad9" class="outline-2">
+<h2 id="org0da2ad9"><span class="section-number-2">8.</span> Platform-Specific Features</h2>
 <div class="outline-text-2" id="text-8">
 </div>
-<div id="outline-container-orgea0a6ee" class="outline-3">
-<h3 id="orgea0a6ee"><span class="section-number-3">8.1.</span> Windows (WSL)</h3>
+<div id="outline-container-org0f02d5c" class="outline-3">
+<h3 id="org0f02d5c"><span class="section-number-3">8.1.</span> Windows (WSL)</h3>
 <div class="outline-text-3" id="text-8-1">
 <ul class="org-ul">
 <li>Clipboard integration via <code>clip.exe</code></li>
@@ -3153,8 +3385,8 @@ ssh-connect-fromout-gs9-16
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd1c36dc" class="outline-3">
-<h3 id="orgd1c36dc"><span class="section-number-3">8.2.</span> macOS</h3>
+<div id="outline-container-org8132ccb" class="outline-3">
+<h3 id="org8132ccb"><span class="section-number-3">8.2.</span> macOS</h3>
 <div class="outline-text-3" id="text-8-2">
 <ul class="org-ul">
 <li><code>exec-path-from-shell</code> for PATH management</li>
@@ -3163,8 +3395,8 @@ ssh-connect-fromout-gs9-16
 </ul>
 </div>
 </div>
-<div id="outline-container-org053e9a7" class="outline-3">
-<h3 id="org053e9a7"><span class="section-number-3">8.3.</span> Linux</h3>
+<div id="outline-container-orgd612742" class="outline-3">
+<h3 id="orgd612742"><span class="section-number-3">8.3.</span> Linux</h3>
 <div class="outline-text-3" id="text-8-3">
 <ul class="org-ul">
 <li><code>vterm</code> for fast terminal</li>
@@ -3173,8 +3405,8 @@ ssh-connect-fromout-gs9-16
 </ul>
 </div>
 </div>
-<div id="outline-container-org7e38128" class="outline-3">
-<h3 id="org7e38128"><span class="section-number-3">8.4.</span> WSL (Windows Subsystem for Linux)</h3>
+<div id="outline-container-org4dcfef2" class="outline-3">
+<h3 id="org4dcfef2"><span class="section-number-3">8.4.</span> WSL (Windows Subsystem for Linux)</h3>
 <div class="outline-text-3" id="text-8-4">
 <ul class="org-ul">
 <li>Windows PATH filtering (removes <i>mnt/c</i> paths)</li>
@@ -3185,8 +3417,8 @@ ssh-connect-fromout-gs9-16
 </div>
 </div>
 </div>
-<div id="outline-container-orge6710e5" class="outline-2">
-<h2 id="orge6710e5"><span class="section-number-2">9.</span> Environment Variables</h2>
+<div id="outline-container-org170102b" class="outline-2">
+<h2 id="org170102b"><span class="section-number-2">9.</span> Environment Variables</h2>
 <div class="outline-text-2" id="text-9">
 <table>
 
@@ -3239,12 +3471,12 @@ ssh-connect-fromout-gs9-16
 </table>
 </div>
 </div>
-<div id="outline-container-orgd591ab3" class="outline-2">
-<h2 id="orgd591ab3"><span class="section-number-2">10.</span> Custom Themes &amp; Colors</h2>
+<div id="outline-container-orgb390c9c" class="outline-2">
+<h2 id="orgb390c9c"><span class="section-number-2">10.</span> Custom Themes &amp; Colors</h2>
 <div class="outline-text-2" id="text-10">
 </div>
-<div id="outline-container-org9a820ef" class="outline-3">
-<h3 id="org9a820ef"><span class="section-number-3">10.1.</span> doom-dracula Theme</h3>
+<div id="outline-container-org9f67f14" class="outline-3">
+<h3 id="org9f67f14"><span class="section-number-3">10.1.</span> doom-dracula Theme</h3>
 <div class="outline-text-3" id="text-10-1">
 <p>
 Mode line changes color based on Evil state:
@@ -3257,8 +3489,8 @@ Mode line changes color based on Evil state:
 </ul>
 </div>
 </div>
-<div id="outline-container-org15c5161" class="outline-3">
-<h3 id="org15c5161"><span class="section-number-3">10.2.</span> Font Configuration</h3>
+<div id="outline-container-org412c5b5" class="outline-3">
+<h3 id="org412c5b5"><span class="section-number-3">10.2.</span> Font Configuration</h3>
 <div class="outline-text-3" id="text-10-2">
 <ul class="org-ul">
 <li><b>Default font</b>: Maple Mono 17 (Linux), JetBrainsMono 17 (fallback)</li>
@@ -3268,75 +3500,75 @@ Mode line changes color based on Evil state:
 </div>
 </div>
 </div>
-<div id="outline-container-orgebdd893" class="outline-2">
-<h2 id="orgebdd893"><span class="section-number-2">11.</span> Troubleshooting</h2>
+<div id="outline-container-org674f5ce" class="outline-2">
+<h2 id="org674f5ce"><span class="section-number-2">11.</span> Troubleshooting</h2>
 <div class="outline-text-2" id="text-11">
 </div>
-<div id="outline-container-org68fe019" class="outline-3">
-<h3 id="org68fe019"><span class="section-number-3">11.1.</span> Package Installation Fails</h3>
+<div id="outline-container-org35d7955" class="outline-3">
+<h3 id="org35d7955"><span class="section-number-3">11.1.</span> Package Installation Fails</h3>
 <div class="outline-text-3" id="text-11-1">
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Refresh package archives
+<pre class="src src-bash"><code><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Refresh package archives
 </span>M-x package-refresh-contents RET
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org96f4d04" class="outline-3">
-<h3 id="org96f4d04"><span class="section-number-3">11.2.</span> LSP Not Working</h3>
+<div id="outline-container-org7e03761" class="outline-3">
+<h3 id="org7e03761"><span class="section-number-3">11.2.</span> LSP Not Working</h3>
 <div class="outline-text-3" id="text-11-2">
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Install pyright
+<pre class="src src-bash"><code><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Install pyright
 </span>pip install pyright
 
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Or for Rust
 </span>rustup component add rust-analyzer
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org690a937" class="outline-3">
-<h3 id="org690a937"><span class="section-number-3">11.3.</span> AI Features Not Working</h3>
+<div id="outline-container-org9dfa182" class="outline-3">
+<h3 id="org9dfa182"><span class="section-number-3">11.3.</span> AI Features Not Working</h3>
 <div class="outline-text-3" id="text-11-3">
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Check API key is set
+<pre class="src src-bash"><code><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Check API key is set
 </span><span style="color: #30b3ff;">echo</span> $<span style="color: #62ff94;">OPENROUTER_API_KEY</span>
 
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">If using Aider, check DeepSeek key
 </span><span style="color: #30b3ff;">echo</span> $<span style="color: #62ff94;">DEEPSEEK_API_KEY</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org4add737" class="outline-3">
-<h3 id="org4add737"><span class="section-number-3">11.4.</span> SSH Connection Issues</h3>
+<div id="outline-container-org3b26dc6" class="outline-3">
+<h3 id="org3b26dc6"><span class="section-number-3">11.4.</span> SSH Connection Issues</h3>
 <div class="outline-text-3" id="text-11-4">
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Test SSH connection manually
+<pre class="src src-bash"><code><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Test SSH connection manually
 </span>ssh zi@cs1.astaple.com
 
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Check tramp configuration
 </span>M-x tramp-version RET
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgac923f1" class="outline-3">
-<h3 id="orgac923f1"><span class="section-number-3">11.5.</span> Performance Issues</h3>
+<div id="outline-container-orgbd8dbd0" class="outline-3">
+<h3 id="orgbd8dbd0"><span class="section-number-3">11.5.</span> Performance Issues</h3>
 <div class="outline-text-3" id="text-11-5">
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Increase garbage collection threshold (already configured)
+<pre class="src src-bash"><code><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Increase garbage collection threshold (already configured)
 </span><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">In init.el: (setq gc-cons-threshold (* 50 1024 1024))
 </span>
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Check startup time
 </span>emacs --debug-init
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org9fcf2d7" class="outline-2">
-<h2 id="org9fcf2d7"><span class="section-number-2">12.</span> Acknowledgments</h2>
+<div id="outline-container-org3659e2c" class="outline-2">
+<h2 id="org3659e2c"><span class="section-number-2">12.</span> Acknowledgments</h2>
 <div class="outline-text-2" id="text-12">
 <p>
 This configuration builds upon many excellent Emacs packages and ideas from:
@@ -3352,19 +3584,19 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </ul>
 </div>
 </div>
-<div id="outline-container-org8ffc565" class="outline-2">
-<h2 id="org8ffc565"><span class="section-number-2">13.</span> 中文翻译</h2>
+<div id="outline-container-org902d0c7" class="outline-2">
+<h2 id="org902d0c7"><span class="section-number-2">13.</span> 中文翻译</h2>
 <div class="outline-text-2" id="text-13">
 <p>
 这是一份全面的、模块化的 Emacs 配置，集成了 AI/LLM 集成、Python 开发工具、用于笔记和发布的 Org-mode，以及通过 Evil 模式实现的 Vim 风格编辑。
 </p>
 </div>
-<div id="outline-container-org94f4e91" class="outline-3">
-<h3 id="org94f4e91"><span class="section-number-3">13.1.</span> 安装与设置</h3>
+<div id="outline-container-org4e73e30" class="outline-3">
+<h3 id="org4e73e30"><span class="section-number-3">13.1.</span> 安装与设置</h3>
 <div class="outline-text-3" id="text-13-1">
 </div>
-<div id="outline-container-orge583d3d" class="outline-4">
-<h4 id="orge583d3d"><span class="section-number-4">13.1.1.</span> 前置要求</h4>
+<div id="outline-container-orgf91a1bf" class="outline-4">
+<h4 id="orgf91a1bf"><span class="section-number-4">13.1.1.</span> 前置要求</h4>
 <div class="outline-text-4" id="text-13-1-1">
 <ul class="org-ul">
 <li><b>Emacs</b> 27+ (推荐)</li>
@@ -3376,11 +3608,11 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </ul>
 </div>
 </div>
-<div id="outline-container-org86fc5a6" class="outline-4">
-<h4 id="org86fc5a6"><span class="section-number-4">13.1.2.</span> 安装</h4>
+<div id="outline-container-org83426b3" class="outline-4">
+<h4 id="org83426b3"><span class="section-number-4">13.1.2.</span> 安装</h4>
 <div class="outline-text-4" id="text-13-1-2">
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#20811;&#38534;&#37197;&#32622;
+<pre class="src src-bash"><code><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#20811;&#38534;&#37197;&#32622;
 </span>git clone https://github.com/ziLiang3845/.emacs.d.git ~/.emacs.d
 
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#23433;&#35013;&#25152;&#38656;&#22806;&#37096;&#24037;&#20855;
@@ -3393,12 +3625,12 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#21551;&#21160; Emacs
 </span>emacs
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgd63c2ed" class="outline-4">
-<h4 id="orgd63c2ed"><span class="section-number-4">13.1.3.</span> 首次设置</h4>
+<div id="outline-container-orgbffb936" class="outline-4">
+<h4 id="orgbffb936"><span class="section-number-4">13.1.3.</span> 首次设置</h4>
 <div class="outline-text-4" id="text-13-1-3">
 <ol class="org-ol">
 <li>启动 Emacs - 包将会自动安装</li>
@@ -3407,15 +3639,15 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </ol>
 </div>
 </div>
-<div id="outline-container-orgc5df289" class="outline-4">
-<h4 id="orgc5df289"><span class="section-number-4">13.1.4.</span> 设置脚本 (doc/)</h4>
+<div id="outline-container-org044ae06" class="outline-4">
+<h4 id="org044ae06"><span class="section-number-4">13.1.4.</span> 设置脚本 (doc/)</h4>
 <div class="outline-text-4" id="text-13-1-4">
 <p>
 <code>doc/</code> 目录包含用于自动化安装系统依赖的 shell 脚本。在首次启动 Emacs 之前按顺序运行这些脚本。
 </p>
 </div>
 <ol class="org-ol">
-<li><a id="orge879adc"></a>Ubuntu/Debian 设置脚本<br>
+<li><a id="orgb4b57d5"></a>Ubuntu/Debian 设置脚本<br>
 <div class="outline-text-5" id="text-13-1-4-1">
 <table>
 
@@ -3470,10 +3702,10 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </li>
-<li><a id="org4882b09"></a>推荐的安装顺序<br>
+<li><a id="orgdd6eb87"></a>推荐的安装顺序<br>
 <div class="outline-text-5" id="text-13-1-4-2">
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #30b3ff;">cd</span> ~/.emacs.d/doc/
+<pre class="src src-bash"><code><span style="color: #30b3ff;">cd</span> ~/.emacs.d/doc/
 
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">1. &#23433;&#35013;&#31995;&#32479;&#21253; (Ubuntu/Debian)
 </span>sudo bash 2.run_ubuntu_shell_sudo.sh
@@ -3492,11 +3724,11 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">6. Git &#37197;&#32622;
 </span>bash 6.initial_setup.sh
-</pre>
+</code></pre>
 </div>
 </div>
 </li>
-<li><a id="org0b19766"></a>Arch Linux<br>
+<li><a id="orgeb85c0d"></a>Arch Linux<br>
 <div class="outline-text-5" id="text-13-1-4-3">
 <table>
 
@@ -3526,7 +3758,7 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </li>
-<li><a id="orge7b8ac2"></a>其他设置文件<br>
+<li><a id="org548adef"></a>其他设置文件<br>
 <div class="outline-text-5" id="text-13-1-4-4">
 <table>
 
@@ -3579,10 +3811,10 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </ol>
 </div>
 </div>
-<div id="outline-container-org4e7a7a2" class="outline-3">
-<h3 id="org4e7a7a2"><span class="section-number-3">13.2.</span> 项目结构</h3>
+<div id="outline-container-org6dc9f63" class="outline-3">
+<h3 id="org6dc9f63"><span class="section-number-3">13.2.</span> 项目结构</h3>
 <div class="outline-text-3" id="text-13-2">
-<pre class="example" id="orga4bfde0">
+<pre class="example" id="org5b0ad6a">
 .emacs.d/
 ├── init.el                    # 主入口点
 ├── lisp/
@@ -3595,8 +3827,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 └── feeds/                    # RSS 订阅配置 (elfeed)
 </pre>
 </div>
-<div id="outline-container-orge1b7c7c" class="outline-4">
-<h4 id="orge1b7c7c"><span class="section-number-4">13.2.1.</span> 模块加载顺序 (init.el)</h4>
+<div id="outline-container-orge77a6a1" class="outline-4">
+<h4 id="orge77a6a1"><span class="section-number-4">13.2.1.</span> 模块加载顺序 (init.el)</h4>
 <div class="outline-text-4" id="text-13-2-1">
 <ul class="org-ul">
 <li>init-self-config-function  → 平台检测，核心工具</li>
@@ -3642,8 +3874,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </div>
 </div>
 </div>
-<div id="outline-container-orgfddee8c" class="outline-3">
-<h3 id="orgfddee8c"><span class="section-number-3">13.3.</span> 核心功能概览</h3>
+<div id="outline-container-org6a3f7dc" class="outline-3">
+<h3 id="org6a3f7dc"><span class="section-number-3">13.3.</span> 核心功能概览</h3>
 <div class="outline-text-3" id="text-13-3">
 <table>
 
@@ -3713,12 +3945,12 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-org2d77e1b" class="outline-3">
-<h3 id="org2d77e1b"><span class="section-number-3">13.4.</span> 快捷键参考</h3>
+<div id="outline-container-orgdcaab48" class="outline-3">
+<h3 id="orgdcaab48"><span class="section-number-3">13.4.</span> 快捷键参考</h3>
 <div class="outline-text-3" id="text-13-4">
 </div>
-<div id="outline-container-orgf061300" class="outline-4">
-<h4 id="orgf061300"><span class="section-number-4">13.4.1.</span> 全局快捷键</h4>
+<div id="outline-container-org6d77e3a" class="outline-4">
+<h4 id="org6d77e3a"><span class="section-number-4">13.4.1.</span> 全局快捷键</h4>
 <div class="outline-text-4" id="text-13-4-1">
 <table>
 
@@ -3843,15 +4075,15 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-org7525b91" class="outline-4">
-<h4 id="org7525b91"><span class="section-number-4">13.4.2.</span> Evil 模式 Leader 键 (SPC)</h4>
+<div id="outline-container-orge83c9dd" class="outline-4">
+<h4 id="orge83c9dd"><span class="section-number-4">13.4.2.</span> Evil 模式 Leader 键 (SPC)</h4>
 <div class="outline-text-4" id="text-13-4-2">
 <p>
 以下所有快捷键在 Evil Normal/Visual 模式下以 <code>SPC</code> 为前缀。
 </p>
 </div>
 <ol class="org-ol">
-<li><a id="orga3f4f11"></a>文件和缓冲区管理<br>
+<li><a id="org3f6d770"></a>文件和缓冲区管理<br>
 <div class="outline-text-5" id="text-13-4-2-1">
 <table>
 
@@ -3922,7 +4154,7 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </li>
-<li><a id="org694d3d1"></a>窗口管理<br>
+<li><a id="org1d23c2c"></a>窗口管理<br>
 <div class="outline-text-5" id="text-13-4-2-2">
 <table>
 
@@ -3987,7 +4219,7 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </li>
-<li><a id="orgb5a325d"></a>帮助和文档<br>
+<li><a id="orgaef7c97"></a>帮助和文档<br>
 <div class="outline-text-5" id="text-13-4-2-3">
 <table>
 
@@ -4034,7 +4266,7 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </li>
-<li><a id="orgc932def"></a>代码导航和编辑<br>
+<li><a id="org01c9ce7"></a>代码导航和编辑<br>
 <div class="outline-text-5" id="text-13-4-2-4">
 <table>
 
@@ -4099,7 +4331,7 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </li>
-<li><a id="orgd06c8b3"></a>Citre 代码导航<br>
+<li><a id="orge912054"></a>Citre 代码导航<br>
 <div class="outline-text-5" id="text-13-4-2-5">
 <table>
 
@@ -4146,7 +4378,7 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </li>
-<li><a id="org4988c12"></a>Anaconda 模式 (Python)<br>
+<li><a id="orgd06307e"></a>Anaconda 模式 (Python)<br>
 <div class="outline-text-5" id="text-13-4-2-6">
 <table>
 
@@ -4205,7 +4437,7 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </li>
-<li><a id="orgeb860df"></a>Python 脚本 (F5 / nohup)<br>
+<li><a id="org6c45f20"></a>Python 脚本 (F5 / nohup)<br>
 <div class="outline-text-5" id="text-13-4-2-7">
 <table>
 
@@ -4258,7 +4490,7 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </li>
-<li><a id="org280fb6e"></a>SSH 连接<br>
+<li><a id="org6a77e79"></a>SSH 连接<br>
 <div class="outline-text-5" id="text-13-4-2-8">
 <table>
 
@@ -4323,7 +4555,7 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </li>
-<li><a id="org07be761"></a>剪贴板和 WSL<br>
+<li><a id="org4f81469"></a>剪贴板和 WSL<br>
 <div class="outline-text-5" id="text-13-4-2-9">
 <table>
 
@@ -4364,7 +4596,7 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </li>
-<li><a id="orgf583844"></a>Shell<br>
+<li><a id="org58b2771"></a>Shell<br>
 <div class="outline-text-5" id="text-13-4-2-10">
 <table>
 
@@ -4399,7 +4631,7 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </li>
-<li><a id="org0f710e8"></a>英文和拼写<br>
+<li><a id="org1fdb2fc"></a>英文和拼写<br>
 <div class="outline-text-5" id="text-13-4-2-11">
 <table>
 
@@ -4446,7 +4678,7 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </li>
-<li><a id="org11909bd"></a>Org 模式<br>
+<li><a id="orgb56cfd9"></a>Org 模式<br>
 <div class="outline-text-5" id="text-13-4-2-12">
 <table>
 
@@ -4505,7 +4737,7 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </li>
-<li><a id="orga3140c9"></a>隐藏/显示代码<br>
+<li><a id="orgb42ca79"></a>隐藏/显示代码<br>
 <div class="outline-text-5" id="text-13-4-2-13">
 <table>
 
@@ -4534,7 +4766,7 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </li>
-<li><a id="org657a3ae"></a>集合<br>
+<li><a id="org50525f1"></a>集合<br>
 <div class="outline-text-5" id="text-13-4-2-14">
 <table>
 
@@ -4565,8 +4797,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </li>
 </ol>
 </div>
-<div id="outline-container-org60ad818" class="outline-4">
-<h4 id="org60ad818"><span class="section-number-4">13.4.3.</span> Evil 状态导航</h4>
+<div id="outline-container-org32f91f8" class="outline-4">
+<h4 id="org32f91f8"><span class="section-number-4">13.4.3.</span> Evil 状态导航</h4>
 <div class="outline-text-4" id="text-13-4-3">
 <table>
 
@@ -4625,8 +4857,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-org1e897fa" class="outline-4">
-<h4 id="org1e897fa"><span class="section-number-4">13.4.4.</span> Evil 转义</h4>
+<div id="outline-container-org0caeb35" class="outline-4">
+<h4 id="org0caeb35"><span class="section-number-4">13.4.4.</span> Evil 转义</h4>
 <div class="outline-text-4" id="text-13-4-4">
 <table>
 
@@ -4655,8 +4887,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-org89eeab5" class="outline-4">
-<h4 id="org89eeab5"><span class="section-number-4">13.4.5.</span> 窗口导航 (winum)</h4>
+<div id="outline-container-org9893ae5" class="outline-4">
+<h4 id="org9893ae5"><span class="section-number-4">13.4.5.</span> 窗口导航 (winum)</h4>
 <div class="outline-text-4" id="text-13-4-5">
 <table>
 
@@ -4733,8 +4965,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-orgd636307" class="outline-4">
-<h4 id="orgd636307"><span class="section-number-4">13.4.6.</span> Ivy/Counsel 搜索</h4>
+<div id="outline-container-orgb5f99c4" class="outline-4">
+<h4 id="orgb5f99c4"><span class="section-number-4">13.4.6.</span> Ivy/Counsel 搜索</h4>
 <div class="outline-text-4" id="text-13-4-6">
 <table>
 
@@ -4811,8 +5043,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-orgeaf5173" class="outline-4">
-<h4 id="orgeaf5173"><span class="section-number-4">13.4.7.</span> Org 模式快捷键</h4>
+<div id="outline-container-org5bd5325" class="outline-4">
+<h4 id="org5bd5325"><span class="section-number-4">13.4.7.</span> Org 模式快捷键</h4>
 <div class="outline-text-4" id="text-13-4-7">
 <table>
 
@@ -4859,8 +5091,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-orgb061fce" class="outline-4">
-<h4 id="orgb061fce"><span class="section-number-4">13.4.8.</span> Python 开发</h4>
+<div id="outline-container-org10588d4" class="outline-4">
+<h4 id="org10588d4"><span class="section-number-4">13.4.8.</span> Python 开发</h4>
 <div class="outline-text-4" id="text-13-4-8">
 <table>
 
@@ -4889,8 +5121,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-orgafb29a6" class="outline-4">
-<h4 id="orgafb29a6"><span class="section-number-4">13.4.9.</span> Citre 代码导航</h4>
+<div id="outline-container-orgc3a31e7" class="outline-4">
+<h4 id="orgc3a31e7"><span class="section-number-4">13.4.9.</span> Citre 代码导航</h4>
 <div class="outline-text-4" id="text-13-4-9">
 <table>
 
@@ -4937,8 +5169,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-orga2fdbfd" class="outline-4">
-<h4 id="orga2fdbfd"><span class="section-number-4">13.4.10.</span> AI/LLM 快捷键</h4>
+<div id="outline-container-orgf1765cc" class="outline-4">
+<h4 id="orgf1765cc"><span class="section-number-4">13.4.10.</span> AI/LLM 快捷键</h4>
 <div class="outline-text-4" id="text-13-4-10">
 <table>
 
@@ -4973,8 +5205,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-org6485623" class="outline-4">
-<h4 id="org6485623"><span class="section-number-4">13.4.11.</span> UI 缩放</h4>
+<div id="outline-container-org9f7dba2" class="outline-4">
+<h4 id="org9f7dba2"><span class="section-number-4">13.4.11.</span> UI 缩放</h4>
 <div class="outline-text-4" id="text-13-4-11">
 <table>
 
@@ -5027,8 +5259,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-org10a205f" class="outline-4">
-<h4 id="org10a205f"><span class="section-number-4">13.4.12.</span> Flymake 诊断</h4>
+<div id="outline-container-org3984993" class="outline-4">
+<h4 id="org3984993"><span class="section-number-4">13.4.12.</span> Flymake 诊断</h4>
 <div class="outline-text-4" id="text-13-4-12">
 <table>
 
@@ -5070,12 +5302,12 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </div>
 </div>
 </div>
-<div id="outline-container-orgd260da4" class="outline-3">
-<h3 id="orgd260da4"><span class="section-number-3">13.5.</span> 包列表</h3>
+<div id="outline-container-org950c574" class="outline-3">
+<h3 id="org950c574"><span class="section-number-3">13.5.</span> 包列表</h3>
 <div class="outline-text-3" id="text-13-5">
 </div>
-<div id="outline-container-orge4e8594" class="outline-4">
-<h4 id="orge4e8594"><span class="section-number-4">13.5.1.</span> 核心基础设施</h4>
+<div id="outline-container-org758ffa5" class="outline-4">
+<h4 id="org758ffa5"><span class="section-number-4">13.5.1.</span> 核心基础设施</h4>
 <div class="outline-text-4" id="text-13-5-1">
 <table>
 
@@ -5105,8 +5337,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-org589d7bc" class="outline-4">
-<h4 id="org589d7bc"><span class="section-number-4">13.5.2.</span> Vim 模拟 (Evil)</h4>
+<div id="outline-container-org0d39708" class="outline-4">
+<h4 id="org0d39708"><span class="section-number-4">13.5.2.</span> Vim 模拟 (Evil)</h4>
 <div class="outline-text-4" id="text-13-5-2">
 <table>
 
@@ -5161,8 +5393,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-orgaee06a3" class="outline-4">
-<h4 id="orgaee06a3"><span class="section-number-4">13.5.3.</span> UI 和主题</h4>
+<div id="outline-container-org0a3aad4" class="outline-4">
+<h4 id="org0a3aad4"><span class="section-number-4">13.5.3.</span> UI 和主题</h4>
 <div class="outline-text-4" id="text-13-5-3">
 <table>
 
@@ -5247,8 +5479,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-org1906ab8" class="outline-4">
-<h4 id="org1906ab8"><span class="section-number-4">13.5.4.</span> Python 开发</h4>
+<div id="outline-container-orga1b1e83" class="outline-4">
+<h4 id="orga1b1e83"><span class="section-number-4">13.5.4.</span> Python 开发</h4>
 <div class="outline-text-4" id="text-13-5-4">
 <table>
 
@@ -5298,8 +5530,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-org562059e" class="outline-4">
-<h4 id="org562059e"><span class="section-number-4">13.5.5.</span> 语言服务器协议</h4>
+<div id="outline-container-org1a91c83" class="outline-4">
+<h4 id="org1a91c83"><span class="section-number-4">13.5.5.</span> 语言服务器协议</h4>
 <div class="outline-text-4" id="text-13-5-5">
 <table>
 
@@ -5334,8 +5566,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-org6519e4c" class="outline-4">
-<h4 id="org6519e4c"><span class="section-number-4">13.5.6.</span> 代码导航</h4>
+<div id="outline-container-orge51dc9c" class="outline-4">
+<h4 id="orge51dc9c"><span class="section-number-4">13.5.6.</span> 代码导航</h4>
 <div class="outline-text-4" id="text-13-5-6">
 <table>
 
@@ -5375,8 +5607,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-org2e9690f" class="outline-4">
-<h4 id="org2e9690f"><span class="section-number-4">13.5.7.</span> Org Mode</h4>
+<div id="outline-container-org4107f0e" class="outline-4">
+<h4 id="org4107f0e"><span class="section-number-4">13.5.7.</span> Org Mode</h4>
 <div class="outline-text-4" id="text-13-5-7">
 <table>
 
@@ -5436,8 +5668,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-org9df0c7a" class="outline-4">
-<h4 id="org9df0c7a"><span class="section-number-4">13.5.8.</span> 代码片段和模板</h4>
+<div id="outline-container-orgc72fa28" class="outline-4">
+<h4 id="orgc72fa28"><span class="section-number-4">13.5.8.</span> 代码片段和模板</h4>
 <div class="outline-text-4" id="text-13-5-8">
 <table>
 
@@ -5472,8 +5704,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-orge47e4ad" class="outline-4">
-<h4 id="orge47e4ad"><span class="section-number-4">13.5.9.</span> AI/LLM 集成</h4>
+<div id="outline-container-org5458451" class="outline-4">
+<h4 id="org5458451"><span class="section-number-4">13.5.9.</span> AI/LLM 集成</h4>
 <div class="outline-text-4" id="text-13-5-9">
 <table>
 
@@ -5508,8 +5740,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-orgebff9ad" class="outline-4">
-<h4 id="orgebff9ad"><span class="section-number-4">13.5.10.</span> Shell 和终端</h4>
+<div id="outline-container-orgc3e78ce" class="outline-4">
+<h4 id="orgc3e78ce"><span class="section-number-4">13.5.10.</span> Shell 和终端</h4>
 <div class="outline-text-4" id="text-13-5-10">
 <table>
 
@@ -5549,8 +5781,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-orgfd13eff" class="outline-4">
-<h4 id="orgfd13eff"><span class="section-number-4">13.5.11.</span> 版本控制</h4>
+<div id="outline-container-org60dcd60" class="outline-4">
+<h4 id="org60dcd60"><span class="section-number-4">13.5.11.</span> 版本控制</h4>
 <div class="outline-text-4" id="text-13-5-11">
 <table>
 
@@ -5580,8 +5812,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-org659b96f" class="outline-4">
-<h4 id="org659b96f"><span class="section-number-4">13.5.12.</span> Web 开发</h4>
+<div id="outline-container-orgf17be28" class="outline-4">
+<h4 id="orgf17be28"><span class="section-number-4">13.5.12.</span> Web 开发</h4>
 <div class="outline-text-4" id="text-13-5-12">
 <table>
 
@@ -5621,8 +5853,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-org3635402" class="outline-4">
-<h4 id="org3635402"><span class="section-number-4">13.5.13.</span> 其他语言</h4>
+<div id="outline-container-orga9d423f" class="outline-4">
+<h4 id="orga9d423f"><span class="section-number-4">13.5.13.</span> 其他语言</h4>
 <div class="outline-text-4" id="text-13-5-13">
 <table>
 
@@ -5682,8 +5914,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-org3fcdc65" class="outline-4">
-<h4 id="org3fcdc65"><span class="section-number-4">13.5.14.</span> 生产力工具</h4>
+<div id="outline-container-org0b00025" class="outline-4">
+<h4 id="org0b00025"><span class="section-number-4">13.5.14.</span> 生产力工具</h4>
 <div class="outline-text-4" id="text-13-5-14">
 <table>
 
@@ -5758,8 +5990,8 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </table>
 </div>
 </div>
-<div id="outline-container-org450d5ff" class="outline-4">
-<h4 id="org450d5ff"><span class="section-number-4">13.5.15.</span> 实用工具</h4>
+<div id="outline-container-org23ab203" class="outline-4">
+<h4 id="org23ab203"><span class="section-number-4">13.5.15.</span> 实用工具</h4>
 <div class="outline-text-4" id="text-13-5-15">
 <table>
 
@@ -5815,15 +6047,15 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </div>
 </div>
 </div>
-<div id="outline-container-org43d893a" class="outline-3">
-<h3 id="org43d893a"><span class="section-number-3">13.6.</span> 配置文件</h3>
+<div id="outline-container-orgee5f940" class="outline-3">
+<h3 id="orgee5f940"><span class="section-number-3">13.6.</span> 配置文件</h3>
 <div class="outline-text-3" id="text-13-6">
 </div>
-<div id="outline-container-org6ea1e5a" class="outline-4">
-<h4 id="org6ea1e5a"><span class="section-number-4">13.6.1.</span> init-ai.el - AI/LLM 集成</h4>
+<div id="outline-container-orga3ba2e1" class="outline-4">
+<h4 id="orga3ba2e1"><span class="section-number-4">13.6.1.</span> init-ai.el - AI/LLM 集成</h4>
 <div class="outline-text-4" id="text-13-6-1">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">GPTEL (OpenRouter)
+<pre class="src src-elisp"><code><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">GPTEL (OpenRouter)
 </span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> gptel-model <span style="color: #1cc24b;">"qwen/qwen3.6-plus-preview:free"</span><span style="color: #24f6d9;">)</span>
 <span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> gptel-backend
       <span style="color: #c770ff;">(</span>gptel-make-openai <span style="color: #1cc24b;">"OpenRouter"</span>
@@ -5838,15 +6070,15 @@ This configuration builds upon many excellent Emacs packages and ideas from:
   <span style="color: #30b3ff;">:bind</span> <span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"C-c C-'"</span> . claude-code-ide-menu<span style="color: #c770ff;">)</span>
   <span style="color: #30b3ff;">:config</span>
   <span style="color: #c770ff;">(</span>claude-code-ide-emacs-tools-setup<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org5c4b189" class="outline-4">
-<h4 id="org5c4b189"><span class="section-number-4">13.6.2.</span> init-openai.el - Aider (DeepSeek)</h4>
+<div id="outline-container-orgc99e9b2" class="outline-4">
+<h4 id="orgc99e9b2"><span class="section-number-4">13.6.2.</span> init-openai.el - Aider (DeepSeek)</h4>
 <div class="outline-text-4" id="text-13-6-2">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">use-package</span> aidermacs
+<pre class="src src-elisp"><code><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">use-package</span> aidermacs
   <span style="color: #30b3ff;">:bind</span> <span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"C-c a"</span> . aidermacs-transient-menu<span style="color: #c770ff;">)</span>
   <span style="color: #30b3ff;">:custom</span>
   <span style="color: #c770ff;">(</span>aidermacs-default-model <span style="color: #1cc24b;">"deepseek"</span><span style="color: #c770ff;">)</span>
@@ -5854,15 +6086,15 @@ This configuration builds upon many excellent Emacs packages and ideas from:
   <span style="color: #c770ff;">(</span>aidermacs-editor-model <span style="color: #1cc24b;">"deepseek/deepseek-chat"</span><span style="color: #c770ff;">)</span>
   <span style="color: #c770ff;">(</span>aidermacs-backend 'vterm<span style="color: #c770ff;">)</span>
   <span style="color: #c770ff;">(</span>aidermacs-watch-files t<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org42f8933" class="outline-4">
-<h4 id="org42f8933"><span class="section-number-4">13.6.3.</span> init-lsp.el - 语言服务器协议</h4>
+<div id="outline-container-org04b5a66" class="outline-4">
+<h4 id="org04b5a66"><span class="section-number-4">13.6.3.</span> init-lsp.el - 语言服务器协议</h4>
 <div class="outline-text-4" id="text-13-6-3">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Eglot &#33258;&#21160;&#20026; rust-mode &#21644; python-mode &#21551;&#21160;
+<pre class="src src-elisp"><code><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Eglot &#33258;&#21160;&#20026; rust-mode &#21644; python-mode &#21551;&#21160;
 </span><span style="color: #24f6d9;">(</span>add-hook 'rust-mode-hook 'eglot-ensure<span style="color: #24f6d9;">)</span>
 <span style="color: #24f6d9;">(</span>add-hook 'python-mode-hook 'eglot-ensure<span style="color: #24f6d9;">)</span>
 
@@ -5871,15 +6103,15 @@ This configuration builds upon many excellent Emacs packages and ideas from:
   <span style="color: #30b3ff;">:vc</span> <span style="color: #c770ff;">(</span><span style="color: #30b3ff;">:url</span> <span style="color: #1cc24b;">"https://github.com/copilot-emacs/copilot.el"</span> <span style="color: #30b3ff;">:branch</span> <span style="color: #1cc24b;">"main"</span><span style="color: #c770ff;">)</span>
   <span style="color: #30b3ff;">:config</span>
   <span style="color: #c770ff;">(</span>global-copilot-mode<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgcc00ceb" class="outline-4">
-<h4 id="orgcc00ceb"><span class="section-number-4">13.6.4.</span> init-org.el - Org Mode</h4>
+<div id="outline-container-org6f272ff" class="outline-4">
+<h4 id="org6f272ff"><span class="section-number-4">13.6.4.</span> init-org.el - Org Mode</h4>
 <div class="outline-text-4" id="text-13-6-4">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">&#33258;&#23450;&#20041;&#26631;&#31614;
+<pre class="src src-elisp"><code><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">&#33258;&#23450;&#20041;&#26631;&#31614;
 </span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> org-tag-alist '<span style="color: #c770ff;">(</span><span style="color: #e6ff57;">(</span><span style="color: #1cc24b;">"@Research"</span> . ?r<span style="color: #e6ff57;">)</span> <span style="color: #e6ff57;">(</span><span style="color: #1cc24b;">"@Literature"</span> . ?l<span style="color: #e6ff57;">)</span> <span style="color: #e6ff57;">(</span><span style="color: #1cc24b;">"@Book"</span> . ?b<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
 
 <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Babel &#35821;&#35328;
@@ -5890,15 +6122,15 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">PlantUML
 </span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> org-plantuml-jar-path <span style="color: #1cc24b;">"~/.emacs.d/software/plantuml.jar"</span><span style="color: #24f6d9;">)</span>
 <span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> org-confirm-babel-evaluate nil<span style="color: #24f6d9;">)</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgdc1283f" class="outline-4">
-<h4 id="orgdc1283f"><span class="section-number-4">13.6.5.</span> init-evil.el - Vim 模拟</h4>
+<div id="outline-container-orga6bc8cd" class="outline-4">
+<h4 id="orga6bc8cd"><span class="section-number-4">13.6.5.</span> init-evil.el - Vim 模拟</h4>
 <div class="outline-text-4" id="text-13-6-5">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Evil &#36716;&#20041;
+<pre class="src src-elisp"><code><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Evil &#36716;&#20041;
 </span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq-default</span> evil-escape-delay 0.3<span style="color: #24f6d9;">)</span>
 <span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq-default</span> evil-escape-key-sequence <span style="color: #1cc24b;">"kj"</span><span style="color: #24f6d9;">)</span>
 
@@ -5910,15 +6142,15 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 </span><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Org: [ &#8594; [[]], = &#8594; ==
 </span><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">Emacs-lisp: ( &#8594; ( ), ` &#8594; `'
 </span><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">&#36890;&#29992;: / &#8594; //</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org65c11bc" class="outline-4">
-<h4 id="org65c11bc"><span class="section-number-4">13.6.6.</span> init-ui.el - 视觉配置</h4>
+<div id="outline-container-org32fa66b" class="outline-4">
+<h4 id="org32fa66b"><span class="section-number-4">13.6.6.</span> init-ui.el - 视觉配置</h4>
 <div class="outline-text-4" id="text-13-6-6">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">&#20027;&#39064;
+<pre class="src src-elisp"><code><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">&#20027;&#39064;
 </span><span style="color: #24f6d9;">(</span>load-theme 'doom-dracula t<span style="color: #24f6d9;">)</span>
 
 <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">&#23383;&#20307;
@@ -5935,15 +6167,15 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">&#34892;&#21495;
 </span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">when</span> <span style="color: #c770ff;">(</span>fboundp 'display-line-numbers-mode<span style="color: #c770ff;">)</span>
   <span style="color: #c770ff;">(</span>global-display-line-numbers-mode<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org7104d09" class="outline-4">
-<h4 id="org7104d09"><span class="section-number-4">13.6.7.</span> init-python.el - Python 开发</h4>
+<div id="outline-container-orgc97f0b6" class="outline-4">
+<h4 id="orgc97f0b6"><span class="section-number-4">13.6.7.</span> init-python.el - Python 开发</h4>
 <div class="outline-text-4" id="text-13-6-7">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">&#20351;&#29992; nohup &#36816;&#34892;&#33050;&#26412;
+<pre class="src src-elisp"><code><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">&#20351;&#29992; nohup &#36816;&#34892;&#33050;&#26412;
 </span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">lz/running-current-bash-with-nohup</span> <span style="color: #c770ff;">()</span>
   <span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">interactive</span><span style="color: #c770ff;">)</span>
   <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">&#36816;&#34892;: nohup bash &lt;file&gt; &gt; timestamp-identify---runfile.log &amp;
@@ -5960,15 +6192,15 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 <span style="color: #30b3ff;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">lz/open-tensorboard-in-current-buffer</span> <span style="color: #ffa83d;">()</span>
   <span style="color: #ffa83d;">(</span><span style="color: #c770ff; font-weight: bold;">interactive</span><span style="color: #ffa83d;">)</span>
   <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">&#22312;&#39033;&#30446;&#30446;&#24405;&#20013;&#25171;&#24320; TensorBoard</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org9cd2319" class="outline-4">
-<h4 id="org9cd2319"><span class="section-number-4">13.6.8.</span> init-ssh.el - SSH 连接</h4>
+<div id="outline-container-org9ab00d1" class="outline-4">
+<h4 id="org9ab00d1"><span class="section-number-4">13.6.8.</span> init-ssh.el - SSH 连接</h4>
 <div class="outline-text-4" id="text-13-6-8">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">&#30452;&#25509;&#36830;&#25509;
+<pre class="src src-elisp"><code><span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">&#30452;&#25509;&#36830;&#25509;
 </span>ssh-connect-141    <span style="color: #8ca391;">; </span><span style="color: #8ca391; font-style: italic;">10.21.20.141
 </span>ssh-connect-142    <span style="color: #8ca391;">; </span><span style="color: #8ca391; font-style: italic;">10.21.20.142
 </span>ssh-connect-cs1    <span style="color: #8ca391;">; </span><span style="color: #8ca391; font-style: italic;">cs1.astaple.com
@@ -5978,17 +6210,17 @@ This configuration builds upon many excellent Emacs packages and ideas from:
 <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">&#36890;&#36807;&#36339;&#26495;&#20027;&#26426; (is1.astaple.com)
 </span>ssh-connect-fromout-cs1-2
 ssh-connect-fromout-gs9-16
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org08d8277" class="outline-3">
-<h3 id="org08d8277"><span class="section-number-3">13.7.</span> 自定义函数</h3>
+<div id="outline-container-org8c1b4ca" class="outline-3">
+<h3 id="org8c1b4ca"><span class="section-number-3">13.7.</span> 自定义函数</h3>
 <div class="outline-text-3" id="text-13-7">
 </div>
-<div id="outline-container-org5cf73cc" class="outline-4">
-<h4 id="org5cf73cc"><span class="section-number-4">13.7.1.</span> 核心工具 (init-self-config-function.el)</h4>
+<div id="outline-container-org296b7bd" class="outline-4">
+<h4 id="org296b7bd"><span class="section-number-4">13.7.1.</span> 核心工具 (init-self-config-function.el)</h4>
 <div class="outline-text-4" id="text-13-7-1">
 <table>
 
@@ -6018,8 +6250,8 @@ ssh-connect-fromout-gs9-16
 </table>
 </div>
 </div>
-<div id="outline-container-org469b257" class="outline-4">
-<h4 id="org469b257"><span class="section-number-4">13.7.2.</span> Python 脚本 (init-python.el)</h4>
+<div id="outline-container-org3efed11" class="outline-4">
+<h4 id="org3efed11"><span class="section-number-4">13.7.2.</span> Python 脚本 (init-python.el)</h4>
 <div class="outline-text-4" id="text-13-7-2">
 <table>
 
@@ -6069,8 +6301,8 @@ ssh-connect-fromout-gs9-16
 </table>
 </div>
 </div>
-<div id="outline-container-org508fc17" class="outline-4">
-<h4 id="org508fc17"><span class="section-number-4">13.7.3.</span> 缓冲区管理 (init-buffer.el)</h4>
+<div id="outline-container-org266046d" class="outline-4">
+<h4 id="org266046d"><span class="section-number-4">13.7.3.</span> 缓冲区管理 (init-buffer.el)</h4>
 <div class="outline-text-4" id="text-13-7-3">
 <table>
 
@@ -6095,8 +6327,8 @@ ssh-connect-fromout-gs9-16
 </table>
 </div>
 </div>
-<div id="outline-container-org5f2d4ae" class="outline-4">
-<h4 id="org5f2d4ae"><span class="section-number-4">13.7.4.</span> WSL 工具 (init-wsl.el)</h4>
+<div id="outline-container-org4b78d44" class="outline-4">
+<h4 id="org4b78d44"><span class="section-number-4">13.7.4.</span> WSL 工具 (init-wsl.el)</h4>
 <div class="outline-text-4" id="text-13-7-4">
 <table>
 
@@ -6136,8 +6368,8 @@ ssh-connect-fromout-gs9-16
 </table>
 </div>
 </div>
-<div id="outline-container-org32bab42" class="outline-4">
-<h4 id="org32bab42"><span class="section-number-4">13.7.5.</span> SSH 连接 (init-ssh.el)</h4>
+<div id="outline-container-org08525e9" class="outline-4">
+<h4 id="org08525e9"><span class="section-number-4">13.7.5.</span> SSH 连接 (init-ssh.el)</h4>
 <div class="outline-text-4" id="text-13-7-5">
 <table>
 
@@ -6182,8 +6414,8 @@ ssh-connect-fromout-gs9-16
 </table>
 </div>
 </div>
-<div id="outline-container-org43583eb" class="outline-4">
-<h4 id="org43583eb"><span class="section-number-4">13.7.6.</span> Org 模式 (init-org.el)</h4>
+<div id="outline-container-org24fc649" class="outline-4">
+<h4 id="org24fc649"><span class="section-number-4">13.7.6.</span> Org 模式 (init-org.el)</h4>
 <div class="outline-text-4" id="text-13-7-6">
 <table>
 
@@ -6228,8 +6460,8 @@ ssh-connect-fromout-gs9-16
 </table>
 </div>
 </div>
-<div id="outline-container-org9618465" class="outline-4">
-<h4 id="org9618465"><span class="section-number-4">13.7.7.</span> 博客发布 (init-blog.el)</h4>
+<div id="outline-container-orgddfa3e5" class="outline-4">
+<h4 id="orgddfa3e5"><span class="section-number-4">13.7.7.</span> 博客发布 (init-blog.el)</h4>
 <div class="outline-text-4" id="text-13-7-7">
 <table>
 
@@ -6254,8 +6486,8 @@ ssh-connect-fromout-gs9-16
 </table>
 </div>
 </div>
-<div id="outline-container-org4e6f4f4" class="outline-4">
-<h4 id="org4e6f4f4"><span class="section-number-4">13.7.8.</span> LaTeX (init-latex.el)</h4>
+<div id="outline-container-org933b8dd" class="outline-4">
+<h4 id="org933b8dd"><span class="section-number-4">13.7.8.</span> LaTeX (init-latex.el)</h4>
 <div class="outline-text-4" id="text-13-7-8">
 <table>
 
@@ -6281,12 +6513,12 @@ ssh-connect-fromout-gs9-16
 </div>
 </div>
 </div>
-<div id="outline-container-orgb50a84f" class="outline-3">
-<h3 id="orgb50a84f"><span class="section-number-3">13.8.</span> 平台特定功能</h3>
+<div id="outline-container-org79bd23d" class="outline-3">
+<h3 id="org79bd23d"><span class="section-number-3">13.8.</span> 平台特定功能</h3>
 <div class="outline-text-3" id="text-13-8">
 </div>
-<div id="outline-container-orgeb8ed67" class="outline-4">
-<h4 id="orgeb8ed67"><span class="section-number-4">13.8.1.</span> Windows (WSL)</h4>
+<div id="outline-container-org66eecf7" class="outline-4">
+<h4 id="org66eecf7"><span class="section-number-4">13.8.1.</span> Windows (WSL)</h4>
 <div class="outline-text-4" id="text-13-8-1">
 <ul class="org-ul">
 <li>通过 <code>clip.exe</code> 实现剪贴板集成</li>
@@ -6296,8 +6528,8 @@ ssh-connect-fromout-gs9-16
 </ul>
 </div>
 </div>
-<div id="outline-container-org81356b9" class="outline-4">
-<h4 id="org81356b9"><span class="section-number-4">13.8.2.</span> macOS</h4>
+<div id="outline-container-org782f1a4" class="outline-4">
+<h4 id="org782f1a4"><span class="section-number-4">13.8.2.</span> macOS</h4>
 <div class="outline-text-4" id="text-13-8-2">
 <ul class="org-ul">
 <li><code>exec-path-from-shell</code> 用于 PATH 管理</li>
@@ -6306,8 +6538,8 @@ ssh-connect-fromout-gs9-16
 </ul>
 </div>
 </div>
-<div id="outline-container-org989cb84" class="outline-4">
-<h4 id="org989cb84"><span class="section-number-4">13.8.3.</span> Linux</h4>
+<div id="outline-container-org52e597b" class="outline-4">
+<h4 id="org52e597b"><span class="section-number-4">13.8.3.</span> Linux</h4>
 <div class="outline-text-4" id="text-13-8-3">
 <ul class="org-ul">
 <li><code>vterm</code> 用于快速终端</li>
@@ -6316,8 +6548,8 @@ ssh-connect-fromout-gs9-16
 </ul>
 </div>
 </div>
-<div id="outline-container-orgb09d1f9" class="outline-4">
-<h4 id="orgb09d1f9"><span class="section-number-4">13.8.4.</span> WSL (Windows Subsystem for Linux)</h4>
+<div id="outline-container-orge702887" class="outline-4">
+<h4 id="orge702887"><span class="section-number-4">13.8.4.</span> WSL (Windows Subsystem for Linux)</h4>
 <div class="outline-text-4" id="text-13-8-4">
 <ul class="org-ul">
 <li>Windows PATH 过滤 (移除 <i>mnt/c</i> 路径)</li>
@@ -6328,8 +6560,8 @@ ssh-connect-fromout-gs9-16
 </div>
 </div>
 </div>
-<div id="outline-container-org03c01ff" class="outline-3">
-<h3 id="org03c01ff"><span class="section-number-3">13.9.</span> 环境变量</h3>
+<div id="outline-container-org9468ac0" class="outline-3">
+<h3 id="org9468ac0"><span class="section-number-3">13.9.</span> 环境变量</h3>
 <div class="outline-text-3" id="text-13-9">
 <table>
 
@@ -6382,12 +6614,12 @@ ssh-connect-fromout-gs9-16
 </table>
 </div>
 </div>
-<div id="outline-container-orgcc517d8" class="outline-3">
-<h3 id="orgcc517d8"><span class="section-number-3">13.10.</span> 自定义主题和颜色</h3>
+<div id="outline-container-org1b34fba" class="outline-3">
+<h3 id="org1b34fba"><span class="section-number-3">13.10.</span> 自定义主题和颜色</h3>
 <div class="outline-text-3" id="text-13-10">
 </div>
-<div id="outline-container-orge7c8991" class="outline-4">
-<h4 id="orge7c8991"><span class="section-number-4">13.10.1.</span> doom-dracula 主题</h4>
+<div id="outline-container-orgd0ac9c1" class="outline-4">
+<h4 id="orgd0ac9c1"><span class="section-number-4">13.10.1.</span> doom-dracula 主题</h4>
 <div class="outline-text-4" id="text-13-10-1">
 <p>
 Mode line 根据 Evil 状态改变颜色：
@@ -6400,8 +6632,8 @@ Mode line 根据 Evil 状态改变颜色：
 </ul>
 </div>
 </div>
-<div id="outline-container-org32c874c" class="outline-4">
-<h4 id="org32c874c"><span class="section-number-4">13.10.2.</span> 字体配置</h4>
+<div id="outline-container-orgc6ca9be" class="outline-4">
+<h4 id="orgc6ca9be"><span class="section-number-4">13.10.2.</span> 字体配置</h4>
 <div class="outline-text-4" id="text-13-10-2">
 <ul class="org-ul">
 <li><b>默认字体</b>: Maple Mono 17 (Linux), JetBrainsMono 17 (备用)</li>
@@ -6411,75 +6643,75 @@ Mode line 根据 Evil 状态改变颜色：
 </div>
 </div>
 </div>
-<div id="outline-container-orgfdd453a" class="outline-3">
-<h3 id="orgfdd453a"><span class="section-number-3">13.11.</span> 故障排除</h3>
+<div id="outline-container-org7de405d" class="outline-3">
+<h3 id="org7de405d"><span class="section-number-3">13.11.</span> 故障排除</h3>
 <div class="outline-text-3" id="text-13-11">
 </div>
-<div id="outline-container-org353d56e" class="outline-4">
-<h4 id="org353d56e"><span class="section-number-4">13.11.1.</span> 包安装失败</h4>
+<div id="outline-container-orgb3d8ecf" class="outline-4">
+<h4 id="orgb3d8ecf"><span class="section-number-4">13.11.1.</span> 包安装失败</h4>
 <div class="outline-text-4" id="text-13-11-1">
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#21047;&#26032;&#21253;&#26723;&#26696;
+<pre class="src src-bash"><code><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#21047;&#26032;&#21253;&#26723;&#26696;
 </span>M-x package-refresh-contents RET
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgc5ef59c" class="outline-4">
-<h4 id="orgc5ef59c"><span class="section-number-4">13.11.2.</span> LSP 不工作</h4>
+<div id="outline-container-orgc41056d" class="outline-4">
+<h4 id="orgc41056d"><span class="section-number-4">13.11.2.</span> LSP 不工作</h4>
 <div class="outline-text-4" id="text-13-11-2">
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#23433;&#35013; pyright
+<pre class="src src-bash"><code><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#23433;&#35013; pyright
 </span>pip install pyright
 
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#25110;&#32773;&#23545;&#20110; Rust
 </span>rustup component add rust-analyzer
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org37607e9" class="outline-4">
-<h4 id="org37607e9"><span class="section-number-4">13.11.3.</span> AI 功能不工作</h4>
+<div id="outline-container-org6e5ad89" class="outline-4">
+<h4 id="org6e5ad89"><span class="section-number-4">13.11.3.</span> AI 功能不工作</h4>
 <div class="outline-text-4" id="text-13-11-3">
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#26816;&#26597; API &#23494;&#38053;&#26159;&#21542;&#35774;&#32622;
+<pre class="src src-bash"><code><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#26816;&#26597; API &#23494;&#38053;&#26159;&#21542;&#35774;&#32622;
 </span><span style="color: #30b3ff;">echo</span> $<span style="color: #62ff94;">OPENROUTER_API_KEY</span>
 
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#22914;&#26524;&#20351;&#29992; Aider&#65292;&#26816;&#26597; DeepSeek &#23494;&#38053;
 </span><span style="color: #30b3ff;">echo</span> $<span style="color: #62ff94;">DEEPSEEK_API_KEY</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org33c78f0" class="outline-4">
-<h4 id="org33c78f0"><span class="section-number-4">13.11.4.</span> SSH 连接问题</h4>
+<div id="outline-container-org7a44b4f" class="outline-4">
+<h4 id="org7a44b4f"><span class="section-number-4">13.11.4.</span> SSH 连接问题</h4>
 <div class="outline-text-4" id="text-13-11-4">
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#25163;&#21160;&#27979;&#35797; SSH &#36830;&#25509;
+<pre class="src src-bash"><code><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#25163;&#21160;&#27979;&#35797; SSH &#36830;&#25509;
 </span>ssh zi@cs1.astaple.com
 
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#26816;&#26597; tramp &#37197;&#32622;
 </span>M-x tramp-version RET
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org7d21942" class="outline-4">
-<h4 id="org7d21942"><span class="section-number-4">13.11.5.</span> 性能问题</h4>
+<div id="outline-container-orgd2ca1ba" class="outline-4">
+<h4 id="orgd2ca1ba"><span class="section-number-4">13.11.5.</span> 性能问题</h4>
 <div class="outline-text-4" id="text-13-11-5">
 <div class="org-src-container">
-<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#22686;&#21152;&#22403;&#22334;&#22238;&#25910;&#38408;&#20540; (&#24050;&#37197;&#32622;)
+<pre class="src src-bash"><code><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#22686;&#21152;&#22403;&#22334;&#22238;&#25910;&#38408;&#20540; (&#24050;&#37197;&#32622;)
 </span><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#22312; init.el &#20013;: (setq gc-cons-threshold (* 50 1024 1024))
 </span>
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#26816;&#26597;&#21551;&#21160;&#26102;&#38388;
 </span>emacs --debug-init
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org3d0a6c3" class="outline-3">
-<h3 id="org3d0a6c3"><span class="section-number-3">13.12.</span> 致谢</h3>
+<div id="outline-container-orgd1c2da3" class="outline-3">
+<h3 id="orgd1c2da3"><span class="section-number-3">13.12.</span> 致谢</h3>
 <div class="outline-text-3" id="text-13-12">
 <p>
 此配置基于众多优秀的 Emacs 包和思想构建：
@@ -6498,7 +6730,7 @@ Mode line 根据 Evil 状态改变颜色：
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Apr  2 09:57:55 2026</span> <span class="date">Last modified: 2026-05-10 Sun 16:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Apr  2 09:57:55 2026</span> <span class="date">Last modified: 2026-05-10 Sun 16:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
 </div>
 </body>
 </html>
