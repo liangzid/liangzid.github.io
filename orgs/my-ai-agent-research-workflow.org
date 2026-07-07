@@ -1,0 +1,257 @@
+#+title: 【2026年版】我的AI Agent科研工作流：一个苦涩的教训
+#+date: Wed May 27 17:53:49 2026
+#+author: Zi Liang
+#+email: zi1415926.liang@connect.polyu.hk
+#+latex_class: elegantpaper
+#+filetags: :research:agent:
+
+
+尽管笔者宣称AI frontier research已经在O1（或者说R1）之后事实上撞墙的，但是AI作为一种工具本身的商业化和落地其实是在剧烈提速，以至于不得不再次写一篇文章对之前AI Agent编程的判断进行剧烈调整。
+
+现在甚至可以说：正如一个2022年的NLP专家如果不持续学习完全就不理解LLM一样，Agent领域在2025年与2026年的区别已经如同鸿沟了。
+
+之前的文章见： [[file:HowtoUseEmacsin2026.org][How-to-use-emacs-in-2026]]
+
+但是时代又变了。
+
+* 苦涩的教训（The Bitter Lesson）
+
+Richard Sutton在2019年提出的苦涩的教训（Richard Sutton, 2024年图灵奖得主），其核心思想非常简洁：
+
+#+begin_quote
+In AI, general approaches that scale with available computational power tend to outperform ones based on domain-specific understanding because they are better at taking advantage of the falling cost of computation over time.
+#+end_quote
+
+翻译一下：在AI中，能够随着算力增长而扩展的通用方法，总是碾压那些依赖领域知识、试图告诉AI "该怎么做" 的方法。
+
+具体到每种思想的胜负：
+
+| Traps（陷阱） | Truth（真相） |
+| Rule-based | Learning-based |
+| Human experience is essential | Human experience is suboptimal |
+| Tell AI how to do | Give anything an AI required, let it determine how to do |
+
+说白了就是：不要教AI怎么做，给它资源让它自己学。
+
+但是这个教训是否已经渗透到 =我们用AI做科研= 的方式中？我认为没有。绝大多数人仍然在用旧时代的思维去用AI。
+
+* 我的苦涩教训：把Agent当人看
+
+我在AI Agent科研中获得的教训，可以归结为两条核心原则：
+
+1. 做AI Agent研究时，把它当成 =自然科学= ，而非 =工程科学= 。即：不要试图去"设计"Agent的行为，而是去"观察"和"理解"Agent的行为。
+2. 使用LLM或Agent时，把它当成 =一个人= ，而非一台机器或程序。
+
+第一条原则意味着：prompt engineering hacking是徒劳的。你无法通过精心设计prompt来获得一个稳定、可控的Agent行为，就像你无法通过精心编排实验条件来改变物理定律一样。Context management is all you need。
+
+第二条原则则更为深刻。把Agent当成人之后，你会发现很多困惑自然消解：
++ 让一个人记忆citation是反人类的——所以对LLM也一样。Citation Hallucination是完全正常的。
++ 一个人如果9个月没读论文，你跟他讨论literature review，他当然会胡编——Agent也一样，所以web search是vital的。
++ 你不总是对的，你的判断也一样。所以要允许Agent =disagree when it disagrees=。
+
+几乎所有的不良体验，都来自于违反这两条核心原则。
+
+* 我的科研工作流全景
+
+整体来看，我的工作流可以概括为：=AI是研究员，Zi是共同作者、审稿人、以及reward model=。
+
+流程如下：
+
++ Idea Spark：Idea的产生
++ Literature Review：调研与相关工作
++ Experiments：实验
++ Paper Writing：论文撰写
++ Submission：投稿
++ Ads：宣传
+
+下面逐一展开。
+
+** Idea可以由AI来想吗？
+
+可以，但是 =不推荐=。
+
+原因有二。其一，科研的快乐来自于 =想象一件事，然后实现它= 。如果连idea都是LLM给的，科研本身的意义就坍塌了。
+
+其二，更致命的问题在于：LLM在创意上是高度 =同质的（homomorphic）= 。如果你让LLM从零构思一个新idea，它会非常高效地产出一些和现有工作高度相似的方案。一种prompt的平庸性（banality），会导致相似的论文。
+
+正确的做法是：
+1. 不要直接问LLM要idea。
+2. 不要给LLM一大堆论文然后让它想一个新idea。
+3. 正确的方式是：与LLM讨论。把LLM当成一个 =非常专业但很久没读论文的研究者= ，与它讨论一个你已有的idea方向，让它帮你发展这个idea。
+
+如果你这样使用LLM，它在idea thinking上的能力可以超过大多数研究者。
+
+当然，也可以让LLM帮你脑暴。比如问它：="废旧机械键盘帽的可能用途"=。但这是在帮你打开思维，而不是替代你的创意。
+
+** 调研（Literature Review）可以由AI来搞吗？
+
+完全可以。甚至比我做得更好。
+
+除非你生活在一个非常稳定的学术领域（即相关工作的增量很少），否则LLM做literature review的能力远超人类专家。原因是：LLM可以快速消化海量信息，而人类会受到阅读速度和记忆容量的限制。
+
+但有一个关键前提：=Web search is vital!!!=
+
+把LLM当成一个：=9个月没读论文但非常专业且比你强的研究者=。它需要重新接入学术网络，更新自己的知识库。
+
+需要注意Citation Hallucination的问题。但如前所述，这本质上是把Agent当机器看待的思维陷阱——一个人被要求背诵citation也会出错，所以这不是Agent的缺陷，而是使用方式的问题。
+
+** 实验可以由AI来写吗？
+
+完全可以。Coding agent =远比我可靠=。
+
+为什么必须使用vibe coding和coding agent？三个理由：
+1. 它可以比你自己更准确地实现你的想法：=It can more accurately implement your idea than yourself.=
+2. 快：=It is fast.=
+3. 学术代码仓库不需要重型维护（maintenance）：=Academic code repository does not need heavy maintenance.=
+
+我自己的数据：
+| Language | Lines of Code |
+| Python | 4,240,000 |
+| Emacs Lisp | 1,250,000 |
+| Rust | 250,000 |
+
+但这不是说你完全不需要看代码。=Review the Code=仍然是有必要的。相关思考见：https://larsfaye.com/articles/agentic-coding-is-a-trap
+
+一些关键概念：
++ Harness Engineering
++ Spec Driven Development (SDD)
++ 各种技巧（OMO, SP, GM...）
++ 工具：CodeGraph
+
+但即使是这样，我最终认为SDD也不是Agentic coding的最终答案。原因在下文详述。
+
+** 证明（Proofs）可以由AI来做吗？
+
+直接用。效果远好于大多数专家。
+
+但仍然需要 =Review the Proof=。
+
+** 画图（Drawing）可以由AI来做吗？
+
+目前只能使用GPT-Image 2。
+
+方法很简单：把tex文件直接发给它。比如发method.tex获取方法框架图，发intro.tex或threat model section获取场景图。然后手动重绘，或者让它生成draw.io代码，或者其他方式。
+
+注意Anti-AI themes的问题。
+
+* 论文工作流：从零开始的Agentic Paper Workflow
+
+** 基础设施建设
+
++ Latex Repository（始终私有）
++ Code Repository（可切换为公开）
++ 使用 =git= 管理一切
++ Specification——非常重要
+
+** Step 1: 复制AGENTS.md文件
+
+这是我的AGENTS.md的核心内容。它定义了我与Agent交互的基本规则：
+
+#+begin_quote
+Call me 团长。
+
+Rule 1: Disagree when you disagree. 我知道你想保持礼貌，但coding是一项困难且危险的工作，核心原则是写出准确的代码。所以如果我的前提是错误的，直接指出来。
+
+Rule 2: 永远不要捏造。对于你不确定的事情，通过阅读文件、运行命令或web search来寻找更多信息。如果这些策略都无法工作，就说 "No evidence to show..." 或者 "I do not know that."
+
+Rule 3: Stop when confused. 我（用户）给你的指令不清晰或混乱是很常见的。直接问我，让我们一起讨论！需要量化的东西，告诉我。永远不要保持沉默然后继续。
+
+Rule 4: Minimal code changes. 永远不要修改与当前任务无关的代码。不做drive-by refactors和reformatting，除非我明确告诉你。这是Karpathy's Observation的应用。
+
+Rule 5: When planning, grilling me. Interview me relentlessly about every aspect of this plan until we reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one. For each question, provide your recommended answer. 每次只问一个问题。如果某个问题可以通过探索codebase来回答，就探索codebase。这就是 =The Grilling-me skill=。参考：Workflow for AI Coding (YouTube)
+
+Rule 6: 每5轮对话后，用org-mode格式简要记录我们的讨论到 =./records/[Task].org=。
+
+Rule 7: 当你发现某个话题/中心点在我们的讨论中完成时，检查整个roadmap并为下一阶段的多轮grilling提供一些新方向。
+#+end_quote
+
+关于代码撰写，需要认识到 =Paradox of Supervision=：越想让Agent写得快，就越需要人类的监督；但越监督，就越失去了Agent带来的速度优势。参考：https://larsfaye.com/articles/agentic-coding-is-a-trap 以及Anthropic的研究：https://www.anthropic.com/research/how-ai-is-transforming-work-at-anthropic#and-less-hands-on-practice
+
+关于论文写作的额外规则：
+
+#+begin_quote
+- Always Latex format. No markdown.
+- Use =$$= or =\begin{...}\end{...}= for math notation. Never use =\(\)=.
+- Never use terms like solely, leverage, delve into, tapestry, furthermore.
+- NEVER use em dash (—), double em dash (——), and ";" in paper writing.
+- Never =\textbf{}= the first point when in an enumerate environment.
+- 写作要符合AI论文或者安全论文的投稿风格。如果不知道具体投什么，说明grill me不够。
+- 别用缩写。比如it's, 必须是 =it is=。
+- 少用's。比如 =XXXX's performance= 应该替换为 =the performance of XXXX=。
+- 注意上下文已有的缩写。像LLM这种如果之前已经详写过Large Language Models，就不要再重新写了。
+- 保留团长所进行的任何格式调整。
+#+end_quote
+
+** Step 2: Grill me — 通过聊天撰写研究计划
+
+流程：
+1. 撰写初始研究计划（Initial Research Plan）
+2. 与AI讨论，让它做文献调研（Literature Review），并对所有细节和难点grill me
+3. 生成新的研究计划（New Research Plan）
+4. 执行新计划
+
+** Step 3: 实验与代码审查
+
++ =tmux= 用于后台运行
++ Spec 用于质量保证
++ Human Review 通过 =git diff= 进行
++ =git= 用于备份
++ 终端工具推荐：Ghostty, zellij
+
+** Step 4: 论文撰写
+
+以下事情 =全部交给AI=：
+
++ 不要自己编译
++ 不要自己做格式调整
++ 不要自己手动检查参考文献
++ 不要自己读call for papers
++ 不要自己切换模板
++ 不要自己检查typos
++ 不要自己检查warning/errors
+
+这些全部交给AI。人类只做一件事：审阅和决策。
+
+* 一些Minor Tips
+
+** 1. 尽量使用英文与Agent交互
+
+当你使用高度蒸馏模型或小模型时，英文prompt的效果显著优于中文。
+
+参考论文："Yes, My LoRD." Guiding Language Model Extraction with Locality Reinforced Distillation. https://aclanthology.org/2025.acl-long.73.pdf
+
+** 2. 保持Context简短
+
++ 使用 =/new=, =/fork=, =/tree= 等功能管理context
++ 除非必要，不要引入任何新的skills
++ 保持AGENTS.md和其他配置文件简短
+
+Context management is all you need。
+
+* 未来的AI学术生态
+
+** 论文变得更便宜
+
+当论文的边际成本趋近于零时，会有几个后果：
++ Ads（宣传）> acceptance（接受）
++ Exports (toolkits, packages, benchmarks) > a method（方法本身）
++ 回到原点：Research is to re-search. 研究的本质是不断重新探索。
+
+** AI会议的终局：一个分享会
+
+当论文量产化之后，AI会议的评审功能会萎缩，取而代之的是分享和交流功能。会议不再是一个筛选机制，而是一个聚集机制。
+
+* Takeaways
+
+1. The Bitter Lesson：通用方法和规模化压倒领域知识。Context management is all you need。
+2. No prompt engineering hacking：prompt engineering是徒劳的。把Agent当人对待，而不是当机器调参。
+3. Context management is all you need：管理context比管理prompt重要一万倍。
+4. The curse of supervision：SDD不是Agentic coding的最终答案。人类监督和AI速度之间的悖论尚未被解决。
+5. Regard Agent as a person：
+   + 让Agent记忆citation是反人类的，所以对LLM也一样
+   + YOU ARE NOT ALWAYS RIGHT. YOUR RECOGNITION, as well.
+6. 工具推荐：
+   + AGENTS.md: https://github.com/liangzid/AGENT-TEMPLATE
+   + GemFilter: https://github.com/liangzid/GemFilter
+   + AUA: https://github.com/liangzid/AgentUtteranceAnalysis
+

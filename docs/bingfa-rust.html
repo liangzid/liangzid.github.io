@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-07-07 Tue 20:50 -->
+<!-- 2026-05-29 Fri 10:11 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>【低质量】rust是如何适配并发的？</title>
@@ -55,7 +55,6 @@
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
   pre.src-authinfo::before { content: 'Authinfo'; }
-  pre.src-c:before { content: 'C'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -70,7 +69,7 @@
   pre.src-haskell:before { content: 'Haskell'; }
   pre.src-hledger:before { content: 'hledger'; }
   pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'JavaScript'; }
+  pre.src-js:before { content: 'Javascript'; }
   pre.src-latex:before { content: 'LaTeX'; }
   pre.src-ledger:before { content: 'Ledger'; }
   pre.src-lisp:before { content: 'Lisp'; }
@@ -204,35 +203,35 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge4c8d4a">1. 什么是并发？</a></li>
-<li><a href="#org505ce75">2. 处理并行、并发问题的计算机知识</a>
+<li><a href="#org65a5c18">1. 什么是并发？</a></li>
+<li><a href="#org1edb93e">2. 处理并行、并发问题的计算机知识</a>
 <ul>
-<li><a href="#org00ddb34">2.1. 使用rust创建多线程</a></li>
+<li><a href="#org7674e9e">2.1. 使用rust创建多线程</a></li>
 </ul>
 </li>
-<li><a href="#orga0d83dc">3. 安全并发的若干解决方案</a>
+<li><a href="#org521802c">3. 安全并发的若干解决方案</a>
 <ul>
-<li><a href="#org814f717">3.1. 消息传递：不要通过共享内存来通讯，而是通过通讯来共享内存</a></li>
-<li><a href="#org0c4ef1e">3.2. 共享状态：</a></li>
+<li><a href="#org8cdbb7b">3.1. 消息传递：不要通过共享内存来通讯，而是通过通讯来共享内存</a></li>
+<li><a href="#org84c3689">3.2. 共享状态：</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orge4c8d4a" class="outline-2">
-<h2 id="orge4c8d4a"><span class="section-number-2">1.</span> 什么是并发？</h2>
+<div id="outline-container-org65a5c18" class="outline-2">
+<h2 id="org65a5c18"><span class="section-number-2">1.</span> 什么是并发？</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 并发包括两个概念：并发（concurrent）和并行（parallel）。前者主要是指如何让程序的各个模块彼此独立的执行；而后者，主要指如何将多个程序同时执行。在rust中并不会对并发和并行进行特别清楚地区分。
 </p>
 </div>
 </div>
-<div id="outline-container-org505ce75" class="outline-2">
-<h2 id="org505ce75"><span class="section-number-2">2.</span> 处理并行、并发问题的计算机知识</h2>
+<div id="outline-container-org1edb93e" class="outline-2">
+<h2 id="org1edb93e"><span class="section-number-2">2.</span> 处理并行、并发问题的计算机知识</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org00ddb34" class="outline-3">
-<h3 id="org00ddb34"><span class="section-number-3">2.1.</span> 使用rust创建多线程</h3>
+<div id="outline-container-org7674e9e" class="outline-3">
+<h3 id="org7674e9e"><span class="section-number-3">2.1.</span> 使用rust创建多线程</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 我们知道，一个正在执行的计算机程序一般就是一个进程，这个进程里可以包括很多个线程。
@@ -241,7 +240,7 @@
 
 
 <div class="org-src-container">
-<pre class="src src-rust"><code><span style="color: #c770ff; font-weight: bold;">use</span> <span style="color: #ffa83d;">std</span>::thread;
+<pre class="src src-rust"><span style="color: #c770ff; font-weight: bold;">use</span> <span style="color: #ffa83d;">std</span>::thread;
 <span style="color: #c770ff; font-weight: bold;">use</span> <span style="color: #ffa83d;">std</span>::<span style="color: #ffa83d;">time</span>::<span style="color: #e6ff57;">Duration</span>;
 
 <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span> <span style="color: #24f6d9;">{</span>
@@ -259,7 +258,7 @@
              <span style="color: #ffa83d;">thread</span>::sleep<span style="color: #e6ff57;">(</span><span style="color: #e6ff57;">Duration</span>::from_millis<span style="color: #30b3ff;">(</span>1<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>;
          <span style="color: #c770ff;">}</span>
 <span style="color: #24f6d9;">}</span>
-</code></pre>
+</pre>
 </div>
 <p>
 可以看出，thread::spawn就是用来创建新的线程的，而thead::sleep用来对这个定期做一个暂停，
@@ -273,7 +272,7 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><code>   <span style="color: #c770ff; font-weight: bold;">use</span> <span style="color: #ffa83d;">std</span>::thread;
+<pre class="src src-rust">   <span style="color: #c770ff; font-weight: bold;">use</span> <span style="color: #ffa83d;">std</span>::thread;
 <span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span> <span style="color: #24f6d9;">{</span>
     <span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">v</span> = <span style="color: #ffa83d;">vec!</span><span style="color: #c770ff;">[</span>1, 2, 3<span style="color: #c770ff;">]</span>;
 
@@ -283,7 +282,7 @@
 
     handle.join<span style="color: #c770ff;">()</span>.unwrap<span style="color: #c770ff;">()</span>;
 <span style="color: #24f6d9;">}</span>
-</code></pre>
+</pre>
 </div>
 <p>
 从这个示例中可以看出，我们可以通过move来获取v的ownership，而非通过引用。因为我们将v的所有权移到了新线程里，原始的main函数将不再拥有处理新线程的作用。这样可以规避什么风险呢？很简单：如果我们在新线程里删掉了v，那么主线程里使用v就会访问一片不存在的内存区域，从而可能引发问题。那我们再来看一看为什么我们不能把v的引用传入到新线程里。这其实涉及到悬垂引用的问题。如果我们把v的引用传入到新线程里，当我们的v在老线程里被处理掉了，新线程必然会出现通过引用访问一片不存在的内存区域的情况。
@@ -296,23 +295,23 @@
 </div>
 </div>
 </div>
-<div id="outline-container-orga0d83dc" class="outline-2">
-<h2 id="orga0d83dc"><span class="section-number-2">3.</span> 安全并发的若干解决方案</h2>
+<div id="outline-container-org521802c" class="outline-2">
+<h2 id="org521802c"><span class="section-number-2">3.</span> 安全并发的若干解决方案</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org814f717" class="outline-3">
-<h3 id="org814f717"><span class="section-number-3">3.1.</span> 消息传递：不要通过共享内存来通讯，而是通过通讯来共享内存</h3>
+<div id="outline-container-org8cdbb7b" class="outline-3">
+<h3 id="org8cdbb7b"><span class="section-number-3">3.1.</span> 消息传递：不要通过共享内存来通讯，而是通过通讯来共享内存</h3>
 </div>
 
 
 
-<div id="outline-container-org0c4ef1e" class="outline-3">
-<h3 id="org0c4ef1e"><span class="section-number-3">3.2.</span> 共享状态：</h3>
+<div id="outline-container-org84c3689" class="outline-3">
+<h3 id="org84c3689"><span class="section-number-3">3.2.</span> 共享状态：</h3>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Sat Nov 20 09:19:26 2021</span> <span class="date">Last modified: 2026-05-10 Sun 16:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Sat Nov 20 09:19:26 2021</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>

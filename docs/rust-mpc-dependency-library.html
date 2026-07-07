@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-07-07 Tue 20:50 -->
+<!-- 2026-05-29 Fri 10:11 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>多方安全计算原理与相关库介绍</title>
@@ -19,57 +19,57 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org2d77235">1. 多方安全计算相关</a>
+<li><a href="#orgf4f2216">1. 多方安全计算相关</a>
 <ul>
-<li><a href="#org32ebce7">1.1. byteorder</a></li>
-<li><a href="#org2eb2aa7">1.2. bit-vec</a></li>
-<li><a href="#org238d5a0">1.3. num-traits</a></li>
-<li><a href="#org8c50436">1.4. ndarray</a></li>
-<li><a href="#orga4a1104">1.5. rayon</a></li>
-<li><a href="#org330e5e3">1.6. blake2</a></li>
-<li><a href="#orgeff2e0d">1.7. rand_chacha</a></li>
-<li><a href="#org8c08000">1.8. npy, npy-derive</a></li>
-<li><a href="#orgdae78cd">1.9. tch</a></li>
-<li><a href="#orgcb40dd1">1.10. ocelot</a></li>
-<li><a href="#org9aac577">1.11. scuttlebutt</a></li>
-<li><a href="#org81496a6">1.12. bincode</a></li>
-<li><a href="#org286d526">1.13. io-utils</a></li>
+<li><a href="#orgf442f9d">1.1. byteorder</a></li>
+<li><a href="#org9726b75">1.2. bit-vec</a></li>
+<li><a href="#org810e426">1.3. num-traits</a></li>
+<li><a href="#org9f3ebdd">1.4. ndarray</a></li>
+<li><a href="#orga1bbb4b">1.5. rayon</a></li>
+<li><a href="#org580f503">1.6. blake2</a></li>
+<li><a href="#orgcfb213d">1.7. rand_chacha</a></li>
+<li><a href="#org1417e09">1.8. npy, npy-derive</a></li>
+<li><a href="#org51c5ab0">1.9. tch</a></li>
+<li><a href="#org180b8d1">1.10. ocelot</a></li>
+<li><a href="#org88c5f13">1.11. scuttlebutt</a></li>
+<li><a href="#orge0066e5">1.12. bincode</a></li>
+<li><a href="#org3e928bd">1.13. io-utils</a></li>
 </ul>
 </li>
-<li><a href="#org39456eb">2. 通用</a>
+<li><a href="#org82c4bbc">2. 通用</a>
 <ul>
-<li><a href="#orgd41f725">2.1. derivative</a></li>
-<li><a href="#orgc706d45">2.2. clippy</a></li>
-<li><a href="#org89494cc">2.3. failure</a></li>
-<li><a href="#org21f55e1">2.4. colored</a></li>
-<li><a href="#orgd9f2d4c">2.5. criterion</a></li>
-<li><a href="#org31c5620">2.6. std::io</a></li>
-<li><a href="#orgda1ab1e">2.7. macro_rules!</a></li>
-<li><a href="#org65e630b">2.8. #[inline]</a></li>
-<li><a href="#orgc925106">2.9. std::io::Cursor</a></li>
-<li><a href="#org9e7fd44">2.10. std::marker::PhantomData</a></li>
-<li><a href="#org7fc82bb">2.11. bindgen</a></li>
-<li><a href="#org22599bd">2.12. cmake</a></li>
-<li><a href="#org769d612">2.13. crossbeam</a></li>
+<li><a href="#org54843d1">2.1. derivative</a></li>
+<li><a href="#orge68fc97">2.2. clippy</a></li>
+<li><a href="#org60fee2c">2.3. failure</a></li>
+<li><a href="#orgaa896a9">2.4. colored</a></li>
+<li><a href="#orgb100102">2.5. criterion</a></li>
+<li><a href="#org48d6e7f">2.6. std::io</a></li>
+<li><a href="#org53dab17">2.7. macro_rules!</a></li>
+<li><a href="#org41fb7a6">2.8. #[inline]</a></li>
+<li><a href="#orgd011413">2.9. std::io::Cursor</a></li>
+<li><a href="#org8e2fe6c">2.10. std::marker::PhantomData</a></li>
+<li><a href="#org86221e8">2.11. bindgen</a></li>
+<li><a href="#org930931b">2.12. cmake</a></li>
+<li><a href="#org57f9ed7">2.13. crossbeam</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org2d77235" class="outline-2">
-<h2 id="org2d77235"><span class="section-number-2">1.</span> 多方安全计算相关</h2>
+<div id="outline-container-orgf4f2216" class="outline-2">
+<h2 id="orgf4f2216"><span class="section-number-2">1.</span> 多方安全计算相关</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org32ebce7" class="outline-3">
-<h3 id="org32ebce7"><span class="section-number-3">1.1.</span> byteorder</h3>
+<div id="outline-container-orgf442f9d" class="outline-3">
+<h3 id="orgf442f9d"><span class="section-number-3">1.1.</span> byteorder</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 用途：以大端或小端的方式对二进制数字进行编码和解码。
 </p>
 </div>
 </div>
-<div id="outline-container-org2eb2aa7" class="outline-3">
-<h3 id="org2eb2aa7"><span class="section-number-3">1.2.</span> bit-vec</h3>
+<div id="outline-container-org9726b75" class="outline-3">
+<h3 id="org9726b75"><span class="section-number-3">1.2.</span> bit-vec</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 用途：现在看来和素数相关，未详。
@@ -80,88 +80,88 @@ ref：<a href="https://contain-rs.github.io/bit-vec/bit_vec/">https://contain-rs
 </p>
 </div>
 </div>
-<div id="outline-container-org238d5a0" class="outline-3">
-<h3 id="org238d5a0"><span class="section-number-3">1.3.</span> num-traits</h3>
+<div id="outline-container-org810e426" class="outline-3">
+<h3 id="org810e426"><span class="section-number-3">1.3.</span> num-traits</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 用途：为通用数学中所存在的traits所构建的collection
 </p>
 </div>
 </div>
-<div id="outline-container-org8c50436" class="outline-3">
-<h3 id="org8c50436"><span class="section-number-3">1.4.</span> ndarray</h3>
+<div id="outline-container-org9f3ebdd" class="outline-3">
+<h3 id="org9f3ebdd"><span class="section-number-3">1.4.</span> ndarray</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 用途：rust中的numpy
 </p>
 </div>
 </div>
-<div id="outline-container-orga4a1104" class="outline-3">
-<h3 id="orga4a1104"><span class="section-number-3">1.5.</span> rayon</h3>
+<div id="outline-container-orga1bbb4b" class="outline-3">
+<h3 id="orga1bbb4b"><span class="section-number-3">1.5.</span> rayon</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 用途：并行计算库
 </p>
 </div>
 </div>
-<div id="outline-container-org330e5e3" class="outline-3">
-<h3 id="org330e5e3"><span class="section-number-3">1.6.</span> blake2</h3>
+<div id="outline-container-org580f503" class="outline-3">
+<h3 id="org580f503"><span class="section-number-3">1.6.</span> blake2</h3>
 <div class="outline-text-3" id="text-1-6">
 <p>
 用途：hash function blake2的封装
 </p>
 </div>
 </div>
-<div id="outline-container-orgeff2e0d" class="outline-3">
-<h3 id="orgeff2e0d"><span class="section-number-3">1.7.</span> rand_chacha</h3>
+<div id="outline-container-orgcfb213d" class="outline-3">
+<h3 id="orgcfb213d"><span class="section-number-3">1.7.</span> rand_chacha</h3>
 <div class="outline-text-3" id="text-1-7">
 <p>
 使用chacha算法的随机数生成器
 </p>
 </div>
 </div>
-<div id="outline-container-org8c08000" class="outline-3">
-<h3 id="org8c08000"><span class="section-number-3">1.8.</span> npy, npy-derive</h3>
+<div id="outline-container-org1417e09" class="outline-3">
+<h3 id="org1417e09"><span class="section-number-3">1.8.</span> npy, npy-derive</h3>
 <div class="outline-text-3" id="text-1-8">
 <p>
 用以读取和写入numpy库所用到的npy文件。
 </p>
 </div>
 </div>
-<div id="outline-container-orgdae78cd" class="outline-3">
-<h3 id="orgdae78cd"><span class="section-number-3">1.9.</span> tch</h3>
+<div id="outline-container-org51c5ab0" class="outline-3">
+<h3 id="org51c5ab0"><span class="section-number-3">1.9.</span> tch</h3>
 <div class="outline-text-3" id="text-1-9">
 <p>
 C++ pytorch库的rust绑定
 </p>
 </div>
 </div>
-<div id="outline-container-orgcb40dd1" class="outline-3">
-<h3 id="orgcb40dd1"><span class="section-number-3">1.10.</span> ocelot</h3>
+<div id="outline-container-org180b8d1" class="outline-3">
+<h3 id="org180b8d1"><span class="section-number-3">1.10.</span> ocelot</h3>
 <div class="outline-text-3" id="text-1-10">
 <p>
 不经意传输的rust实现
 </p>
 </div>
 </div>
-<div id="outline-container-org9aac577" class="outline-3">
-<h3 id="org9aac577"><span class="section-number-3">1.11.</span> scuttlebutt</h3>
+<div id="outline-container-org88c5f13" class="outline-3">
+<h3 id="org88c5f13"><span class="section-number-3">1.11.</span> scuttlebutt</h3>
 <div class="outline-text-3" id="text-1-11">
 <p>
 多方安全计算相关的基础library
 </p>
 </div>
 </div>
-<div id="outline-container-org81496a6" class="outline-3">
-<h3 id="org81496a6"><span class="section-number-3">1.12.</span> bincode</h3>
+<div id="outline-container-orge0066e5" class="outline-3">
+<h3 id="orge0066e5"><span class="section-number-3">1.12.</span> bincode</h3>
 <div class="outline-text-3" id="text-1-12">
 <p>
 对变量进行编码和解码
 </p>
 </div>
 </div>
-<div id="outline-container-org286d526" class="outline-3">
-<h3 id="org286d526"><span class="section-number-3">1.13.</span> io-utils</h3>
+<div id="outline-container-org3e928bd" class="outline-3">
+<h3 id="org3e928bd"><span class="section-number-3">1.13.</span> io-utils</h3>
 <div class="outline-text-3" id="text-1-13">
 <p>
 network wrappers
@@ -169,12 +169,12 @@ network wrappers
 </div>
 </div>
 </div>
-<div id="outline-container-org39456eb" class="outline-2">
-<h2 id="org39456eb"><span class="section-number-2">2.</span> 通用</h2>
+<div id="outline-container-org82c4bbc" class="outline-2">
+<h2 id="org82c4bbc"><span class="section-number-2">2.</span> 通用</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgd41f725" class="outline-3">
-<h3 id="orgd41f725"><span class="section-number-3">2.1.</span> derivative</h3>
+<div id="outline-container-org54843d1" class="outline-3">
+<h3 id="org54843d1"><span class="section-number-3">2.1.</span> derivative</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 derivative是常用的依赖，他可以自动化地为一些自定义的enum或struct提供一些标准的trait，如构造函数Defualt，用于复制的Copy和Clone，等等。
@@ -185,8 +185,8 @@ derivative是常用的依赖，他可以自动化地为一些自定义的enum或
 </p>
 </div>
 </div>
-<div id="outline-container-orgc706d45" class="outline-3">
-<h3 id="orgc706d45"><span class="section-number-3">2.2.</span> clippy</h3>
+<div id="outline-container-orge68fc97" class="outline-3">
+<h3 id="orge68fc97"><span class="section-number-3">2.2.</span> clippy</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 用途：代码规范。
@@ -197,56 +197,56 @@ ref：<a href="https://github.com/rust-lang/rust-clippy">https://github.com/rust
 </p>
 </div>
 </div>
-<div id="outline-container-org89494cc" class="outline-3">
-<h3 id="org89494cc"><span class="section-number-3">2.3.</span> failure</h3>
+<div id="outline-container-org60fee2c" class="outline-3">
+<h3 id="org60fee2c"><span class="section-number-3">2.3.</span> failure</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 用途：错误处理库
 </p>
 </div>
 </div>
-<div id="outline-container-org21f55e1" class="outline-3">
-<h3 id="org21f55e1"><span class="section-number-3">2.4.</span> colored</h3>
+<div id="outline-container-orgaa896a9" class="outline-3">
+<h3 id="orgaa896a9"><span class="section-number-3">2.4.</span> colored</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 用途：colored outputs
 </p>
 </div>
 </div>
-<div id="outline-container-orgd9f2d4c" class="outline-3">
-<h3 id="orgd9f2d4c"><span class="section-number-3">2.5.</span> criterion</h3>
+<div id="outline-container-orgb100102" class="outline-3">
+<h3 id="orgb100102"><span class="section-number-3">2.5.</span> criterion</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 用途：评估代码块，代码测速
 </p>
 </div>
 </div>
-<div id="outline-container-org31c5620" class="outline-3">
-<h3 id="org31c5620"><span class="section-number-3">2.6.</span> std::io</h3>
+<div id="outline-container-org48d6e7f" class="outline-3">
+<h3 id="org48d6e7f"><span class="section-number-3">2.6.</span> std::io</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 io opearation of rust. It provides two tratis: Read and Write.
 </p>
 </div>
 </div>
-<div id="outline-container-orgda1ab1e" class="outline-3">
-<h3 id="orgda1ab1e"><span class="section-number-3">2.7.</span> macro_rules!</h3>
+<div id="outline-container-org53dab17" class="outline-3">
+<h3 id="org53dab17"><span class="section-number-3">2.7.</span> macro_rules!</h3>
 <div class="outline-text-3" id="text-2-7">
 <p>
 create macro for rust.
 </p>
 </div>
 </div>
-<div id="outline-container-org65e630b" class="outline-3">
-<h3 id="org65e630b"><span class="section-number-3">2.8.</span> #[inline]</h3>
+<div id="outline-container-org41fb7a6" class="outline-3">
+<h3 id="org41fb7a6"><span class="section-number-3">2.8.</span> #[inline]</h3>
 <div class="outline-text-3" id="text-2-8">
 <p>
 an <code>inline</code> features, which suggests the compiler inline this function.
 </p>
 </div>
 </div>
-<div id="outline-container-orgc925106" class="outline-3">
-<h3 id="orgc925106"><span class="section-number-3">2.9.</span> std::io::Cursor</h3>
+<div id="outline-container-orgd011413" class="outline-3">
+<h3 id="orgd011413"><span class="section-number-3">2.9.</span> std::io::Cursor</h3>
 <div class="outline-text-3" id="text-2-9">
 <p>
 the buffer of memory in rust.
@@ -257,32 +257,32 @@ see: <a href="https://doc.rust-lang.org/std/io/struct.Cursor.html">https://doc.r
 </p>
 </div>
 </div>
-<div id="outline-container-org9e7fd44" class="outline-3">
-<h3 id="org9e7fd44"><span class="section-number-3">2.10.</span> std::marker::PhantomData</h3>
+<div id="outline-container-org8e2fe6c" class="outline-3">
+<h3 id="org8e2fe6c"><span class="section-number-3">2.10.</span> std::marker::PhantomData</h3>
 <div class="outline-text-3" id="text-2-10">
 <p>
 幽灵数据，Phantomdata&lt;T&gt;是一个范型变量，表示类型为T的变量可能存在
 </p>
 </div>
 </div>
-<div id="outline-container-org7fc82bb" class="outline-3">
-<h3 id="org7fc82bb"><span class="section-number-3">2.11.</span> bindgen</h3>
+<div id="outline-container-org86221e8" class="outline-3">
+<h3 id="org86221e8"><span class="section-number-3">2.11.</span> bindgen</h3>
 <div class="outline-text-3" id="text-2-11">
 <p>
 为C或C++生成rust bings
 </p>
 </div>
 </div>
-<div id="outline-container-org22599bd" class="outline-3">
-<h3 id="org22599bd"><span class="section-number-3">2.12.</span> cmake</h3>
+<div id="outline-container-org930931b" class="outline-3">
+<h3 id="org930931b"><span class="section-number-3">2.12.</span> cmake</h3>
 <div class="outline-text-3" id="text-2-12">
 <p>
 通过使用cmake来为rust构建C++的native labrary
 </p>
 </div>
 </div>
-<div id="outline-container-org769d612" class="outline-3">
-<h3 id="org769d612"><span class="section-number-3">2.13.</span> crossbeam</h3>
+<div id="outline-container-org57f9ed7" class="outline-3">
+<h3 id="org57f9ed7"><span class="section-number-3">2.13.</span> crossbeam</h3>
 <div class="outline-text-3" id="text-2-13">
 <p>
 并法编程相关
@@ -292,7 +292,7 @@ see: <a href="https://doc.rust-lang.org/std/io/struct.Cursor.html">https://doc.r
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Feb  3 14:31:38 2023</span> <span class="date">Last modified: 2026-05-10 Sun 16:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Feb  3 14:31:38 2023</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>

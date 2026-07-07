@@ -1,0 +1,29 @@
+#+title: LoRA Security: The "Achilles' Heel" of Parameter-Efficient Fine-Tuning?
+#+author: Zi Liang
+#+date: 2026-05-27
+#+options: toc:nil
+
+* Background: LoRA Is Everywhere
+
+LoRA (Low-Rank Adaptation) is now the de facto standard for fine-tuning LLMs—add a few low-rank matrices, keep the original weights frozen, and the model adapts to new tasks. It is extremely efficient.
+
+But nobody had systematically studied: how secure is a LoRA-fine-tuned model?
+
+* Our Analytical Framework: An NTK Perspective
+
+We used NTK (Neural Tangent Kernel) to model the kernel-level differences between LoRA and full fine-tuning. The beauty of NTK is that it approximates training as kernel regression, enabling analytical analysis of attack effects.
+
+* Two Counterintuitive Findings
+
+1. *Against untargeted poisoning: LoRA is more vulnerable.* Reason: LoRA's low-rank constraint limits the model's ability to "correct" the poisoning's influence. Full fine-tuning has more degrees of freedom to "overwrite" anomalous signals introduced by poisoning.
+
+2. *Against backdoor attacks: LoRA is actually more robust.* Reason: LoRA's low-rank nature makes backdoor trigger patterns hard to "survive" in the low-rank subspace. Backdoors are inherently high-rank signals—LoRA's constraint ironically weakens them.
+
+We also found that LoRA's rank and initialization variance significantly affect robustness—higher rank helps, but initialization effects are non-monotonic.
+
+* Paper Info
+
+- Title: Does Low Rank Adaptation Lead to Lower Robustness against Training-Time Attacks?
+- Authors: Zi Liang, Haibo Hu, Qingqing Ye, Yaxin Xiao, Ronghua Li
+- Status: ICML 2025
+- Code: https://github.com/liangzid/LoRA-sSecurity

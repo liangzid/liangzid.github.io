@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-07-07 Tue 20:50 -->
+<!-- 2026-05-29 Fri 10:11 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Introducing EMatrix — A Matrix-Inspired Emacs Theme</title>
@@ -55,7 +55,6 @@
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
   pre.src-authinfo::before { content: 'Authinfo'; }
-  pre.src-c:before { content: 'C'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -70,7 +69,7 @@
   pre.src-haskell:before { content: 'Haskell'; }
   pre.src-hledger:before { content: 'hledger'; }
   pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'JavaScript'; }
+  pre.src-js:before { content: 'Javascript'; }
   pre.src-latex:before { content: 'LaTeX'; }
   pre.src-ledger:before { content: 'Ledger'; }
   pre.src-lisp:before { content: 'Lisp'; }
@@ -204,31 +203,31 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org04e392e">1. Color Palette</a></li>
-<li><a href="#orge5b773f">2. Why Build a "Matrix" Theme?</a></li>
-<li><a href="#orga628270">3. Installation</a>
+<li><a href="#orgb14def1">1. Color Palette</a></li>
+<li><a href="#org220b6fc">2. Why Build a "Matrix" Theme?</a></li>
+<li><a href="#org44148a0">3. Installation</a>
 <ul>
-<li><a href="#org81c6271">3.1. package-vc-install (Emacs 29+)</a></li>
-<li><a href="#orgad00afd">3.2. use-package</a></li>
-<li><a href="#orgc3acebb">3.3. Manual</a></li>
+<li><a href="#org06ea99c">3.1. package-vc-install (Emacs 29+)</a></li>
+<li><a href="#org0077662">3.2. use-package</a></li>
+<li><a href="#org6fcd23f">3.3. Manual</a></li>
 </ul>
 </li>
-<li><a href="#orgf2e6c85">4. Font</a></li>
-<li><a href="#org99df891">5. Supported Packages</a></li>
-<li><a href="#orgd9230dc">6. File Structure</a></li>
-<li><a href="#org5d1b23a">7. Credits</a></li>
-<li><a href="#orgfff688e">8. License</a></li>
+<li><a href="#org35f0ca2">4. Font</a></li>
+<li><a href="#org95e3651">5. Supported Packages</a></li>
+<li><a href="#org9da4f0a">6. File Structure</a></li>
+<li><a href="#org112654f">7. Credits</a></li>
+<li><a href="#org2c92500">8. License</a></li>
 </ul>
 </div>
 </div>
 
-<div id="orga66c2ed" class="figure">
+<div id="orgb5ad965" class="figure">
 <p><img src="./images/screenshot_20260510_164629.png" alt="screenshot_20260510_164629.png">
 </p>
 </div>
 
 
-<div id="org3bc7f8f" class="figure">
+<div id="org9115fdf" class="figure">
 <p><img src="./images/screenshot_20260510_163951.png" alt="screenshot_20260510_163951.png">
 </p>
 </div>
@@ -242,8 +241,8 @@ Dark green-tinted background with bright green foreground, purple keywords,
 teal functions, orange constants — the classic Matrix hacker aesthetic from
 the OpenCode terminal UI.
 </p>
-<div id="outline-container-org04e392e" class="outline-2">
-<h2 id="org04e392e"><span class="section-number-2">1.</span> Color Palette</h2>
+<div id="outline-container-orgb14def1" class="outline-2">
+<h2 id="orgb14def1"><span class="section-number-2">1.</span> Color Palette</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Sourced from <code>packages/ui/src/theme/themes/matrix.json</code> in the OpenCode repository.
@@ -403,8 +402,8 @@ Sourced from <code>packages/ui/src/theme/themes/matrix.json</code> in the OpenCo
 </table>
 </div>
 </div>
-<div id="outline-container-orge5b773f" class="outline-2">
-<h2 id="orge5b773f"><span class="section-number-2">2.</span> Why Build a "Matrix" Theme?</h2>
+<div id="outline-container-org220b6fc" class="outline-2">
+<h2 id="org220b6fc"><span class="section-number-2">2.</span> Why Build a "Matrix" Theme?</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 OpenCode is an AI-powered CLI coding agent with a distinctive green-on-dark
@@ -421,52 +420,52 @@ constants) make code structure immediately recognizable.
 </p>
 </div>
 </div>
-<div id="outline-container-orga628270" class="outline-2">
-<h2 id="orga628270"><span class="section-number-2">3.</span> Installation</h2>
+<div id="outline-container-org44148a0" class="outline-2">
+<h2 id="org44148a0"><span class="section-number-2">3.</span> Installation</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org81c6271" class="outline-3">
-<h3 id="org81c6271"><span class="section-number-3">3.1.</span> package-vc-install (Emacs 29+)</h3>
+<div id="outline-container-org06ea99c" class="outline-3">
+<h3 id="org06ea99c"><span class="section-number-3">3.1.</span> package-vc-install (Emacs 29+)</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><code><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">unless</span> <span style="color: #c770ff;">(</span>package-installed-p 'ematrix<span style="color: #c770ff;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">unless</span> <span style="color: #c770ff;">(</span>package-installed-p 'ematrix<span style="color: #c770ff;">)</span>
   <span style="color: #c770ff;">(</span>package-vc-install <span style="color: #1cc24b;">"https://github.com/liangzid/ematrix"</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-</code></pre>
+</pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgad00afd" class="outline-3">
-<h3 id="orgad00afd"><span class="section-number-3">3.2.</span> use-package</h3>
+<div id="outline-container-org0077662" class="outline-3">
+<h3 id="org0077662"><span class="section-number-3">3.2.</span> use-package</h3>
 <div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><code><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">use-package</span> ematrix
+<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">use-package</span> ematrix
   <span style="color: #30b3ff;">:vc</span> <span style="color: #c770ff;">(</span><span style="color: #30b3ff;">:url</span> <span style="color: #1cc24b;">"https://github.com/liangzid/ematrix"</span>
         <span style="color: #30b3ff;">:rev</span> <span style="color: #30b3ff;">:newest</span><span style="color: #c770ff;">)</span>
   <span style="color: #30b3ff;">:config</span>
   <span style="color: #c770ff;">(</span>load-theme 'ematrix t<span style="color: #c770ff;">)</span>
   <span style="color: #c770ff;">(</span>ematrix-set-font<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-</code></pre>
+</pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgc3acebb" class="outline-3">
-<h3 id="orgc3acebb"><span class="section-number-3">3.3.</span> Manual</h3>
+<div id="outline-container-org6fcd23f" class="outline-3">
+<h3 id="org6fcd23f"><span class="section-number-3">3.3.</span> Manual</h3>
 <div class="outline-text-3" id="text-3-3">
 <div class="org-src-container">
-<pre class="src src-bash"><code>git clone https://github.com/liangzid/ematrix ~/.emacs.d/elpa/ematrix
-</code></pre>
+<pre class="src src-bash">git clone https://github.com/liangzid/ematrix ~/.emacs.d/elpa/ematrix
+</pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><code><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">require</span> '<span style="color: #ffa83d;">ematrix</span><span style="color: #24f6d9;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">require</span> '<span style="color: #ffa83d;">ematrix</span><span style="color: #24f6d9;">)</span>
 <span style="color: #24f6d9;">(</span>load-theme 'ematrix t<span style="color: #24f6d9;">)</span>
-</code></pre>
+</pre>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgf2e6c85" class="outline-2">
-<h2 id="orgf2e6c85"><span class="section-number-2">4.</span> Font</h2>
+<div id="outline-container-org35f0ca2" class="outline-2">
+<h2 id="org35f0ca2"><span class="section-number-2">4.</span> Font</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 EMatrix matches the <a href="https://github.com/anomalyco/opencode/blob/dev/packages/console/app/src/style/token/font.css">OpenCode font stack</a>:
@@ -528,7 +527,7 @@ systems, installing <code>fonts-ibm-plex</code> is the quickest way to get a clo
 </p>
 
 <div class="org-src-container">
-<pre class="src src-bash"><code><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Debian/Ubuntu
+<pre class="src src-bash"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Debian/Ubuntu
 </span>sudo apt install fonts-ibm-plex
 
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Arch
@@ -536,7 +535,7 @@ systems, installing <code>fonts-ibm-plex</code> is the quickest way to get a clo
 
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">macOS
 </span>brew install font-ibm-plex
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -544,9 +543,9 @@ Set the font manually with <code>M-x ematrix-set-font</code>, or call it from yo
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><code><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> ematrix-default-font-size 14<span style="color: #24f6d9;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> ematrix-default-font-size 14<span style="color: #24f6d9;">)</span>
 <span style="color: #24f6d9;">(</span>ematrix-set-font<span style="color: #24f6d9;">)</span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -554,10 +553,10 @@ Override with a custom font:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><code><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> ematrix-default-font <span style="color: #1cc24b;">"Cascadia Code"</span><span style="color: #24f6d9;">)</span>
+<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> ematrix-default-font <span style="color: #1cc24b;">"Cascadia Code"</span><span style="color: #24f6d9;">)</span>
 <span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> ematrix-default-font-size 13<span style="color: #24f6d9;">)</span>
 <span style="color: #24f6d9;">(</span>ematrix-set-font<span style="color: #24f6d9;">)</span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -565,13 +564,13 @@ The CJK font defaults to <b>LXGW WenKai Mono</b>. Change it:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><code><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> ematrix-chinese-font <span style="color: #1cc24b;">"Noto Serif CJK SC"</span><span style="color: #24f6d9;">)</span>
-</code></pre>
+<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> ematrix-chinese-font <span style="color: #1cc24b;">"Noto Serif CJK SC"</span><span style="color: #24f6d9;">)</span>
+</pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org99df891" class="outline-2">
-<h2 id="org99df891"><span class="section-number-2">5.</span> Supported Packages</h2>
+<div id="outline-container-org95e3651" class="outline-2">
+<h2 id="org95e3651"><span class="section-number-2">5.</span> Supported Packages</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 EMatrix provides faces for:
@@ -589,18 +588,18 @@ EMatrix provides faces for:
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd9230dc" class="outline-2">
-<h2 id="orgd9230dc"><span class="section-number-2">6.</span> File Structure</h2>
+<div id="outline-container-org9da4f0a" class="outline-2">
+<h2 id="org9da4f0a"><span class="section-number-2">6.</span> File Structure</h2>
 <div class="outline-text-2" id="text-6">
-<pre class="example" id="org5e3f731">
+<pre class="example" id="orgd95ab38">
 ematrix/
 ├── ematrix.el          # Package entry point, font setup, customization
 └── ematrix-theme.el    # deftheme with 130+ face definitions
 </pre>
 </div>
 </div>
-<div id="outline-container-org5d1b23a" class="outline-2">
-<h2 id="org5d1b23a"><span class="section-number-2">7.</span> Credits</h2>
+<div id="outline-container-org112654f" class="outline-2">
+<h2 id="org112654f"><span class="section-number-2">7.</span> Credits</h2>
 <div class="outline-text-2" id="text-7">
 <p>
 Color scheme sourced from <a href="https://github.com/anomalyco/opencode">OpenCode</a> by AnomalyCo, used under the MIT license.
@@ -611,8 +610,8 @@ The theme is at <a href="https://github.com/liangzid/ematrix">github.com/liangzi
 </p>
 </div>
 </div>
-<div id="outline-container-orgfff688e" class="outline-2">
-<h2 id="orgfff688e"><span class="section-number-2">8.</span> License</h2>
+<div id="outline-container-org2c92500" class="outline-2">
+<h2 id="org2c92500"><span class="section-number-2">8.</span> License</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 MIT
@@ -621,7 +620,7 @@ MIT
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Sun May 10 17:00:00 2026</span> <span class="date">Last modified: 2026-05-10 Sun 17:04</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Sun May 10 17:00:00 2026</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>

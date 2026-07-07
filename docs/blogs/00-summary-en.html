@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2026-05-29 Fri 10:11 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>My Research Journey: Understanding Models, Uncovering Vulnerabilities, and Building Defenses</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">My Research Journey: Understanding Models, Uncovering Vulnerabilities, and Building Defenses</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org2b1e999">1. Preface</a></li>
+<li><a href="#orgcd9fbf3">2. Thread One: Opening the Black Box—Understanding the Inner Workings of LLMs</a>
+<ul>
+<li><a href="#orgb559260">2.1. DPS: Drawing a Decision Boundary for LLMs</a></li>
+<li><a href="#org7bad2f0">2.2. TEMP: Alignment Signals Are in the Data, Not in RLHF</a></li>
+<li><a href="#org8ef11d2">2.3. The Information Bottleneck of Vision Tokens</a></li>
+<li><a href="#orgaa20412">2.4. Prompt Lexical Sensitivity: Beyond Prompt Engineering</a></li>
+</ul>
+</li>
+<li><a href="#org1a06f09">3. Thread Two: Attack as Understanding—Revealing Vulnerabilities</a>
+<ul>
+<li><a href="#orgab2636c">3.1. LoRD: How to Steal an LLM?</a></li>
+<li><a href="#org202ae6f">3.2. Prompt Leakage: Your System Prompts Are Not Safe</a></li>
+<li><a href="#orgdc27b0b">3.3. Web Memorization: What Did the LLM Memorize from the Internet?</a></li>
+<li><a href="#org03ac6b5">3.4. VIA: When Poisoned Data Meets Synthetic Data</a></li>
+<li><a href="#org2fc3dd3">3.5. LoRA Robustness: Lighter Means Weaker?</a></li>
+<li><a href="#orgf3e30f8">3.6. Mobius Injection: Can a Single Message Paralyze AI Infrastructure?</a></li>
+</ul>
+</li>
+<li><a href="#orge9eaeb0">4. Thread Three: Beyond Individual Models—Broader Impacts of AI</a>
+<ul>
+<li><a href="#org2f9dde2">4.1. The Matthew Effect: AI Coding Tools Make the Rich Richer</a></li>
+<li><a href="#orge3f54e7">4.2. ArxivRollBench: Is Your Model Cheating on the Test?</a></li>
+<li><a href="#org64b8bf6">4.3. Argus: Multi-Agent Ensemble for Security Vulnerability Detection</a></li>
+</ul>
+</li>
+<li><a href="#org31a2441">5. Thread Four: Not Just Attacking—Building Defenses and Privacy</a>
+<ul>
+<li><a href="#org470f181">5.1. MERGE: Fast Private Text Generation</a></li>
+</ul>
+</li>
+<li><a href="#org5e58e51">6. Closing Thoughts</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org2b1e999" class="outline-2">
+<h2 id="org2b1e999"><span class="section-number-2">1.</span> Preface</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Over the past five years—from 2021 to now—I have accumulated a body of work in LLM safety and interpretability. This post is an attempt to connect the dots across my fourteen first-author (or co-first-author) papers—not as a dry publication list, but as a narrative of what I was thinking, what I found, and why it matters.
+</p>
+
+<p>
+My research can be condensed into one cycle: <i>attack to understand, understand to defend</i>. These are not three separate phases. They form a loop—the more you understand a model, the better you know where it breaks. The more you attack it, the more clearly you see what it really is.
+</p>
+
+<p>
+I will organize these works into four threads.
+</p>
+</div>
+</div>
+<div id="outline-container-orgcd9fbf3" class="outline-2">
+<h2 id="orgcd9fbf3"><span class="section-number-2">2.</span> Thread One: Opening the Black Box—Understanding the Inner Workings of LLMs</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-orgb559260" class="outline-3">
+<h3 id="orgb559260"><span class="section-number-3">2.1.</span> DPS: Drawing a Decision Boundary for LLMs</h3>
+<div class="outline-text-3" id="text-2-1">
+
+<div id="org79ffc3e" class="figure">
+<p><img src="./images/screenshot_20250927_204135.png" alt="screenshot_20250927_204135.png" width="60%">
+</p>
+</div>
+
+<p>
+This is one of my favorite pieces of work from the PhD. The question is straightforward: how do LLMs actually make decisions?
+</p>
+
+<p>
+Classification models have decision boundaries, but LLMs are generative models. What does a "decision boundary" even mean for them? We formalized an answer: treat the LLM as a composite multi-class classifier, then define a Decision Potential Surface (DPS). The core idea is a potential function—when the potential equals zero, the resulting contour line is exactly the LLM's decision boundary.
+</p>
+
+<p>
+We then proposed K-DPS, which approximates DPS with only K samples per input point, and analyzed the error bounds both theoretically and empirically. The reviewers liked this one a lot.
+</p>
+
+<p>
+<b>KEYPOINT</b>: This is, to my knowledge, the first work that formally defines and approximates the decision boundary of LLMs—going beyond the hand-wavy "LLMs are black boxes" narrative.
+</p>
+</div>
+</div>
+<div id="outline-container-org7bad2f0" class="outline-3">
+<h3 id="org7bad2f0"><span class="section-number-3">2.2.</span> TEMP: Alignment Signals Are in the Data, Not in RLHF</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<div id="org65e2aa9" class="figure">
+<p><img src="./images/screenshot_20250309_222112.png" alt="screenshot_20250309_222112.png" width="60%">
+</p>
+</div>
+
+<p>
+AAAI 2025 Oral. The intuition behind this paper is simple: RLHF requires massive human annotation, but are human preference signals already latent in the raw text corpus?
+</p>
+
+<p>
+We assumed a prior distribution over the corpus and designed a method to sample safer responses <i>without any human labels</i>. In other words, the seeds of alignment are embedded in the data itself—not in the reward model of RLHF.
+</p>
+
+<p>
+This idea has since been corroborated by several follow-up works, including alignment techniques from major industry labs. The oral presentation sparked many good conversations—people were more receptive to the "alignment from raw text" hypothesis than I had anticipated.
+</p>
+</div>
+</div>
+<div id="outline-container-org8ef11d2" class="outline-3">
+<h3 id="org8ef11d2"><span class="section-number-3">2.3.</span> The Information Bottleneck of Vision Tokens</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+This is joint work with Shuxin Zhuang (Preprint 2026). The question: how much information can a single vision token actually carry? In VLMs, images are split into patches and mapped to tokens, but each token has a finite information capacity.
+</p>
+
+<p>
+We discovered that the information capacity of vision tokens follows a scaling law—it has a quantitative relationship with image resolution, patch size, and task complexity. This has direct implications for VLM design: if you want finer-grained recognition, you need more tokens. Our scaling law tells you exactly how many.
+</p>
+</div>
+</div>
+<div id="outline-container-orgaa20412" class="outline-3">
+<h3 id="orgaa20412"><span class="section-number-3">2.4.</span> Prompt Lexical Sensitivity: Beyond Prompt Engineering</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+ACL 2026 Findings, joint work with Qipeng Xie. We all know prompt engineering matters. But we found something deeper: prompts are far more sensitive to wording than people realize.
+</p>
+
+<p>
+The same intent, expressed with a different synonym or even a different punctuation mark, can produce drastically different output quality. We systematically quantified this sensitivity, analyzed which linguistic features drive quality variance, and proposed robust prompt design strategies.
+</p>
+
+<p>
+<b>KEYPOINT</b>: This implies that current prompt-based evaluations have enormous hidden variance. The "model capability" you measure on a particular prompt may simply be an artifact of that prompt's wording.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org1a06f09" class="outline-2">
+<h2 id="org1a06f09"><span class="section-number-2">3.</span> Thread Two: Attack as Understanding—Revealing Vulnerabilities</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orgab2636c" class="outline-3">
+<h3 id="orgab2636c"><span class="section-number-3">3.1.</span> LoRD: How to Steal an LLM?</h3>
+<div class="outline-text-3" id="text-3-1">
+
+<div id="org343e70c" class="figure">
+<p><img src="./images/screenshot_20250309_221216.png" alt="screenshot_20250309_221216.png" width="60%">
+</p>
+</div>
+
+<p>
+ACL 2025 Main. Model extraction—copying a target model's capabilities through repeated API queries. The standard approach uses cross-entropy (MLE) for distillation, but we found a problem: if the target model was trained with RL (e.g., RLHF), MLE does not work well.
+</p>
+
+<p>
+Why? Because the output distribution of an RL-trained model differs from the distribution that MLE assumes. We proposed LoRD (Locality Reinforced Distillation), a new RL-based extraction method. LoRD is not only more effective but also naturally resistant to certain watermarks.
+</p>
+
+<p>
+<b>KEYPOINT</b>: This is a real threat. If your LLM API is publicly accessible, an adversary can genuinely replicate your model's capabilities with LoRD.
+</p>
+</div>
+</div>
+<div id="outline-container-org202ae6f" class="outline-3">
+<h3 id="org202ae6f"><span class="section-number-3">3.2.</span> Prompt Leakage: Your System Prompts Are Not Safe</h3>
+<div class="outline-text-3" id="text-3-2">
+
+<div id="orgcad0898" class="figure">
+<p><img src="./images/screenshot_20250309_221310.png" alt="screenshot_20250309_221310.png" width="60%">
+</p>
+</div>
+
+
+<div id="org3209420" class="figure">
+<p><img src="./images/screenshot_20250309_221323.png" alt="screenshot_20250309_221323.png" width="60%">
+</p>
+</div>
+
+<p>
+When OpenAI's GPTs took off, many developers embedded core logic in system prompts, assuming this was secure. We showed it is not.
+</p>
+
+<p>
+We systematically evaluated three questions: (1) Can alignment defend against prompt extraction? Short answer: not really. (2) How do models leak prompts? We proposed and experimentally validated two hypotheses. (3) What factors influence leakage severity? Prompt length, complexity, and certain model properties all play a role.
+</p>
+
+<p>
+We also proposed several easy-to-adopt defense strategies based on our findings. The citation count on this paper has been climbing steadily, which tells me people care about this problem.
+</p>
+</div>
+</div>
+<div id="outline-container-orgdc27b0b" class="outline-3">
+<h3 id="orgdc27b0b"><span class="section-number-3">3.3.</span> Web Memorization: What Did the LLM Memorize from the Internet?</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+WWW 2026, joint work with Zhiyao Wu. LLMs memorize vast amounts of web content during training—but <i>what</i> exactly do they memorize? We proposed a semantic-level membership inference attack: not just detecting whether a specific text was in the training set, but detecting whether a <i>semantic concept</i> has been memorized by the model.
+</p>
+
+<p>
+Applications include privacy auditing, copyright detection, and training data provenance.
+</p>
+</div>
+</div>
+<div id="outline-container-org03ac6b5" class="outline-3">
+<h3 id="org03ac6b5"><span class="section-number-3">3.4.</span> VIA: When Poisoned Data Meets Synthetic Data</h3>
+<div class="outline-text-3" id="text-3-4">
+
+<div id="orgad3e3c0" class="figure">
+<p><img src="./images/screenshot_20250927_201328.png" alt="screenshot_20250927_201328.png" width="60%">
+</p>
+</div>
+
+<p>
+NeurIPS 2025 Spotlight. This is one of the works I am most proud of. The context: modern LLM training relies heavily on synthetic data—using models to generate data for training or distilling smaller models.
+</p>
+
+<p>
+We discovered two key facts:
+</p>
+<ol class="org-ol">
+<li>The distributional properties of synthetic data render traditional poisoning attacks largely ineffective—poisoned samples get "diluted" during the synthesis process.</li>
+<li>However, we proposed a new attack paradigm—Virus Infection Attack (VIA)—that enables the poison signal to <i>propagate</i> and <i>infect</i> downstream models through the synthetic data pipeline.</li>
+</ol>
+
+<p>
+This is the first systematic study of synthetic data security, and the first attack that gives poisoning a genuine "infectious" capability under the synthetic data paradigm.
+</p>
+
+<p>
+<b>KEYPOINT</b>: Think about it. If an attacker plants poison in an open-source model, that poison can propagate through synthetic data to every downstream model distilled from it. This is a supply-chain-level security threat.
+</p>
+</div>
+</div>
+<div id="outline-container-org2fc3dd3" class="outline-3">
+<h3 id="org2fc3dd3"><span class="section-number-3">3.5.</span> LoRA Robustness: Lighter Means Weaker?</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+ICML 2025. LoRA is now the de facto standard for fine-tuning LLMs. But how secure is it? We used NTK (Neural Tangent Kernel) to model the kernel-level differences between LoRA and full fine-tuning.
+</p>
+
+<p>
+The findings are nuanced:
+</p>
+<ul class="org-ul">
+<li>Against untargeted poisoning, LoRA is more vulnerable than full fine-tuning.</li>
+<li>Against backdoor attacks, LoRA is actually <i>more robust</i> than full fine-tuning.</li>
+</ul>
+
+<p>
+We also uncovered how LoRA's rank and initialization variance affect robustness—higher rank helps, but the initialization variance effect is counterintuitive.
+</p>
+</div>
+</div>
+<div id="outline-container-orgf3e30f8" class="outline-3">
+<h3 id="orgf3e30f8"><span class="section-number-3">3.6.</span> Mobius Injection: Can a Single Message Paralyze AI Infrastructure?</h3>
+<div class="outline-text-3" id="text-3-6">
+<p>
+Preprint 2026. This is very new work, investigating security in Agent-to-Agent communication scenarios. We found that a carefully crafted "Mobius Injection" can trigger cascading resource exhaustion across an agent network—essentially a new form of DDoS attack, which we call AbO-DDoS (Agent-borne DDoS).
+</p>
+
+<p>
+<b>KEYPOINT</b>: As the agent ecosystem grows, inter-agent communication security will become an entirely new attack surface. This paper is just the tip of the iceberg.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orge9eaeb0" class="outline-2">
+<h2 id="orge9eaeb0"><span class="section-number-2">4.</span> Thread Three: Beyond Individual Models—Broader Impacts of AI</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org2f9dde2" class="outline-3">
+<h3 id="org2f9dde2"><span class="section-number-3">4.1.</span> The Matthew Effect: AI Coding Tools Make the Rich Richer</h3>
+<div class="outline-text-3" id="text-4-1">
+
+<div id="orgd23d647" class="figure">
+<p><img src="./images/screenshot_20250927_203308.png" alt="screenshot_20250927_203308.png" width="60%">
+</p>
+</div>
+
+<p>
+ICLR 2026, joint work with Fei Gu. AI coding tools like Cursor and Copilot are everywhere. But what do they do to the software ecosystem?
+</p>
+
+<p>
+We discovered a Matthew Effect: AI coding tools tend to generate code for already-popular languages and frameworks—the ones with abundant training data. The result? Popular technologies get more AI-assisted development and become even more popular, while niche but potentially valuable technologies languish from lack of AI support.
+</p>
+
+<p>
+We validated this effect across both programming languages and frameworks. It is a hidden bias—AI tools claim to boost everyone's productivity, but they are quietly shaping the evolutionary direction of the software ecosystem.
+</p>
+
+<p>
+<b>KEYPOINT</b>: This work sits at the intersection of my master's background (software engineering) and my PhD focus (LLM safety). Looking back after a few years, I find that accumulations from different stages converge in unexpected ways.
+</p>
+</div>
+</div>
+<div id="outline-container-orge3f54e7" class="outline-3">
+<h3 id="orge3f54e7"><span class="section-number-3">4.2.</span> ArxivRollBench: Is Your Model Cheating on the Test?</h3>
+<div class="outline-text-3" id="text-4-2">
+
+<div id="org1a5b951" class="figure">
+<p><img src="./images/screenshot_20250927_202632.png" alt="screenshot_20250927_202632.png" width="60%">
+</p>
+</div>
+
+<p>
+AAAI 2026. The motivation is simple: there are too many LLM benchmarks, and scores keep going up, but how much of that is real capability versus memorization of leaked test data?
+</p>
+
+<p>
+Drawing inspiration from the One-Time-Pad in cryptography, we designed a new benchmark paradigm. ArxivRollBench automatically generates test cases from newly published arXiv papers every day—since the papers are new, the model cannot have seen them, so test results are not contaminated by training data.
+</p>
+
+<p>
+We also proposed a quantitative framework for measuring the "cheating ratio." The leaderboard is at: <a href="https://arxivroll.moreoverai.com">https://arxivroll.moreoverai.com</a>
+</p>
+
+<p>
+<b>KEYPOINT</b>: I will update the leaderboard every six months. Follow along to see which models perform best under "clean exam" conditions.
+</p>
+</div>
+</div>
+<div id="outline-container-org64b8bf6" class="outline-3">
+<h3 id="org64b8bf6"><span class="section-number-3">4.3.</span> Argus: Multi-Agent Ensemble for Security Vulnerability Detection</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Preprint 2026. This work returns to my roots in software security. We proposed Argus, a multi-agent collaborative static analysis framework capable of detecting security vulnerabilities across full attack chains.
+</p>
+
+<p>
+Traditional static analysis tools each have their strengths but operate in isolation. Argus uses a multi-agent ensemble to orchestrate them, leveraging each tool's expertise. The framework performs well on real-world vulnerability detection.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org31a2441" class="outline-2">
+<h2 id="org31a2441"><span class="section-number-2">5.</span> Thread Four: Not Just Attacking—Building Defenses and Privacy</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-org470f181" class="outline-3">
+<h3 id="org470f181"><span class="section-number-3">5.1.</span> MERGE: Fast Private Text Generation</h3>
+<div class="outline-text-3" id="text-5-1">
+
+<div id="org49a974f" class="figure">
+<p><img src="./images/screenshot_20250309_221412.png" alt="screenshot_20250309_221412.png" width="60%">
+</p>
+</div>
+
+<p>
+AAAI 2024. This was my first paper during the PhD, and also the first privacy-preserving inference framework specifically designed for NLG models.
+</p>
+
+<p>
+Based on Secret Sharing and Multi-Party Computation (MPC), MERGE enables text generation without revealing user inputs or model parameters. We achieved a 10x speedup through a series of optimizations. If you are curious about how cryptography protects AI privacy, this is a good starting point.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org5e58e51" class="outline-2">
+<h2 id="org5e58e51"><span class="section-number-2">6.</span> Closing Thoughts</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+Looking back at these fourteen papers—from MERGE's privacy computing to DPS's decision boundaries, from LoRD's model extraction to VIA's poisoning propagation—the research trajectory may seem scattered, but the core question has never changed: <i>How do large models actually work, and where do they break?</i>
+</p>
+
+<p>
+In other words, I do "understanding through attack" and "attacking through understanding"—using attacks to understand models, then using that understanding to find new attack surfaces, cycling forward.
+</p>
+
+<p>
+If any of this interests you, feel free to reach out. My email is zi1415926.liang@connect.polyu.hk, and my WeChat is paperacceptplease.
+</p>
+
+<p>
+Also check out my GitHub: <a href="https://github.com/liangzid">https://github.com/liangzid</a>
+</p>
+
+<p>
+Zi Liang's Publication List:
+</p>
+<ul class="org-ul">
+<li>Google Scholar: <a href="https://scholar.google.com/citations?user=pzrGwvMAAAAJ&amp;hl=en">https://scholar.google.com/citations?user=pzrGwvMAAAAJ&amp;hl=en</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzi20163933@qq.com">liangzi20163933@qq.com</a>)</span> <span class="date">Create Date: 2026-05-27</span> <span class="date">Last modified: 2026-05-27 Wed 21:37</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+</div>
+</body>
+</html>

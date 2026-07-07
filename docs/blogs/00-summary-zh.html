@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2026-05-29 Fri 10:11 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>我的研究之旅：从理解模型到发现漏洞，再到构建防御</title>
+<meta name="author" content="Zi Liang (团长)" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">我的研究之旅：从理解模型到发现漏洞，再到构建防御</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org4100371">1. 写在前面</a></li>
+<li><a href="#orgd349b38">2. 线索一：把黑箱打开——理解大模型的"内心世界"</a>
+<ul>
+<li><a href="#org5333abe">2.1. DPS：给LLM画一条决策边界</a></li>
+<li><a href="#orgf304c52">2.2. TEMP：对齐信号不在RLHF里，在语料里</a></li>
+<li><a href="#orgb054145">2.3. Vision Token的信息瓶颈</a></li>
+<li><a href="#org5357de0">2.4. Prompt的"措辞敏感性"</a></li>
+</ul>
+</li>
+<li><a href="#org3cc80c4">3. 线索二：攻击即理解——用攻击揭示模型的脆弱性</a>
+<ul>
+<li><a href="#org44aa64f">3.1. LoRD：怎么"偷"一个LLM？</a></li>
+<li><a href="#orgd09bdb5">3.2. Prompt Leakage：你的系统提示词藏不住</a></li>
+<li><a href="#org25b09c6">3.3. Web Memorization：LLM记住了互联网的什么？</a></li>
+<li><a href="#org7df4898">3.4. VIA：当毒化数据遇上合成数据</a></li>
+<li><a href="#orgeec2cad">3.5. LoRA的鲁棒性：越轻量越脆弱？</a></li>
+<li><a href="#orgb2f7fc0">3.6. Mobius Injection：一条消息瘫痪AI基础设施？</a></li>
+</ul>
+</li>
+<li><a href="#org5a7ef64">4. 线索三：跳出模型本身——AI对世界的更广泛影响</a>
+<ul>
+<li><a href="#org5ec57e3">4.1. Matthew Effect：AI编程工具让"富者更富"</a></li>
+<li><a href="#orgc280271">4.2. ArxivRollBench：你的模型在"作弊"吗？</a></li>
+<li><a href="#org4ba772e">4.3. Argus：多Agent协作的安全漏洞检测</a></li>
+</ul>
+</li>
+<li><a href="#orgbd25afe">5. 线索四：不仅要攻击，还要防御——隐私计算</a>
+<ul>
+<li><a href="#orgfb60466">5.1. MERGE：快速私有文本生成</a></li>
+</ul>
+</li>
+<li><a href="#org3de17d9">6. 一些感想</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org4100371" class="outline-2">
+<h2 id="org4100371"><span class="section-number-2">1.</span> 写在前面</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+从2021年开始做科研到现在，五年时间，我在LLM安全与可解释性这个方向上积累了不少工作。借这个机会，把这十四篇一作（含共一）论文串起来讲一讲——不是那种冷冰冰的论文列表，而是真正的"我在想什么、我发现了什么"。
+</p>
+
+<p>
+我的研究方向可以概括为一句话：*通过攻击来理解模型，通过理解来构建防御*。这不是三个独立的阶段，而是一个循环——你越理解模型，就越知道它哪里脆弱；你越攻击它，就越看清它的本质。
+</p>
+
+<p>
+下面我把这些工作分成四条线索来讲。
+</p>
+</div>
+</div>
+<div id="outline-container-orgd349b38" class="outline-2">
+<h2 id="orgd349b38"><span class="section-number-2">2.</span> 线索一：把黑箱打开——理解大模型的"内心世界"</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org5333abe" class="outline-3">
+<h3 id="org5333abe"><span class="section-number-3">2.1.</span> DPS：给LLM画一条决策边界</h3>
+<div class="outline-text-3" id="text-2-1">
+
+<div id="orgcc326c0" class="figure">
+<p><img src="./images/screenshot_20250927_204135.png" alt="screenshot_20250927_204135.png" width="60%">
+</p>
+</div>
+
+<p>
+这是我博士期间最喜欢的工作之一。问题很直接：大模型到底是怎么做决策的？
+</p>
+
+<p>
+分类模型有decision boundary，但LLM是一个生成式模型，它的"决策边界"是什么？我们给出了一个形式化定义：把LLM看作一个组合的多类分类器，然后定义了Decision Potential Surface (DPS)。DPS的核心是一个势函数——当势函数等于0的时候，那条等高线就是LLM的决策边界。
+</p>
+
+<p>
+更进一步，我们提出了K-DPS——只需要对每个点采样K次就能近似DPS，并且从理论和实验上分析了误差界。这个工作投出去之后reviewer的评价很高，rebuttal也很顺利，目前还在等最终结果。
+</p>
+
+<p>
+*KEYPOINT*：这是第一次有人把LLM的决策边界这件事正经地形式化并近似出来，而不是停留在"LLM是黑箱"这句话上。
+</p>
+</div>
+</div>
+<div id="outline-container-orgf304c52" class="outline-3">
+<h3 id="orgf304c52"><span class="section-number-3">2.2.</span> TEMP：对齐信号不在RLHF里，在语料里</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<div id="orge70a976" class="figure">
+<p><img src="./images/screenshot_20250309_222112.png" alt="screenshot_20250309_222112.png" width="60%">
+</p>
+</div>
+
+<p>
+AAAI'25 Oral。这篇的想法其实很朴素：RLHF需要大量人类标注，但人类偏好的信号是不是已经藏在原始语料里了？
+</p>
+
+<p>
+我们假设语料中存在一个先验分布，然后设计了一种方法，在不需要任何人工标注的情况下，从这个分布中采样出更安全的回复。换句话说，*alignment的种子埋在数据里，而不是RLHF的reward model里*。
+</p>
+
+<p>
+这个想法后来在很多后续工作中被印证了——包括一些大厂的alignment技术报告也提到了类似的观点。Oral presentation的时候和很多同行聊了，大家对"语料自带对齐信号"这件事的接受度比我想象的高。
+</p>
+</div>
+</div>
+<div id="outline-container-orgb054145" class="outline-3">
+<h3 id="orgb054145"><span class="section-number-3">2.3.</span> Vision Token的信息瓶颈</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+这是和树鑫（Shuxin Zhuang）合作的工作，发表在Preprint'26。问题是：一个Vision Token到底能承载多少信息？在VLM（视觉语言模型）中，图像被切成patch再映射成token，但这个token的信息量是有上限的。
+</p>
+
+<p>
+我们发现了Vision Token的信息量遵循一个scaling law——它和图像分辨率、patch大小、以及任务复杂度之间存在定量的关系。这个发现对VLM的设计有直接的指导意义：你想让模型识别更细粒度的物体？那就需要更多的vision tokens，但具体需要多少，我们的scaling law可以告诉你。
+</p>
+</div>
+</div>
+<div id="outline-container-org5357de0" class="outline-3">
+<h3 id="org5357de0"><span class="section-number-3">2.4.</span> Prompt的"措辞敏感性"</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+ACL'26 Findings，和启鹏（Qipeng Xie）合作。大家都知道prompt engineering很重要，但我们发现了一个更底层的问题：prompt对措辞的敏感程度远超想象。
+</p>
+
+<p>
+同一个意思，换一个词、甚至换一个标点，模型的输出质量可能天差地别。我们系统性地量化了这种敏感性，分析了哪些语言学特征会导致prompt质量波动，并提出了一些稳健的prompt设计策略。
+</p>
+
+<p>
+*KEYPOINT*：这意味着当前的prompt evaluation可能存在巨大的方差——你在某个prompt上测出来的"模型能力"，可能只是prompt措辞的偶然结果。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org3cc80c4" class="outline-2">
+<h2 id="org3cc80c4"><span class="section-number-2">3.</span> 线索二：攻击即理解——用攻击揭示模型的脆弱性</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org44aa64f" class="outline-3">
+<h3 id="org44aa64f"><span class="section-number-3">3.1.</span> LoRD：怎么"偷"一个LLM？</h3>
+<div class="outline-text-3" id="text-3-1">
+
+<div id="org686a382" class="figure">
+<p><img src="./images/screenshot_20250309_221216.png" alt="screenshot_20250309_221216.png" width="60%">
+</p>
+</div>
+
+<p>
+ACL'25 Main。Model extraction（模型窃取）攻击——通过反复查询目标模型来复制它的能力。传统方法用交叉熵（MLE）做蒸馏，但我们发现一个问题：如果目标模型是用RL训过的（比如RLHF），那么MLE就不太好使了。
+</p>
+
+<p>
+为什么？因为RL训练的模型输出的分布和MLE假设的分布不一致。我们提出了LoRD（Locality Reinforced Distillation），一种新的RL-based extraction方法。LoRD不仅更有效，而且天然对watermark有一定的抵抗力。
+</p>
+
+<p>
+*KEYPOINT*：这是一个实际威胁——如果你的LLM API对外开放，攻击者确实可以用LoRD来复制你的模型能力。
+</p>
+</div>
+</div>
+<div id="outline-container-orgd09bdb5" class="outline-3">
+<h3 id="orgd09bdb5"><span class="section-number-3">3.2.</span> Prompt Leakage：你的系统提示词藏不住</h3>
+<div class="outline-text-3" id="text-3-2">
+
+<div id="orgde6d31d" class="figure">
+<p><img src="./images/screenshot_20250309_221310.png" alt="screenshot_20250309_221310.png" width="60%">
+</p>
+</div>
+
+
+<div id="org20ec71e" class="figure">
+<p><img src="./images/screenshot_20250309_221323.png" alt="screenshot_20250309_221323.png" width="60%">
+</p>
+</div>
+
+<p>
+OpenAI的GPTs火了之后，很多人把核心逻辑写在system prompt里，以为这样就安全了。我们证明了：不安全。
+</p>
+
+<p>
+我们系统性地评估了三个方面：(1) alignment能不能防住prompt extraction？答案是基本不能。(2) 模型是怎么泄露prompt的？我们提出了两个假设并用实验验证。(3) 哪些因素影响泄露程度？我们发现prompt的长度、复杂度、以及模型本身的某些属性都是关键因素。
+</p>
+
+<p>
+基于这些发现，我们还提出了几种简单有效的防御策略。这个工作的citation涨得很快，说明大家对这个问题确实很关注。
+</p>
+</div>
+</div>
+<div id="outline-container-org25b09c6" class="outline-3">
+<h3 id="org25b09c6"><span class="section-number-3">3.3.</span> Web Memorization：LLM记住了互联网的什么？</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+WWW'26，和志尧（Zhiyao Wu）合作。LLM在训练时"记住"了大量网页内容，但哪些内容被记住了？我们提出了一种语义级别的membership inference attack——不只是判断某个文本是否在训练集里，而是判断某个"语义概念"是否被模型记住了。
+</p>
+
+<p>
+这个工作的应用场景很广：隐私审计、版权检测、训练数据溯源等等。
+</p>
+</div>
+</div>
+<div id="outline-container-org7df4898" class="outline-3">
+<h3 id="org7df4898"><span class="section-number-3">3.4.</span> VIA：当毒化数据遇上合成数据</h3>
+<div class="outline-text-3" id="text-3-4">
+
+<div id="orgc770b70" class="figure">
+<p><img src="./images/screenshot_20250927_201328.png" alt="screenshot_20250927_201328.png" width="60%">
+</p>
+</div>
+
+<p>
+NeurIPS'25 Spotlight。这是我最引以为傲的工作之一。背景是：现在的LLM训练大量使用合成数据（synthetic data），即用模型自己生成的数据来训练自己或蒸馏小模型。
+</p>
+
+<p>
+我们发现了两个关键事实：
+</p>
+<ol class="org-ol">
+<li>合成数据的分布特性使得传统的poisoning attack基本失效——毒化样本在合成过程中被"稀释"了。</li>
+<li>但我们提出了一种新的攻击范式——Virus Infection Attack (VIA)——可以让毒化信号在合成数据的生成和训练过程中"传播"和"感染"下游模型。</li>
+</ol>
+
+<p>
+这是第一个系统性研究合成数据安全性的工作，也是第一个让poisoning在合成数据范式下具备"感染能力"的攻击。
+</p>
+
+<p>
+*KEYPOINT*：想想看，如果攻击者在一个开源模型里埋了毒，这个毒可以通过合成数据传播到所有用这个模型蒸馏出来的下游模型。这是一个供应链级别的安全威胁。
+</p>
+</div>
+</div>
+<div id="outline-container-orgeec2cad" class="outline-3">
+<h3 id="orgeec2cad"><span class="section-number-3">3.5.</span> LoRA的鲁棒性：越轻量越脆弱？</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+ICML'25。LoRA现在已经是大模型微调的事实标准了，但它的安全性怎么样？我们用NTK（Neural Tangent Kernel）建模了LoRA和全量微调在kernel层面的差异。
+</p>
+
+<p>
+结论很有意思：
+</p>
+<ul class="org-ul">
+<li>对于无目标poisoning攻击，LoRA比全量微调更脆弱；</li>
+<li>但对于后门攻击（backdoor），LoRA反而比全量微调更鲁棒。</li>
+</ul>
+
+<p>
+我们还发现了LoRA的rank和初始化方差对鲁棒性的影响——rank越高越鲁棒，但初始化方差的影响是反直觉的。
+</p>
+</div>
+</div>
+<div id="outline-container-orgb2f7fc0" class="outline-3">
+<h3 id="orgb2f7fc0"><span class="section-number-3">3.6.</span> Mobius Injection：一条消息瘫痪AI基础设施？</h3>
+<div class="outline-text-3" id="text-3-6">
+<p>
+Preprint'26。这是一个非常新的工作，研究的是Agent-to-Agent通信场景下的安全问题。我们发现，通过精心构造的"莫比乌斯注入"（Mobius Injection），攻击者可以用一条消息在Agent网络中引发级联的资源耗尽——本质上是一种新型的DDoS攻击，我们称之为AbO-DDoS（Agent-borne DDoS）。
+</p>
+
+<p>
+*KEYPOINT*：随着Agent生态的兴起，Agent之间的通信安全将成为一个全新的攻击面。这个工作只是冰山一角。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org5a7ef64" class="outline-2">
+<h2 id="org5a7ef64"><span class="section-number-2">4.</span> 线索三：跳出模型本身——AI对世界的更广泛影响</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org5ec57e3" class="outline-3">
+<h3 id="org5ec57e3"><span class="section-number-3">4.1.</span> Matthew Effect：AI编程工具让"富者更富"</h3>
+<div class="outline-text-3" id="text-4-1">
+
+<div id="org410803e" class="figure">
+<p><img src="./images/screenshot_20250927_203308.png" alt="screenshot_20250927_203308.png" width="60%">
+</p>
+</div>
+
+<p>
+ICLR'26，和顾飞（Fei Gu）合作。Cursor、Copilot这些AI编程工具越来越流行，但它们对软件生态有什么影响？
+</p>
+
+<p>
+我们发现了一个"马太效应"：AI编程工具倾向于生成那些已经流行、语料丰富的编程语言和框架的代码。结果呢？流行的语言和框架因为有更多的AI辅助而变得更流行，而小众但有潜力的技术栈因为AI支持不足而更难获得关注。
+</p>
+
+<p>
+我们在编程语言和编程框架两个维度上验证了这个效应。这是一个hidden bias——AI工具声称提升所有人的效率，但它在悄悄塑造软件生态的演化方向。
+</p>
+
+<p>
+*KEYPOINT*：这是我的硕士背景（软件工程）和博士方向（LLM安全）的交汇点。一件事做了几年之后回头看，发现不同阶段的积累会以一种意想不到的方式汇聚。
+</p>
+</div>
+</div>
+<div id="outline-container-orgc280271" class="outline-3">
+<h3 id="orgc280271"><span class="section-number-3">4.2.</span> ArxivRollBench：你的模型在"作弊"吗？</h3>
+<div class="outline-text-3" id="text-4-2">
+
+<div id="org1efffd5" class="figure">
+<p><img src="./images/screenshot_20250927_202632.png" alt="screenshot_20250927_202632.png" width="60%">
+</p>
+</div>
+
+<p>
+AAAI'26。这个问题来自一个朴素的观察：现在的LLM benchmark太多了，模型在benchmark上的分数越来越高，但这些分数有多少是真正的能力，有多少是"见过题"之后的记忆？
+</p>
+
+<p>
+我们借鉴密码学中One-Time-Pad的思想，设计了一种新的benchmark范式。ArxivRollBench每天自动从最新arXiv论文中生成测试用例——因为论文是新的，模型不可能见过，所以测试结果不会被训练数据污染。
+</p>
+
+<p>
+我们还提出了一个量化"作弊程度"的evaluation framework。Leaderboard在这里：<a href="https://arxivroll.moreoverai.com">https://arxivroll.moreoverai.com</a>
+</p>
+
+<p>
+*KEYPOINT*：我会每半年更新一次leaderboard。欢迎大家关注哪些模型在"裸考"下表现最好。
+</p>
+</div>
+</div>
+<div id="outline-container-org4ba772e" class="outline-3">
+<h3 id="org4ba772e"><span class="section-number-3">4.3.</span> Argus：多Agent协作的安全漏洞检测</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Preprint'26。这个工作回到了软件安全的老本行。我们提出了Argus，一个基于多Agent协作的静态分析框架，可以检测完整攻击链上的安全漏洞。
+</p>
+
+<p>
+传统的静态分析工具各有所长但互不通信，Argus用一个multi-agent ensemble把它们"编排"起来，各取所长。这个工作在真实世界的漏洞检测上表现很好。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgbd25afe" class="outline-2">
+<h2 id="orgbd25afe"><span class="section-number-2">5.</span> 线索四：不仅要攻击，还要防御——隐私计算</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orgfb60466" class="outline-3">
+<h3 id="orgfb60466"><span class="section-number-3">5.1.</span> MERGE：快速私有文本生成</h3>
+<div class="outline-text-3" id="text-5-1">
+
+<div id="org3a89402" class="figure">
+<p><img src="./images/screenshot_20250309_221412.png" alt="screenshot_20250309_221412.png" width="60%">
+</p>
+</div>
+
+<p>
+AAAI'24。这是我博士期间的第一个工作，也是第一个专门为NLG模型设计的隐私保护推理框架。
+</p>
+
+<p>
+基于Secret Sharing和MPC（多方安全计算），MERGE可以在不泄露用户输入和模型参数的情况下完成文本生成。我们通过一系列优化将推理速度提升了10倍。如果你对密码学如何保护AI隐私感兴趣，这篇是个不错的起点。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org3de17d9" class="outline-2">
+<h2 id="org3de17d9"><span class="section-number-2">6.</span> 一些感想</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+回头看这十四篇论文，从MERGE的隐私计算到DPS的决策边界，从LoRD的模型窃取到VIA的毒化传播，研究路线看似跳跃，但核心问题一直没变：*大模型到底是怎么工作的，以及它在哪里会出问题*。
+</p>
+
+<p>
+换句话说，我做的是"理解性攻击"和"攻击性理解"——用攻击来理解模型，理解了之后再去找新的攻击面，如此循环往复。
+</p>
+
+<p>
+如果你对我的任何工作感兴趣，欢迎发邮件讨论。我的邮箱是 zi1415926.liang@connect.polyu.hk，微信是 paperacceptplease。
+</p>
+
+<p>
+也欢迎关注我的GitHub：<a href="https://github.com/liangzid">https://github.com/liangzid</a>
+</p>
+
+<p>
+团长的论文列表：
+</p>
+<ul class="org-ul">
+<li>Google Scholar: <a href="https://scholar.google.com/citations?user=pzrGwvMAAAAJ&amp;hl=zh-CN">https://scholar.google.com/citations?user=pzrGwvMAAAAJ&amp;hl=zh-CN</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (团长) (<a href="mailto:liangzi20163933@qq.com">liangzi20163933@qq.com</a>)</span> <span class="date">Create Date: 2026-05-27</span> <span class="date">Last modified: 2026-05-27 Wed 21:36</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+</div>
+</body>
+</html>

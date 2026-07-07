@@ -1,0 +1,29 @@
+#+title: The Information Bottleneck of Vision Tokens: How Much Can One Token Hold?
+#+author: Zi Liang
+#+date: 2026-05-27
+#+options: toc:nil
+
+* Background: Where Do Vision Tokens Come From?
+
+In VLMs (Vision-Language Models), an image is first split into patches, and each patch is mapped to a vision token. This token is the model's "window" for seeing the image.
+
+But here is a question: how much information can a single token actually hold? As image resolution increases and tasks become more complex, how many tokens do you need? Nobody had answered this quantitatively before.
+
+* Our Discovery
+
+In joint work with Shuxin Zhuang, we found that the information capacity of vision tokens follows a scaling law—a quantitative power-law relationship with image resolution, patch size, and task complexity.
+
+Specifically:
+- Higher resolution increases per-token information (with diminishing returns)
+- Smaller patches (more tokens) increase total information
+- More complex tasks (e.g., fine-grained recognition) demand higher per-token information
+
+* Practical Implications
+
+This scaling law directly informs VLM design. For instance, if you want the model to recognize small objects in images, our formula tells you exactly what resolution you need—given a specific patch size—for each token to carry sufficient discriminative information. No more trial and error.
+
+* Paper Info
+
+- Title: How Much Information Can a Vision Token Hold? A Scaling Law for Recognition Limits in VLMs
+- Authors: Shuxin Zhuang, Zi Liang, Runsheng Yu, Hongzong Li, Rong Feng, Shiqin Tang, Youzhi Zhang
+- Status: Preprint 2026

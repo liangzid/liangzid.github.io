@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-07-07 Tue 20:50 -->
+<!-- 2026-05-29 Fri 10:11 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OpenClaw 代码乱读笔记 2</title>
@@ -56,7 +56,6 @@
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
   pre.src-authinfo::before { content: 'Authinfo'; }
-  pre.src-c:before { content: 'C'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -71,7 +70,7 @@
   pre.src-haskell:before { content: 'Haskell'; }
   pre.src-hledger:before { content: 'hledger'; }
   pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'JavaScript'; }
+  pre.src-js:before { content: 'Javascript'; }
   pre.src-latex:before { content: 'LaTeX'; }
   pre.src-ledger:before { content: 'Ledger'; }
   pre.src-lisp:before { content: 'Lisp'; }
@@ -205,70 +204,70 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orga26ddc5">1. 第六章：AI Agent 是怎么工作的？—— Pi Embedded Runner 和系统提示词</a>
+<li><a href="#org0bc0710">1. 第六章：AI Agent 是怎么工作的？—— Pi Embedded Runner 和系统提示词</a>
 <ul>
-<li><a href="#org7899fc5">1.1. 6.1 先看系统提示词是怎么构建的</a>
+<li><a href="#org1726d1f">1.1. 6.1 先看系统提示词是怎么构建的</a>
 <ul>
-<li><a href="#org89beb91">1.1.1. 6.1.1 系统提示词的完整结构</a></li>
-<li><a href="#orgeb3c161">1.1.2. 6.1.2 Tooling 部分：工具列表</a></li>
-<li><a href="#org0bc67f4">1.1.3. 6.1.3 Safety 部分：安全规则</a></li>
-<li><a href="#org902efb0">1.1.4. 6.1.4 Skills 部分：告诉 AI 怎么用 Skills</a></li>
-<li><a href="#orgae1e2c6">1.1.5. 6.1.5 Memory 部分：告诉 AI 怎么用记忆</a></li>
-<li><a href="#org7147cd9">1.1.6. 6.1.6 三种提示词模式</a></li>
+<li><a href="#orgf90c5d1">1.1.1. 6.1.1 系统提示词的完整结构</a></li>
+<li><a href="#orgfc20ab8">1.1.2. 6.1.2 Tooling 部分：工具列表</a></li>
+<li><a href="#org680406e">1.1.3. 6.1.3 Safety 部分：安全规则</a></li>
+<li><a href="#orgcf13c3b">1.1.4. 6.1.4 Skills 部分：告诉 AI 怎么用 Skills</a></li>
+<li><a href="#orgcc8b730">1.1.5. 6.1.5 Memory 部分：告诉 AI 怎么用记忆</a></li>
+<li><a href="#orge222b55">1.1.6. 6.1.6 三种提示词模式</a></li>
 </ul>
 </li>
-<li><a href="#orgc83f231">1.2. 6.2 Skill 例子：两个真实的 SKILL.md</a>
+<li><a href="#org8d38b06">1.2. 6.2 Skill 例子：两个真实的 SKILL.md</a>
 <ul>
-<li><a href="#org2467c20">1.2.1. 6.2.1 例子一：weather Skill</a></li>
-<li><a href="#org3556dda">1.2.2. 6.2.2 例子二：github Skill</a></li>
+<li><a href="#org078a1c7">1.2.1. 6.2.1 例子一：weather Skill</a></li>
+<li><a href="#org4bb7b14">1.2.2. 6.2.2 例子二：github Skill</a></li>
 </ul>
 </li>
-<li><a href="#orgdb48cf9">1.3. 6.3 Pi Embedded Runner：src/agents/pi-embedded-runner/</a></li>
-<li><a href="#orgb52019a">1.4. 6.4 这章看完的感觉</a></li>
+<li><a href="#orgbe24d2e">1.3. 6.3 Pi Embedded Runner：src/agents/pi-embedded-runner/</a></li>
+<li><a href="#org613394b">1.4. 6.4 这章看完的感觉</a></li>
 </ul>
 </li>
-<li><a href="#orga1b6725">2. 第七章：Memory 系统 —— SQLite + sqlite-vec + 混合搜索</a>
+<li><a href="#org7ec39ce">2. 第七章：Memory 系统 —— SQLite + sqlite-vec + 混合搜索</a>
 <ul>
-<li><a href="#org380b859">2.1. 7.1 再看一眼整体结构：src/memory/</a></li>
-<li><a href="#orgb14f4d8">2.2. 7.2 MemoryIndexManager 类的详细字段</a></li>
-<li><a href="#orgd124344">2.3. 7.3 数据库表详细说明</a></li>
-<li><a href="#org4200bd3">2.4. 7.4 混合搜索详细说明：src/memory/hybrid.ts</a></li>
-<li><a href="#org2a88e97">2.5. 7.5 文件监听和自动同步</a></li>
-<li><a href="#org6db6a6e">2.6. 7.6 这章看完的感觉</a></li>
+<li><a href="#org3c8a993">2.1. 7.1 再看一眼整体结构：src/memory/</a></li>
+<li><a href="#org8ff8713">2.2. 7.2 MemoryIndexManager 类的详细字段</a></li>
+<li><a href="#orge4955bc">2.3. 7.3 数据库表详细说明</a></li>
+<li><a href="#orgeffc8a1">2.4. 7.4 混合搜索详细说明：src/memory/hybrid.ts</a></li>
+<li><a href="#org6aa9016">2.5. 7.5 文件监听和自动同步</a></li>
+<li><a href="#org396eb3a">2.6. 7.6 这章看完的感觉</a></li>
 </ul>
 </li>
-<li><a href="#org3b9dffc">3. 第八章：Skills 和插件系统</a>
+<li><a href="#org604b65d">3. 第八章：Skills 和插件系统</a>
 <ul>
-<li><a href="#org7a2225f">3.1. 8.1 Skill vs 插件</a></li>
-<li><a href="#org5378289">3.2. 8.2 Skill 的 frontmatter 详细说明</a>
+<li><a href="#org530cd39">3.1. 8.1 Skill vs 插件</a></li>
+<li><a href="#org8a9638d">3.2. 8.2 Skill 的 frontmatter 详细说明</a>
 <ul>
-<li><a href="#orgbd0bcc5">3.2.1. 8.2.1 weather Skill 的 frontmatter</a></li>
-<li><a href="#org7929d34">3.2.2. 8.2.2 github Skill 的 frontmatter</a></li>
-<li><a href="#orge00db1a">3.2.3. 8.2.3 frontmatter 字段说明</a></li>
+<li><a href="#orgcedb037">3.2.1. 8.2.1 weather Skill 的 frontmatter</a></li>
+<li><a href="#org03c0a2b">3.2.2. 8.2.2 github Skill 的 frontmatter</a></li>
+<li><a href="#orgf3a1190">3.2.3. 8.2.3 frontmatter 字段说明</a></li>
 </ul>
 </li>
-<li><a href="#orgc882b26">3.3. 8.3 插件系统详细说明：src/plugins/</a>
+<li><a href="#org5fd65cd">3.3. 8.3 插件系统详细说明：src/plugins/</a>
 <ul>
-<li><a href="#org0135b38">3.3.1. 8.3.1 插件清单类型：PluginManifest</a></li>
+<li><a href="#org05a0a44">3.3.1. 8.3.1 插件清单类型：PluginManifest</a></li>
 </ul>
 </li>
-<li><a href="#orgef8eb4e">3.4. 8.4 插件加载流程</a></li>
-<li><a href="#orge41dc9a">3.5. 8.5 这章看完的感觉</a></li>
+<li><a href="#org0b673c8">3.4. 8.4 插件加载流程</a></li>
+<li><a href="#org06d71fb">3.5. 8.5 这章看完的感觉</a></li>
 </ul>
 </li>
-<li><a href="#orgf291728">4. 第二部分暂时写到这里</a></li>
+<li><a href="#org6d378cf">4. 第二部分暂时写到这里</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orga26ddc5" class="outline-2">
-<h2 id="orga26ddc5"><span class="section-number-2">1.</span> 第六章：AI Agent 是怎么工作的？—— Pi Embedded Runner 和系统提示词</h2>
+<div id="outline-container-org0bc0710" class="outline-2">
+<h2 id="org0bc0710"><span class="section-number-2">1.</span> 第六章：AI Agent 是怎么工作的？—— Pi Embedded Runner 和系统提示词</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 好了，前面我们看了 Gateway、渠道、安全这些，现在来看看最核心的部分：AI Agent 是怎么实现的？
 </p>
 </div>
-<div id="outline-container-org7899fc5" class="outline-3">
-<h3 id="org7899fc5"><span class="section-number-3">1.1.</span> 6.1 先看系统提示词是怎么构建的</h3>
+<div id="outline-container-org1726d1f" class="outline-3">
+<h3 id="org1726d1f"><span class="section-number-3">1.1.</span> 6.1 先看系统提示词是怎么构建的</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 文件路径：=src/agents/system-prompt.ts=
@@ -282,8 +281,8 @@
 这个文件里有一个 <code>buildAgentSystemPrompt()</code> 函数，它把很多个部分拼起来形成完整的系统提示词。让我们看看系统提示词到底长什么样 —— 我从代码里整理一下结构：
 </p>
 </div>
-<div id="outline-container-org89beb91" class="outline-4">
-<h4 id="org89beb91"><span class="section-number-4">1.1.1.</span> 6.1.1 系统提示词的完整结构</h4>
+<div id="outline-container-orgf90c5d1" class="outline-4">
+<h4 id="orgf90c5d1"><span class="section-number-4">1.1.1.</span> 6.1.1 系统提示词的完整结构</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <p>
 一个完整的系统提示词包含这些部分：
@@ -319,15 +318,15 @@
 </p>
 </div>
 </div>
-<div id="outline-container-orgeb3c161" class="outline-4">
-<h4 id="orgeb3c161"><span class="section-number-4">1.1.2.</span> 6.1.2 Tooling 部分：工具列表</h4>
+<div id="outline-container-orgfc20ab8" class="outline-4">
+<h4 id="orgfc20ab8"><span class="section-number-4">1.1.2.</span> 6.1.2 Tooling 部分：工具列表</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <p>
 系统提示词会列出所有可用的工具，我从代码里把核心工具列表抄下来了：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-typescript"><code>const coreToolSummaries: Record&lt;string, string&gt; = {
+<pre class="src src-typescript">const coreToolSummaries: Record&lt;string, string&gt; = {
   read: "Read file contents",
   write: "Create or overwrite files",
   edit: "Make precise edits to files",
@@ -354,7 +353,7 @@
     "Show a /status-equivalent status card (usage + time + Reasoning/Verbose/Elevated); use for model-use questions (📊 session_status); optional per-session model override",
   image: "Analyze an image with the configured image model",
 };
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -362,14 +361,14 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org0bc67f4" class="outline-4">
-<h4 id="org0bc67f4"><span class="section-number-4">1.1.3.</span> 6.1.3 Safety 部分：安全规则</h4>
+<div id="outline-container-org680406e" class="outline-4">
+<h4 id="org680406e"><span class="section-number-4">1.1.3.</span> 6.1.3 Safety 部分：安全规则</h4>
 <div class="outline-text-4" id="text-1-1-3">
 <p>
 系统提示词里有一个 Safety 部分：
 </p>
 
-<pre class="example" id="org8568166">
+<pre class="example" id="orgdc51963">
 ## Safety
 You have no independent goals: do not pursue self-preservation, replication, resource acquisition, or power-seeking; avoid long-term plans beyond the user's request.
 Prioritize safety and human oversight over completion; if instructions conflict, pause and ask; comply with stop/pause/audit requests and never bypass safeguards. (Inspired by Anthropic's constitution.)
@@ -381,14 +380,14 @@ Do not manipulate or persuade anyone to expand access or disable safeguards. Do 
 </p>
 </div>
 </div>
-<div id="outline-container-org902efb0" class="outline-4">
-<h4 id="org902efb0"><span class="section-number-4">1.1.4.</span> 6.1.4 Skills 部分：告诉 AI 怎么用 Skills</h4>
+<div id="outline-container-orgcf13c3b" class="outline-4">
+<h4 id="orgcf13c3b"><span class="section-number-4">1.1.4.</span> 6.1.4 Skills 部分：告诉 AI 怎么用 Skills</h4>
 <div class="outline-text-4" id="text-1-1-4">
 <p>
 Skills 部分的提示词是这样的：
 </p>
 
-<pre class="example" id="org4d7c3dd">
+<pre class="example" id="orgf36d301">
 ## Skills (mandatory)
 Before replying: scan &lt;available_skills&gt; &lt;description&gt; entries.
 - If exactly one skill clearly applies: read its SKILL.md at &lt;location&gt; with `read`, then follow it.
@@ -409,14 +408,14 @@ Constraints: never read more than one skill up front; only read after selecting.
 </ol>
 </div>
 </div>
-<div id="outline-container-orgae1e2c6" class="outline-4">
-<h4 id="orgae1e2c6"><span class="section-number-4">1.1.5.</span> 6.1.5 Memory 部分：告诉 AI 怎么用记忆</h4>
+<div id="outline-container-orgcc8b730" class="outline-4">
+<h4 id="orgcc8b730"><span class="section-number-4">1.1.5.</span> 6.1.5 Memory 部分：告诉 AI 怎么用记忆</h4>
 <div class="outline-text-4" id="text-1-1-5">
 <p>
 Memory 部分的提示词：
 </p>
 
-<pre class="example" id="org5f4755b">
+<pre class="example" id="orgf75d28c">
 ## Memory Recall
 Before answering anything about prior work, decisions, dates, people, preferences, or todos: run memory_search on MEMORY.md + memory/*.md; then use memory_get to pull only the needed lines. If low confidence after search, say you checked.
 Citations: include Source: &lt;path#line&gt; when it helps the user verify memory snippets.
@@ -427,8 +426,8 @@ Citations: include Source: &lt;path#line&gt; when it helps the user verify memor
 </p>
 </div>
 </div>
-<div id="outline-container-org7147cd9" class="outline-4">
-<h4 id="org7147cd9"><span class="section-number-4">1.1.6.</span> 6.1.6 三种提示词模式</h4>
+<div id="outline-container-orge222b55" class="outline-4">
+<h4 id="orge222b55"><span class="section-number-4">1.1.6.</span> 6.1.6 三种提示词模式</h4>
 <div class="outline-text-4" id="text-1-1-6">
 <ul class="org-ul">
 <li><code>full</code> —— 完整的提示词（主代理用）</li>
@@ -438,22 +437,22 @@ Citations: include Source: &lt;path#line&gt; when it helps the user verify memor
 </div>
 </div>
 </div>
-<div id="outline-container-orgc83f231" class="outline-3">
-<h3 id="orgc83f231"><span class="section-number-3">1.2.</span> 6.2 Skill 例子：两个真实的 SKILL.md</h3>
+<div id="outline-container-org8d38b06" class="outline-3">
+<h3 id="org8d38b06"><span class="section-number-3">1.2.</span> 6.2 Skill 例子：两个真实的 SKILL.md</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 说了半天 Skill，我们来看看真实的 SKILL.md 长什么样！我选了两个比较简单的作为例子。
 </p>
 </div>
-<div id="outline-container-org2467c20" class="outline-4">
-<h4 id="org2467c20"><span class="section-number-4">1.2.1.</span> 6.2.1 例子一：weather Skill</h4>
+<div id="outline-container-org078a1c7" class="outline-4">
+<h4 id="org078a1c7"><span class="section-number-4">1.2.1.</span> 6.2.1 例子一：weather Skill</h4>
 <div class="outline-text-4" id="text-1-2-1">
 <p>
 文件路径：=skills/weather/SKILL.md=
 </p>
 
 <div class="org-src-container">
-<pre class="src src-markdown"><code><span style="color: #8ca391;">---</span>
+<pre class="src src-markdown"><span style="color: #8ca391;">---</span>
 <span style="color: #62ff94;">name</span><span style="color: #8ca391;">: </span><span style="color: #1cc24b;">weather</span>
 <span style="color: #62ff94;">description</span><span style="color: #8ca391;">: </span><span style="color: #1cc24b;">Get current weather and forecasts </span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">no API key required</span><span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">.</span>
 <span style="color: #62ff94;">homepage</span><span style="color: #8ca391;">: </span><span style="color: #1cc24b;">https://wttr.in/:help</span>
@@ -507,7 +506,7 @@ Free, no key, good for programmatic use:
 Find coordinates for a city, then query. Returns JSON with temp, windspeed, weathercode.
 
 Docs: <span style="color: #30b3ff; text-decoration: underline;">https://open-meteo.com/en/docs</span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -525,15 +524,15 @@ Docs: <span style="color: #30b3ff; text-decoration: underline;">https://open-met
 </ul>
 </div>
 </div>
-<div id="outline-container-org3556dda" class="outline-4">
-<h4 id="org3556dda"><span class="section-number-4">1.2.2.</span> 6.2.2 例子二：github Skill</h4>
+<div id="outline-container-org4bb7b14" class="outline-4">
+<h4 id="org4bb7b14"><span class="section-number-4">1.2.2.</span> 6.2.2 例子二：github Skill</h4>
 <div class="outline-text-4" id="text-1-2-2">
 <p>
 文件路径：=skills/github/SKILL.md=
 </p>
 
 <div class="org-src-container">
-<pre class="src src-markdown"><code><span style="color: #8ca391;">---</span>
+<pre class="src src-markdown"><span style="color: #8ca391;">---</span>
 <span style="color: #62ff94;">name</span><span style="color: #8ca391;">: </span><span style="color: #1cc24b;">github</span>
 <span style="color: #62ff94;">description</span><span style="color: #8ca391;">: </span><span style="color: #1cc24b;">"Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries."</span>
 <span style="color: #62ff94;">metadata</span><span style="color: #8ca391;">:</span>
@@ -610,7 +609,7 @@ Most commands support <span style="color: #8ca391;">`</span><span style="color: 
 <span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
 </span><span style="background-color: #0e120e;">gh issue list --repo owner/repo --json number,title --jq '.</span><span style="color: #24f6d9; background-color: #0e120e;">[]</span><span style="background-color: #0e120e;"> | "\</span><span style="color: #24f6d9; background-color: #0e120e;">(</span><span style="background-color: #0e120e;">.number</span><span style="color: #24f6d9; background-color: #0e120e;">)</span><span style="background-color: #0e120e;">: \</span><span style="color: #24f6d9; background-color: #0e120e;">(</span><span style="background-color: #0e120e;">.title</span><span style="color: #24f6d9; background-color: #0e120e;">)</span><span style="background-color: #0e120e;">"'
 </span><span style="color: #8ca391; background-color: #0e120e;">```</span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -623,8 +622,8 @@ Most commands support <span style="color: #8ca391;">`</span><span style="color: 
 </div>
 </div>
 </div>
-<div id="outline-container-orgdb48cf9" class="outline-3">
-<h3 id="orgdb48cf9"><span class="section-number-3">1.3.</span> 6.3 Pi Embedded Runner：src/agents/pi-embedded-runner/</h3>
+<div id="outline-container-orgbe24d2e" class="outline-3">
+<h3 id="orgbe24d2e"><span class="section-number-3">1.3.</span> 6.3 Pi Embedded Runner：src/agents/pi-embedded-runner/</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 文件路径：=src/agents/pi-embedded-runner/=
@@ -642,7 +641,7 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 <li>调用 AI 模型</li>
 <li>处理工具调用</li>
 <li>管理上下文窗口（上下文太长时会压缩）</li>
-<li>等等&hellip;</li>
+<li>等等&#x2026;</li>
 </ul>
 
 <p>
@@ -650,8 +649,8 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </p>
 </div>
 </div>
-<div id="outline-container-orgb52019a" class="outline-3">
-<h3 id="orgb52019a"><span class="section-number-3">1.4.</span> 6.4 这章看完的感觉</h3>
+<div id="outline-container-org613394b" class="outline-3">
+<h3 id="org613394b"><span class="section-number-3">1.4.</span> 6.4 这章看完的感觉</h3>
 <div class="outline-text-3" id="text-1-4">
 <ul class="org-ul">
 <li>系统提示词是动态构建的，不是写死的，有 20+ 个部分！</li>
@@ -663,12 +662,12 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </div>
 </div>
 </div>
-<div id="outline-container-orga1b6725" class="outline-2">
-<h2 id="orga1b6725"><span class="section-number-2">2.</span> 第七章：Memory 系统 —— SQLite + sqlite-vec + 混合搜索</h2>
+<div id="outline-container-org7ec39ce" class="outline-2">
+<h2 id="org7ec39ce"><span class="section-number-2">2.</span> 第七章：Memory 系统 —— SQLite + sqlite-vec + 混合搜索</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org380b859" class="outline-3">
-<h3 id="org380b859"><span class="section-number-3">2.1.</span> 7.1 再看一眼整体结构：src/memory/</h3>
+<div id="outline-container-org3c8a993" class="outline-3">
+<h3 id="org3c8a993"><span class="section-number-3">2.1.</span> 7.1 再看一眼整体结构：src/memory/</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 文件路径：=src/memory/=
@@ -766,15 +765,15 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </p>
 </div>
 </div>
-<div id="outline-container-orgb14f4d8" class="outline-3">
-<h3 id="orgb14f4d8"><span class="section-number-3">2.2.</span> 7.2 MemoryIndexManager 类的详细字段</h3>
+<div id="outline-container-org8ff8713" class="outline-3">
+<h3 id="org8ff8713"><span class="section-number-3">2.2.</span> 7.2 MemoryIndexManager 类的详细字段</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 文件路径：=src/memory/manager.ts=
 </p>
 
 <div class="org-src-container">
-<pre class="src src-typescript"><code>export class MemoryIndexManager implements MemorySearchManager {
+<pre class="src src-typescript">export class MemoryIndexManager implements MemorySearchManager {
   private readonly cacheKey: string;
   private readonly cfg: OpenClawConfig;
   private readonly agentId: string;
@@ -851,7 +850,7 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 
   // ... 还有更多字段
 }
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -868,8 +867,8 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </ol>
 </div>
 </div>
-<div id="outline-container-orgd124344" class="outline-3">
-<h3 id="orgd124344"><span class="section-number-3">2.3.</span> 7.3 数据库表详细说明</h3>
+<div id="outline-container-orge4955bc" class="outline-3">
+<h3 id="orge4955bc"><span class="section-number-3">2.3.</span> 7.3 数据库表详细说明</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 数据库里有这几个关键表，我从代码里挖出来的：
@@ -922,8 +921,8 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </ul>
 </div>
 </div>
-<div id="outline-container-org4200bd3" class="outline-3">
-<h3 id="org4200bd3"><span class="section-number-3">2.4.</span> 7.4 混合搜索详细说明：src/memory/hybrid.ts</h3>
+<div id="outline-container-orgeffc8a1" class="outline-3">
+<h3 id="orgeffc8a1"><span class="section-number-3">2.4.</span> 7.4 混合搜索详细说明：src/memory/hybrid.ts</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 文件路径：=src/memory/hybrid.ts=
@@ -936,8 +935,8 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </ul>
 </div>
 </div>
-<div id="outline-container-org2a88e97" class="outline-3">
-<h3 id="org2a88e97"><span class="section-number-3">2.5.</span> 7.5 文件监听和自动同步</h3>
+<div id="outline-container-org6aa9016" class="outline-3">
+<h3 id="org6aa9016"><span class="section-number-3">2.5.</span> 7.5 文件监听和自动同步</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 <code>MemoryIndexManager</code> 有一个 <code>watcher</code> 字段，是 <code>chokidar.FSWatcher</code> 类型。这意味着它会监听内存文件的变化，自动同步到数据库里
@@ -957,8 +956,8 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </p>
 </div>
 </div>
-<div id="outline-container-org6db6a6e" class="outline-3">
-<h3 id="org6db6a6e"><span class="section-number-3">2.6.</span> 7.6 这章看完的感觉</h3>
+<div id="outline-container-org396eb3a" class="outline-3">
+<h3 id="org396eb3a"><span class="section-number-3">2.6.</span> 7.6 这章看完的感觉</h3>
 <div class="outline-text-3" id="text-2-6">
 <ul class="org-ul">
 <li>用 SQLite + sqlite-vec 做向量存储</li>
@@ -972,15 +971,15 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </div>
 </div>
 </div>
-<div id="outline-container-org3b9dffc" class="outline-2">
-<h2 id="org3b9dffc"><span class="section-number-2">3.</span> 第八章：Skills 和插件系统</h2>
+<div id="outline-container-org604b65d" class="outline-2">
+<h2 id="org604b65d"><span class="section-number-2">3.</span> 第八章：Skills 和插件系统</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 翻代码的时候我发现了两个目录：=skills/= 和 =extensions/=，还有 =src/plugins/=。这三个东西是啥关系？
 </p>
 </div>
-<div id="outline-container-org7a2225f" class="outline-3">
-<h3 id="org7a2225f"><span class="section-number-3">3.1.</span> 8.1 Skill vs 插件</h3>
+<div id="outline-container-org530cd39" class="outline-3">
+<h3 id="org530cd39"><span class="section-number-3">3.1.</span> 8.1 Skill vs 插件</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 两者的核心区别：
@@ -1048,32 +1047,32 @@ OpenClaw 用的是 <code>@mariozechner/pi-*</code> 这一套库来运行 AI Agen
 </ul>
 </div>
 </div>
-<div id="outline-container-org5378289" class="outline-3">
-<h3 id="org5378289"><span class="section-number-3">3.2.</span> 8.2 Skill 的 frontmatter 详细说明</h3>
+<div id="outline-container-org8a9638d" class="outline-3">
+<h3 id="org8a9638d"><span class="section-number-3">3.2.</span> 8.2 Skill 的 frontmatter 详细说明</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 每个 Skill 目录里都有一个 =SKILL.md=，头部有 frontmatter（YAML 或 TOML）。我们用 weather 和 github 的例子来看看：
 </p>
 </div>
-<div id="outline-container-orgbd0bcc5" class="outline-4">
-<h4 id="orgbd0bcc5"><span class="section-number-4">3.2.1.</span> 8.2.1 weather Skill 的 frontmatter</h4>
+<div id="outline-container-orgcedb037" class="outline-4">
+<h4 id="orgcedb037"><span class="section-number-4">3.2.1.</span> 8.2.1 weather Skill 的 frontmatter</h4>
 <div class="outline-text-4" id="text-3-2-1">
 <div class="org-src-container">
-<pre class="src src-yaml"><code>---
+<pre class="src src-yaml">---
 name: weather
 description: Get current weather and forecasts (no API key required).
 homepage: https://wttr.in/:help
 metadata: { "openclaw": { "emoji": "🌤️", "requires": { "bins": ["curl"] } }
 ---
-</code></pre>
+</pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org7929d34" class="outline-4">
-<h4 id="org7929d34"><span class="section-number-4">3.2.2.</span> 8.2.2 github Skill 的 frontmatter</h4>
+<div id="outline-container-org03c0a2b" class="outline-4">
+<h4 id="org03c0a2b"><span class="section-number-4">3.2.2.</span> 8.2.2 github Skill 的 frontmatter</h4>
 <div class="outline-text-4" id="text-3-2-2">
 <div class="org-src-container">
-<pre class="src src-yaml"><code>---
+<pre class="src src-yaml">---
 name: github
 description: "Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries."
 metadata:
@@ -1102,12 +1101,12 @@ metadata:
       },
   }
 ---
-</code></pre>
+</pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orge00db1a" class="outline-4">
-<h4 id="orge00db1a"><span class="section-number-4">3.2.3.</span> 8.2.3 frontmatter 字段说明</h4>
+<div id="outline-container-orgf3a1190" class="outline-4">
+<h4 id="orgf3a1190"><span class="section-number-4">3.2.3.</span> 8.2.3 frontmatter 字段说明</h4>
 <div class="outline-text-4" id="text-3-2-3">
 <p>
 从这两个例子我们可以看出 frontmatter 包含这些字段：
@@ -1171,8 +1170,8 @@ metadata:
 </div>
 </div>
 </div>
-<div id="outline-container-orgc882b26" class="outline-3">
-<h3 id="orgc882b26"><span class="section-number-3">3.3.</span> 8.3 插件系统详细说明：src/plugins/</h3>
+<div id="outline-container-org5fd65cd" class="outline-3">
+<h3 id="org5fd65cd"><span class="section-number-3">3.3.</span> 8.3 插件系统详细说明：src/plugins/</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 文件路径：=src/plugins/=
@@ -1303,11 +1302,11 @@ metadata:
 这个目录里有 50+ 个文件！插件系统设计得真的很完善。
 </p>
 </div>
-<div id="outline-container-org0135b38" class="outline-4">
-<h4 id="org0135b38"><span class="section-number-4">3.3.1.</span> 8.3.1 插件清单类型：PluginManifest</h4>
+<div id="outline-container-org05a0a44" class="outline-4">
+<h4 id="org05a0a44"><span class="section-number-4">3.3.1.</span> 8.3.1 插件清单类型：PluginManifest</h4>
 <div class="outline-text-4" id="text-3-3-1">
 <div class="org-src-container">
-<pre class="src src-typescript"><code>// 插件清单
+<pre class="src src-typescript">// 插件清单
 export type PluginManifest = {
   id: string;
   name: string;
@@ -1338,7 +1337,7 @@ export type PluginManifest = {
 
   // ... 更多字段
 };
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -1349,13 +1348,13 @@ export type PluginManifest = {
 <li>新的 CLI 命令（Commands）</li>
 <li>新的服务（Services）</li>
 <li>新的消息渠道（Channels）</li>
-<li>等等&hellip;</li>
+<li>等等&#x2026;</li>
 </ul>
 </div>
 </div>
 </div>
-<div id="outline-container-orgef8eb4e" class="outline-3">
-<h3 id="orgef8eb4e"><span class="section-number-3">3.4.</span> 8.4 插件加载流程</h3>
+<div id="outline-container-org0b673c8" class="outline-3">
+<h3 id="org0b673c8"><span class="section-number-3">3.4.</span> 8.4 插件加载流程</h3>
 <div class="outline-text-3" id="text-3-4">
 <ol class="org-ol">
 <li><b><b>发现插件</b></b> —— 扫描 <code>extensions/</code> 目录</li>
@@ -1367,8 +1366,8 @@ export type PluginManifest = {
 </ol>
 </div>
 </div>
-<div id="outline-container-orge41dc9a" class="outline-3">
-<h3 id="orge41dc9a"><span class="section-number-3">3.5.</span> 8.5 这章看完的感觉</h3>
+<div id="outline-container-org06d71fb" class="outline-3">
+<h3 id="org06d71fb"><span class="section-number-3">3.5.</span> 8.5 这章看完的感觉</h3>
 <div class="outline-text-3" id="text-3-5">
 <ul class="org-ul">
 <li>Skill 是 Markdown 文档，给 AI 看的操作指南</li>
@@ -1379,8 +1378,8 @@ export type PluginManifest = {
 </div>
 </div>
 </div>
-<div id="outline-container-orgf291728" class="outline-2">
-<h2 id="orgf291728"><span class="section-number-2">4.</span> 第二部分暂时写到这里</h2>
+<div id="outline-container-org6d378cf" class="outline-2">
+<h2 id="org6d378cf"><span class="section-number-2">4.</span> 第二部分暂时写到这里</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 第二部分我写了三章：
@@ -1394,7 +1393,7 @@ export type PluginManifest = {
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Feb 19 18:29:19 2026</span> <span class="date">Last modified: 2026-05-10 Sun 16:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Feb 19 18:29:19 2026</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>

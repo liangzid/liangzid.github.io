@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-07-07 Tue 20:50 -->
+<!-- 2026-05-29 Fri 10:11 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>任务型对话系统中Neural Pipeline系列源码剖析</title>
@@ -19,28 +19,28 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org4fc61c2">1. 总体结构</a></li>
-<li><a href="#org5254c28">2. Data部分</a>
+<li><a href="#orgfa668c2">1. 总体结构</a></li>
+<li><a href="#orga6a9376">2. Data部分</a>
 <ul>
-<li><a href="#org60b5e1d">2.1. GPT-2的输入形态</a></li>
-<li><a href="#orgf808b93">2.2. Neural Pipeline中的文本输入与输出</a></li>
-<li><a href="#org0afbcbb">2.3. neural pipline与GPT-2的结合</a></li>
-<li><a href="#org5479f76">2.4. 再坚持一下: 为什么说一个TOD很复杂?</a>
+<li><a href="#orgffd741b">2.1. GPT-2的输入形态</a></li>
+<li><a href="#orge534314">2.2. Neural Pipeline中的文本输入与输出</a></li>
+<li><a href="#org58aa90b">2.3. neural pipline与GPT-2的结合</a></li>
+<li><a href="#org5473186">2.4. 再坚持一下: 为什么说一个TOD很复杂?</a>
 <ul>
-<li><a href="#org6c7b1c7">2.4.1. 如何预处理任务型对话系统数据集?</a></li>
-<li><a href="#orge156e24">2.4.2. TOD的层级结构以及各个常见的数据对象</a></li>
-<li><a href="#org722e222">2.4.3. 如何解析tod数据集?</a></li>
+<li><a href="#orgafbf14c">2.4.1. 如何预处理任务型对话系统数据集?</a></li>
+<li><a href="#org1077d68">2.4.2. TOD的层级结构以及各个常见的数据对象</a></li>
+<li><a href="#org65590a2">2.4.3. 如何解析tod数据集?</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgb1ddc5e">3. Model的设计</a>
+<li><a href="#orgfa85b5b">3. Model的设计</a>
 <ul>
-<li><a href="#orge9343d1">3.1. train- forward</a></li>
+<li><a href="#orga76d736">3.1. train- forward</a></li>
 </ul>
 </li>
-<li><a href="#org764dda4">4. 训练流程</a></li>
-<li><a href="#org9754c60">5. 推理流程</a></li>
+<li><a href="#org9c19fe9">4. 训练流程</a></li>
+<li><a href="#orgcfc95c0">5. 推理流程</a></li>
 </ul>
 </div>
 </div>
@@ -59,8 +59,8 @@
 <p>
 然后,这篇文章就着重于描述上述模型的代码实现了!
 </p>
-<div id="outline-container-org4fc61c2" class="outline-2">
-<h2 id="org4fc61c2"><span class="section-number-2">1.</span> 总体结构</h2>
+<div id="outline-container-orgfa668c2" class="outline-2">
+<h2 id="orgfa668c2"><span class="section-number-2">1.</span> 总体结构</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 总体上而言, 任何一个深度学习的代码无外乎以下几个主要部分:
@@ -73,8 +73,8 @@
 </ul>
 </div>
 </div>
-<div id="outline-container-org5254c28" class="outline-2">
-<h2 id="org5254c28"><span class="section-number-2">2.</span> Data部分</h2>
+<div id="outline-container-orga6a9376" class="outline-2">
+<h2 id="orga6a9376"><span class="section-number-2">2.</span> Data部分</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 对于深度学习,尤其是transformer时代的深度学习而言, 当下的创新多从训练任务和整理数据入手,而非模型的结构. 笔者的同学甚至因为在面向某个NLP任务时自己设计了特殊的结构而被审稿人质疑. neural pipeline的方法, 其核心思路是将TOD中的各个基本组件都统一地放在单一的一个NLG模型中,所以, 对数据的编排就不得不算是重中之重了.
@@ -84,8 +84,8 @@
 下文将先介绍GPT-2的输入输出具体是什么风格, 之后介绍TOD的各基本模块的输入输出为什么, 最后在上述二者的基础上, 探究怎么用GPT-2做基本模块的输入. 当然,这里的问题是:为什么一定要用GPT-2 ? 其实不用GPT-2也是完全可以的, T5, BART等模型一样可以解决该问题, 此处单以GPT-2为示例,其他情况灵活变通.
 </p>
 </div>
-<div id="outline-container-org60b5e1d" class="outline-3">
-<h3 id="org60b5e1d"><span class="section-number-3">2.1.</span> GPT-2的输入形态</h3>
+<div id="outline-container-orgffd741b" class="outline-3">
+<h3 id="orgffd741b"><span class="section-number-3">2.1.</span> GPT-2的输入形态</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 GPT-2的输入严格而言主要包括三部分:
@@ -102,7 +102,7 @@ GPT-2的输入严格而言主要包括三部分:
 
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">forward</span><span style="color: #24f6d9;">(</span>
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">forward</span><span style="color: #24f6d9;">(</span>
          <span style="color: #c770ff; font-weight: bold;">self</span>,
          input_ids<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">None</span>, <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">token encoding
 </span>         past<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">None</span>,
@@ -116,7 +116,7 @@ GPT-2的输入严格而言主要包括三部分:
          output_attentions<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">None</span>,
          output_hidden_states<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">None</span>,
 <span style="color: #24f6d9;">)</span>:
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -129,7 +129,7 @@ GPT-2的输入严格而言主要包括三部分:
 
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">GPT2Model</span><span style="color: #24f6d9;">(</span>GPT2PreTrainedModel<span style="color: #24f6d9;">)</span>:
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">GPT2Model</span><span style="color: #24f6d9;">(</span>GPT2PreTrainedModel<span style="color: #24f6d9;">)</span>:
          <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">__init__</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">self</span>, config<span style="color: #24f6d9;">)</span>:
              <span style="color: #30b3ff;">super</span><span style="color: #24f6d9;">()</span>.__init__<span style="color: #24f6d9;">(</span>config<span style="color: #24f6d9;">)</span>
 
@@ -146,7 +146,7 @@ GPT-2的输入严格而言主要包括三部分:
 
          <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">set_input_embeddings</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">self</span>, new_embeddings<span style="color: #24f6d9;">)</span>:
              <span style="color: #c770ff; font-weight: bold;">self</span>.<span style="color: #62ff94;">wte</span> <span style="color: #24f6d9;">=</span> new_embeddings
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -159,8 +159,8 @@ GPT-2的输入严格而言主要包括三部分:
 </p>
 </div>
 </div>
-<div id="outline-container-orgf808b93" class="outline-3">
-<h3 id="orgf808b93"><span class="section-number-3">2.2.</span> Neural Pipeline中的文本输入与输出</h3>
+<div id="outline-container-orge534314" class="outline-3">
+<h3 id="orge534314"><span class="section-number-3">2.2.</span> Neural Pipeline中的文本输入与输出</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 下面来看任务型对话系统Neural Pipeline的输入与输出形态.
@@ -285,8 +285,8 @@ GPT-2的输入严格而言主要包括三部分:
 </p>
 </div>
 </div>
-<div id="outline-container-org0afbcbb" class="outline-3">
-<h3 id="org0afbcbb"><span class="section-number-3">2.3.</span> neural pipline与GPT-2的结合</h3>
+<div id="outline-container-org58aa90b" class="outline-3">
+<h3 id="org58aa90b"><span class="section-number-3">2.3.</span> neural pipline与GPT-2的结合</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 我们最终的目标是用GPT-2来完成一个pipeline, 所以相当于用history做输出输出belief state, 之后检索数据库得到datbase matching result, 用三者做输入去产生actions, 最终产生delexicalized response.
@@ -297,7 +297,7 @@ GPT-2的输入严格而言主要包括三部分:
 </p>
 
 
-<div id="orgc70d28c" class="figure">
+<div id="org0bcb50c" class="figure">
 <p><img src="./images/screenshot_20220326_173041.png" alt="screenshot_20220326_173041.png">
 </p>
 </div>
@@ -319,14 +319,14 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">format_belief</span><span style="color: #24f6d9;">(</span>belief: OrderedDict<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">-&gt;</span> <span style="color: #30b3ff;">str</span>:
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">format_belief</span><span style="color: #24f6d9;">(</span>belief: OrderedDict<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">-&gt;</span> <span style="color: #30b3ff;">str</span>:
     <span style="color: #c770ff; font-weight: bold;">assert</span> <span style="color: #30b3ff;">isinstance</span><span style="color: #24f6d9;">(</span>belief, OrderedDict<span style="color: #24f6d9;">)</span>
     <span style="color: #62ff94;">str_bs</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[]</span>
     <span style="color: #c770ff; font-weight: bold;">for</span> domain, domain_bs <span style="color: #c770ff; font-weight: bold;">in</span> belief.items<span style="color: #24f6d9;">()</span>:
           <span style="color: #62ff94;">domain_bs</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">', '</span>.join<span style="color: #24f6d9;">(</span><span style="color: #c770ff;">[</span>f<span style="color: #1cc24b;">'</span>{slot}<span style="color: #1cc24b;"> = </span>{val}<span style="color: #1cc24b;">'</span> <span style="color: #c770ff; font-weight: bold;">for</span> slot, val <span style="color: #c770ff; font-weight: bold;">in</span> <span style="color: #30b3ff;">sorted</span><span style="color: #e6ff57;">(</span>domain_bs.items<span style="color: #30b3ff;">()</span>, key<span style="color: #24f6d9;">=</span><span style="color: #c770ff; font-weight: bold;">lambda</span> x: x<span style="color: #30b3ff;">[</span>0<span style="color: #30b3ff;">]</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">]</span><span style="color: #24f6d9;">)</span>
           str_bs.extend<span style="color: #24f6d9;">(</span><span style="color: #c770ff;">[</span>domain, <span style="color: #1cc24b;">'{'</span> <span style="color: #24f6d9;">+</span> domain_bs <span style="color: #24f6d9;">+</span> <span style="color: #1cc24b;">'}'</span><span style="color: #c770ff;">]</span><span style="color: #24f6d9;">)</span>
     <span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #1cc24b;">' '</span>.join<span style="color: #24f6d9;">(</span>str_bs<span style="color: #24f6d9;">)</span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -334,7 +334,7 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">format_dialogue_act</span><span style="color: #24f6d9;">(</span>acts<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">-&gt;</span> <span style="color: #30b3ff;">str</span>:
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">format_dialogue_act</span><span style="color: #24f6d9;">(</span>acts<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">-&gt;</span> <span style="color: #30b3ff;">str</span>:
     <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">assert isinstance(acts, List[List[str]])
 </span>    <span style="color: #62ff94;">str_da</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[]</span>
     <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">intent-domain-slot-value
@@ -344,7 +344,7 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
           <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">str_acts+=f"{intent}, {domain}, {slot}, {value}; "
 </span>          <span style="color: #62ff94;">str_acts</span><span style="color: #24f6d9;">+=</span>f<span style="color: #1cc24b;">"</span>{intent}<span style="color: #1cc24b;">, </span>{domain}<span style="color: #1cc24b;">, </span>{slot}<span style="color: #1cc24b;">; "</span>
     <span style="color: #c770ff; font-weight: bold;">return</span> str_acts<span style="color: #24f6d9;">[</span>:<span style="color: #24f6d9;">-</span>2<span style="color: #24f6d9;">]</span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -352,13 +352,13 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">default_translate_match</span><span style="color: #24f6d9;">(</span>n<span style="color: #24f6d9;">)</span>:
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">default_translate_match</span><span style="color: #24f6d9;">(</span>n<span style="color: #24f6d9;">)</span>:
     <span style="color: #c770ff; font-weight: bold;">if</span> n <span style="color: #24f6d9;">==</span> 0:
           <span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #1cc24b;">'no match'</span>
     <span style="color: #c770ff; font-weight: bold;">if</span> n <span style="color: #24f6d9;">==</span> 1:
           <span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #1cc24b;">'1 match'</span>
     <span style="color: #c770ff; font-weight: bold;">return</span> f<span style="color: #1cc24b;">'</span>{n}<span style="color: #1cc24b;"> matches'</span>
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -366,7 +366,7 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><code>    <span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">InsertLabelsTransformation</span>:
+<pre class="src src-python">    <span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">InsertLabelsTransformation</span>:
         <span style="color: #62ff94;">user_label</span>: <span style="color: #30b3ff;">str</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">'User :'</span>
         <span style="color: #62ff94;">sys_label</span>: <span style="color: #30b3ff;">str</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">'System :'</span>
         <span style="color: #62ff94;">database_label</span>: <span style="color: #30b3ff;">str</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">'DB :'</span>
@@ -422,7 +422,7 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
                                        dialogue_act<span style="color: #24f6d9;">=</span>dialogue_act,
                                        context<span style="color: #24f6d9;">=</span>context<span style="color: #24f6d9;">)</span>
 
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -438,7 +438,7 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #62ff94;">EOB_TK</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">'&lt;|eob|&gt;'</span>
+<pre class="src src-python"><span style="color: #62ff94;">EOB_TK</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">'&lt;|eob|&gt;'</span>
 <span style="color: #62ff94;">EOKB_TK</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">'&lt;|eokb|&gt;'</span>
 <span style="color: #62ff94;">EOT_TK</span> <span style="color: #24f6d9;">=</span> <span style="color: #1cc24b;">'&lt;|endoftext|&gt;'</span>
 
@@ -450,10 +450,10 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
     tokenizer.add_special_tokens<span style="color: #24f6d9;">(</span><span style="color: #c770ff;">{</span><span style="color: #1cc24b;">'additional_special_tokens'</span>: SPECIAL_TOKENS<span style="color: #c770ff;">}</span><span style="color: #24f6d9;">)</span>
     model.resize_token_embeddings<span style="color: #24f6d9;">(</span><span style="color: #30b3ff;">len</span><span style="color: #c770ff;">(</span>tokenizer<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
     <span style="color: #c770ff; font-weight: bold;">return</span> tokenizer, model
-</code></pre>
+</pre>
 </div>
 <p>
-其中p开头的和eo都不属于neural pipline的范畴, 是我的工作的一部分&hellip;&hellip;
+其中p开头的和eo都不属于neural pipline的范畴, 是我的工作的一部分&#x2026;&#x2026;
 </p>
 
 <p>
@@ -461,7 +461,7 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">TokenizerTransformation</span>:
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">TokenizerTransformation</span>:
     <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">__init__</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">self</span>, tokenizer: transformers.GPT2Tokenizer, max_context_length: <span style="color: #30b3ff;">int</span> <span style="color: #24f6d9;">=</span> 500, is_bi<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span><span style="color: #24f6d9;">)</span>:
           <span style="color: #c770ff; font-weight: bold;">self</span>.<span style="color: #62ff94;">bob</span>, <span style="color: #c770ff; font-weight: bold;">self</span>.<span style="color: #62ff94;">eob</span>, <span style="color: #c770ff; font-weight: bold;">self</span>.<span style="color: #62ff94;">eokb</span> <span style="color: #24f6d9;">=</span> tokenizer.convert_tokens_to_ids<span style="color: #24f6d9;">(</span>
               <span style="color: #c770ff;">[</span><span style="color: #1cc24b;">'=&gt;'</span>, <span style="color: #1cc24b;">'&lt;|eob|&gt;'</span>, <span style="color: #1cc24b;">'&lt;|eokb|&gt;'</span><span style="color: #c770ff;">]</span><span style="color: #24f6d9;">)</span>
@@ -527,7 +527,7 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
           <span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #30b3ff;">dict</span><span style="color: #24f6d9;">(</span>input_ids<span style="color: #24f6d9;">=</span>inp, belief_labels<span style="color: #24f6d9;">=</span>belief_labels, response_labels<span style="color: #24f6d9;">=</span>response_labels,
                       consistency_labels<span style="color: #24f6d9;">=</span>positive, consistency_token_ids<span style="color: #24f6d9;">=</span><span style="color: #30b3ff;">len</span><span style="color: #c770ff;">(</span>labels<span style="color: #c770ff;">)</span> <span style="color: #24f6d9;">-</span> 1<span style="color: #24f6d9;">)</span>
 
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -551,7 +551,7 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #e6ff57;">@dataclass</span>
+<pre class="src src-python"><span style="color: #e6ff57;">@dataclass</span>
 <span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">DataCollatorWithPadding</span>:
     tokenizer: Union<span style="color: #24f6d9;">[</span>transformers.PreTrainedTokenizer,
                        transformers.PreTrainedTokenizerFast<span style="color: #24f6d9;">]</span>
@@ -589,7 +589,7 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 </span>          <span style="color: #8ca391;">#     </span><span style="color: #8ca391; font-style: italic;">batch["response_labels"]=None 
 </span>
           <span style="color: #c770ff; font-weight: bold;">return</span> batch
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -597,22 +597,22 @@ serial的过程, 依照不同的代码实现有所不同, 主要而言其实包�
 </p>
 </div>
 </div>
-<div id="outline-container-org5479f76" class="outline-3">
-<h3 id="org5479f76"><span class="section-number-3">2.4.</span> 再坚持一下: 为什么说一个TOD很复杂?</h3>
+<div id="outline-container-org5473186" class="outline-3">
+<h3 id="org5473186"><span class="section-number-3">2.4.</span> 再坚持一下: 为什么说一个TOD很复杂?</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 如果你认为上述部分就是TOD data部分源码的核心, 未免有点小看任务型对话系统的复杂度了. 因为我们其实还没有正式开始介绍全部的流程. 
 </p>
 </div>
-<div id="outline-container-org6c7b1c7" class="outline-4">
-<h4 id="org6c7b1c7"><span class="section-number-4">2.4.1.</span> 如何预处理任务型对话系统数据集?</h4>
+<div id="outline-container-orgafbf14c" class="outline-4">
+<h4 id="orgafbf14c"><span class="section-number-4">2.4.1.</span> 如何预处理任务型对话系统数据集?</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <p>
 略.
 这部分代码我还没开始看,后续补充.
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">!/usr/bin/env python
+<pre class="src src-python"><span style="color: #8ca391;">#</span><span style="color: #8ca391; font-style: italic;">!/usr/bin/env python
 </span><span style="color: #c770ff; font-weight: bold;">import</span> sqlite3
 <span style="color: #c770ff; font-weight: bold;">import</span> json
 <span style="color: #c770ff; font-weight: bold;">import</span> os
@@ -1692,19 +1692,19 @@ MW_DOMAINS = </span>{MW_DOMAINS}<span style="color: #1cc24b;">
                total<span style="color: #24f6d9;">=</span>file_size, unit<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">'B'</span>, disable<span style="color: #24f6d9;">=</span>file_size <span style="color: #24f6d9;">&lt;</span> 1024<span style="color: #24f6d9;">**</span>2,
                unit_scale<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>, desc<span style="color: #24f6d9;">=</span>source_url.split<span style="color: #c770ff;">(</span><span style="color: #1cc24b;">'/'</span><span style="color: #c770ff;">)[</span><span style="color: #24f6d9;">-</span>1<span style="color: #c770ff;">]</span><span style="color: #24f6d9;">)</span>
 
-           <span style="color: #c770ff; font-weight: bold;">with</span> tempfile.TemporaryFile<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">'rb+'</span><span style="color: #24f6d9;">)</span> <span style="color: #c770ff; font-weight: bold;">as</span> file:
+           <span style="color: #c770ff; font-weight: bold;">with</span> tempfile.TemporaryFile<span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">'rb+'</span><span style="color: #24f6d9;">)</span> <span style="color: #c770ff; font-weight: bold;">as</span> <span style="color: #30b3ff;">file</span>:
                <span style="color: #c770ff; font-weight: bold;">for</span> data <span style="color: #c770ff; font-weight: bold;">in</span> response.iter_content<span style="color: #24f6d9;">(</span>chunk_size<span style="color: #24f6d9;">=</span>1024<span style="color: #24f6d9;">)</span>:
-                   file.write<span style="color: #24f6d9;">(</span>data<span style="color: #24f6d9;">)</span>
+                   <span style="color: #30b3ff;">file</span>.write<span style="color: #24f6d9;">(</span>data<span style="color: #24f6d9;">)</span>
                    pbar.update<span style="color: #24f6d9;">(</span>1024<span style="color: #24f6d9;">)</span>
-               file.flush<span style="color: #24f6d9;">()</span>
-               file.seek<span style="color: #24f6d9;">(</span>0<span style="color: #24f6d9;">)</span>
+               <span style="color: #30b3ff;">file</span>.flush<span style="color: #24f6d9;">()</span>
+               <span style="color: #30b3ff;">file</span>.seek<span style="color: #24f6d9;">(</span>0<span style="color: #24f6d9;">)</span>
                pbar.close<span style="color: #24f6d9;">()</span>
                <span style="color: #c770ff; font-weight: bold;">if</span> zipf <span style="color: #c770ff; font-weight: bold;">is</span> <span style="color: #c770ff; font-weight: bold;">not</span> <span style="color: #ffa83d;">None</span>:
                    <span style="color: #c770ff; font-weight: bold;">with</span> zipf.<span style="color: #30b3ff;">open</span><span style="color: #24f6d9;">(</span>dest_path, <span style="color: #1cc24b;">'w'</span><span style="color: #24f6d9;">)</span> <span style="color: #c770ff; font-weight: bold;">as</span> f:
-                       shutil.copyfileobj<span style="color: #24f6d9;">(</span>file, f<span style="color: #24f6d9;">)</span>
+                       shutil.copyfileobj<span style="color: #24f6d9;">(</span><span style="color: #30b3ff;">file</span>, f<span style="color: #24f6d9;">)</span>
                <span style="color: #c770ff; font-weight: bold;">else</span>:
                    <span style="color: #c770ff; font-weight: bold;">with</span> <span style="color: #30b3ff;">open</span><span style="color: #24f6d9;">(</span>dest_path, <span style="color: #1cc24b;">'wb+'</span><span style="color: #24f6d9;">)</span> <span style="color: #c770ff; font-weight: bold;">as</span> f:
-                       shutil.copyfileobj<span style="color: #24f6d9;">(</span>file, f<span style="color: #24f6d9;">)</span>
+                       shutil.copyfileobj<span style="color: #24f6d9;">(</span><span style="color: #30b3ff;">file</span>, f<span style="color: #24f6d9;">)</span>
 
 
 <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">export_lexicalizer_source</span><span style="color: #24f6d9;">(</span>path<span style="color: #24f6d9;">)</span>:
@@ -1765,12 +1765,12 @@ import re
 
 <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #30b3ff;">__name__</span> <span style="color: #24f6d9;">==</span> <span style="color: #1cc24b;">"__main__"</span>:
            download<span style="color: #24f6d9;">()</span>
-</code></pre>
+</pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orge156e24" class="outline-4">
-<h4 id="orge156e24"><span class="section-number-4">2.4.2.</span> TOD的层级结构以及各个常见的数据对象</h4>
+<div id="outline-container-org1077d68" class="outline-4">
+<h4 id="org1077d68"><span class="section-number-4">2.4.2.</span> TOD的层级结构以及各个常见的数据对象</h4>
 <div class="outline-text-4" id="text-2-4-2">
 <p>
 对话系统的最小单元, 应该是什么? 是一个组件吗? 不, 组件是不统一的,多个组件才能形成一次输入. 那么是一个对话吗? 当然也不是,因为一个对话包含了多个轮. 对的, 对话系统的基本单元,是轮. 对话系统是以轮为单位进行展示的. 我们的每次训练, 所传入的每一条数据,都是1轮数据整理成了一条线状的输入.
@@ -1778,7 +1778,7 @@ import re
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">DialogueItems</span>:
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">DialogueItems</span>:
     @<span style="color: #30b3ff;">staticmethod</span>
     <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">cumsum</span><span style="color: #24f6d9;">(</span>sequence<span style="color: #24f6d9;">)</span>:
         <span style="color: #62ff94;">r</span>, <span style="color: #62ff94;">s</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[]</span>, 0
@@ -1817,7 +1817,7 @@ import re
         <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #c770ff; font-weight: bold;">not</span> <span style="color: #c770ff; font-weight: bold;">self</span>.cumulative_sizes:
             <span style="color: #c770ff; font-weight: bold;">return</span> 0
         <span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #c770ff; font-weight: bold;">self</span>.cumulative_sizes<span style="color: #24f6d9;">[</span><span style="color: #24f6d9;">-</span>1<span style="color: #24f6d9;">]</span>
-</code></pre>
+</pre>
 </div>
 <p>
 其中, <code>self.cumulative_sizes</code> 是一个列表, 列表里的每一个元素(经由cumsum计算而得)都是从一开始到现在所经历的对话轮数.
@@ -1829,7 +1829,7 @@ import re
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #e6ff57;">@dataclass</span>
+<pre class="src src-python"><span style="color: #e6ff57;">@dataclass</span>
 <span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">DialogDataset</span><span style="color: #24f6d9;">(</span>torch.utils.data.Dataset<span style="color: #24f6d9;">)</span>:
           items: List<span style="color: #24f6d9;">[</span><span style="color: #30b3ff;">any</span><span style="color: #24f6d9;">]</span>
           <span style="color: #62ff94;">database</span>: <span style="color: #e6ff57;">Any</span> <span style="color: #24f6d9;">=</span> <span style="color: #ffa83d;">None</span>
@@ -1880,7 +1880,7 @@ import re
                   <span style="color: #62ff94;">ontology</span> <span style="color: #24f6d9;">=</span> merge_ontologies<span style="color: #24f6d9;">(</span><span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">self</span>.ontology, ontology<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
               <span style="color: #c770ff; font-weight: bold;">return</span> dataclasses.replace<span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">self</span>, items<span style="color: #24f6d9;">=</span>items, transform<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">None</span>, domains<span style="color: #24f6d9;">=</span>domains, ontology<span style="color: #24f6d9;">=</span>ontology<span style="color: #24f6d9;">)</span>
 
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -1888,7 +1888,7 @@ import re
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">transform</span><span style="color: #24f6d9;">(</span>x<span style="color: #24f6d9;">)</span>:
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">transform</span><span style="color: #24f6d9;">(</span>x<span style="color: #24f6d9;">)</span>:
     <span style="color: #62ff94;">dialogue</span>, <span style="color: #62ff94;">items</span> <span style="color: #24f6d9;">=</span> x
     <span style="color: #62ff94;">context</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span>s<span style="color: #c770ff;">[</span><span style="color: #1cc24b;">'text'</span><span style="color: #c770ff;">]</span> <span style="color: #c770ff; font-weight: bold;">for</span> s <span style="color: #c770ff; font-weight: bold;">in</span> items<span style="color: #c770ff;">[</span>:<span style="color: #24f6d9;">-</span>1<span style="color: #c770ff;">]</span><span style="color: #24f6d9;">]</span>
     <span style="color: #c770ff; font-weight: bold;">if</span> context_window_size <span style="color: #c770ff; font-weight: bold;">is</span> <span style="color: #c770ff; font-weight: bold;">not</span> <span style="color: #ffa83d;">None</span> <span style="color: #c770ff; font-weight: bold;">and</span> context_window_size <span style="color: #24f6d9;">&gt;</span> 0:
@@ -1904,7 +1904,7 @@ import re
                     response<span style="color: #24f6d9;">=</span>items<span style="color: #c770ff;">[</span><span style="color: #24f6d9;">-</span>1<span style="color: #c770ff;">][</span><span style="color: #1cc24b;">'delexicalised_text'</span><span style="color: #c770ff;">]</span>,
                             raw_response<span style="color: #24f6d9;">=</span>items<span style="color: #c770ff;">[</span><span style="color: #24f6d9;">-</span>1<span style="color: #c770ff;">][</span><span style="color: #1cc24b;">'text'</span><span style="color: #c770ff;">]</span><span style="color: #24f6d9;">)</span>
   <span style="color: #c770ff; font-weight: bold;">return</span> item
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -1912,7 +1912,7 @@ import re
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #e6ff57;">@dataclass</span>
+<pre class="src src-python"><span style="color: #e6ff57;">@dataclass</span>
 <span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">DialogDatasetItem</span>:
         context: Union<span style="color: #24f6d9;">[</span>List<span style="color: #c770ff;">[</span><span style="color: #30b3ff;">str</span><span style="color: #c770ff;">]</span>, <span style="color: #30b3ff;">str</span><span style="color: #24f6d9;">]</span>
         <span style="color: #62ff94;">belief</span>: <span style="color: #e6ff57;">Union</span><span style="color: #24f6d9;">[</span><span style="color: #e6ff57;">Dict</span><span style="color: #c770ff;">[</span><span style="color: #30b3ff;">str</span>, <span style="color: #e6ff57;">Dict</span><span style="color: #e6ff57;">[</span><span style="color: #30b3ff;">str</span>, <span style="color: #30b3ff;">str</span><span style="color: #e6ff57;">]</span><span style="color: #c770ff;">]</span>, <span style="color: #30b3ff;">str</span><span style="color: #24f6d9;">]</span> <span style="color: #24f6d9;">=</span> <span style="color: #ffa83d;">None</span>
@@ -1929,7 +1929,7 @@ import re
                 <span style="color: #c770ff; font-weight: bold;">self</span>.<span style="color: #62ff94;">belief</span> <span style="color: #24f6d9;">=</span> val
 
             <span style="color: #c770ff; font-weight: bold;">return</span> val
-</code></pre>
+</pre>
 </div>
 
 
@@ -1938,15 +1938,15 @@ import re
 </p>
 </div>
 </div>
-<div id="outline-container-org722e222" class="outline-4">
-<h4 id="org722e222"><span class="section-number-4">2.4.3.</span> 如何解析tod数据集?</h4>
+<div id="outline-container-org65590a2" class="outline-4">
+<h4 id="org65590a2"><span class="section-number-4">2.4.3.</span> 如何解析tod数据集?</h4>
 <div class="outline-text-4" id="text-2-4-3">
 <p>
 该源码直接基于名字加载数据集,如下面函数所示 <code>loader.py -&gt; load_dataset</code>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">load_dataset</span><span style="color: #24f6d9;">(</span>name, restrict_domains<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>, augment<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">'disabled'</span>, use_blacklist<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>, <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span>:
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">load_dataset</span><span style="color: #24f6d9;">(</span>name, restrict_domains<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>, augment<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">'disabled'</span>, use_blacklist<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>, <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span>:
           <span style="color: #c770ff; font-weight: bold;">if</span> restrict_domains:
               <span style="color: #c770ff; font-weight: bold;">return</span> load_dataset<span style="color: #24f6d9;">(</span>name, domains<span style="color: #24f6d9;">=</span>RESTRICTED_DOMAINS, <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span>
 
@@ -1965,15 +1965,15 @@ import re
           <span style="color: #c770ff; font-weight: bold;">if</span> use_blacklist:
               <span style="color: #62ff94;">dataset</span> <span style="color: #24f6d9;">=</span> add_blacklist<span style="color: #24f6d9;">(</span>dataset, name<span style="color: #24f6d9;">)</span>
           <span style="color: #c770ff; font-weight: bold;">return</span> dataset
-</code></pre>
+</pre>
 </div>
 
 <p>
-其实这里面并没有加载什么数据集!真正的加载数据集的操作被写进了 <code>dataset.py -&gt; load_dataset</code> 里面. 不是很理解作者的脑回路&hellip;&hellip;
+其实这里面并没有加载什么数据集!真正的加载数据集的操作被写进了 <code>dataset.py -&gt; load_dataset</code> 里面. 不是很理解作者的脑回路&#x2026;&#x2026;
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">load_dataset</span><span style="color: #24f6d9;">(</span>name, use_goal<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,have_template<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">load_dataset</span><span style="color: #24f6d9;">(</span>name, use_goal<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,have_template<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
                        context_window_size<span style="color: #24f6d9;">=</span>15, domains<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">None</span>,
                        <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">-&gt;</span> DialogDataset:
           <span style="color: #62ff94;">name</span>, <span style="color: #62ff94;">split</span> <span style="color: #24f6d9;">=</span> split_name<span style="color: #24f6d9;">(</span>name<span style="color: #24f6d9;">)</span>
@@ -2017,7 +2017,7 @@ import re
               dataset.<span style="color: #62ff94;">lexicalizer</span> <span style="color: #24f6d9;">=</span> AutoLexicalizer.load<span style="color: #24f6d9;">(</span>path<span style="color: #24f6d9;">)</span>
 
           <span style="color: #c770ff; font-weight: bold;">return</span> dataset
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -2042,7 +2042,7 @@ import re
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">NegativeSamplingDatasetWrapper</span><span style="color: #24f6d9;">(</span>torch.utils.data.Dataset<span style="color: #24f6d9;">)</span>:
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">NegativeSamplingDatasetWrapper</span><span style="color: #24f6d9;">(</span>torch.utils.data.Dataset<span style="color: #24f6d9;">)</span>:
     <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">__init__</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">self</span>, inner, transform<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">None</span>,num_bs_negative<span style="color: #24f6d9;">=</span>4<span style="color: #24f6d9;">)</span>:
         <span style="color: #8ca391;">## </span><span style="color: #8ca391; font-style: italic;">inner --&gt; datasets
 </span>        <span style="color: #c770ff; font-weight: bold;">self</span>.<span style="color: #62ff94;">inner</span> <span style="color: #24f6d9;">=</span> inner
@@ -2092,7 +2092,7 @@ import re
                                    negative_bs_list<span style="color: #24f6d9;">=</span>negtive_bs_list<span style="color: #24f6d9;">)</span>
         <span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #c770ff; font-weight: bold;">self</span>.transform<span style="color: #24f6d9;">(</span>item<span style="color: #24f6d9;">)</span>
 
-</code></pre>
+</pre>
 </div>
 
 <p>
@@ -2106,21 +2106,21 @@ import re
 </div>
 </div>
 </div>
-<div id="outline-container-orgb1ddc5e" class="outline-2">
-<h2 id="orgb1ddc5e"><span class="section-number-2">3.</span> Model的设计</h2>
+<div id="outline-container-orgfa85b5b" class="outline-2">
+<h2 id="orgfa85b5b"><span class="section-number-2">3.</span> Model的设计</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 model的设计中, training的forward和inference时的generation其实是两种形态,因此在此处进行两种描述. 先看一下训练时.
 </p>
 </div>
-<div id="outline-container-orge9343d1" class="outline-3">
-<h3 id="orge9343d1"><span class="section-number-3">3.1.</span> train- forward</h3>
+<div id="outline-container-orga76d736" class="outline-3">
+<h3 id="orga76d736"><span class="section-number-3">3.1.</span> train- forward</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 核心代码如下:
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">SoloistConfig</span><span style="color: #24f6d9;">(</span>transformers.GPT2Config<span style="color: #24f6d9;">)</span>:
+<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">class</span> <span style="color: #e6ff57;">SoloistConfig</span><span style="color: #24f6d9;">(</span>transformers.GPT2Config<span style="color: #24f6d9;">)</span>:
          <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">__init__</span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">self</span>,
                       summary_label_smoothing<span style="color: #24f6d9;">=</span>0.1, <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">for overfitting.
 </span>                      <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span>:
@@ -2197,7 +2197,7 @@ model的设计中, training的forward和inference时的generation其实是两种
 </span>                     <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">embedding dimension, and select the first batch, and with all seqence.
 </span>                     <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">so the shape is 1*msl*1
 </span>                     <span style="color: #62ff94;">token_ids</span> <span style="color: #24f6d9;">=</span> torch.full_like<span style="color: #24f6d9;">(</span>hidden_states<span style="color: #c770ff;">[</span>..., :1, :<span style="color: #c770ff;">]</span>, <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">which the shape is ???
-</span>                                                 hidden_states.shape<span style="color: #c770ff;">[</span><span style="color: #24f6d9;">-</span>2<span style="color: #c770ff;">]</span><span style="color: #24f6d9;">-</span>1, dtype<span style="color: #24f6d9;">=</span>torch.long,<span style="color: #24f6d9;">)</span>
+</span>                                                 hidden_states.shape<span style="color: #c770ff;">[</span><span style="color: #24f6d9;">-</span>2<span style="color: #c770ff;">]</span><span style="color: #24f6d9;">-</span>1, dtype<span style="color: #24f6d9;">=</span>torch.<span style="color: #30b3ff;">long</span>,<span style="color: #24f6d9;">)</span>
                  <span style="color: #c770ff; font-weight: bold;">else</span>:
                      <span style="color: #62ff94;">token_ids</span> <span style="color: #24f6d9;">=</span> token_ids.unsqueeze<span style="color: #24f6d9;">(</span><span style="color: #24f6d9;">-</span>1<span style="color: #24f6d9;">)</span>.unsqueeze<span style="color: #24f6d9;">(</span><span style="color: #24f6d9;">-</span>1<span style="color: #24f6d9;">)</span>
                      <span style="color: #62ff94;">token_ids</span> <span style="color: #24f6d9;">=</span> token_ids.expand<span style="color: #24f6d9;">(</span>
@@ -2246,20 +2246,20 @@ model的设计中, training的forward和inference时的generation其实是两种
              <span style="color: #c770ff; font-weight: bold;">if</span> consistency_loss <span style="color: #c770ff; font-weight: bold;">is</span> <span style="color: #c770ff; font-weight: bold;">not</span> <span style="color: #ffa83d;">None</span>:
                  <span style="color: #62ff94;">output</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">(</span>consistency_loss,<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">+</span> output
              <span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #24f6d9;">(</span><span style="color: #c770ff;">(</span>belief_loss, response_loss <span style="color: #24f6d9;">+</span> bp_loss, response_ce <span style="color: #24f6d9;">+</span> bp_loss<span style="color: #c770ff;">)</span> <span style="color: #24f6d9;">+</span> output<span style="color: #24f6d9;">)</span> <span style="color: #c770ff; font-weight: bold;">if</span> belief_loss <span style="color: #c770ff; font-weight: bold;">is</span> <span style="color: #c770ff; font-weight: bold;">not</span> <span style="color: #ffa83d;">None</span> <span style="color: #c770ff; font-weight: bold;">else</span> output
-</code></pre>
+</pre>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org764dda4" class="outline-2">
-<h2 id="org764dda4"><span class="section-number-2">4.</span> 训练流程</h2>
+<div id="outline-container-org9c19fe9" class="outline-2">
+<h2 id="org9c19fe9"><span class="section-number-2">4.</span> 训练流程</h2>
 </div>
-<div id="outline-container-org9754c60" class="outline-2">
-<h2 id="org9754c60"><span class="section-number-2">5.</span> 推理流程</h2>
+<div id="outline-container-orgcfc95c0" class="outline-2">
+<h2 id="orgcfc95c0"><span class="section-number-2">5.</span> 推理流程</h2>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Sun Jan 16 15:43:35 2022</span> <span class="date">Last modified: 2026-05-10 Sun 16:50</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Sun Jan 16 15:43:35 2022</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
 </div>
 </body>
 </html>

@@ -1,0 +1,29 @@
+#+title: Vision Token的信息瓶颈：一个Token到底能装多少信息？
+#+author: Zi Liang (团长)
+#+date: 2026-05-27
+#+options: toc:nil
+
+* 背景：Vision Token是怎么来的？
+
+在VLM（视觉语言模型）里，一张图片先被切成若干个patch，每个patch再被映射成一个vision token。这个token就是模型"看"图像的窗口。
+
+但你有没有想过：一个token到底能装多少信息？如果你的图像分辨率越来越高、任务越来越复杂，你需要多少个token才够用？之前没有人定量回答过这个问题。
+
+* 我们的发现
+
+和树鑫（Shuxin Zhuang）合作，我们发现vision token的信息量遵循一个scaling law——它和图像分辨率、patch大小、以及任务复杂度之间存在定量的幂律关系。
+
+具体来说：
+- 分辨率越高，每个token承载的信息量越大（但增速递减）
+- patch越小（即token越多），总信息量越大
+- 任务越复杂（比如需要细粒度识别），对token信息量的要求越高
+
+* 实践意义
+
+这个scaling law对VLM的设计有直接的指导意义。比如你想让模型识别图像中的小物体——我们的公式可以告诉你，在给定的patch size下，需要多少分辨率才能让每个token装下足够的判别信息。不用瞎试了。
+
+* 论文信息
+
+- 标题: How Much Information Can a Vision Token Hold? A Scaling Law for Recognition Limits in VLMs
+- 作者: Shuxin Zhuang, Zi Liang, Runsheng Yu, Hongzong Li, Rong Feng, Shiqin Tang, Youzhi Zhang
+- 状态: Preprint 2026

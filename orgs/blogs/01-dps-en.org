@@ -1,0 +1,30 @@
+#+title: DPS: Drawing a Decision Boundary for Large Language Models
+#+author: Zi Liang
+#+date: 2026-05-27
+#+options: toc:nil
+
+* Background: How does an LLM actually "choose"?
+
+Everyone calls LLMs "black boxes." But that is not an excuse—we need to understand how they actually make decisions.
+
+Classification models have decision boundaries: a line (or hyperplane)—cats on one side, dogs on the other. But LLMs are generative models. They do not output "cat" or "dog"; they output entire sentences. So what does a "decision boundary" even mean for an LLM? Before DPS, nobody had answered this properly.
+
+* Our Approach
+
+We reformulated the LLM as a composite multi-class classifier. Based on this formalization, we proposed the Decision Potential Surface (DPS)—a potential function surface. The core result: *the zero-height contour line of DPS is exactly the LLM's decision boundary.*
+
+We then proposed K-DPS, which approximates DPS with only K samples per input point. This is crucial because exact DPS computation requires enumerating the entire output space, which is infeasible. We analyzed the error bounds of K-DPS both theoretically and empirically, showing that a small number of samples yields a very good approximation.
+
+* Why Does This Matter?
+
+This is the first work to formally define and approximate the decision boundary of LLMs. With a decision boundary in hand, you can do many things: analyze where models tend to fail, understand how adversarial examples work, and even guide alignment training.
+
+* Paper Info
+
+- Title: Decision Potential Surface: A Theoretical and Practical Approximation of LLM's Decision Boundary
+- Authors: Zi Liang, Zhiyao Wu, Haoyang Shang, Yulin Jin, Qingqing Ye, Huadi Zheng, Peizhao Hu, Haibo Hu
+- Status: Arxiv Preprint 2025
+- Code: https://github.com/liangzid/DPS
+
+#+ATTR_HTML: :width 70%
+[[file:../images/screenshot_20250927_204135.png]]

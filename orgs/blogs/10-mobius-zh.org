@@ -1,0 +1,25 @@
+#+title: Mobius Injection：一条消息瘫痪AI基础设施？
+#+author: Zi Liang (团长)
+#+date: 2026-05-27
+#+options: toc:nil
+
+* 背景：Agent生态的新攻击面
+
+随着AI Agent的兴起，Agent与Agent之间的通信变得越来越普遍。但这也打开了一个全新的攻击面——如果一个恶意Agent给另一个Agent发了一条精心构造的消息，会发生什么？
+
+* AbO-DDoS：Agent传播的分布式拒绝服务
+
+我们提出了AbO-DDoS（Agent-borne DDoS），一种新型的分布式拒绝服务攻击。攻击者通过"莫比乌斯注入"（Mobius Injection）——一种递归结构、能不断自我触发的消息——让Agent网络中的所有节点陷入无限的资源消耗循环。
+
+本质上，这利用了大模型的一个底层特性：在处理输入时，模型的计算量往往是输入的（超）线性函数。如果你能让输入在Agent之间循环传播并且每次都被"加工"得更复杂，你就可以在Agent网络中引发级联的资源耗尽。
+
+* 为什么叫"莫比乌斯注入"？
+
+莫比乌斯带是一个没有起点和终点的单侧曲面。我们的注入消息类似——它没有"终止条件"，在Agent之间的传递中不断变形但永不停歇。
+
+* 论文信息
+
+- 标题: Can a Single Message Paralyze the AI Infrastructure? The Rise of AbO-DDoS Attacks through Targeted Mobius Injection
+- 作者: Zi Liang, Ronghua Li, Yanyun Wang, Qingqing Ye, Haibo Hu
+- 状态: Preprint 2026
+- 代码: https://github.com/liangzid/MobiusInjection

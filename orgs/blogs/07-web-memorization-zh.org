@@ -1,0 +1,29 @@
+#+title: Web Memorization：LLM记住了互联网的什么？
+#+author: Zi Liang (团长)
+#+date: 2026-05-27
+#+options: toc:nil
+
+* 背景：LLM的记忆问题
+
+LLM在训练时"见过"海量的网页内容。有些内容被记住了（memorized），有些没有。搞清楚"记住了什么"很重要——涉及隐私（是否记住了个人信息）、版权（是否记住了付费内容）、和安全（是否记住了危险知识）。
+
+和志尧（Zhiyao Wu）合作，我们提出了一种新的membership inference方法。
+
+* 从"文本级别"到"语义级别"
+
+传统的membership inference attack判断的是"这段文字是否在训练集里"。我们把它升级到了语义级别——判断"这个语义概念是否被模型记住了"。
+
+比如，我们不问"模型是否见过某篇具体的新闻文章"，而是问"模型是否记住了'某公司发生过数据泄露'这个语义事实"。
+
+* 为什么语义级别更好？
+
+文本级别的判断很容易被绕过——改几个词、换个说法，membership signal就消失了。但语义级别的记忆是更深层的——只要模型"知道"这件事，无论你怎么换表述，它都藏不住。
+
+这个工作在WWW'26发表，应用场景包括隐私审计、版权检测、和训练数据溯源。
+
+* 论文信息
+
+- 标题: Decoding Web Memorization: A Semantic Membership Inference Attack on LLMs
+- 作者: Zhiyao Wu, Zi Liang, Haibo Hu
+- 状态: WWW 2026
+- 论文: https://www.arxiv.org/abs/2510.03271

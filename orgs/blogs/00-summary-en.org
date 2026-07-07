@@ -1,0 +1,174 @@
+#+title: My Research Journey: Understanding Models, Uncovering Vulnerabilities, and Building Defenses
+#+author: Zi Liang
+#+date: 2026-05-27
+#+options: toc:t
+
+* Preface
+
+Over the past five years—from 2021 to now—I have accumulated a body of work in LLM safety and interpretability. This post is an attempt to connect the dots across my fourteen first-author (or co-first-author) papers—not as a dry publication list, but as a narrative of what I was thinking, what I found, and why it matters.
+
+My research can be condensed into one cycle: /attack to understand, understand to defend/. These are not three separate phases. They form a loop—the more you understand a model, the better you know where it breaks. The more you attack it, the more clearly you see what it really is.
+
+I will organize these works into four threads.
+
+* Thread One: Opening the Black Box—Understanding the Inner Workings of LLMs
+
+** DPS: Drawing a Decision Boundary for LLMs
+
+#+ATTR_HTML: :width 60%
+[[file:./images/screenshot_20250927_204135.png]]
+
+This is one of my favorite pieces of work from the PhD. The question is straightforward: how do LLMs actually make decisions?
+
+Classification models have decision boundaries, but LLMs are generative models. What does a "decision boundary" even mean for them? We formalized an answer: treat the LLM as a composite multi-class classifier, then define a Decision Potential Surface (DPS). The core idea is a potential function—when the potential equals zero, the resulting contour line is exactly the LLM's decision boundary.
+
+We then proposed K-DPS, which approximates DPS with only K samples per input point, and analyzed the error bounds both theoretically and empirically. The reviewers liked this one a lot.
+
+*KEYPOINT*: This is, to my knowledge, the first work that formally defines and approximates the decision boundary of LLMs—going beyond the hand-wavy "LLMs are black boxes" narrative.
+
+** TEMP: Alignment Signals Are in the Data, Not in RLHF
+
+#+ATTR_HTML: :width 60%
+[[file:./images/screenshot_20250309_222112.png]]
+
+AAAI 2025 Oral. The intuition behind this paper is simple: RLHF requires massive human annotation, but are human preference signals already latent in the raw text corpus?
+
+We assumed a prior distribution over the corpus and designed a method to sample safer responses /without any human labels/. In other words, the seeds of alignment are embedded in the data itself—not in the reward model of RLHF.
+
+This idea has since been corroborated by several follow-up works, including alignment techniques from major industry labs. The oral presentation sparked many good conversations—people were more receptive to the "alignment from raw text" hypothesis than I had anticipated.
+
+** The Information Bottleneck of Vision Tokens
+
+This is joint work with Shuxin Zhuang (Preprint 2026). The question: how much information can a single vision token actually carry? In VLMs, images are split into patches and mapped to tokens, but each token has a finite information capacity.
+
+We discovered that the information capacity of vision tokens follows a scaling law—it has a quantitative relationship with image resolution, patch size, and task complexity. This has direct implications for VLM design: if you want finer-grained recognition, you need more tokens. Our scaling law tells you exactly how many.
+
+** Prompt Lexical Sensitivity: Beyond Prompt Engineering
+
+ACL 2026 Findings, joint work with Qipeng Xie. We all know prompt engineering matters. But we found something deeper: prompts are far more sensitive to wording than people realize.
+
+The same intent, expressed with a different synonym or even a different punctuation mark, can produce drastically different output quality. We systematically quantified this sensitivity, analyzed which linguistic features drive quality variance, and proposed robust prompt design strategies.
+
+*KEYPOINT*: This implies that current prompt-based evaluations have enormous hidden variance. The "model capability" you measure on a particular prompt may simply be an artifact of that prompt's wording.
+
+* Thread Two: Attack as Understanding—Revealing Vulnerabilities
+
+** LoRD: How to Steal an LLM?
+
+#+ATTR_HTML: :width 60%
+[[file:./images/screenshot_20250309_221216.png]]
+
+ACL 2025 Main. Model extraction—copying a target model's capabilities through repeated API queries. The standard approach uses cross-entropy (MLE) for distillation, but we found a problem: if the target model was trained with RL (e.g., RLHF), MLE does not work well.
+
+Why? Because the output distribution of an RL-trained model differs from the distribution that MLE assumes. We proposed LoRD (Locality Reinforced Distillation), a new RL-based extraction method. LoRD is not only more effective but also naturally resistant to certain watermarks.
+
+*KEYPOINT*: This is a real threat. If your LLM API is publicly accessible, an adversary can genuinely replicate your model's capabilities with LoRD.
+
+** Prompt Leakage: Your System Prompts Are Not Safe
+
+#+ATTR_HTML: :width 60%
+[[file:./images/screenshot_20250309_221310.png]]
+
+#+ATTR_HTML: :width 60%
+[[file:./images/screenshot_20250309_221323.png]]
+
+When OpenAI's GPTs took off, many developers embedded core logic in system prompts, assuming this was secure. We showed it is not.
+
+We systematically evaluated three questions: (1) Can alignment defend against prompt extraction? Short answer: not really. (2) How do models leak prompts? We proposed and experimentally validated two hypotheses. (3) What factors influence leakage severity? Prompt length, complexity, and certain model properties all play a role.
+
+We also proposed several easy-to-adopt defense strategies based on our findings. The citation count on this paper has been climbing steadily, which tells me people care about this problem.
+
+** Web Memorization: What Did the LLM Memorize from the Internet?
+
+WWW 2026, joint work with Zhiyao Wu. LLMs memorize vast amounts of web content during training—but /what/ exactly do they memorize? We proposed a semantic-level membership inference attack: not just detecting whether a specific text was in the training set, but detecting whether a /semantic concept/ has been memorized by the model.
+
+Applications include privacy auditing, copyright detection, and training data provenance.
+
+** VIA: When Poisoned Data Meets Synthetic Data
+
+#+ATTR_HTML: :width 60%
+[[file:./images/screenshot_20250927_201328.png]]
+
+NeurIPS 2025 Spotlight. This is one of the works I am most proud of. The context: modern LLM training relies heavily on synthetic data—using models to generate data for training or distilling smaller models.
+
+We discovered two key facts:
+1. The distributional properties of synthetic data render traditional poisoning attacks largely ineffective—poisoned samples get "diluted" during the synthesis process.
+2. However, we proposed a new attack paradigm—Virus Infection Attack (VIA)—that enables the poison signal to /propagate/ and /infect/ downstream models through the synthetic data pipeline.
+
+This is the first systematic study of synthetic data security, and the first attack that gives poisoning a genuine "infectious" capability under the synthetic data paradigm.
+
+*KEYPOINT*: Think about it. If an attacker plants poison in an open-source model, that poison can propagate through synthetic data to every downstream model distilled from it. This is a supply-chain-level security threat.
+
+** LoRA Robustness: Lighter Means Weaker?
+
+ICML 2025. LoRA is now the de facto standard for fine-tuning LLMs. But how secure is it? We used NTK (Neural Tangent Kernel) to model the kernel-level differences between LoRA and full fine-tuning.
+
+The findings are nuanced:
+- Against untargeted poisoning, LoRA is more vulnerable than full fine-tuning.
+- Against backdoor attacks, LoRA is actually /more robust/ than full fine-tuning.
+
+We also uncovered how LoRA's rank and initialization variance affect robustness—higher rank helps, but the initialization variance effect is counterintuitive.
+
+** Mobius Injection: Can a Single Message Paralyze AI Infrastructure?
+
+Preprint 2026. This is very new work, investigating security in Agent-to-Agent communication scenarios. We found that a carefully crafted "Mobius Injection" can trigger cascading resource exhaustion across an agent network—essentially a new form of DDoS attack, which we call AbO-DDoS (Agent-borne DDoS).
+
+*KEYPOINT*: As the agent ecosystem grows, inter-agent communication security will become an entirely new attack surface. This paper is just the tip of the iceberg.
+
+* Thread Three: Beyond Individual Models—Broader Impacts of AI
+
+** The Matthew Effect: AI Coding Tools Make the Rich Richer
+
+#+ATTR_HTML: :width 60%
+[[file:./images/screenshot_20250927_203308.png]]
+
+ICLR 2026, joint work with Fei Gu. AI coding tools like Cursor and Copilot are everywhere. But what do they do to the software ecosystem?
+
+We discovered a Matthew Effect: AI coding tools tend to generate code for already-popular languages and frameworks—the ones with abundant training data. The result? Popular technologies get more AI-assisted development and become even more popular, while niche but potentially valuable technologies languish from lack of AI support.
+
+We validated this effect across both programming languages and frameworks. It is a hidden bias—AI tools claim to boost everyone's productivity, but they are quietly shaping the evolutionary direction of the software ecosystem.
+
+*KEYPOINT*: This work sits at the intersection of my master's background (software engineering) and my PhD focus (LLM safety). Looking back after a few years, I find that accumulations from different stages converge in unexpected ways.
+
+** ArxivRollBench: Is Your Model Cheating on the Test?
+
+#+ATTR_HTML: :width 60%
+[[file:./images/screenshot_20250927_202632.png]]
+
+AAAI 2026. The motivation is simple: there are too many LLM benchmarks, and scores keep going up, but how much of that is real capability versus memorization of leaked test data?
+
+Drawing inspiration from the One-Time-Pad in cryptography, we designed a new benchmark paradigm. ArxivRollBench automatically generates test cases from newly published arXiv papers every day—since the papers are new, the model cannot have seen them, so test results are not contaminated by training data.
+
+We also proposed a quantitative framework for measuring the "cheating ratio." The leaderboard is at: https://arxivroll.moreoverai.com
+
+*KEYPOINT*: I will update the leaderboard every six months. Follow along to see which models perform best under "clean exam" conditions.
+
+** Argus: Multi-Agent Ensemble for Security Vulnerability Detection
+
+Preprint 2026. This work returns to my roots in software security. We proposed Argus, a multi-agent collaborative static analysis framework capable of detecting security vulnerabilities across full attack chains.
+
+Traditional static analysis tools each have their strengths but operate in isolation. Argus uses a multi-agent ensemble to orchestrate them, leveraging each tool's expertise. The framework performs well on real-world vulnerability detection.
+
+* Thread Four: Not Just Attacking—Building Defenses and Privacy
+
+** MERGE: Fast Private Text Generation
+
+#+ATTR_HTML: :width 60%
+[[file:./images/screenshot_20250309_221412.png]]
+
+AAAI 2024. This was my first paper during the PhD, and also the first privacy-preserving inference framework specifically designed for NLG models.
+
+Based on Secret Sharing and Multi-Party Computation (MPC), MERGE enables text generation without revealing user inputs or model parameters. We achieved a 10x speedup through a series of optimizations. If you are curious about how cryptography protects AI privacy, this is a good starting point.
+
+* Closing Thoughts
+
+Looking back at these fourteen papers—from MERGE's privacy computing to DPS's decision boundaries, from LoRD's model extraction to VIA's poisoning propagation—the research trajectory may seem scattered, but the core question has never changed: /How do large models actually work, and where do they break?/
+
+In other words, I do "understanding through attack" and "attacking through understanding"—using attacks to understand models, then using that understanding to find new attack surfaces, cycling forward.
+
+If any of this interests you, feel free to reach out. My email is zi1415926.liang@connect.polyu.hk, and my WeChat is paperacceptplease.
+
+Also check out my GitHub: https://github.com/liangzid
+
+Zi Liang's Publication List:
+- Google Scholar: https://scholar.google.com/citations?user=pzrGwvMAAAAJ&hl=en

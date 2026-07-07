@@ -1,0 +1,34 @@
+#+title: Prompt的措辞敏感性：换一个词，结果天差地别
+#+author: Zi Liang (团长)
+#+date: 2026-05-27
+#+options: toc:nil
+
+* 背景：Prompt Engineering到底有多"玄学"？
+
+大家都知道prompt很重要。同一个问题，换个问法，模型的表现可能完全不同。但这种敏感性到底有多严重？哪些语言学因素在起作用？之前的工作大多停留在经验层面。
+
+和启鹏（Qipeng Xie）合作，我们决定系统性地量化这件事。
+
+* 我们的发现
+
+结论比我们预想的更惊人。同一个语义意图，仅仅改变：
+- 一个同义词（比如"分析"换成"剖析"）
+- 一个标点符号（句号换成感叹号）
+- 甚至一个冠词的位置
+
+模型的输出质量就可能出现显著波动——在某些任务上，波动幅度超过20%。
+
+我们分析了导致敏感性的语言学特征，包括词汇频率、句法复杂度、语义歧义度等，并发现了一些规律：
+- 低频词比高频词更敏感
+- 复杂句式比简单句式更敏感
+- 模型越大，对措辞的敏感度反而越高（反直觉！）
+
+* 这意味着什么？
+
+当前的prompt-based evaluation可能存在巨大的隐藏方差。你在某个prompt上测出来的"模型能力"，可能只是prompt措辞的偶然结果。我们提出了一些稳健的prompt设计策略来缓解这个问题。
+
+* 论文信息
+
+- 标题: Beyond Prompt Engineering: A Systematic Analysis of Prompt Lexical Sensitivity and Its Impacts on Quality
+- 作者: Qipeng Xie, Zi Liang, Jiafei Wu, Yufei Chen, Weizheng Wang, Wenao Ma, Zhong Ming, Haiqin Yang, Kaishun Wu
+- 状态: ACL 2026 Findings
