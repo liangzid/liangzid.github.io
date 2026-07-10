@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-29 Fri 10:11 -->
+<!-- 2026-07-10 Fri 16:59 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>LoRA Security: The "Achilles' Heel" of Parameter-Efficient Fine-Tuning?</title>
@@ -55,6 +55,7 @@
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
   pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -69,7 +70,7 @@
   pre.src-haskell:before { content: 'Haskell'; }
   pre.src-hledger:before { content: 'hledger'; }
   pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
+  pre.src-js:before { content: 'JavaScript'; }
   pre.src-latex:before { content: 'LaTeX'; }
   pre.src-ledger:before { content: 'Ledger'; }
   pre.src-lisp:before { content: 'Lisp'; }
@@ -199,8 +200,8 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">LoRA Security: The "Achilles' Heel" of Parameter-Efficient Fine-Tuning?</h1>
-<div id="outline-container-org0fb663e" class="outline-2">
-<h2 id="org0fb663e"><span class="section-number-2">1.</span> Background: LoRA Is Everywhere</h2>
+<div id="outline-container-orgcc46882" class="outline-2">
+<h2 id="orgcc46882"><span class="section-number-2">1.</span> Background: LoRA Is Everywhere</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 LoRA (Low-Rank Adaptation) is now the de facto standard for fine-tuning LLMs—add a few low-rank matrices, keep the original weights frozen, and the model adapts to new tasks. It is extremely efficient.
@@ -211,16 +212,16 @@ But nobody had systematically studied: how secure is a LoRA-fine-tuned model?
 </p>
 </div>
 </div>
-<div id="outline-container-org9bf282b" class="outline-2">
-<h2 id="org9bf282b"><span class="section-number-2">2.</span> Our Analytical Framework: An NTK Perspective</h2>
+<div id="outline-container-org98c4f8b" class="outline-2">
+<h2 id="org98c4f8b"><span class="section-number-2">2.</span> Our Analytical Framework: An NTK Perspective</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 We used NTK (Neural Tangent Kernel) to model the kernel-level differences between LoRA and full fine-tuning. The beauty of NTK is that it approximates training as kernel regression, enabling analytical analysis of attack effects.
 </p>
 </div>
 </div>
-<div id="outline-container-orgea7943d" class="outline-2">
-<h2 id="orgea7943d"><span class="section-number-2">3.</span> Two Counterintuitive Findings</h2>
+<div id="outline-container-org818ac91" class="outline-2">
+<h2 id="org818ac91"><span class="section-number-2">3.</span> Two Counterintuitive Findings</h2>
 <div class="outline-text-2" id="text-3">
 <ol class="org-ol">
 <li><b>Against untargeted poisoning: LoRA is more vulnerable.</b> Reason: LoRA's low-rank constraint limits the model's ability to "correct" the poisoning's influence. Full fine-tuning has more degrees of freedom to "overwrite" anomalous signals introduced by poisoning.</li>
@@ -233,8 +234,8 @@ We also found that LoRA's rank and initialization variance significantly affect 
 </p>
 </div>
 </div>
-<div id="outline-container-orgb4af526" class="outline-2">
-<h2 id="orgb4af526"><span class="section-number-2">4.</span> Paper Info</h2>
+<div id="outline-container-org886a734" class="outline-2">
+<h2 id="org886a734"><span class="section-number-2">4.</span> Paper Info</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li>Title: Does Low Rank Adaptation Lead to Lower Robustness against Training-Time Attacks?</li>
@@ -246,7 +247,7 @@ We also found that LoRA's rank and initialization variance significantly affect 
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzi20163933@qq.com">liangzi20163933@qq.com</a>)</span> <span class="date">Create Date: 2026-05-27</span> <span class="date">Last modified: 2026-05-27 Wed 21:41</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzi20163933@qq.com">liangzi20163933@qq.com</a>)</span> <span class="date">Create Date: 2026-05-27</span> <span class="date">Last modified: 2026-05-27 Wed 21:41</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
 </div>
 </body>
 </html>

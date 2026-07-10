@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-29 Fri 10:11 -->
+<!-- 2026-07-10 Fri 16:59 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>运维管理笔记二： 用户管理与硬盘挂载</title>
@@ -55,6 +55,7 @@
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
   pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -69,7 +70,7 @@
   pre.src-haskell:before { content: 'Haskell'; }
   pre.src-hledger:before { content: 'hledger'; }
   pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
+  pre.src-js:before { content: 'JavaScript'; }
   pre.src-latex:before { content: 'LaTeX'; }
   pre.src-ledger:before { content: 'Ledger'; }
   pre.src-lisp:before { content: 'Lisp'; }
@@ -203,17 +204,17 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgf797152">1. 开账号</a></li>
-<li><a href="#org439cdc5">2. 修改账号的用户名</a></li>
-<li><a href="#org4ff095f">3. 数据备份</a></li>
+<li><a href="#org6c0b9d7">1. 开账号</a></li>
+<li><a href="#org4f18a2d">2. 修改账号的用户名</a></li>
+<li><a href="#org017d46c">3. 数据备份</a></li>
 </ul>
 </div>
 </div>
 <p>
 在<a href="install-cuda-in-server.html">上一篇</a>笔记中我学会了如何为GPU硬件设置驱动和安装cuda，现在我又开始学习如何管理用户了。
 </p>
-<div id="outline-container-orgf797152" class="outline-2">
-<h2 id="orgf797152"><span class="section-number-2">1.</span> 开账号</h2>
+<div id="outline-container-org6c0b9d7" class="outline-2">
+<h2 id="org6c0b9d7"><span class="section-number-2">1.</span> 开账号</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 开账号最简单的方式是用 <code>adduser</code> 而非 <code>useradd</code> 。
@@ -224,13 +225,13 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org439cdc5" class="outline-2">
-<h2 id="org439cdc5"><span class="section-number-2">2.</span> 修改账号的用户名</h2>
+<div id="outline-container-org4f18a2d" class="outline-2">
+<h2 id="org4f18a2d"><span class="section-number-2">2.</span> 修改账号的用户名</h2>
 <div class="outline-text-2" id="text-2">
 <div class="org-src-container">
-<pre class="src src-sh">usermod -l newusername oldusername <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#36825;&#19968;&#34892;&#29992;&#26469;&#20462;&#25913;&#29992;&#25143;&#21517;
+<pre class="src src-sh"><code>usermod -l newusername oldusername <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#36825;&#19968;&#34892;&#29992;&#26469;&#20462;&#25913;&#29992;&#25143;&#21517;
 </span>usermod -d /home/newusername -m newusername <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">&#36825;&#19968;&#34892;&#29992;&#26469;&#20462;&#25913;home&#19979;&#38754;&#30340;&#26087;&#25991;&#20214;&#21517;&#20026;&#26032;&#25991;&#20214;&#21517;</span>
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -238,8 +239,8 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org4ff095f" class="outline-2">
-<h2 id="org4ff095f"><span class="section-number-2">3.</span> 数据备份</h2>
+<div id="outline-container-org017d46c" class="outline-2">
+<h2 id="org017d46c"><span class="section-number-2">3.</span> 数据备份</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 然后服务器扩容，我负责备份。硬盘备份的主要方式如下：
@@ -250,8 +251,8 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">sudo su
-</pre>
+<pre class="src src-sh"><code>sudo su
+</code></pre>
 </div>
 
 <p>
@@ -269,9 +270,9 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">mkdir /mnt/dir_you_set
+<pre class="src src-sh"><code>mkdir /mnt/dir_you_set
 mount /dev/sdc2 /mnt/dir_you_set
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -287,14 +288,14 @@ mount /dev/sdc2 /mnt/dir_you_set
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">unmount /mnt/sdb2
-</pre>
+<pre class="src src-sh"><code>unmount /mnt/sdb2
+</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: ziliang (<a href="mailto:2273067585@qq.com">2273067585@qq.com</a>)</span> <span class="date">Create Date: Thu Mar 31 14:54:26 2022</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: ziliang (<a href="mailto:2273067585@qq.com">2273067585@qq.com</a>)</span> <span class="date">Create Date: Thu Mar 31 14:54:26 2022</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
 </div>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-29 Fri 10:11 -->
+<!-- 2026-07-10 Fri 16:59 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>LoRD: How to Steal a Large Language Model</title>
@@ -55,6 +55,7 @@
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
   pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -69,7 +70,7 @@
   pre.src-haskell:before { content: 'Haskell'; }
   pre.src-hledger:before { content: 'hledger'; }
   pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
+  pre.src-js:before { content: 'JavaScript'; }
   pre.src-latex:before { content: 'LaTeX'; }
   pre.src-ledger:before { content: 'Ledger'; }
   pre.src-lisp:before { content: 'Lisp'; }
@@ -199,8 +200,8 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">LoRD: How to Steal a Large Language Model</h1>
-<div id="outline-container-org471188a" class="outline-2">
-<h2 id="org471188a"><span class="section-number-2">1.</span> Background: Model Extraction Is a Real Threat</h2>
+<div id="outline-container-org2cdfb2d" class="outline-2">
+<h2 id="org2cdfb2d"><span class="section-number-2">1.</span> Background: Model Extraction Is a Real Threat</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Model extraction is simple in concept: the adversary repeatedly queries your LLM API, collects input-output pairs, and trains a "substitute model" to replicate your model's capabilities.
@@ -211,16 +212,16 @@ This is not just academic curiosity. If your LLM API is public (e.g., pay-per-to
 </p>
 </div>
 </div>
-<div id="outline-container-orge92f439" class="outline-2">
-<h2 id="orge92f439"><span class="section-number-2">2.</span> The Problem: MLE Falls Short</h2>
+<div id="outline-container-org277d262" class="outline-2">
+<h2 id="org277d262"><span class="section-number-2">2.</span> The Problem: MLE Falls Short</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Traditional extraction methods use cross-entropy (MLE) for distillation. But we found a problem: if the target model was trained with RL (e.g., RLHF), MLE does not work well. RL training shifts the output distribution, and the MLE assumption no longer matches.
 </p>
 </div>
 </div>
-<div id="outline-container-org257e02b" class="outline-2">
-<h2 id="org257e02b"><span class="section-number-2">3.</span> Our Method: LoRD</h2>
+<div id="outline-container-org72089d2" class="outline-2">
+<h2 id="org72089d2"><span class="section-number-2">3.</span> Our Method: LoRD</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 LoRD (Locality Reinforced Distillation) is a new RL-based extraction method. The core idea is to exploit the "local structure" of the target model's outputs—the relationships between outputs on similar inputs—to guide the substitute model's learning.
@@ -231,8 +232,8 @@ Experiments show that LoRD significantly outperforms MLE baselines in both extra
 </p>
 </div>
 </div>
-<div id="outline-container-org7be52fe" class="outline-2">
-<h2 id="org7be52fe"><span class="section-number-2">4.</span> Paper Info</h2>
+<div id="outline-container-org0952ebb" class="outline-2">
+<h2 id="org0952ebb"><span class="section-number-2">4.</span> Paper Info</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li>Title: "Yes, My LoRD." Guiding Language Model Extraction with Locality Reinforced Distillation</li>
@@ -242,7 +243,7 @@ Experiments show that LoRD significantly outperforms MLE baselines in both extra
 </ul>
 
 
-<div id="orgec80846" class="figure">
+<div id="orga148aad" class="figure">
 <p><img src="../images/screenshot_20250309_221216.png" alt="screenshot_20250309_221216.png" width="70%">
 </p>
 </div>
@@ -250,7 +251,7 @@ Experiments show that LoRD significantly outperforms MLE baselines in both extra
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzi20163933@qq.com">liangzi20163933@qq.com</a>)</span> <span class="date">Create Date: 2026-05-27</span> <span class="date">Last modified: 2026-05-27 Wed 21:40</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzi20163933@qq.com">liangzi20163933@qq.com</a>)</span> <span class="date">Create Date: 2026-05-27</span> <span class="date">Last modified: 2026-05-27 Wed 21:40</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
 </div>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-29 Fri 10:11 -->
+<!-- 2026-07-10 Fri 16:59 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>search on graph系列算法笔记</title>
@@ -19,24 +19,24 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org5d90d16">1. search on graph问题的两个步骤</a>
+<li><a href="#org03302ce">1. search on graph问题的两个步骤</a>
 <ul>
-<li><a href="#orgeecac49">1.1. Delaunay graph 与 voronoi Diagram</a></li>
-<li><a href="#orga2eef57">1.2. 图的贪婪搜索与度量函数的凸特性</a></li>
+<li><a href="#orgff4008e">1.1. Delaunay graph 与 voronoi Diagram</a></li>
+<li><a href="#org3f72603">1.2. 图的贪婪搜索与度量函数的凸特性</a></li>
 </ul>
 </li>
-<li><a href="#org9d81e06">2. NSW Navigation Small World</a></li>
-<li><a href="#org53c7c4d">3. HNSW Hierarchical NSW</a></li>
-<li><a href="#orgccc4c70">4. BFSG Binary Function Search on Graph</a></li>
-<li><a href="#org9273269">5. our method NISG: Neural interface metric search on Graph</a></li>
+<li><a href="#orgb1916c4">2. NSW Navigation Small World</a></li>
+<li><a href="#org3166550">3. HNSW Hierarchical NSW</a></li>
+<li><a href="#org337b8e9">4. BFSG Binary Function Search on Graph</a></li>
+<li><a href="#org5653aac">5. our method NISG: Neural interface metric search on Graph</a></li>
 </ul>
 </div>
 </div>
 <p>
 今天阅读一篇需要复现的论文,发现自己对"search on graph"一直没有足够的了解.因此专门抽出一天时间学习这一类解决ANNS问题的方法,算是为以后的工作铺平道路吧.
 </p>
-<div id="outline-container-org5d90d16" class="outline-2">
-<h2 id="org5d90d16"><span class="section-number-2">1.</span> search on graph问题的两个步骤</h2>
+<div id="outline-container-org03302ce" class="outline-2">
+<h2 id="org03302ce"><span class="section-number-2">1.</span> search on graph问题的两个步骤</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 一般而言,所有的search on graph算法都包含两个基本的环节:graph construction 与 graph search.正如LSH等算法需要建设一个向量点的sketch一样,search on graph的算法侧重于捕捉节点与节点之间的连接关系,即通过一张"图"去存储点集的预信息,而非存储哈希表.因此,这两个环节的基本功能是:
@@ -50,8 +50,8 @@
 为了澄清上述描述中的一些问题,需要对Delaunay graph进行一个简单的说明.
 </p>
 </div>
-<div id="outline-container-orgeecac49" class="outline-3">
-<h3 id="orgeecac49"><span class="section-number-3">1.1.</span> Delaunay graph 与 voronoi Diagram</h3>
+<div id="outline-container-orgff4008e" class="outline-3">
+<h3 id="orgff4008e"><span class="section-number-3">1.1.</span> Delaunay graph 与 voronoi Diagram</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 你可以在<a href="https://www.bilibili.com/video/BV1Ck4y1z7VT?from=search&amp;seid=11009589865241430903">bilibili-delaunay三角</a>找到对delaunay划分的一些直观理解.
@@ -104,7 +104,7 @@
 </p>
 
 
-<div id="orga088a2d" class="figure">
+<div id="org162ae18" class="figure">
 <p><img src="./images/20200622160517.png" alt="20200622160517.png">
 </p>
 </div>
@@ -118,12 +118,12 @@
 </p>
 </div>
 </div>
-<div id="outline-container-orga2eef57" class="outline-3">
-<h3 id="orga2eef57"><span class="section-number-3">1.2.</span> 图的贪婪搜索与度量函数的凸特性</h3>
+<div id="outline-container-org3f72603" class="outline-3">
+<h3 id="org3f72603"><span class="section-number-3">1.2.</span> 图的贪婪搜索与度量函数的凸特性</h3>
 </div>
 </div>
-<div id="outline-container-org9d81e06" class="outline-2">
-<h2 id="org9d81e06"><span class="section-number-2">2.</span> NSW Navigation Small World</h2>
+<div id="outline-container-orgb1916c4" class="outline-2">
+<h2 id="orgb1916c4"><span class="section-number-2">2.</span> NSW Navigation Small World</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 那么,怎么去做这件事呢?!常见的一个思路是,NSW.在这一章,将从直观上先说一说NSW的基本思路,而后再给出该算法详细的伪代码.
@@ -165,7 +165,7 @@ NSW算法自然语言描述:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-C++">K-NNSearch<span style="color: #24f6d9;">(</span><span style="color: #e6ff57;">object</span> <span style="color: #62ff94;">q</span>, integer: m, k<span style="color: #24f6d9;">)</span>
+<pre class="src src-C++"><code>K-NNSearch<span style="color: #24f6d9;">(</span><span style="color: #e6ff57;">object</span> <span style="color: #62ff94;">q</span>, integer: m, k<span style="color: #24f6d9;">)</span>
 TreeSet <span style="color: #24f6d9;">[</span>object<span style="color: #24f6d9;">]</span> tempRes, candidates, visitedSet, result 
 <span style="color: #8ca391;">// </span><span style="color: #8ca391; font-style: italic;">&#36827;&#34892;m&#27425;&#24490;&#29615;&#65292;&#36991;&#20813;&#38543;&#26426;&#24615;
 </span><span style="color: #c770ff; font-weight: bold;">for</span> <span style="color: #24f6d9;">(</span>i&#8592;0; i &lt; m; i++<span style="color: #24f6d9;">)</span> <span style="color: #c770ff; font-weight: bold;">do</span>:
@@ -188,15 +188,15 @@ TreeSet <span style="color: #24f6d9;">[</span>object<span style="color: #24f6d9;
 end <span style="color: #c770ff; font-weight: bold;">for</span> 
 <span style="color: #c770ff; font-weight: bold;">return</span> best k elements from result
 
-</pre>
+</code></pre>
 </div>
 <p>
 可以看出,为了减弱采样的随机性带来的影响,算法中进行了多次重复.
 </p>
 </div>
 </div>
-<div id="outline-container-org53c7c4d" class="outline-2">
-<h2 id="org53c7c4d"><span class="section-number-2">3.</span> HNSW Hierarchical NSW</h2>
+<div id="outline-container-org3166550" class="outline-2">
+<h2 id="org3166550"><span class="section-number-2">3.</span> HNSW Hierarchical NSW</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 学长就让我看到HNSW.或许这就是目前比较好的算法了吧!其实,HNSW本质上就是对NSW的增量研究,因而解释起来应该比较简单.
@@ -215,7 +215,7 @@ end <span style="color: #c770ff; font-weight: bold;">for</span>
 </p>
 
 
-<div id="org39d8295" class="figure">
+<div id="org2677dcb" class="figure">
 <p><img src="images/20200622165904.png" alt="20200622165904.png">
 </p>
 </div>
@@ -240,7 +240,7 @@ end <span style="color: #c770ff; font-weight: bold;">for</span>
 </p>
 
 
-<div id="orga2d2022" class="figure">
+<div id="org19fedbb" class="figure">
 <p><img src="images/20200622172455.png" alt="20200622172455.png">
 </p>
 </div>
@@ -251,7 +251,7 @@ end <span style="color: #c770ff; font-weight: bold;">for</span>
 </p>
 
 
-<div id="orga1fa67d" class="figure">
+<div id="org6c8e5c4" class="figure">
 <p><img src="images/20200622172615.png" alt="20200622172615.png">
 </p>
 </div>
@@ -261,13 +261,13 @@ end <span style="color: #c770ff; font-weight: bold;">for</span>
 </p>
 
 
-<div id="org4b537b3" class="figure">
+<div id="org7ae1b6c" class="figure">
 <p><img src="images/20200622172709.png" alt="20200622172709.png">
 </p>
 </div>
 
 
-<div id="orgae2f110" class="figure">
+<div id="org45355d1" class="figure">
 <p><img src="images/20200622172743.png" alt="20200622172743.png">
 </p>
 </div>
@@ -277,14 +277,14 @@ end <span style="color: #c770ff; font-weight: bold;">for</span>
 </p>
 
 
-<div id="orge20c515" class="figure">
+<div id="org5e61799" class="figure">
 <p><img src="images/20200622173018.png" alt="20200622173018.png">
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-orgccc4c70" class="outline-2">
-<h2 id="orgccc4c70"><span class="section-number-2">4.</span> BFSG Binary Function Search on Graph</h2>
+<div id="outline-container-org337b8e9" class="outline-2">
+<h2 id="org337b8e9"><span class="section-number-2">4.</span> BFSG Binary Function Search on Graph</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Binary function是指以两个输入为自变量的神经网络函数.从某意义上讲,这种函数也可以被认为是一种勉强而特殊的距离度量.当然,与L2,consine等不同的是,这种距离度量是非凸的,因此直接的search on graph 方法或许无法使用.
@@ -315,7 +315,7 @@ WSDM2020中的Fast item ranking一文中给出了一种基于search on graph的�
 </ol>
 
 
-<div id="org8f3f445" class="figure">
+<div id="org4cdcc93" class="figure">
 <p><img src="images/20200623095623.png" alt="20200623095623.png">
 </p>
 </div>
@@ -325,23 +325,23 @@ WSDM2020中的Fast item ranking一文中给出了一种基于search on graph的�
 </ol>
 
 
-<div id="org8f116cd" class="figure">
+<div id="orga669977" class="figure">
 <p><img src="images/20200623095658.png" alt="20200623095658.png">
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org9273269" class="outline-2">
-<h2 id="org9273269"><span class="section-number-2">5.</span> our method NISG: Neural interface metric search on Graph</h2>
+<div id="outline-container-org5653aac" class="outline-2">
+<h2 id="org5653aac"><span class="section-number-2">5.</span> our method NISG: Neural interface metric search on Graph</h2>
 <div class="outline-text-2" id="text-5">
 <p>
-在进行graph construction的过程中,单纯使用L2距离并不是一个美妙的决定,同时,使用神经网络作为search函数又难以满足众多非凸的性质.为了解决这个问题,我们采用了一种新的方法, blablabla&#x2026;
+在进行graph construction的过程中,单纯使用L2距离并不是一个美妙的决定,同时,使用神经网络作为search函数又难以满足众多非凸的性质.为了解决这个问题,我们采用了一种新的方法, blablabla&hellip;
 </p>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Liang Zi (<a href="mailto:liangzi20163933@qq.com">liangzi20163933@qq.com</a>)</span> <span class="date">Create Date: </span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Liang Zi (<a href="mailto:liangzi20163933@qq.com">liangzi20163933@qq.com</a>)</span> <span class="date">Create Date: </span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
 </div>
 </body>
 </html>

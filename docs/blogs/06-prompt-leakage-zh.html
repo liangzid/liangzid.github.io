@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-29 Fri 10:11 -->
+<!-- 2026-07-10 Fri 16:59 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Prompt Leakage：你的系统提示词，藏不住的</title>
@@ -55,6 +55,7 @@
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
   pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -69,7 +70,7 @@
   pre.src-haskell:before { content: 'Haskell'; }
   pre.src-hledger:before { content: 'hledger'; }
   pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
+  pre.src-js:before { content: 'JavaScript'; }
   pre.src-latex:before { content: 'LaTeX'; }
   pre.src-ledger:before { content: 'Ledger'; }
   pre.src-lisp:before { content: 'Lisp'; }
@@ -199,8 +200,8 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">Prompt Leakage：你的系统提示词，藏不住的</h1>
-<div id="outline-container-orgbb35d7a" class="outline-2">
-<h2 id="orgbb35d7a"><span class="section-number-2">1.</span> 背景：GPTs火了之后的隐忧</h2>
+<div id="outline-container-org28193b7" class="outline-2">
+<h2 id="org28193b7"><span class="section-number-2">1.</span> 背景：GPTs火了之后的隐忧</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 OpenAI推出GPTs之后，人人都能创建自己的定制化ChatGPT。常见的做法是把核心逻辑、角色设定、甚至商业机密写在system prompt里。大家觉得——"模型本身有alignment保护，prompt应该不会被泄露吧？"
@@ -211,8 +212,8 @@ OpenAI推出GPTs之后，人人都能创建自己的定制化ChatGPT。常见的
 </p>
 </div>
 </div>
-<div id="outline-container-orgf93e047" class="outline-2">
-<h2 id="orgf93e047"><span class="section-number-2">2.</span> 三个核心问题</h2>
+<div id="outline-container-orga01f9e0" class="outline-2">
+<h2 id="orga01f9e0"><span class="section-number-2">2.</span> 三个核心问题</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 我们系统性地研究了三个问题：
@@ -227,16 +228,16 @@ OpenAI推出GPTs之后，人人都能创建自己的定制化ChatGPT。常见的
 </ol>
 </div>
 </div>
-<div id="outline-container-orgdc05efe" class="outline-2">
-<h2 id="orgdc05efe"><span class="section-number-2">3.</span> 防御策略</h2>
+<div id="outline-container-org1396dee" class="outline-2">
+<h2 id="org1396dee"><span class="section-number-2">3.</span> 防御策略</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 基于这些发现，我们提出了几种低成本防御：prompt压缩、动态prompt注入、以及基于注意力的检测机制。不需要重新训练模型。
 </p>
 </div>
 </div>
-<div id="outline-container-orga725a61" class="outline-2">
-<h2 id="orga725a61"><span class="section-number-2">4.</span> 论文信息</h2>
+<div id="outline-container-org67529b6" class="outline-2">
+<h2 id="org67529b6"><span class="section-number-2">4.</span> 论文信息</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li>标题: Why Are My Prompts Leaked? Unraveling Prompt Extraction Threats in Customized Large Language Models</li>
@@ -246,12 +247,12 @@ OpenAI推出GPTs之后，人人都能创建自己的定制化ChatGPT。常见的
 </ul>
 
 
-<div id="org5ff7f21" class="figure">
+<div id="org6ea23b0" class="figure">
 <p><img src="../images/screenshot_20250309_221310.png" alt="screenshot_20250309_221310.png" width="45%">
 </p>
 </div>
 
-<div id="orgd6212e4" class="figure">
+<div id="orgb3963a2" class="figure">
 <p><img src="../images/screenshot_20250309_221323.png" alt="screenshot_20250309_221323.png" width="45%">
 </p>
 </div>
@@ -259,7 +260,7 @@ OpenAI推出GPTs之后，人人都能创建自己的定制化ChatGPT。常见的
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (团长) (<a href="mailto:liangzi20163933@qq.com">liangzi20163933@qq.com</a>)</span> <span class="date">Create Date: 2026-05-27</span> <span class="date">Last modified: 2026-05-27 Wed 21:40</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (团长) (<a href="mailto:liangzi20163933@qq.com">liangzi20163933@qq.com</a>)</span> <span class="date">Create Date: 2026-05-27</span> <span class="date">Last modified: 2026-05-27 Wed 21:40</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
 </div>
 </body>
 </html>

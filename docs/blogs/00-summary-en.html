@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-29 Fri 10:11 -->
+<!-- 2026-07-10 Fri 16:59 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>My Research Journey: Understanding Models, Uncovering Vulnerabilities, and Building Defenses</title>
@@ -55,6 +55,7 @@
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
   pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -69,7 +70,7 @@
   pre.src-haskell:before { content: 'Haskell'; }
   pre.src-hledger:before { content: 'hledger'; }
   pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
+  pre.src-js:before { content: 'JavaScript'; }
   pre.src-latex:before { content: 'LaTeX'; }
   pre.src-ledger:before { content: 'Ledger'; }
   pre.src-lisp:before { content: 'Lisp'; }
@@ -203,43 +204,43 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org2b1e999">1. Preface</a></li>
-<li><a href="#orgcd9fbf3">2. Thread One: Opening the Black Box—Understanding the Inner Workings of LLMs</a>
+<li><a href="#org46e3b50">1. Preface</a></li>
+<li><a href="#org266b726">2. Thread One: Opening the Black Box—Understanding the Inner Workings of LLMs</a>
 <ul>
-<li><a href="#orgb559260">2.1. DPS: Drawing a Decision Boundary for LLMs</a></li>
-<li><a href="#org7bad2f0">2.2. TEMP: Alignment Signals Are in the Data, Not in RLHF</a></li>
-<li><a href="#org8ef11d2">2.3. The Information Bottleneck of Vision Tokens</a></li>
-<li><a href="#orgaa20412">2.4. Prompt Lexical Sensitivity: Beyond Prompt Engineering</a></li>
+<li><a href="#org618d918">2.1. DPS: Drawing a Decision Boundary for LLMs</a></li>
+<li><a href="#orgf437470">2.2. TEMP: Alignment Signals Are in the Data, Not in RLHF</a></li>
+<li><a href="#orgb3aa2df">2.3. The Information Bottleneck of Vision Tokens</a></li>
+<li><a href="#org4e26149">2.4. Prompt Lexical Sensitivity: Beyond Prompt Engineering</a></li>
 </ul>
 </li>
-<li><a href="#org1a06f09">3. Thread Two: Attack as Understanding—Revealing Vulnerabilities</a>
+<li><a href="#org652a759">3. Thread Two: Attack as Understanding—Revealing Vulnerabilities</a>
 <ul>
-<li><a href="#orgab2636c">3.1. LoRD: How to Steal an LLM?</a></li>
-<li><a href="#org202ae6f">3.2. Prompt Leakage: Your System Prompts Are Not Safe</a></li>
-<li><a href="#orgdc27b0b">3.3. Web Memorization: What Did the LLM Memorize from the Internet?</a></li>
-<li><a href="#org03ac6b5">3.4. VIA: When Poisoned Data Meets Synthetic Data</a></li>
-<li><a href="#org2fc3dd3">3.5. LoRA Robustness: Lighter Means Weaker?</a></li>
-<li><a href="#orgf3e30f8">3.6. Mobius Injection: Can a Single Message Paralyze AI Infrastructure?</a></li>
+<li><a href="#org450374d">3.1. LoRD: How to Steal an LLM?</a></li>
+<li><a href="#org1e6316b">3.2. Prompt Leakage: Your System Prompts Are Not Safe</a></li>
+<li><a href="#org6f02a55">3.3. Web Memorization: What Did the LLM Memorize from the Internet?</a></li>
+<li><a href="#org28a3d51">3.4. VIA: When Poisoned Data Meets Synthetic Data</a></li>
+<li><a href="#org63c86b3">3.5. LoRA Robustness: Lighter Means Weaker?</a></li>
+<li><a href="#org9d334cd">3.6. Mobius Injection: Can a Single Message Paralyze AI Infrastructure?</a></li>
 </ul>
 </li>
-<li><a href="#orge9eaeb0">4. Thread Three: Beyond Individual Models—Broader Impacts of AI</a>
+<li><a href="#org3b42f26">4. Thread Three: Beyond Individual Models—Broader Impacts of AI</a>
 <ul>
-<li><a href="#org2f9dde2">4.1. The Matthew Effect: AI Coding Tools Make the Rich Richer</a></li>
-<li><a href="#orge3f54e7">4.2. ArxivRollBench: Is Your Model Cheating on the Test?</a></li>
-<li><a href="#org64b8bf6">4.3. Argus: Multi-Agent Ensemble for Security Vulnerability Detection</a></li>
+<li><a href="#org7871fbe">4.1. The Matthew Effect: AI Coding Tools Make the Rich Richer</a></li>
+<li><a href="#orgcf2e9fb">4.2. ArxivRollBench: Is Your Model Cheating on the Test?</a></li>
+<li><a href="#orgbfd0e69">4.3. Argus: Multi-Agent Ensemble for Security Vulnerability Detection</a></li>
 </ul>
 </li>
-<li><a href="#org31a2441">5. Thread Four: Not Just Attacking—Building Defenses and Privacy</a>
+<li><a href="#org3a52ca9">5. Thread Four: Not Just Attacking—Building Defenses and Privacy</a>
 <ul>
-<li><a href="#org470f181">5.1. MERGE: Fast Private Text Generation</a></li>
+<li><a href="#org787c678">5.1. MERGE: Fast Private Text Generation</a></li>
 </ul>
 </li>
-<li><a href="#org5e58e51">6. Closing Thoughts</a></li>
+<li><a href="#orgcee2b55">6. Closing Thoughts</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org2b1e999" class="outline-2">
-<h2 id="org2b1e999"><span class="section-number-2">1.</span> Preface</h2>
+<div id="outline-container-org46e3b50" class="outline-2">
+<h2 id="org46e3b50"><span class="section-number-2">1.</span> Preface</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Over the past five years—from 2021 to now—I have accumulated a body of work in LLM safety and interpretability. This post is an attempt to connect the dots across my fourteen first-author (or co-first-author) papers—not as a dry publication list, but as a narrative of what I was thinking, what I found, and why it matters.
@@ -254,15 +255,15 @@ I will organize these works into four threads.
 </p>
 </div>
 </div>
-<div id="outline-container-orgcd9fbf3" class="outline-2">
-<h2 id="orgcd9fbf3"><span class="section-number-2">2.</span> Thread One: Opening the Black Box—Understanding the Inner Workings of LLMs</h2>
+<div id="outline-container-org266b726" class="outline-2">
+<h2 id="org266b726"><span class="section-number-2">2.</span> Thread One: Opening the Black Box—Understanding the Inner Workings of LLMs</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgb559260" class="outline-3">
-<h3 id="orgb559260"><span class="section-number-3">2.1.</span> DPS: Drawing a Decision Boundary for LLMs</h3>
+<div id="outline-container-org618d918" class="outline-3">
+<h3 id="org618d918"><span class="section-number-3">2.1.</span> DPS: Drawing a Decision Boundary for LLMs</h3>
 <div class="outline-text-3" id="text-2-1">
 
-<div id="org79ffc3e" class="figure">
+<div id="org7240648" class="figure">
 <p><img src="./images/screenshot_20250927_204135.png" alt="screenshot_20250927_204135.png" width="60%">
 </p>
 </div>
@@ -284,11 +285,11 @@ We then proposed K-DPS, which approximates DPS with only K samples per input poi
 </p>
 </div>
 </div>
-<div id="outline-container-org7bad2f0" class="outline-3">
-<h3 id="org7bad2f0"><span class="section-number-3">2.2.</span> TEMP: Alignment Signals Are in the Data, Not in RLHF</h3>
+<div id="outline-container-orgf437470" class="outline-3">
+<h3 id="orgf437470"><span class="section-number-3">2.2.</span> TEMP: Alignment Signals Are in the Data, Not in RLHF</h3>
 <div class="outline-text-3" id="text-2-2">
 
-<div id="org65e2aa9" class="figure">
+<div id="org5b0a374" class="figure">
 <p><img src="./images/screenshot_20250309_222112.png" alt="screenshot_20250309_222112.png" width="60%">
 </p>
 </div>
@@ -306,8 +307,8 @@ This idea has since been corroborated by several follow-up works, including alig
 </p>
 </div>
 </div>
-<div id="outline-container-org8ef11d2" class="outline-3">
-<h3 id="org8ef11d2"><span class="section-number-3">2.3.</span> The Information Bottleneck of Vision Tokens</h3>
+<div id="outline-container-orgb3aa2df" class="outline-3">
+<h3 id="orgb3aa2df"><span class="section-number-3">2.3.</span> The Information Bottleneck of Vision Tokens</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 This is joint work with Shuxin Zhuang (Preprint 2026). The question: how much information can a single vision token actually carry? In VLMs, images are split into patches and mapped to tokens, but each token has a finite information capacity.
@@ -318,8 +319,8 @@ We discovered that the information capacity of vision tokens follows a scaling l
 </p>
 </div>
 </div>
-<div id="outline-container-orgaa20412" class="outline-3">
-<h3 id="orgaa20412"><span class="section-number-3">2.4.</span> Prompt Lexical Sensitivity: Beyond Prompt Engineering</h3>
+<div id="outline-container-org4e26149" class="outline-3">
+<h3 id="org4e26149"><span class="section-number-3">2.4.</span> Prompt Lexical Sensitivity: Beyond Prompt Engineering</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 ACL 2026 Findings, joint work with Qipeng Xie. We all know prompt engineering matters. But we found something deeper: prompts are far more sensitive to wording than people realize.
@@ -335,15 +336,15 @@ The same intent, expressed with a different synonym or even a different punctuat
 </div>
 </div>
 </div>
-<div id="outline-container-org1a06f09" class="outline-2">
-<h2 id="org1a06f09"><span class="section-number-2">3.</span> Thread Two: Attack as Understanding—Revealing Vulnerabilities</h2>
+<div id="outline-container-org652a759" class="outline-2">
+<h2 id="org652a759"><span class="section-number-2">3.</span> Thread Two: Attack as Understanding—Revealing Vulnerabilities</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgab2636c" class="outline-3">
-<h3 id="orgab2636c"><span class="section-number-3">3.1.</span> LoRD: How to Steal an LLM?</h3>
+<div id="outline-container-org450374d" class="outline-3">
+<h3 id="org450374d"><span class="section-number-3">3.1.</span> LoRD: How to Steal an LLM?</h3>
 <div class="outline-text-3" id="text-3-1">
 
-<div id="org343e70c" class="figure">
+<div id="org6c6dfd5" class="figure">
 <p><img src="./images/screenshot_20250309_221216.png" alt="screenshot_20250309_221216.png" width="60%">
 </p>
 </div>
@@ -361,17 +362,17 @@ Why? Because the output distribution of an RL-trained model differs from the dis
 </p>
 </div>
 </div>
-<div id="outline-container-org202ae6f" class="outline-3">
-<h3 id="org202ae6f"><span class="section-number-3">3.2.</span> Prompt Leakage: Your System Prompts Are Not Safe</h3>
+<div id="outline-container-org1e6316b" class="outline-3">
+<h3 id="org1e6316b"><span class="section-number-3">3.2.</span> Prompt Leakage: Your System Prompts Are Not Safe</h3>
 <div class="outline-text-3" id="text-3-2">
 
-<div id="orgcad0898" class="figure">
+<div id="org6c72e8d" class="figure">
 <p><img src="./images/screenshot_20250309_221310.png" alt="screenshot_20250309_221310.png" width="60%">
 </p>
 </div>
 
 
-<div id="org3209420" class="figure">
+<div id="org0c39487" class="figure">
 <p><img src="./images/screenshot_20250309_221323.png" alt="screenshot_20250309_221323.png" width="60%">
 </p>
 </div>
@@ -389,8 +390,8 @@ We also proposed several easy-to-adopt defense strategies based on our findings.
 </p>
 </div>
 </div>
-<div id="outline-container-orgdc27b0b" class="outline-3">
-<h3 id="orgdc27b0b"><span class="section-number-3">3.3.</span> Web Memorization: What Did the LLM Memorize from the Internet?</h3>
+<div id="outline-container-org6f02a55" class="outline-3">
+<h3 id="org6f02a55"><span class="section-number-3">3.3.</span> Web Memorization: What Did the LLM Memorize from the Internet?</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 WWW 2026, joint work with Zhiyao Wu. LLMs memorize vast amounts of web content during training—but <i>what</i> exactly do they memorize? We proposed a semantic-level membership inference attack: not just detecting whether a specific text was in the training set, but detecting whether a <i>semantic concept</i> has been memorized by the model.
@@ -401,11 +402,11 @@ Applications include privacy auditing, copyright detection, and training data pr
 </p>
 </div>
 </div>
-<div id="outline-container-org03ac6b5" class="outline-3">
-<h3 id="org03ac6b5"><span class="section-number-3">3.4.</span> VIA: When Poisoned Data Meets Synthetic Data</h3>
+<div id="outline-container-org28a3d51" class="outline-3">
+<h3 id="org28a3d51"><span class="section-number-3">3.4.</span> VIA: When Poisoned Data Meets Synthetic Data</h3>
 <div class="outline-text-3" id="text-3-4">
 
-<div id="orgad3e3c0" class="figure">
+<div id="org833ee36" class="figure">
 <p><img src="./images/screenshot_20250927_201328.png" alt="screenshot_20250927_201328.png" width="60%">
 </p>
 </div>
@@ -431,8 +432,8 @@ This is the first systematic study of synthetic data security, and the first att
 </p>
 </div>
 </div>
-<div id="outline-container-org2fc3dd3" class="outline-3">
-<h3 id="org2fc3dd3"><span class="section-number-3">3.5.</span> LoRA Robustness: Lighter Means Weaker?</h3>
+<div id="outline-container-org63c86b3" class="outline-3">
+<h3 id="org63c86b3"><span class="section-number-3">3.5.</span> LoRA Robustness: Lighter Means Weaker?</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 ICML 2025. LoRA is now the de facto standard for fine-tuning LLMs. But how secure is it? We used NTK (Neural Tangent Kernel) to model the kernel-level differences between LoRA and full fine-tuning.
@@ -451,8 +452,8 @@ We also uncovered how LoRA's rank and initialization variance affect robustness�
 </p>
 </div>
 </div>
-<div id="outline-container-orgf3e30f8" class="outline-3">
-<h3 id="orgf3e30f8"><span class="section-number-3">3.6.</span> Mobius Injection: Can a Single Message Paralyze AI Infrastructure?</h3>
+<div id="outline-container-org9d334cd" class="outline-3">
+<h3 id="org9d334cd"><span class="section-number-3">3.6.</span> Mobius Injection: Can a Single Message Paralyze AI Infrastructure?</h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 Preprint 2026. This is very new work, investigating security in Agent-to-Agent communication scenarios. We found that a carefully crafted "Mobius Injection" can trigger cascading resource exhaustion across an agent network—essentially a new form of DDoS attack, which we call AbO-DDoS (Agent-borne DDoS).
@@ -464,15 +465,15 @@ Preprint 2026. This is very new work, investigating security in Agent-to-Agent c
 </div>
 </div>
 </div>
-<div id="outline-container-orge9eaeb0" class="outline-2">
-<h2 id="orge9eaeb0"><span class="section-number-2">4.</span> Thread Three: Beyond Individual Models—Broader Impacts of AI</h2>
+<div id="outline-container-org3b42f26" class="outline-2">
+<h2 id="org3b42f26"><span class="section-number-2">4.</span> Thread Three: Beyond Individual Models—Broader Impacts of AI</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org2f9dde2" class="outline-3">
-<h3 id="org2f9dde2"><span class="section-number-3">4.1.</span> The Matthew Effect: AI Coding Tools Make the Rich Richer</h3>
+<div id="outline-container-org7871fbe" class="outline-3">
+<h3 id="org7871fbe"><span class="section-number-3">4.1.</span> The Matthew Effect: AI Coding Tools Make the Rich Richer</h3>
 <div class="outline-text-3" id="text-4-1">
 
-<div id="orgd23d647" class="figure">
+<div id="org96425c4" class="figure">
 <p><img src="./images/screenshot_20250927_203308.png" alt="screenshot_20250927_203308.png" width="60%">
 </p>
 </div>
@@ -494,11 +495,11 @@ We validated this effect across both programming languages and frameworks. It is
 </p>
 </div>
 </div>
-<div id="outline-container-orge3f54e7" class="outline-3">
-<h3 id="orge3f54e7"><span class="section-number-3">4.2.</span> ArxivRollBench: Is Your Model Cheating on the Test?</h3>
+<div id="outline-container-orgcf2e9fb" class="outline-3">
+<h3 id="orgcf2e9fb"><span class="section-number-3">4.2.</span> ArxivRollBench: Is Your Model Cheating on the Test?</h3>
 <div class="outline-text-3" id="text-4-2">
 
-<div id="org1a5b951" class="figure">
+<div id="org256bb8e" class="figure">
 <p><img src="./images/screenshot_20250927_202632.png" alt="screenshot_20250927_202632.png" width="60%">
 </p>
 </div>
@@ -520,8 +521,8 @@ We also proposed a quantitative framework for measuring the "cheating ratio." Th
 </p>
 </div>
 </div>
-<div id="outline-container-org64b8bf6" class="outline-3">
-<h3 id="org64b8bf6"><span class="section-number-3">4.3.</span> Argus: Multi-Agent Ensemble for Security Vulnerability Detection</h3>
+<div id="outline-container-orgbfd0e69" class="outline-3">
+<h3 id="orgbfd0e69"><span class="section-number-3">4.3.</span> Argus: Multi-Agent Ensemble for Security Vulnerability Detection</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Preprint 2026. This work returns to my roots in software security. We proposed Argus, a multi-agent collaborative static analysis framework capable of detecting security vulnerabilities across full attack chains.
@@ -533,15 +534,15 @@ Traditional static analysis tools each have their strengths but operate in isola
 </div>
 </div>
 </div>
-<div id="outline-container-org31a2441" class="outline-2">
-<h2 id="org31a2441"><span class="section-number-2">5.</span> Thread Four: Not Just Attacking—Building Defenses and Privacy</h2>
+<div id="outline-container-org3a52ca9" class="outline-2">
+<h2 id="org3a52ca9"><span class="section-number-2">5.</span> Thread Four: Not Just Attacking—Building Defenses and Privacy</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org470f181" class="outline-3">
-<h3 id="org470f181"><span class="section-number-3">5.1.</span> MERGE: Fast Private Text Generation</h3>
+<div id="outline-container-org787c678" class="outline-3">
+<h3 id="org787c678"><span class="section-number-3">5.1.</span> MERGE: Fast Private Text Generation</h3>
 <div class="outline-text-3" id="text-5-1">
 
-<div id="org49a974f" class="figure">
+<div id="orga3da69e" class="figure">
 <p><img src="./images/screenshot_20250309_221412.png" alt="screenshot_20250309_221412.png" width="60%">
 </p>
 </div>
@@ -556,8 +557,8 @@ Based on Secret Sharing and Multi-Party Computation (MPC), MERGE enables text ge
 </div>
 </div>
 </div>
-<div id="outline-container-org5e58e51" class="outline-2">
-<h2 id="org5e58e51"><span class="section-number-2">6.</span> Closing Thoughts</h2>
+<div id="outline-container-orgcee2b55" class="outline-2">
+<h2 id="orgcee2b55"><span class="section-number-2">6.</span> Closing Thoughts</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Looking back at these fourteen papers—from MERGE's privacy computing to DPS's decision boundaries, from LoRD's model extraction to VIA's poisoning propagation—the research trajectory may seem scattered, but the core question has never changed: <i>How do large models actually work, and where do they break?</i>
@@ -585,7 +586,7 @@ Zi Liang's Publication List:
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzi20163933@qq.com">liangzi20163933@qq.com</a>)</span> <span class="date">Create Date: 2026-05-27</span> <span class="date">Last modified: 2026-05-27 Wed 21:37</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzi20163933@qq.com">liangzi20163933@qq.com</a>)</span> <span class="date">Create Date: 2026-05-27</span> <span class="date">Last modified: 2026-05-27 Wed 21:37</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
 </div>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-29 Fri 10:11 -->
+<!-- 2026-07-10 Fri 16:59 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Common Lisp notes and thinkings (Part I: Functions)</title>
@@ -55,6 +55,7 @@
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
   pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -69,7 +70,7 @@
   pre.src-haskell:before { content: 'Haskell'; }
   pre.src-hledger:before { content: 'hledger'; }
   pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
+  pre.src-js:before { content: 'JavaScript'; }
   pre.src-latex:before { content: 'LaTeX'; }
   pre.src-ledger:before { content: 'Ledger'; }
   pre.src-lisp:before { content: 'Lisp'; }
@@ -203,31 +204,31 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org405b88d">1. (eq function object) ?</a>
+<li><a href="#org6f9023c">1. (eq function object) ?</a>
 <ul>
-<li><a href="#org65fbfa4">1.1. Three state of a function</a></li>
-<li><a href="#orga1f4e0c">1.2. Closure: those functions who have <b>undefined</b> variable</a></li>
+<li><a href="#org0c50af0">1.1. Three state of a function</a></li>
+<li><a href="#org39d6d1d">1.2. Closure: those functions who have <b>undefined</b> variable</a></li>
 </ul>
 </li>
-<li><a href="#org01dec8d">2. Functional programming principle</a></li>
-<li><a href="#org4d43fe1">3. From Bottom to Top: another programming Strategy</a>
+<li><a href="#org82a1bb2">2. Functional programming principle</a></li>
+<li><a href="#org17e0424">3. From Bottom to Top: another programming Strategy</a>
 <ul>
-<li><a href="#orged19a34">3.1. Some abstraction examples of functions</a></li>
-<li><a href="#orgb472bb4">3.2. Rethink Recursion</a></li>
+<li><a href="#org705d0cd">3.1. Some abstraction examples of functions</a></li>
+<li><a href="#orge1288ac">3.2. Rethink Recursion</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org405b88d" class="outline-2">
-<h2 id="org405b88d"><span class="section-number-2">1.</span> (eq function object) ?</h2>
+<div id="outline-container-org6f9023c" class="outline-2">
+<h2 id="org6f9023c"><span class="section-number-2">1.</span> (eq function object) ?</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Yes.
 </p>
 </div>
-<div id="outline-container-org65fbfa4" class="outline-3">
-<h3 id="org65fbfa4"><span class="section-number-3">1.1.</span> Three state of a function</h3>
+<div id="outline-container-org0c50af0" class="outline-3">
+<h3 id="org0c50af0"><span class="section-number-3">1.1.</span> Three state of a function</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 We use <code>(defun plus1 (x) (\+ x 1))</code> to define a function named <code>'plus1</code>,
@@ -245,16 +246,16 @@ three types of state for this function, as:
 </ul>
 </div>
 </div>
-<div id="outline-container-orga1f4e0c" class="outline-3">
-<h3 id="orga1f4e0c"><span class="section-number-3">1.2.</span> Closure: those functions who have <b>undefined</b> variable</h3>
+<div id="outline-container-org39d6d1d" class="outline-3">
+<h3 id="org39d6d1d"><span class="section-number-3">1.2.</span> Closure: those functions who have <b>undefined</b> variable</h3>
 <div class="outline-text-3" id="text-1-2">
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> w
+<pre class="src src-elisp"><code><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> w
 <span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #e6ff57;">(</span><span style="color: #30b3ff;">(</span>a 3<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
   <span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">plus-a</span> <span style="color: #30b3ff;">(</span>x<span style="color: #30b3ff;">)</span> <span style="color: #30b3ff;">(</span>+ x a<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
          <span style="color: #e6ff57;">(</span>plus-a 5<span style="color: #e6ff57;">)</span>
 <span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -266,8 +267,8 @@ functions with different <code>a</code>. Here <code>plus-a</code> is a closure.
 </div>
 </div>
 </div>
-<div id="outline-container-org01dec8d" class="outline-2">
-<h2 id="org01dec8d"><span class="section-number-2">2.</span> Functional programming principle</h2>
+<div id="outline-container-org82a1bb2" class="outline-2">
+<h2 id="org82a1bb2"><span class="section-number-2">2.</span> Functional programming principle</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 What is FPP?
@@ -293,7 +294,7 @@ Example:
 
 
 <div class="org-src-container">
-<pre class="src src-elisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">f</span> <span style="color: #c770ff;">(</span>x<span style="color: #c770ff;">)</span>
+<pre class="src src-elisp"><code><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">f</span> <span style="color: #c770ff;">(</span>x<span style="color: #c770ff;">)</span>
   <span style="color: #c770ff;">(</span>list 'a <span style="color: #e6ff57;">(</span>expt <span style="color: #30b3ff;">(</span>car x<span style="color: #30b3ff;">)</span> 2<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
 
 <span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">f2</span> <span style="color: #c770ff;">(</span>x<span style="color: #c770ff;">)</span>
@@ -301,7 +302,7 @@ Example:
     <span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> y <span style="color: #30b3ff;">(</span>car x<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
     <span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">setq</span> sqr <span style="color: #30b3ff;">(</span>expt y 2<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
     <span style="color: #e6ff57;">(</span>list 'a sqr<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -310,8 +311,8 @@ C++, JAVA, PYTHON, and so on.
 </p>
 </div>
 </div>
-<div id="outline-container-org4d43fe1" class="outline-2">
-<h2 id="org4d43fe1"><span class="section-number-2">3.</span> From Bottom to Top: another programming Strategy</h2>
+<div id="outline-container-org17e0424" class="outline-2">
+<h2 id="org17e0424"><span class="section-number-2">3.</span> From Bottom to Top: another programming Strategy</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 What we learn in courses or real-world encourage us to give a plan
@@ -343,11 +344,11 @@ strategy, because we can test every function, and develope new language
 on our own fields.
 </p>
 </div>
-<div id="outline-container-orged19a34" class="outline-3">
-<h3 id="orged19a34"><span class="section-number-3">3.1.</span> Some abstraction examples of functions</h3>
+<div id="outline-container-org705d0cd" class="outline-3">
+<h3 id="org705d0cd"><span class="section-number-3">3.1.</span> Some abstraction examples of functions</h3>
 <div class="outline-text-3" id="text-3-1">
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span>proclaim '<span style="color: #c770ff;">(</span>inline last1 single append1 nconc1 mklist<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span> <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">compile it
+<pre class="src src-emacs-lisp"><code><span style="color: #24f6d9;">(</span>proclaim '<span style="color: #c770ff;">(</span>inline last1 single append1 nconc1 mklist<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span> <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">compile it
 </span>
 <span style="color: #8ca391;">;; </span><span style="color: #8ca391; font-style: italic;">git last element
 </span><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">last1</span> <span style="color: #c770ff;">(</span>ls<span style="color: #c770ff;">)</span> <span style="color: #c770ff;">(</span>car <span style="color: #e6ff57;">(</span>last ls<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
@@ -489,12 +490,12 @@ result <span style="color: #8ca391;">(</span>list obj<span style="color: #8ca391
 <span style="color: #c770ff;">(</span>values <span style="color: #e6ff57;">(</span>read-from-string <span style="color: #30b3ff;">(</span>apply #'mkstr args<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
 <span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">explode</span> <span style="color: #c770ff;">(</span>sym<span style="color: #c770ff;">)(</span>map 'list #'<span style="color: #e6ff57;">(</span><span style="color: #c770ff; font-weight: bold;">lambda</span> <span style="color: #30b3ff;">(</span>c<span style="color: #30b3ff;">)</span>
 <span style="color: #30b3ff;">(</span>intern <span style="color: #ffa83d;">(</span>make-string 1:initial-element c<span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #e6ff57; font-weight: bold;">(</span><span style="color: #e6ff57; font-weight: bold;">symbol-name sym</span><span style="color: #e6ff57; font-weight: bold;">)</span><span style="color: #c770ff; font-weight: bold;">)</span><span style="color: #24f6d9; font-weight: bold;">)</span>
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgb472bb4" class="outline-3">
-<h3 id="orgb472bb4"><span class="section-number-3">3.2.</span> Rethink Recursion</h3>
+<div id="outline-container-orge1288ac" class="outline-3">
+<h3 id="orge1288ac"><span class="section-number-3">3.2.</span> Rethink Recursion</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 while other languages use <b>loop</b> for a complicated object, lisp prefer <b>recusion</b>. Consider a function that returns the length of a list:
@@ -502,13 +503,13 @@ while other languages use <b>loop</b> for a complicated object, lisp prefer <b>r
 
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">similar to len(x)
+<pre class="src src-python"><code><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">similar to len(x)
 </span><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">len</span><span style="color: #24f6d9;">(</span>ls<span style="color: #24f6d9;">)</span>:
     <span style="color: #62ff94;">i</span><span style="color: #24f6d9;">=</span>0
     <span style="color: #c770ff; font-weight: bold;">for</span> x <span style="color: #c770ff; font-weight: bold;">in</span> ls:
         <span style="color: #62ff94;">i</span><span style="color: #24f6d9;">+=</span>1
     <span style="color: #c770ff; font-weight: bold;">return</span> i
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -517,9 +518,9 @@ In lisp we may write it as:
 
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">len</span> <span style="color: #c770ff;">(</span>ls<span style="color: #c770ff;">)</span>
+<pre class="src src-emacs-lisp"><code><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">len</span> <span style="color: #c770ff;">(</span>ls<span style="color: #c770ff;">)</span>
   <span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #e6ff57;">(</span>null ls<span style="color: #e6ff57;">)</span> 0 <span style="color: #e6ff57;">(</span>1+ <span style="color: #30b3ff;">(</span>len <span style="color: #ffa83d;">(</span>cdr ls<span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -535,13 +536,13 @@ However, we can change such <b>cdr recursion</b> into a <b>tail recursion</b> (a
 </ol>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">len</span> <span style="color: #c770ff;">(</span>ls<span style="color: #c770ff;">)</span>
+<pre class="src src-emacs-lisp"><code><span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">defun</span> <span style="color: #24f6d9;">len</span> <span style="color: #c770ff;">(</span>ls<span style="color: #c770ff;">)</span>
   <span style="color: #c770ff;">(</span>labels <span style="color: #e6ff57;">(</span><span style="color: #30b3ff;">(</span>rec <span style="color: #ffa83d;">(</span>ls acc<span style="color: #ffa83d;">)</span>
                 <span style="color: #ffa83d;">(</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #1cc24b;">(</span>null ls<span style="color: #1cc24b;">)</span>
                     acc
                   <span style="color: #1cc24b;">(</span>rec <span style="color: #24f6d9;">(</span>cdr ls<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">(</span>1+ acc<span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span><span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>
     <span style="color: #e6ff57;">(</span>rec ls 0<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -559,7 +560,7 @@ how to understand and use <b>macro</b> in <i>common lisp</i>.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Oct  6 16:20:35 2023</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Oct  6 16:20:35 2023</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
 </div>
 </body>
 </html>

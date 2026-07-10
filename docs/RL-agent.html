@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-29 Fri 10:11 -->
+<!-- 2026-07-10 Fri 16:59 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>LLM operates Computers: An Introduction and Framework of RL-driven Agent</title>
@@ -55,6 +55,7 @@
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
   pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -69,7 +70,7 @@
   pre.src-haskell:before { content: 'Haskell'; }
   pre.src-hledger:before { content: 'hledger'; }
   pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
+  pre.src-js:before { content: 'JavaScript'; }
   pre.src-latex:before { content: 'LaTeX'; }
   pre.src-ledger:before { content: 'Ledger'; }
   pre.src-lisp:before { content: 'Lisp'; }
@@ -203,69 +204,69 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgf29237d">1. Proposer-Agent-Evaluator (PAE)</a>
+<li><a href="#org7ec9bca">1. Proposer-Agent-Evaluator (PAE)</a>
 <ul>
-<li><a href="#org44256aa">1.1. Observations (what a VLM can see)</a></li>
-<li><a href="#orgf285cda">1.2. Task Proposer (how to generate corpus)</a></li>
-<li><a href="#orgb91dc8b">1.3. Evaluator (How to provide the reward &amp; How to evaluate)</a></li>
-<li><a href="#orga89bf64">1.4. CoT Training (How to train with reasoning)</a></li>
-<li><a href="#orgfa27884">1.5. Experiments</a>
+<li><a href="#orgca79d34">1.1. Observations (what a VLM can see)</a></li>
+<li><a href="#orgdc2a766">1.2. Task Proposer (how to generate corpus)</a></li>
+<li><a href="#org9af5870">1.3. Evaluator (How to provide the reward &amp; How to evaluate)</a></li>
+<li><a href="#org5915c3c">1.4. CoT Training (How to train with reasoning)</a></li>
+<li><a href="#orgee328db">1.5. Experiments</a>
 <ul>
-<li><a href="#orge79c393">1.5.1. Datasets or Environments</a></li>
-<li><a href="#orgde4e33d">1.5.2. Performances</a></li>
+<li><a href="#orgd1941d6">1.5.1. Datasets or Environments</a></li>
+<li><a href="#org109ec8d">1.5.2. Performances</a></li>
 </ul>
 </li>
-<li><a href="#org789a682">1.6. <span class="todo TODO">TODO</span> Source code Analysis</a></li>
+<li><a href="#org91310a7">1.6. <span class="todo TODO">TODO</span> Source code Analysis</a></li>
 </ul>
 </li>
-<li><a href="#org8c9698f">2. WebArena: A Realistic Web Environment for Building Autonomous Agents</a>
+<li><a href="#org41ca522">2. WebArena: A Realistic Web Environment for Building Autonomous Agents</a>
 <ul>
-<li><a href="#orgdc4e08d">2.1. Website Selection</a></li>
-<li><a href="#org0853bcd">2.2. Observations</a></li>
-<li><a href="#org979b9a8">2.3. Actions</a></li>
-<li><a href="#orgceda887">2.4. Intents</a></li>
-<li><a href="#org0e20746">2.5. Evaluation Metrics</a></li>
+<li><a href="#orge4751cd">2.1. Website Selection</a></li>
+<li><a href="#orgb99c921">2.2. Observations</a></li>
+<li><a href="#org8e7a591">2.3. Actions</a></li>
+<li><a href="#org193d45d">2.4. Intents</a></li>
+<li><a href="#orgd5b2a20">2.5. Evaluation Metrics</a></li>
 </ul>
 </li>
-<li><a href="#org8e176a1">3. WebVoyager: Building an End-to-End Web Agent with LMMs</a>
+<li><a href="#orgd1181a4">3. WebVoyager: Building an End-to-End Web Agent with LMMs</a>
 <ul>
-<li><a href="#orga61e21d">3.1. Observations</a></li>
-<li><a href="#org8647b73">3.2. Actions</a></li>
-<li><a href="#orgbaa7e0e">3.3. Datasets</a></li>
-<li><a href="#org12f558a">3.4. Results</a></li>
+<li><a href="#orgabb204b">3.1. Observations</a></li>
+<li><a href="#org5302206">3.2. Actions</a></li>
+<li><a href="#orged319a2">3.3. Datasets</a></li>
+<li><a href="#org7ed145c">3.4. Results</a></li>
 </ul>
 </li>
-<li><a href="#org3ffae01">4. Ragen: Not What We Need</a></li>
-<li><a href="#org7d634c7">5. Tools May Take</a>
+<li><a href="#orgbb2fe47">4. Ragen: Not What We Need</a></li>
+<li><a href="#org7e02e13">5. Tools May Take</a>
 <ul>
-<li><a href="#org641f987">5.1. Magentic-UI</a>
+<li><a href="#org1f381c9">5.1. Magentic-UI</a>
 <ul>
-<li><a href="#org531a5e5">5.1.1. Roles</a></li>
-<li><a href="#orgac7a8ec">5.1.2. Workflow</a></li>
+<li><a href="#orgbcd837c">5.1.1. Roles</a></li>
+<li><a href="#org0b834bd">5.1.2. Workflow</a></li>
 </ul>
 </li>
-<li><a href="#orgb345fb2">5.2. Puppeteer</a></li>
+<li><a href="#org96624bf">5.2. Puppeteer</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgf29237d" class="outline-2">
-<h2 id="orgf29237d"><span class="section-number-2">1.</span> Proposer-Agent-Evaluator (PAE)</h2>
+<div id="outline-container-org7ec9bca" class="outline-2">
+<h2 id="org7ec9bca"><span class="section-number-2">1.</span> Proposer-Agent-Evaluator (PAE)</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Paper: <a href="https://arxiv.org/abs/2412.13194">Proposer-Agent-Evaluator(PAE): Autonomous Skill Discovery For Foundation Model Internet Agents</a>
 </p>
 </div>
-<div id="outline-container-org44256aa" class="outline-3">
-<h3 id="org44256aa"><span class="section-number-3">1.1.</span> Observations (what a VLM can see)</h3>
+<div id="outline-container-orgca79d34" class="outline-3">
+<h3 id="orgca79d34"><span class="section-number-3">1.1.</span> Observations (what a VLM can see)</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Domain-specific Observations and Actions
 </p>
 
 
-<div id="org835cba7" class="figure">
+<div id="org227167f" class="figure">
 <p><img src="./images/screenshot_20250602_150959.png" alt="screenshot_20250602_150959.png">
 </p>
 </div>
@@ -282,8 +283,8 @@ links and text boxes."
 </p>
 </div>
 </div>
-<div id="outline-container-orgf285cda" class="outline-3">
-<h3 id="orgf285cda"><span class="section-number-3">1.2.</span> Task Proposer (how to generate corpus)</h3>
+<div id="outline-container-orgdc2a766" class="outline-3">
+<h3 id="orgdc2a766"><span class="section-number-3">1.2.</span> Task Proposer (how to generate corpus)</h3>
 <div class="outline-text-3" id="text-1-2">
 <ol class="org-ol">
 <li>Prompt, and only use the <code>website name</code>
@@ -293,8 +294,8 @@ as the information</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-orgb91dc8b" class="outline-3">
-<h3 id="orgb91dc8b"><span class="section-number-3">1.3.</span> Evaluator (How to provide the reward &amp; How to evaluate)</h3>
+<div id="outline-container-org9af5870" class="outline-3">
+<h3 id="org9af5870"><span class="section-number-3">1.3.</span> Evaluator (How to provide the reward &amp; How to evaluate)</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 The reward is 0/1, purely result-oriented.
@@ -306,20 +307,20 @@ The reward is 0/1, purely result-oriented.
 </ol>
 </div>
 </div>
-<div id="outline-container-orga89bf64" class="outline-3">
-<h3 id="orga89bf64"><span class="section-number-3">1.4.</span> CoT Training (How to train with reasoning)</h3>
+<div id="outline-container-org5915c3c" class="outline-3">
+<h3 id="org5915c3c"><span class="section-number-3">1.4.</span> CoT Training (How to train with reasoning)</h3>
 <div class="outline-text-3" id="text-1-4">
 <ul class="org-ul">
 <li>Using the Filtered Behavior Cloning (Filtered BC) as the RL algorithm.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgfa27884" class="outline-3">
-<h3 id="orgfa27884"><span class="section-number-3">1.5.</span> Experiments</h3>
+<div id="outline-container-orgee328db" class="outline-3">
+<h3 id="orgee328db"><span class="section-number-3">1.5.</span> Experiments</h3>
 <div class="outline-text-3" id="text-1-5">
 </div>
-<div id="outline-container-orge79c393" class="outline-4">
-<h4 id="orge79c393"><span class="section-number-4">1.5.1.</span> Datasets or Environments</h4>
+<div id="outline-container-orgd1941d6" class="outline-4">
+<h4 id="orgd1941d6"><span class="section-number-4">1.5.1.</span> Datasets or Environments</h4>
 <div class="outline-text-4" id="text-1-5-1">
 <ul class="org-ul">
 <li>WebVoyager
@@ -337,19 +338,19 @@ The reward is 0/1, purely result-oriented.
 </ul>
 </div>
 </div>
-<div id="outline-container-orgde4e33d" class="outline-4">
-<h4 id="orgde4e33d"><span class="section-number-4">1.5.2.</span> Performances</h4>
+<div id="outline-container-org109ec8d" class="outline-4">
+<h4 id="org109ec8d"><span class="section-number-4">1.5.2.</span> Performances</h4>
 <div class="outline-text-4" id="text-1-5-2">
 
-<div id="org8acf385" class="figure">
+<div id="orgee00c49" class="figure">
 <p><img src="./images/screenshot_20250602_152337.png" alt="screenshot_20250602_152337.png">
 </p>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org789a682" class="outline-3">
-<h3 id="org789a682"><span class="section-number-3">1.6.</span> <span class="todo TODO">TODO</span> Source code Analysis</h3>
+<div id="outline-container-org91310a7" class="outline-3">
+<h3 id="org91310a7"><span class="section-number-3">1.6.</span> <span class="todo TODO">TODO</span> Source code Analysis</h3>
 <div class="outline-text-3" id="text-1-6">
 <p>
 TODO.
@@ -357,12 +358,12 @@ TODO.
 </div>
 </div>
 </div>
-<div id="outline-container-org8c9698f" class="outline-2">
-<h2 id="org8c9698f"><span class="section-number-2">2.</span> WebArena: A Realistic Web Environment for Building Autonomous Agents</h2>
+<div id="outline-container-org41ca522" class="outline-2">
+<h2 id="org41ca522"><span class="section-number-2">2.</span> WebArena: A Realistic Web Environment for Building Autonomous Agents</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgdc4e08d" class="outline-3">
-<h3 id="orgdc4e08d"><span class="section-number-3">2.1.</span> Website Selection</h3>
+<div id="outline-container-orge4751cd" class="outline-3">
+<h3 id="orge4751cd"><span class="section-number-3">2.1.</span> Website Selection</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 analyze 200 user's browser histories, and select 4 representative categories:
@@ -381,8 +382,8 @@ And then they build a simulation version of these websites.
 </ul>
 </div>
 </div>
-<div id="outline-container-org0853bcd" class="outline-3">
-<h3 id="org0853bcd"><span class="section-number-3">2.2.</span> Observations</h3>
+<div id="outline-container-orgb99c921" class="outline-3">
+<h3 id="orgb99c921"><span class="section-number-3">2.2.</span> Observations</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 A browser view, with tabs and web pages.
@@ -395,36 +396,36 @@ A browser view, with tabs and web pages.
 </ul>
 </div>
 </div>
-<div id="outline-container-org979b9a8" class="outline-3">
-<h3 id="org979b9a8"><span class="section-number-3">2.3.</span> Actions</h3>
+<div id="outline-container-org8e7a591" class="outline-3">
+<h3 id="org8e7a591"><span class="section-number-3">2.3.</span> Actions</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 "emulates the keyboard and mouse operations"
 </p>
 
 
-<div id="org6b694c3" class="figure">
+<div id="org0fe1096" class="figure">
 <p><img src="./images/screenshot_20250602_163305.png" alt="screenshot_20250602_163305.png">
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-orgceda887" class="outline-3">
-<h3 id="orgceda887"><span class="section-number-3">2.4.</span> Intents</h3>
+<div id="outline-container-org193d45d" class="outline-3">
+<h3 id="org193d45d"><span class="section-number-3">2.4.</span> Intents</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 Some universal templates while difficult and unique for each task.
 </p>
 
 
-<div id="org56b3555" class="figure">
+<div id="org7b1756a" class="figure">
 <p><img src="./images/screenshot_20250602_163355.png" alt="screenshot_20250602_163355.png">
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org0e20746" class="outline-3">
-<h3 id="org0e20746"><span class="section-number-3">2.5.</span> Evaluation Metrics</h3>
+<div id="outline-container-orgd5b2a20" class="outline-3">
+<h3 id="orgd5b2a20"><span class="section-number-3">2.5.</span> Evaluation Metrics</h3>
 <div class="outline-text-3" id="text-2-5">
 <ul class="org-ul">
 <li><code>exact_math</code></li>
@@ -434,22 +435,22 @@ Some universal templates while difficult and unique for each task.
 </div>
 </div>
 </div>
-<div id="outline-container-org8e176a1" class="outline-2">
-<h2 id="org8e176a1"><span class="section-number-2">3.</span> WebVoyager: Building an End-to-End Web Agent with LMMs</h2>
+<div id="outline-container-orgd1181a4" class="outline-2">
+<h2 id="orgd1181a4"><span class="section-number-2">3.</span> WebVoyager: Building an End-to-End Web Agent with LMMs</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 This work is based on <b>Selenium (<a href="https://www.selenium.dev/">https://www.selenium.dev/</a>)</b>, a webdriver for automatically test websites on browsers.
 </p>
 </div>
-<div id="outline-container-orga61e21d" class="outline-3">
-<h3 id="orga61e21d"><span class="section-number-3">3.1.</span> Observations</h3>
+<div id="outline-container-orgabb204b" class="outline-3">
+<h3 id="orgabb204b"><span class="section-number-3">3.1.</span> Observations</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Same as PAE.
 </p>
 
 
-<div id="orgf7bcabf" class="figure">
+<div id="org81a15bb" class="figure">
 <p><img src="./images/screenshot_20250603_095039.png" alt="screenshot_20250603_095039.png">
 </p>
 </div>
@@ -460,8 +461,8 @@ Same as PAE.
 </ul>
 </div>
 </div>
-<div id="outline-container-org8647b73" class="outline-3">
-<h3 id="org8647b73"><span class="section-number-3">3.2.</span> Actions</h3>
+<div id="outline-container-org5302206" class="outline-3">
+<h3 id="org5302206"><span class="section-number-3">3.2.</span> Actions</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Similar to WebArena, i.e., mouse and keyboard actions.
@@ -469,14 +470,14 @@ A simplified version of code, i.e., "click [39]".
 </p>
 
 
-<div id="org08a4fd0" class="figure">
+<div id="org57abbe5" class="figure">
 <p><img src="./images/screenshot_20250603_095715.png" alt="screenshot_20250603_095715.png">
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-orgbaa7e0e" class="outline-3">
-<h3 id="orgbaa7e0e"><span class="section-number-3">3.3.</span> Datasets</h3>
+<div id="outline-container-orged319a2" class="outline-3">
+<h3 id="orged319a2"><span class="section-number-3">3.3.</span> Datasets</h3>
 <div class="outline-text-3" id="text-3-3">
 <ul class="org-ul">
 <li>15 Realistic Websites</li>
@@ -490,28 +491,28 @@ A simplified version of code, i.e., "click [39]".
 </ul>
 
 
-<div id="org03c4c49" class="figure">
+<div id="org122a41e" class="figure">
 <p><img src="./images/screenshot_20250603_095537.png" alt="screenshot_20250603_095537.png">
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org12f558a" class="outline-3">
-<h3 id="org12f558a"><span class="section-number-3">3.4.</span> Results</h3>
+<div id="outline-container-org7ed145c" class="outline-3">
+<h3 id="org7ed145c"><span class="section-number-3">3.4.</span> Results</h3>
 <div class="outline-text-3" id="text-3-4">
 
-<div id="orgd3ede1e" class="figure">
+<div id="orgd2e8c93" class="figure">
 <p><img src="./images/screenshot_20250603_095757.png" alt="screenshot_20250603_095757.png">
 </p>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org3ffae01" class="outline-2">
-<h2 id="org3ffae01"><span class="section-number-2">4.</span> Ragen: Not What We Need</h2>
+<div id="outline-container-orgbb2fe47" class="outline-2">
+<h2 id="orgbb2fe47"><span class="section-number-2">4.</span> Ragen: Not What We Need</h2>
 <div class="outline-text-2" id="text-4">
 
-<div id="orge13bac5" class="figure">
+<div id="org63578a2" class="figure">
 <p><img src="./images/screenshot_20250603_100439.png" alt="screenshot_20250603_100439.png">
 </p>
 </div>
@@ -526,12 +527,12 @@ Reasons:
 </ul>
 </div>
 </div>
-<div id="outline-container-org7d634c7" class="outline-2">
-<h2 id="org7d634c7"><span class="section-number-2">5.</span> Tools May Take</h2>
+<div id="outline-container-org7e02e13" class="outline-2">
+<h2 id="org7e02e13"><span class="section-number-2">5.</span> Tools May Take</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org641f987" class="outline-3">
-<h3 id="org641f987"><span class="section-number-3">5.1.</span> Magentic-UI</h3>
+<div id="outline-container-org1f381c9" class="outline-3">
+<h3 id="org1f381c9"><span class="section-number-3">5.1.</span> Magentic-UI</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 Wechat introduction: <a href="https://mp.weixin.qq.com/s/r2wuKg08X89u96bUtpwFyQ">Wechat Introduction</a>.
@@ -546,8 +547,8 @@ Github Repository: <a href="https://github.com/microsoft/magentic-ui/">https://g
 <li>Human-AI interaction</li>
 </ul>
 </div>
-<div id="outline-container-org531a5e5" class="outline-4">
-<h4 id="org531a5e5"><span class="section-number-4">5.1.1.</span> Roles</h4>
+<div id="outline-container-orgbcd837c" class="outline-4">
+<h4 id="orgbcd837c"><span class="section-number-4">5.1.1.</span> Roles</h4>
 <div class="outline-text-4" id="text-5-1-1">
 <ul class="org-ul">
 <li>🧑‍💼 Orchestrator is the lead agent, powered by a large language model (LLM), that performs co-planning with the user, decides when to ask the user for feedback, and delegates sub-tasks to the remaining agents to complete.</li>
@@ -558,19 +559,19 @@ Github Repository: <a href="https://github.com/microsoft/magentic-ui/">https://g
 </ul>
 </div>
 </div>
-<div id="outline-container-orgac7a8ec" class="outline-4">
-<h4 id="orgac7a8ec"><span class="section-number-4">5.1.2.</span> Workflow</h4>
+<div id="outline-container-org0b834bd" class="outline-4">
+<h4 id="org0b834bd"><span class="section-number-4">5.1.2.</span> Workflow</h4>
 <div class="outline-text-4" id="text-5-1-2">
 
-<div id="org32c1a80" class="figure">
+<div id="orgdf2b3a6" class="figure">
 <p><img src="./images/screenshot_20250603_101530.png" alt="screenshot_20250603_101530.png">
 </p>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgb345fb2" class="outline-3">
-<h3 id="orgb345fb2"><span class="section-number-3">5.2.</span> Puppeteer</h3>
+<div id="outline-container-org96624bf" class="outline-3">
+<h3 id="org96624bf"><span class="section-number-3">5.2.</span> Puppeteer</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 <a href="https://pptr.dev/">https://pptr.dev/</a>
@@ -584,7 +585,7 @@ A JavaScript library which provides a high-level API to control Chrome or Firefo
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Mon Jun  2 10:54:48 2025</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Mon Jun  2 10:54:48 2025</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
 </div>
 </body>
 </html>

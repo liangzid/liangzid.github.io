@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-29 Fri 10:11 -->
+<!-- 2026-07-10 Fri 16:59 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Delphi源码学习与分析</title>
@@ -55,6 +55,7 @@
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
   pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -69,7 +70,7 @@
   pre.src-haskell:before { content: 'Haskell'; }
   pre.src-hledger:before { content: 'hledger'; }
   pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
+  pre.src-js:before { content: 'JavaScript'; }
   pre.src-latex:before { content: 'LaTeX'; }
   pre.src-ledger:before { content: 'Ledger'; }
   pre.src-lisp:before { content: 'Lisp'; }
@@ -203,58 +204,58 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org4be515b">1. </a></li>
-<li><a href="#orgb46e32d">2. Rust部分代码分析</a>
+<li><a href="#org9f10ffc">1. </a></li>
+<li><a href="#org301c091">2. Rust部分代码分析</a>
 <ul>
-<li><a href="#orgec28ab9">2.1. algebra：</a>
+<li><a href="#org5f42998">2.1. algebra：</a>
 <ul>
-<li><a href="#org05c417b">2.1.1. Polynomial</a></li>
-<li><a href="#orgc1a779e">2.1.2. bytes</a></li>
-<li><a href="#org0323baa">2.1.3. biginteger</a></li>
-<li><a href="#org1ebac79">2.1.4. fixed_point</a></li>
-<li><a href="#orgb2d2e97">2.1.5. fields</a></li>
-<li><a href="#orge7de336">2.1.6. 其他</a></li>
+<li><a href="#orgbcdfcd9">2.1.1. Polynomial</a></li>
+<li><a href="#orgabc0b42">2.1.2. bytes</a></li>
+<li><a href="#org46485b3">2.1.3. biginteger</a></li>
+<li><a href="#orgc3707de">2.1.4. fixed_point</a></li>
+<li><a href="#orgcb55295">2.1.5. fields</a></li>
+<li><a href="#orgbd0be52">2.1.6. 其他</a></li>
 </ul>
 </li>
-<li><a href="#org4e00d26">2.2. crypto-primitives</a>
+<li><a href="#org1d7b434">2.2. crypto-primitives</a>
 <ul>
-<li><a href="#org9704237">2.2.1. additive_share</a></li>
-<li><a href="#org8d1611a">2.2.2. beavers_mul</a></li>
-<li><a href="#org642d15e">2.2.3. gc (garbled circuits)</a></li>
+<li><a href="#org26f1adc">2.2.1. additive_share</a></li>
+<li><a href="#org1800fac">2.2.2. beavers_mul</a></li>
+<li><a href="#orgb4590d4">2.2.3. gc (garbled circuits)</a></li>
 </ul>
 </li>
-<li><a href="#org8d85426">2.3. neural-network</a>
+<li><a href="#orgf18dd5e">2.3. neural-network</a>
 <ul>
-<li><a href="#org2c5e2ed">2.3.1. layers</a></li>
-<li><a href="#org4d0bc7c">2.3.2. tensors</a></li>
-<li><a href="#orgb55c9e3">2.3.3. others</a></li>
+<li><a href="#orgf318a93">2.3.1. layers</a></li>
+<li><a href="#orgd3f28e4">2.3.2. tensors</a></li>
+<li><a href="#orgdb11589">2.3.3. others</a></li>
 </ul>
 </li>
-<li><a href="#org930fd38">2.4. protocols-sys</a>
+<li><a href="#org5320e87">2.4. protocols-sys</a>
 <ul>
-<li><a href="#orgd1b0c2e">2.4.1. client_cg</a></li>
-<li><a href="#orgb3061f7">2.4.2. client_gen</a></li>
-<li><a href="#orge57b43f">2.4.3. key_share</a></li>
-<li><a href="#org581457c">2.4.4. server_cg</a></li>
-<li><a href="#orgf7ef17c">2.4.5. server_gen</a></li>
-<li><a href="#org2b4c96c">2.4.6. others</a></li>
+<li><a href="#org92f7077">2.4.1. client_cg</a></li>
+<li><a href="#org09549d1">2.4.2. client_gen</a></li>
+<li><a href="#org95076f9">2.4.3. key_share</a></li>
+<li><a href="#org301433e">2.4.4. server_cg</a></li>
+<li><a href="#orgab18cd5">2.4.5. server_gen</a></li>
+<li><a href="#org6515755">2.4.6. others</a></li>
 </ul>
 </li>
-<li><a href="#org5cf84c9">2.5. protocols</a></li>
+<li><a href="#org35a5ef2">2.5. protocols</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org4be515b" class="outline-2">
-<h2 id="org4be515b"><span class="section-number-2">1.</span> </h2>
+<div id="outline-container-org9f10ffc" class="outline-2">
+<h2 id="org9f10ffc"><span class="section-number-2">1.</span> </h2>
 </div>
-<div id="outline-container-orgb46e32d" class="outline-2">
-<h2 id="orgb46e32d"><span class="section-number-2">2.</span> Rust部分代码分析</h2>
+<div id="outline-container-org301c091" class="outline-2">
+<h2 id="org301c091"><span class="section-number-2">2.</span> Rust部分代码分析</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgec28ab9" class="outline-3">
-<h3 id="orgec28ab9"><span class="section-number-3">2.1.</span> algebra：</h3>
+<div id="outline-container-org5f42998" class="outline-3">
+<h3 id="org5f42998"><span class="section-number-3">2.1.</span> algebra：</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 algebra文件夹提供了基本的代数操作，主要包括：
@@ -271,8 +272,8 @@ algebra文件夹提供了基本的代数操作，主要包括：
 从中可以看出，algebra中不涉及到加密解密算法，仅仅是定义一些基本的结构和操作。
 </p>
 </div>
-<div id="outline-container-org05c417b" class="outline-4">
-<h4 id="org05c417b"><span class="section-number-4">2.1.1.</span> Polynomial</h4>
+<div id="outline-container-orgbcdfcd9" class="outline-4">
+<h4 id="orgbcdfcd9"><span class="section-number-4">2.1.1.</span> Polynomial</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <ol class="org-ol">
 <li>struct
@@ -283,8 +284,8 @@ algebra文件夹提供了基本的代数操作，主要包括：
 </ol>
 </div>
 </div>
-<div id="outline-container-orgc1a779e" class="outline-4">
-<h4 id="orgc1a779e"><span class="section-number-4">2.1.2.</span> bytes</h4>
+<div id="outline-container-orgabc0b42" class="outline-4">
+<h4 id="orgabc0b42"><span class="section-number-4">2.1.2.</span> bytes</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <p>
 整数数据的二进制形式的读取与写入
@@ -301,8 +302,8 @@ algebra文件夹提供了基本的代数操作，主要包括：
 </ol>
 </div>
 </div>
-<div id="outline-container-org0323baa" class="outline-4">
-<h4 id="org0323baa"><span class="section-number-4">2.1.3.</span> biginteger</h4>
+<div id="outline-container-org46485b3" class="outline-4">
+<h4 id="org46485b3"><span class="section-number-4">2.1.3.</span> biginteger</h4>
 <div class="outline-text-4" id="text-2-1-3">
 <ol class="org-ol">
 <li>traits
@@ -321,8 +322,8 @@ algebra文件夹提供了基本的代数操作，主要包括：
 </ol>
 </div>
 </div>
-<div id="outline-container-org1ebac79" class="outline-4">
-<h4 id="org1ebac79"><span class="section-number-4">2.1.4.</span> fixed_point</h4>
+<div id="outline-container-orgc3707de" class="outline-4">
+<h4 id="orgc3707de"><span class="section-number-4">2.1.4.</span> fixed_point</h4>
 <div class="outline-text-4" id="text-2-1-4">
 <ol class="org-ol">
 <li>trait
@@ -338,7 +339,7 @@ algebra文件夹提供了基本的代数操作，主要包括：
 <li>FixedPoint
 <ol class="org-ol">
 <li>参数：inner， inner满足域的性质。num_muls, u8。\_params: phantomdata类型的一个FixedPointParameters</li>
-<li>&#x2026;</li>
+<li>&hellip;</li>
 </ol></li>
 </ol></li>
 </ol>
@@ -351,14 +352,14 @@ algebra文件夹提供了基本的代数操作，主要包括：
 <li>Zero</li>
 <li>PhantomData</li>
 <li>Add,AddAssign</li>
-<li>Mul,M&#x2026;</li>
+<li>Mul,M&hellip;</li>
 <li>Neg</li>
-<li>Sub,S&#x2026;</li>
+<li>Sub,S&hellip;</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-orgb2d2e97" class="outline-4">
-<h4 id="orgb2d2e97"><span class="section-number-4">2.1.5.</span> fields</h4>
+<div id="outline-container-orgcb55295" class="outline-4">
+<h4 id="orgcb55295"><span class="section-number-4">2.1.5.</span> fields</h4>
 <div class="outline-text-4" id="text-2-1-5">
 <ol class="org-ol">
 <li>trait
@@ -371,19 +372,19 @@ algebra文件夹提供了基本的代数操作，主要包括：
 <li>R，R^2，INVariant</li>
 <li>generator,一个乘法生成器，也是一个二次非剩余</li>
 <li>capacity,</li>
-<li>others&#x2026;</li>
+<li>others&hellip;</li>
 </ol></li>
 <li>PrimeField,素数域的trait，包含如下的函数集合：
 <ol class="org-ol">
 <li>from_repr,into_repr，即根据一个大数构造一个有效域出来</li>
 <li>from_random_bytes，根据一个bytes返回有限域中的一个元素</li>
 <li>characteristic，不知道，实现上返回了模数</li>
-<li>&#x2026;</li>
+<li>&hellip;</li>
 </ol></li>
 <li>SquareRootField,支持高效的平方根操作的field,包含以下函数：
 <ol class="org-ol">
 <li>legendre,返回勒让得符号</li>
-<li>sqrt,&#x2026;，平方根操作相关</li>
+<li>sqrt,&hellip;，平方根操作相关</li>
 </ol></li>
 </ol></li>
 <li>其他</li>
@@ -400,8 +401,8 @@ algebra文件夹提供了基本的代数操作，主要包括：
 </ol>
 </div>
 </div>
-<div id="outline-container-orge7de336" class="outline-4">
-<h4 id="orge7de336"><span class="section-number-4">2.1.6.</span> 其他</h4>
+<div id="outline-container-orgbd0be52" class="outline-4">
+<h4 id="orgbd0be52"><span class="section-number-4">2.1.6.</span> 其他</h4>
 <div class="outline-text-4" id="text-2-1-6">
 <ol class="org-ol">
 <li>trait
@@ -415,8 +416,8 @@ algebra文件夹提供了基本的代数操作，主要包括：
 </div>
 </div>
 </div>
-<div id="outline-container-org4e00d26" class="outline-3">
-<h3 id="org4e00d26"><span class="section-number-3">2.2.</span> crypto-primitives</h3>
+<div id="outline-container-org1d7b434" class="outline-3">
+<h3 id="org1d7b434"><span class="section-number-3">2.2.</span> crypto-primitives</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 加密运算环节主要实现了三种简单的加密运算，分别是additive_share，beavers_mul以及garbled circuits。其中加法的共享主要用来进行线性的加密运算，beavers mul主要用来进行乘法同态运算，而gc则用来进行非线性激活函数的运算。
@@ -426,8 +427,8 @@ algebra文件夹提供了基本的代数操作，主要包括：
 TODO beavers_mul缺少介绍
 </p>
 </div>
-<div id="outline-container-org9704237" class="outline-4">
-<h4 id="org9704237"><span class="section-number-4">2.2.1.</span> additive_share</h4>
+<div id="outline-container-org26f1adc" class="outline-4">
+<h4 id="org26f1adc"><span class="section-number-4">2.2.1.</span> additive_share</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <ol class="org-ol">
 <li>trait
@@ -444,7 +445,7 @@ TODO beavers_mul缺少介绍
 <li>AdditiveShare,结构体,只有一个share类型的参数inner.方法包括：
 <ol class="org-ol">
 <li>combine，解密</li>
-<li>add_constant&#x2026;</li>
+<li>add_constant&hellip;</li>
 </ol></li>
 <li>ShareIterator, 顾名思义，Share的一个iterator</li>
 </ol></li>
@@ -462,8 +463,8 @@ TODO beavers_mul缺少介绍
 </ol>
 </div>
 </div>
-<div id="outline-container-org8d1611a" class="outline-4">
-<h4 id="org8d1611a"><span class="section-number-4">2.2.2.</span> beavers_mul</h4>
+<div id="outline-container-org1800fac" class="outline-4">
+<h4 id="org1800fac"><span class="section-number-4">2.2.2.</span> beavers_mul</h4>
 <div class="outline-text-4" id="text-2-2-2">
 <ol class="org-ol">
 <li>struct</li>
@@ -474,8 +475,8 @@ TODO beavers_mul缺少介绍
 </p>
 </div>
 </div>
-<div id="outline-container-org642d15e" class="outline-4">
-<h4 id="org642d15e"><span class="section-number-4">2.2.3.</span> gc (garbled circuits)</h4>
+<div id="outline-container-orgb4590d4" class="outline-4">
+<h4 id="orgb4590d4"><span class="section-number-4">2.2.3.</span> gc (garbled circuits)</h4>
 <div class="outline-text-4" id="text-2-2-3">
 <p>
 略
@@ -483,8 +484,8 @@ TODO beavers_mul缺少介绍
 </div>
 </div>
 </div>
-<div id="outline-container-org8d85426" class="outline-3">
-<h3 id="org8d85426"><span class="section-number-3">2.3.</span> neural-network</h3>
+<div id="outline-container-orgf18dd5e" class="outline-3">
+<h3 id="orgf18dd5e"><span class="section-number-3">2.3.</span> neural-network</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 neural-network主要封装了：
@@ -496,8 +497,8 @@ neural-network主要封装了：
 <li>layer和neural network的抽象</li>
 </ol>
 </div>
-<div id="outline-container-org2c5e2ed" class="outline-4">
-<h4 id="org2c5e2ed"><span class="section-number-4">2.3.1.</span> layers</h4>
+<div id="outline-container-orgf318a93" class="outline-4">
+<h4 id="orgf318a93"><span class="section-number-4">2.3.1.</span> layers</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <ol class="org-ol">
 <li>LayerDims, 包含inputdims和outputdims</li>
@@ -509,7 +510,7 @@ neural-network主要封装了：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">enum</span> <span style="color: #e6ff57;">LinearLayer</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">F</span>, <span style="color: #e6ff57;">C</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #24f6d9;">{</span>
+<pre class="src src-rust"><code><span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">enum</span> <span style="color: #e6ff57;">LinearLayer</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">F</span>, <span style="color: #e6ff57;">C</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #24f6d9;">{</span>
     <span style="color: #e6ff57;">Conv2d</span> <span style="color: #c770ff;">{</span>
           <span style="color: #62ff94;">dims</span>: <span style="color: #e6ff57;">LayerDims</span>,
           <span style="color: #62ff94;">params</span>: <span style="color: #e6ff57;">Conv2dParams</span><span style="color: #e6ff57;">&lt;</span><span style="color: #e6ff57;">F</span>, <span style="color: #e6ff57;">C</span><span style="color: #e6ff57;">&gt;</span>,
@@ -530,7 +531,7 @@ neural-network主要封装了：
           <span style="color: #62ff94;">dims</span>: <span style="color: #e6ff57;">LayerDims</span>,
     <span style="color: #c770ff;">}</span>,
 <span style="color: #24f6d9;">}</span>
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -538,7 +539,7 @@ linear layer info包含如下：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">enum</span> <span style="color: #e6ff57;">LinearLayerInfo</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">F</span>, <span style="color: #e6ff57;">C</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #24f6d9;">{</span>
+<pre class="src src-rust"><code><span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">enum</span> <span style="color: #e6ff57;">LinearLayerInfo</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">F</span>, <span style="color: #e6ff57;">C</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #24f6d9;">{</span>
     <span style="color: #e6ff57;">Conv2d</span> <span style="color: #c770ff;">{</span>
           <span style="color: #62ff94;">kernel</span>: <span style="color: #e6ff57;">(</span><span style="color: #e6ff57;">usize</span>, <span style="color: #e6ff57;">usize</span>, <span style="color: #e6ff57;">usize</span>, <span style="color: #e6ff57;">usize</span><span style="color: #e6ff57;">)</span>,
           <span style="color: #62ff94;">padding</span>: <span style="color: #e6ff57;">Padding</span>,
@@ -555,7 +556,7 @@ linear layer info包含如下：
     <span style="color: #c770ff;">}</span>,
     <span style="color: #e6ff57;">Identity</span>,
 <span style="color: #24f6d9;">}</span>
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -563,8 +564,8 @@ linear layer info包含如下：
 </p>
 </div>
 </div>
-<div id="outline-container-org4d0bc7c" class="outline-4">
-<h4 id="org4d0bc7c"><span class="section-number-4">2.3.2.</span> tensors</h4>
+<div id="outline-container-orgd3f28e4" class="outline-4">
+<h4 id="orgd3f28e4"><span class="section-number-4">2.3.2.</span> tensors</h4>
 <div class="outline-text-4" id="text-2-3-2">
 <p>
 tensors主要包括Input&lt;T&gt;和Output&lt;T&gt;两种范型，二者都是四维张量。
@@ -576,8 +577,8 @@ T的实例化一般就是share和AdditiveShare。
 </p>
 </div>
 </div>
-<div id="outline-container-orgb55c9e3" class="outline-4">
-<h4 id="orgb55c9e3"><span class="section-number-4">2.3.3.</span> others</h4>
+<div id="outline-container-orgdb11589" class="outline-4">
+<h4 id="orgdb11589"><span class="section-number-4">2.3.3.</span> others</h4>
 <div class="outline-text-4" id="text-2-3-3">
 <ol class="org-ol">
 <li>enum
@@ -602,8 +603,8 @@ T的实例化一般就是share和AdditiveShare。
 </div>
 </div>
 </div>
-<div id="outline-container-org930fd38" class="outline-3">
-<h3 id="org930fd38"><span class="section-number-3">2.4.</span> protocols-sys</h3>
+<div id="outline-container-org5320e87" class="outline-3">
+<h3 id="org5320e87"><span class="section-number-3">2.4.</span> protocols-sys</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 protocols-sys定义了完整的密钥交换协议系统。主要包括：
@@ -613,8 +614,8 @@ protocols-sys定义了完整的密钥交换协议系统。主要包括：
 <li>为神经网络层和输入输出定义加密解密的结构体，实现对应的流程</li>
 </ol>
 </div>
-<div id="outline-container-orgd1b0c2e" class="outline-4">
-<h4 id="orgd1b0c2e"><span class="section-number-4">2.4.1.</span> client_cg</h4>
+<div id="outline-container-org92f7077" class="outline-4">
+<h4 id="org92f7077"><span class="section-number-4">2.4.1.</span> client_cg</h4>
 <div class="outline-text-4" id="text-2-4-1">
 <ol class="org-ol">
 <li>struct &amp; enum
@@ -640,8 +641,8 @@ protocols-sys定义了完整的密钥交换协议系统。主要包括：
 </ol>
 </div>
 </div>
-<div id="outline-container-orgb3061f7" class="outline-4">
-<h4 id="orgb3061f7"><span class="section-number-4">2.4.2.</span> client_gen</h4>
+<div id="outline-container-org09549d1" class="outline-4">
+<h4 id="org09549d1"><span class="section-number-4">2.4.2.</span> client_gen</h4>
 <div class="outline-text-4" id="text-2-4-2">
 <ol class="org-ol">
 <li>struct
@@ -660,8 +661,8 @@ protocols-sys定义了完整的密钥交换协议系统。主要包括：
 </ol>
 </div>
 </div>
-<div id="outline-container-orge57b43f" class="outline-4">
-<h4 id="orge57b43f"><span class="section-number-4">2.4.3.</span> key_share</h4>
+<div id="outline-container-org95076f9" class="outline-4">
+<h4 id="org95076f9"><span class="section-number-4">2.4.3.</span> key_share</h4>
 <div class="outline-text-4" id="text-2-4-3">
 <ol class="org-ol">
 <li>struct
@@ -670,11 +671,11 @@ protocols-sys定义了完整的密钥交换协议系统。主要包括：
 KeyShare. KeyShare便是C++版里的SerialCT,其定义为：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust">    <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">struct</span> <span style="color: #e6ff57;">SerialCT</span> <span style="color: #24f6d9;">{</span>
+<pre class="src src-rust"><code>    <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">struct</span> <span style="color: #e6ff57;">SerialCT</span> <span style="color: #24f6d9;">{</span>
     <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #62ff94;">inner</span>: *<span style="color: #c770ff; font-weight: bold;">mut</span> ::<span style="color: #ffa83d;">std</span>::<span style="color: #ffa83d;">os</span>::<span style="color: #ffa83d;">raw</span>::c_char,
     <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #62ff94;">size</span>: <span style="color: #e6ff57;">u64</span>,
 <span style="color: #24f6d9;">}</span>
-</pre>
+</code></pre>
 </div></li>
 </ol></li>
 <li>trait
@@ -684,24 +685,24 @@ KeyShare. KeyShare便是C++版里的SerialCT,其定义为：
 </ol>
 </div>
 </div>
-<div id="outline-container-org581457c" class="outline-4">
-<h4 id="org581457c"><span class="section-number-4">2.4.4.</span> server_cg</h4>
+<div id="outline-container-org301433e" class="outline-4">
+<h4 id="org301433e"><span class="section-number-4">2.4.4.</span> server_cg</h4>
 <div class="outline-text-4" id="text-2-4-4">
 <p>
 类似于client_cg,略
 </p>
 </div>
 </div>
-<div id="outline-container-orgf7ef17c" class="outline-4">
-<h4 id="orgf7ef17c"><span class="section-number-4">2.4.5.</span> server_gen</h4>
+<div id="outline-container-orgab18cd5" class="outline-4">
+<h4 id="orgab18cd5"><span class="section-number-4">2.4.5.</span> server_gen</h4>
 <div class="outline-text-4" id="text-2-4-5">
 <p>
 类似于client_gen,略
 </p>
 </div>
 </div>
-<div id="outline-container-org2b4c96c" class="outline-4">
-<h4 id="org2b4c96c"><span class="section-number-4">2.4.6.</span> others</h4>
+<div id="outline-container-org6515755" class="outline-4">
+<h4 id="org6515755"><span class="section-number-4">2.4.6.</span> others</h4>
 <div class="outline-text-4" id="text-2-4-6">
 <ol class="org-ol">
 <li>struct
@@ -710,11 +711,11 @@ KeyShare. KeyShare便是C++版里的SerialCT,其定义为：
 SealCT: SerialCT的rust封装，其格式类似于：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust"><span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">struct</span> <span style="color: #e6ff57;">SerialCT</span> <span style="color: #24f6d9;">{</span>
+<pre class="src src-rust"><code><span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">struct</span> <span style="color: #e6ff57;">SerialCT</span> <span style="color: #24f6d9;">{</span>
     <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #62ff94;">inner</span>: *<span style="color: #c770ff; font-weight: bold;">mut</span> ::<span style="color: #ffa83d;">std</span>::<span style="color: #ffa83d;">os</span>::<span style="color: #ffa83d;">raw</span>::c_char,
     <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #62ff94;">size</span>: <span style="color: #e6ff57;">u64</span>,
 <span style="color: #24f6d9;">}</span>
-</pre>
+</code></pre>
 </div></li>
 <li>包含如下函数： en(de)crypt_vec，顾名思义，加解密一个向量</li>
 </ol></li>
@@ -722,8 +723,8 @@ SealCT: SerialCT的rust封装，其格式类似于：
 </div>
 </div>
 </div>
-<div id="outline-container-org5cf84c9" class="outline-3">
-<h3 id="org5cf84c9"><span class="section-number-3">2.5.</span> protocols</h3>
+<div id="outline-container-org35a5ef2" class="outline-3">
+<h3 id="org35a5ef2"><span class="section-number-3">2.5.</span> protocols</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 关于通讯的一些东西，略
@@ -733,7 +734,7 @@ SealCT: SerialCT的rust封装，其格式类似于：
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Feb  3 14:59:27 2023</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Feb  3 14:59:27 2023</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
 </div>
 </body>
 </html>

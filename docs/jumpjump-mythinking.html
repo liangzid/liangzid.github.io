@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-29 Fri 10:11 -->
+<!-- 2026-07-10 Fri 16:59 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>半自动手残拯救器：PC端微信跳一跳的解决方案</title>
@@ -19,20 +19,20 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org6551da7">1. 1 需求分析</a></li>
-<li><a href="#org79648b0">2. 2 具体实现</a>
+<li><a href="#orgd23f74c">1. 1 需求分析</a></li>
+<li><a href="#org2a17164">2. 2 具体实现</a>
 <ul>
-<li><a href="#orgec65e1d">2.1. 2.1 操作鼠标</a></li>
-<li><a href="#org7478ffa">2.2. 2.2 简单的图像操作</a></li>
-<li><a href="#org1ef3ee3">2.3. 2.3 组合</a></li>
+<li><a href="#org807ab03">2.1. 2.1 操作鼠标</a></li>
+<li><a href="#org59ae4d9">2.2. 2.2 简单的图像操作</a></li>
+<li><a href="#orgd1ac6be">2.3. 2.3 组合</a></li>
 </ul>
 </li>
-<li><a href="#org2a69918">3. 结束语</a></li>
+<li><a href="#org6a714fa">3. 结束语</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org6551da7" class="outline-2">
-<h2 id="org6551da7"><span class="section-number-2">1.</span> 1 需求分析</h2>
+<div id="outline-container-orgd23f74c" class="outline-2">
+<h2 id="orgd23f74c"><span class="section-number-2">1.</span> 1 需求分析</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 近期，笔者被女朋友卷入了玩一个款名为“跳一跳”的小游戏中，由于笔者的判断能力较差，所以该游戏超不过二十分，大多数情况下仅能得到十分。为了显示出和女朋友之间的竞争性，便开始考虑能否写一个外挂。因为我记得很早之前好像出现过此类外挂。
@@ -47,7 +47,7 @@
 </p>
 
 
-<div id="org8cba12c" class="figure">
+<div id="org4c238c6" class="figure">
 <p><img src="./images/screenshot_20220107_200653.png" alt="screenshot_20220107_200653.png"> 
 </p>
 </div>
@@ -103,8 +103,8 @@
 </ul>
 </div>
 </div>
-<div id="outline-container-org79648b0" class="outline-2">
-<h2 id="org79648b0"><span class="section-number-2">2.</span> 2 具体实现</h2>
+<div id="outline-container-org2a17164" class="outline-2">
+<h2 id="org2a17164"><span class="section-number-2">2.</span> 2 具体实现</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 通过需求分析可知，做成这个事情，最大的需求有二：
@@ -114,8 +114,8 @@
 <li>操作图像，相当于进行处理；</li>
 </ol>
 </div>
-<div id="outline-container-orgec65e1d" class="outline-3">
-<h3 id="orgec65e1d"><span class="section-number-3">2.1.</span> 2.1 操作鼠标</h3>
+<div id="outline-container-org807ab03" class="outline-3">
+<h3 id="org807ab03"><span class="section-number-3">2.1.</span> 2.1 操作鼠标</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 操作鼠标的事情很简单，果然，一搜就找到了大把的API。基本上不管是什么语言都支持。我此处使用的是python，因为写起来快。
@@ -126,7 +126,7 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">from</span> pymouse <span style="color: #c770ff; font-weight: bold;">import</span> <span style="color: #24f6d9;">*</span>
+<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">from</span> pymouse <span style="color: #c770ff; font-weight: bold;">import</span> <span style="color: #24f6d9;">*</span>
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">import time
 </span><span style="color: #c770ff; font-weight: bold;">import</span> win32api
 <span style="color: #c770ff; font-weight: bold;">import</span> pyautogui
@@ -150,7 +150,7 @@
          <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>m.position<span style="color: #c770ff;">()</span><span style="color: #24f6d9;">)</span>
          <span style="color: #c770ff; font-weight: bold;">return</span> m.position<span style="color: #24f6d9;">()</span>
 
-</pre>
+</code></pre>
 </div>
 
 
@@ -160,7 +160,7 @@
 
 
 <div class="org-src-container">
-<pre class="src src-python">
+<pre class="src src-python"><code>
 <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">(x,y) position mouse to hold
 </span><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">t: seconds mouse to hold.
 </span>
@@ -174,12 +174,12 @@
     release<span style="color: #24f6d9;">(</span>x,y<span style="color: #24f6d9;">)</span>
     <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"running one step done. Position: (</span>{x}<span style="color: #1cc24b;">,</span>{y}<span style="color: #1cc24b;">); for </span>{t}<span style="color: #1cc24b;"> s."</span><span style="color: #24f6d9;">)</span>
 
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org7478ffa" class="outline-3">
-<h3 id="org7478ffa"><span class="section-number-3">2.2.</span> 2.2 简单的图像操作</h3>
+<div id="outline-container-org59ae4d9" class="outline-3">
+<h3 id="org59ae4d9"><span class="section-number-3">2.2.</span> 2.2 简单的图像操作</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 本科接触过opencv，熟一点。不多说，直接上代码。唯一值得强调的是，此处有一个截屏的需求，我直接用的一个比较慢的library，因为我对时间没有需求……越慢反而越逼真。
@@ -187,7 +187,7 @@
 
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">screen capture
+<pre class="src src-python"><code><span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">screen capture
 </span><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">getScreenArray</span><span style="color: #24f6d9;">()</span>:
     <span style="color: #62ff94;">img</span> <span style="color: #24f6d9;">=</span> ImageGrab.grab<span style="color: #24f6d9;">(</span>bbox<span style="color: #24f6d9;">=</span><span style="color: #c770ff;">(</span>0, 0, 2048, 2048<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
     <span style="color: #62ff94;">img</span> <span style="color: #24f6d9;">=</span> np.array<span style="color: #24f6d9;">(</span>img.getdata<span style="color: #c770ff;">()</span>, np.uint8<span style="color: #24f6d9;">)</span>.reshape<span style="color: #24f6d9;">(</span>img.size<span style="color: #c770ff;">[</span>1<span style="color: #c770ff;">]</span>, img.size<span style="color: #c770ff;">[</span>0<span style="color: #c770ff;">]</span>, 3<span style="color: #24f6d9;">)</span>
@@ -210,12 +210,12 @@
 
     <span style="color: #c770ff; font-weight: bold;">return</span> top_left, bottom_right
 
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org1ef3ee3" class="outline-3">
-<h3 id="org1ef3ee3"><span class="section-number-3">2.3.</span> 2.3 组合</h3>
+<div id="outline-container-orgd1ac6be" class="outline-3">
+<h3 id="orgd1ac6be"><span class="section-number-3">2.3.</span> 2.3 组合</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 以上API就可以支持完成一整套操作了。如下所述：
@@ -223,7 +223,7 @@
 
 
 <div class="org-src-container">
-<pre class="src src-python">
+<pre class="src src-python"><code>
 
 <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">handwork</span><span style="color: #24f6d9;">(</span>centerx,centery<span style="color: #24f6d9;">)</span>:
     <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">get all screen
@@ -266,7 +266,7 @@
     <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">goOneStepWithTime(centerx,centery,t)
 </span>    autoguiHoldOn<span style="color: #24f6d9;">(</span>srcx,srcy,t<span style="color: #24f6d9;">)</span>
 
-</pre>
+</code></pre>
 </div>
 
 <p>
@@ -274,7 +274,7 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">main1</span><span style="color: #24f6d9;">()</span>:
+<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">main1</span><span style="color: #24f6d9;">()</span>:
     <span style="color: #62ff94;">i</span><span style="color: #24f6d9;">=</span>0
     <span style="color: #c770ff; font-weight: bold;">while</span> <span style="color: #ffa83d;">True</span>:
           <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"please set your persition"</span><span style="color: #24f6d9;">)</span>
@@ -290,13 +290,13 @@
           <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">mymain()
 </span>          <span style="color: #62ff94;">i</span><span style="color: #24f6d9;">+=</span>1
 
-</pre>
+</code></pre>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org2a69918" class="outline-2">
-<h2 id="org2a69918"><span class="section-number-2">3.</span> 结束语</h2>
+<div id="outline-container-org6a714fa" class="outline-2">
+<h2 id="org6a714fa"><span class="section-number-2">3.</span> 结束语</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 我用这套东西刷到将近八百分，唯一值得注意的是，距离太长，关系就不是线性关系了，由于我的程序乘了一个系数，所以我会在距离太长时自己将目标点设置的近一点。和检测一样，如果我有数据，我也可以拟合这个函数关系（可惜我没有）。
@@ -309,7 +309,7 @@
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Jan  7 19:59:11 2022</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Jan  7 19:59:11 2022</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
 </div>
 </body>
 </html>

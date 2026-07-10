@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-05-29 Fri 10:11 -->
+<!-- 2026-07-10 Fri 16:59 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Vision Token的信息瓶颈：一个Token到底能装多少信息？</title>
@@ -55,6 +55,7 @@
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
   pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
   pre.src-C:before { content: 'C'; }
   /* pre.src-C++ doesn't work in CSS */
   pre.src-clojure:before { content: 'Clojure'; }
@@ -69,7 +70,7 @@
   pre.src-haskell:before { content: 'Haskell'; }
   pre.src-hledger:before { content: 'hledger'; }
   pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
+  pre.src-js:before { content: 'JavaScript'; }
   pre.src-latex:before { content: 'LaTeX'; }
   pre.src-ledger:before { content: 'Ledger'; }
   pre.src-lisp:before { content: 'Lisp'; }
@@ -199,8 +200,8 @@
 </div>
 <div id="content" class="content">
 <h1 class="title">Vision Token的信息瓶颈：一个Token到底能装多少信息？</h1>
-<div id="outline-container-orgc42e5c1" class="outline-2">
-<h2 id="orgc42e5c1"><span class="section-number-2">1.</span> 背景：Vision Token是怎么来的？</h2>
+<div id="outline-container-orge3362be" class="outline-2">
+<h2 id="orge3362be"><span class="section-number-2">1.</span> 背景：Vision Token是怎么来的？</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 在VLM（视觉语言模型）里，一张图片先被切成若干个patch，每个patch再被映射成一个vision token。这个token就是模型"看"图像的窗口。
@@ -211,8 +212,8 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org0fc17fc" class="outline-2">
-<h2 id="org0fc17fc"><span class="section-number-2">2.</span> 我们的发现</h2>
+<div id="outline-container-org704bc58" class="outline-2">
+<h2 id="org704bc58"><span class="section-number-2">2.</span> 我们的发现</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 和树鑫（Shuxin Zhuang）合作，我们发现vision token的信息量遵循一个scaling law——它和图像分辨率、patch大小、以及任务复杂度之间存在定量的幂律关系。
@@ -228,16 +229,16 @@
 </ul>
 </div>
 </div>
-<div id="outline-container-org405e2e9" class="outline-2">
-<h2 id="org405e2e9"><span class="section-number-2">3.</span> 实践意义</h2>
+<div id="outline-container-org70b5010" class="outline-2">
+<h2 id="org70b5010"><span class="section-number-2">3.</span> 实践意义</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 这个scaling law对VLM的设计有直接的指导意义。比如你想让模型识别图像中的小物体——我们的公式可以告诉你，在给定的patch size下，需要多少分辨率才能让每个token装下足够的判别信息。不用瞎试了。
 </p>
 </div>
 </div>
-<div id="outline-container-orgc03263e" class="outline-2">
-<h2 id="orgc03263e"><span class="section-number-2">4.</span> 论文信息</h2>
+<div id="outline-container-orgbb7995f" class="outline-2">
+<h2 id="orgbb7995f"><span class="section-number-2">4.</span> 论文信息</h2>
 <div class="outline-text-2" id="text-4">
 <ul class="org-ul">
 <li>标题: How Much Information Can a Vision Token Hold? A Scaling Law for Recognition Limits in VLMs</li>
@@ -248,7 +249,7 @@
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (团长) (<a href="mailto:liangzi20163933@qq.com">liangzi20163933@qq.com</a>)</span> <span class="date">Create Date: 2026-05-27</span> <span class="date">Last modified: 2026-05-27 Wed 21:39</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.2 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (团长) (<a href="mailto:liangzi20163933@qq.com">liangzi20163933@qq.com</a>)</span> <span class="date">Create Date: 2026-05-27</span> <span class="date">Last modified: 2026-05-27 Wed 21:39</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
 </div>
 </body>
 </html>
