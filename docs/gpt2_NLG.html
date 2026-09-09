@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-09-09 Wed 15:44 -->
+<!-- 2026-09-09 Wed 15:46 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>关于huggingface transformers NLG模块实现的基本思路</title>
@@ -210,13 +210,13 @@
 <li><a href="#orgce6a4dd">2.1. 语言模型的训练与测试的不同之处</a></li>
 <li><a href="#org2b01ae9">2.2. 训练环节</a>
 <ul>
-<li><a href="#org84dcdef">2.2.1. 数据集封装形式</a></li>
+<li><a href="#org0a3ccc1">2.2.1. 数据集封装形式</a></li>
 <li><a href="#org501371c">2.2.2. 微不足道的模型训练细节</a></li>
 </ul>
 </li>
 <li><a href="#org31d2789">2.3. 测试环节</a>
 <ul>
-<li><a href="#org0a3ccc1">2.3.1. 数据集封装形式</a></li>
+<li><a href="#org7fec34b">2.3.1. 数据集封装形式</a></li>
 <li><a href="#org14b1743">2.3.2. NLG生成细节</a></li>
 </ul>
 </li>
@@ -250,8 +250,8 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 <h3 id="org2b01ae9"><span class="section-number-3">2.2.</span> 训练环节</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-org84dcdef" class="outline-4">
-<h4 id="org84dcdef"><span class="section-number-4">2.2.1.</span> 数据集封装形式</h4>
+<div id="outline-container-org0a3ccc1" class="outline-4">
+<h4 id="org0a3ccc1"><span class="section-number-4">2.2.1.</span> 数据集封装形式</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 一般而言，是数据等于标签的格式。以对话为例，可能就是"Q+[SEP]+A"这种。
@@ -282,8 +282,8 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 <h3 id="org31d2789"><span class="section-number-3">2.3.</span> 测试环节</h3>
 <div class="outline-text-3" id="text-2-3">
 </div>
-<div id="outline-container-org0a3ccc1" class="outline-4">
-<h4 id="org0a3ccc1"><span class="section-number-4">2.3.1.</span> 数据集封装形式</h4>
+<div id="outline-container-org7fec34b" class="outline-4">
+<h4 id="org7fec34b"><span class="section-number-4">2.3.1.</span> 数据集封装形式</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <p>
 测试环节的数据集同训练环节有所不同，因为在测试环节，相当于是基于一个prefix去生成后面的话。
