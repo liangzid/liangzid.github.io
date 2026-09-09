@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2026-09-09 Wed 19:48 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>1分钟学会量子计算（一）</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'JavaScript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">1分钟学会量子计算（一）</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgd7a8363">1. 核心公式</a>
+<ul>
+<li><a href="#orgd1bec27">1.1. N是什么？</a></li>
+<li><a href="#org2727b49">1.2. x是什么？或者说 \(|x\rangle\) 是什么？</a></li>
+<li><a href="#org55bf24c">1.3. $c_{x}$是什么？</a></li>
+<li><a href="#org6d320cd">1.4. “+”（这里的加法）是什么？</a></li>
+<li><a href="#org96d8913">1.5. \(|\Psi\rangle\) 是什么？</a></li>
+</ul>
+</li>
+<li><a href="#orga88100a">2. 物理含义</a>
+<ul>
+<li><a href="#org4b33612">2.1. 薛定谔的猫</a></li>
+<li><a href="#orgba8b46f">2.2. 双缝干涉实验</a></li>
+<li><a href="#org1d4cc43">2.3. 时间的相对性</a></li>
+<li><a href="#org295e861">2.4. 所有的量子现象，本质上就是概率幅在空间和时间上的相对相位差。</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+今天和朋友聊了一下量子计算与密码学，如此竟然发现了新的大陆。于是决定要开始理解和学习量子计算。这个系列都将是相关的笔记。
+</p>
+<div id="outline-container-orgd7a8363" class="outline-2">
+<h2 id="orgd7a8363"><span class="section-number-2">1.</span> 核心公式</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+量子计算的核心公式是
+</p>
+
+<p>
+\[\vert{}\Psi\rangle = \sum_{x=0}^{2^N-1} c_x~\vert{}x\rangle\]
+</p>
+
+<p>
+本文的目标就是理解这个公式。
+</p>
+</div>
+<div id="outline-container-orgd1bec27" class="outline-3">
+<h3 id="orgd1bec27"><span class="section-number-3">1.1.</span> N是什么？</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+N是（量子）比特数。它规定了$x$作为索引的总数量\(2^N\).
+</p>
+</div>
+</div>
+<div id="outline-container-org2727b49" class="outline-3">
+<h3 id="org2727b49"><span class="section-number-3">1.2.</span> x是什么？或者说 \(|x\rangle\) 是什么？</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+\(|x\rangle\) 代表一个量子态。可以忽视量子这个称谓，理解之为一个态。所谓的态就是指的概率论里某个空间中的一个离散的事件。由于存在$2^N$个这样的态，所以这$2^N$个态其实可以被视作线性空间中的一组基，即他们构成了一个$2^N\(维度的线性空间。因此，可以（虽然不是必定）将这些态用最经典的one-hot vector来表达，如\)[0,&hellip;,0,1,0,&hellip;,0]^T$, 即只有在对应index的维度上为1其他为0.
+</p>
+</div>
+</div>
+<div id="outline-container-org55bf24c" class="outline-3">
+<h3 id="org55bf24c"><span class="section-number-3">1.3.</span> $c_{x}$是什么？</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+$c_{x}$是对于态$x$的一个系数，描述了该态以何种强度存在。
+</p>
+
+<p>
+具体地，$c_{x}$是一个二维向量。鉴于量子力学的物理性，$c_{x}$可以被表达为一个复数。即，它既可以被表达为包含一个实部和一个虚部的复数，也可以被表达为包含一个模长（即该二维向量在二维空间中表达的长度）与一个相位角（即该向量与$x_+$轴的夹角（更具体地，是从该轴移动到该向量的方向性时的总角度））。
+</p>
+
+<p>
+由此，$c_{x}$的模长反映了$x$索引的量子态将会以何种概率出现（平方关系），这是一个"绝对"<sup><a id="fnr.absolute" class="footref" href="#fn.absolute" role="doc-backlink">1</a></sup>（即单个自我比较有意义）的变量，同时收到概率论里和为1的约束，即：
+</p>
+
+<p>
+\(\sum_{x |}c_{x|}^{2}=1\).
+</p>
+
+<p>
+与之对应，$c_{x}$的相位角则反映了该量子态出现的时机。这是一个相对的概念，因为角度的形成其实就是需要两条边（当没有对比物时，x+轴便是）。
+</p>
+</div>
+</div>
+<div id="outline-container-org6d320cd" class="outline-3">
+<h3 id="org6d320cd"><span class="section-number-3">1.4.</span> “+”（这里的加法）是什么？</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+即答：这里的加法就是最朴素的向量里的加法。
+</p>
+
+<p>
+$&forall; i,j &isin; [0, 2^{N}-1],$ given two reasonable complex number \(\alpha, \beta\), what is \(\alpha|x_{i}\rangle+\beta|x_{j}\rangle\)?
+</p>
+
+<p>
+We can denote it as \(|\Psi\rangle_{ij}=\alpha|x_{i}_{}\rangle+\beta|x_{j}_{}\rangle\).
+</p>
+
+<p>
+首先可以断定所得到的这个\(|\Psi\rangle_{ij}\) 一定是也是一个量子态，即它应该共享与$|x_{i}&rang;$相同的模式。换句话说，加法的结果也是一个2^N 维度的向量，该且该向量同样会拥有一个长度（即强度，幅度，概率）和一个出现的相位（即方向性）。
+</p>
+
+<p>
+根据向量的加法公式，不难进行下面一番推导：
+</p>
+
+<p>
+【略】
+</p>
+
+<p>
+而得出
+</p>
+
+<p>
+\(|| |\Psi\rangle_{ij }||^{2}\) 为 \((\alpha+\beta)^2\) .
+</p>
+
+<p>
+而相位为：XXXXXXX.
+</p>
+</div>
+</div>
+<div id="outline-container-org96d8913" class="outline-3">
+<h3 id="org96d8913"><span class="section-number-3">1.5.</span> \(|\Psi\rangle\) 是什么？</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+可以注意到，一个$|&Psi;&rang;$其实是上述如此定义的一个2^N 空间的一个极大线性无关组进行了一个线性组合，其中系数便是c_x 所组成的向量（即坐标值们）。所以这个符号表示了该空间中的一个点，即一个向量。
+</p>
+
+<p>
+如此则结束了对该公式的分析。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orga88100a" class="outline-2">
+<h2 id="orga88100a"><span class="section-number-2">2.</span> 物理含义</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org4b33612" class="outline-3">
+<h3 id="org4b33612"><span class="section-number-3">2.1.</span> 薛定谔的猫</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+考虑一个数学上 被封闭定义的场景：某人在盒子里放了一只猫，送给了另外一个人。这个人需要打开盒子看看猫是否存活。
+</p>
+
+<p>
+按照上述定义，这里的N可以等于1,即$|x&rang;$的全集为2：一个是猫活着，一个是猫死了。
+</p>
+
+<p>
+那么问题来了：
+</p>
+<ol class="org-ol">
+<li>如何描述这个盒子在派送途中该猫的存活状态？</li>
+<li>如何描述这个盒子在打开后该猫的存活状态？</li>
+<li>如何描述这个盒子在刚刚封装完成时猫的存活状态。</li>
+</ol>
+
+<p>
+他们本质上都是两个量子态的叠加态，即在这个1比特量子空间下的一个向量。后续将要被分析的类似的事件的状态也都将是如此的一个向量。
+</p>
+</div>
+</div>
+<div id="outline-container-orgba8b46f" class="outline-3">
+<h3 id="orgba8b46f"><span class="section-number-3">2.2.</span> 双缝干涉实验</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+一个粒子喷出器持续发射出某种具有量子性质的粒子。这些粒子首先会被一个无法通过的隔板挡住，幸运地，隔板上开出了两条缝隙，A和B,而后在隔板后制造一个收集器，来收集被发射出的粒子。
+</p>
+
+<p>
+现在考虑所收集到的这些透过A而到来的粒子与透过B而到来的粒子二者之间的存在关系，以及最重要的，这个所谓的叠加态的性质。
+</p>
+
+<p>
+这同样是一个极简的可以被1比特空间所描述的问题：假设状态空间包含两个基本状态，收集到的粒子穿过了缝隙A而来，以及收集到的粒子穿过缝隙B而来。那么问题是收集到的所有粒子就是上述两个状态的和事件，即要么穿过A过来，要么穿过B过来。
+</p>
+
+<p>
+现在开始讨论如此的一个叠加态的性质。
+</p>
+
+<p>
+首先是幅度，即叠加态向量的长度，也就是出现粒子数量的强度。
+</p>
+
+<p>
+假设途径缝隙A而来的粒子的总运动距离为M，途径缝隙B而来的粒子的总运动距离为N， 速度保持v不变。
+</p>
+
+<p>
+由于该粒子的运动类似于波，假设振幅为\(\omega\),则其运动的角度（相位）可以被表达为
+</p>
+
+<p>
+\(e^{i\theta}=e^{i(kL-\omega t)}\) 
+</p>
+
+<p>
+其中k是一个常数（与频率相关），L是波运动的距离，t是波运动的时间。
+</p>
+
+<p>
+由此，两个同时出发且同频的粒子其相位上的差距可以被表达为：
+</p>
+
+<p>
+\(e^{}^{}^{}^{i(k(M-N))}\)
+</p>
+
+<p>
+上式所反映的就是在该1比特量子空间中的两个向量的夹角。
+</p>
+
+<p>
+当该夹角为锐角时，这两个向量的加法结果的幅值将强于单独任一向量的幅值，且在夹角为0 （即完全同相位）时达到顶峰。注意：这里并不要求距离上M与N的完全相等，只需要k(M-N)是振动频率的整数倍即可。而当调整M与N的距离使得这个夹角变化时，这个向量的加法结果将会发生变化，使得甚至出现一方向量完全为另一方所抵消的效果。
+</p>
+
+
+<div id="org19235b4" class="figure">
+<p><img src="./images/screenshot_20260909_192543.png" alt="screenshot_20260909_192543.png">
+</p>
+</div>
+
+<p>
+反映在实验上：当实验者调整粒子通过两个缝隙的距离时，收集器所采集到的粒子的强度将会产生明暗的变化。
+</p>
+
+<p>
+这表明：
+</p>
+<ol class="org-ol">
+<li>粒子的波动性。</li>
+<li>距离较短的粒子在到达收集装置时，仍然会持续振动，而两束粒子的相位差，本质上便是距离带来的时间延迟。</li>
+<li>上一句的说法没有那么准确。相位差严格等于振动频率乘时间延迟，但是相位差一般大家只考虑余数（即去掉振动周期的整数倍）。即时间延迟相差证书个振动周期时，在物理效果上与同事到达完全等价。</li>
+<li>记事件A发生为E1,记事件B发生为E2, 记事件A发生或事件B发生为E3. 那么E3发生的概率，在上述的数学系统下，不一定比E1要大，也不一定比E2要大。他们的大小关系取决于E1与E2二者的方向性。</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org1d4cc43" class="outline-3">
+<h3 id="org1d4cc43"><span class="section-number-3">2.3.</span> 时间的相对性</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+当A与B谈论时间时，一般会默认存在一个绝对的时间参考系。
+</p>
+
+<p>
+由上述讨论可知时间的相对性。即：
+</p>
+
+<ul class="org-ul">
+<li>绝对的时间坐标系是难以存在的</li>
+<li>时间差，类比于相位差，是可以绝对存在的。</li>
+<li>所谓的处在“同一时间”，或者“同时”二字，从波的角度来看不过是在谈论两个状态其振动中相位的恰好一致性。而两个处在同一时间参考系下的A和B, 不过是在说他们在类似于同频振动下所出现的冰冷的相位差。由此可以推导出：当一个人在阅读几千年前的某本书并突然领会到其中某个点事，这灵光一现状态下或许身体里的某个部分和写此书的人在意识到这个点的状态在物理意义上严格位于同一时间。即：二者就像穿过两条缝隙被打印在同一个收集器上的粒子一样，虽然有一条途径短，但是在振动中幸而碰到了后来的粒子，尽管相位差很大，但是是频率的整数倍，由此本质上属于同一时间。</li>
+<li>又可以说： <b>一个人可以在无数次自我的振动中在物理意义上与曾经的自己相遇。</b> PS.: 只要频率相同且相位合适。</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org295e861" class="outline-3">
+<h3 id="org295e861"><span class="section-number-3">2.4.</span> 所有的量子现象，本质上就是概率幅在空间和时间上的相对相位差。</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+这句话是费曼说的。
+</p>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.absolute" class="footnum" href="#fnr.absolute" role="doc-backlink">1</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+这里称绝对有些问题，因为概率和为1其实只是人类习惯下强行规定的结果。换句话说，长度的孤立且绝对存在依赖于一个封闭的数学空间定义。
+</p></div></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Wed Sep  9 17:53:31 2026</span> <span class="date">Last modified: 2026-09-09 Wed 19:48</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.1 (<a href="https://orgmode.org">Org</a> mode 9.8.7)</span> </div>
+</div>
+</body>
+</html>
