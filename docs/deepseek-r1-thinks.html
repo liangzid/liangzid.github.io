@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-07-26 Sun 14:05 -->
+<!-- 2026-09-09 Wed 12:57 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Thoughts of Deepseek R1</title>
@@ -322,7 +322,7 @@ Objective Formula (to maximize):
 </p>
 
 
-<div id="orgfd930bf" class="figure">
+<div id="orgc1b602f" class="figure">
 <p><img src="./images/screenshot_20250216_112842.png" alt="screenshot_20250216_112842.png">
 </p>
 </div>
@@ -350,7 +350,7 @@ A's formular:
 </p>
 
 
-<div id="org0c93e64" class="figure">
+<div id="org2f40c9c" class="figure">
 <p><img src="./images/screenshot_20250216_113518.png" alt="screenshot_20250216_113518.png">
 </p>
 </div>
@@ -405,13 +405,13 @@ During RL training, the increase of performance is consistent with the increase 
 </p>
 
 
-<div id="orgd279a8c" class="figure">
+<div id="org4b0d023" class="figure">
 <p><img src="./images/screenshot_20250216_114913.png" alt="screenshot_20250216_114913.png">
 </p>
 </div>
 
 
-<div id="orgbe945f5" class="figure">
+<div id="org644dc80" class="figure">
 <p><img src="./images/screenshot_20250216_114925.png" alt="screenshot_20250216_114925.png">
 </p>
 </div>
@@ -429,7 +429,7 @@ An example here:
 </p>
 
 
-<div id="org35e8c55" class="figure">
+<div id="orgd7be9c7" class="figure">
 <p><img src="./images/screenshot_20250216_115420.png" alt="screenshot_20250216_115420.png">
 </p>
 </div>
@@ -502,7 +502,7 @@ The results are impressive:
 </p>
 
 
-<div id="org1d14857" class="figure">
+<div id="orgf0bab71" class="figure">
 <p><img src="./images/screenshot_20250216_122632.png" alt="screenshot_20250216_122632.png">
 </p>
 </div>
@@ -529,46 +529,46 @@ GRPO: use <code>trl</code>'s standard implementation.
 <h3 id="org3ef1b04"><span class="section-number-3">4.1.</span> Accuracy Reward</h3>
 <div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">accuracy_reward</span><span style="color: #24f6d9;">(</span>completions, solution, <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span>:
-    <span style="color: #8ca391; font-style: italic;">"""Reward function that checks if the completion is the same as the ground truth."""</span>
-    <span style="color: #62ff94;">contents</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span>completion<span style="color: #c770ff;">[</span>0<span style="color: #c770ff;">][</span><span style="color: #1cc24b;">"content"</span><span style="color: #c770ff;">]</span> <span style="color: #c770ff; font-weight: bold;">for</span> completion <span style="color: #c770ff; font-weight: bold;">in</span> completions<span style="color: #24f6d9;">]</span>
-    <span style="color: #62ff94;">rewards</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[]</span>
-    <span style="color: #c770ff; font-weight: bold;">for</span> content, sol <span style="color: #c770ff; font-weight: bold;">in</span> <span style="color: #30b3ff;">zip</span><span style="color: #24f6d9;">(</span>contents, solution<span style="color: #24f6d9;">)</span>:
-        <span style="color: #62ff94;">gold_parsed</span> <span style="color: #24f6d9;">=</span> parse<span style="color: #24f6d9;">(</span>
+<pre class="src src-python"><code><span style="color: #B49ADD;">def</span> <span style="color: #79B8D1;">accuracy_reward</span><span style="color: #82A7E8;">(</span>completions, solution, <span style="color: #9AA2B1;">**</span>kwargs<span style="color: #82A7E8;">)</span>:
+    <span style="color: #9AA2B1;">"""Reward function that checks if the completion is the same as the ground truth."""</span>
+    <span style="color: #D6D9E0;">contents</span> <span style="color: #9AA2B1;">=</span> <span style="color: #82A7E8;">[</span>completion<span style="color: #B49ADD;">[</span>0<span style="color: #B49ADD;">][</span><span style="color: #8FBE83;">"content"</span><span style="color: #B49ADD;">]</span> <span style="color: #B49ADD;">for</span> completion <span style="color: #B49ADD;">in</span> completions<span style="color: #82A7E8;">]</span>
+    <span style="color: #D6D9E0;">rewards</span> <span style="color: #9AA2B1;">=</span> <span style="color: #82A7E8;">[]</span>
+    <span style="color: #B49ADD;">for</span> content, sol <span style="color: #B49ADD;">in</span> <span style="color: #79B8D1;">zip</span><span style="color: #82A7E8;">(</span>contents, solution<span style="color: #82A7E8;">)</span>:
+        <span style="color: #D6D9E0;">gold_parsed</span> <span style="color: #9AA2B1;">=</span> parse<span style="color: #82A7E8;">(</span>
             sol,
-            extraction_mode<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"first_match"</span>,
-            extraction_config<span style="color: #24f6d9;">=</span><span style="color: #c770ff;">[</span>LatexExtractionConfig<span style="color: #e6ff57;">()</span><span style="color: #c770ff;">]</span>,
-        <span style="color: #24f6d9;">)</span>
-        <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #30b3ff;">len</span><span style="color: #24f6d9;">(</span>gold_parsed<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">!=</span> 0:
-            <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">We require the answer to be provided in correct latex (no malformed operators)
-</span>            <span style="color: #62ff94;">answer_parsed</span> <span style="color: #24f6d9;">=</span> parse<span style="color: #24f6d9;">(</span>
+            extraction_mode<span style="color: #9AA2B1;">=</span><span style="color: #8FBE83;">"first_match"</span>,
+            extraction_config<span style="color: #9AA2B1;">=</span><span style="color: #B49ADD;">[</span>LatexExtractionConfig<span style="color: #77BEB7;">()</span><span style="color: #B49ADD;">]</span>,
+        <span style="color: #82A7E8;">)</span>
+        <span style="color: #B49ADD;">if</span> <span style="color: #79B8D1;">len</span><span style="color: #82A7E8;">(</span>gold_parsed<span style="color: #82A7E8;">)</span> <span style="color: #9AA2B1;">!=</span> 0:
+            <span style="color: #697282;"># </span><span style="color: #9AA2B1; font-style: italic;">We require the answer to be provided in correct latex (no malformed operators)
+</span>            <span style="color: #D6D9E0;">answer_parsed</span> <span style="color: #9AA2B1;">=</span> parse<span style="color: #82A7E8;">(</span>
                 content,
-                extraction_config<span style="color: #24f6d9;">=</span><span style="color: #c770ff;">[</span>
-                    LatexExtractionConfig<span style="color: #e6ff57;">(</span>
-                        normalization_config<span style="color: #24f6d9;">=</span>NormalizationConfig<span style="color: #30b3ff;">(</span>
-                            nits<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
-                            malformed_operators<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
-                            basic_latex<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
-                            equations<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
-                            boxed<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"all"</span>,
-                            units<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
-                        <span style="color: #30b3ff;">)</span>,
-                        <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Ensures that boxed is tried first
-</span>                        boxed_match_priority<span style="color: #24f6d9;">=</span>0,
-                        try_extract_without_anchor<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
-                    <span style="color: #e6ff57;">)</span>
-                <span style="color: #c770ff;">]</span>,
-                extraction_mode<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"first_match"</span>,
-            <span style="color: #24f6d9;">)</span>
-            <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Reward 1 if the content is the same as the ground truth, 0 otherwise
-</span>            <span style="color: #62ff94;">reward</span> <span style="color: #24f6d9;">=</span> <span style="color: #30b3ff;">float</span><span style="color: #24f6d9;">(</span>verify<span style="color: #c770ff;">(</span>answer_parsed, gold_parsed<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
-        <span style="color: #c770ff; font-weight: bold;">else</span>:
-            <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">If the gold solution is not parseable, we reward 1 to skip this example
-</span>            <span style="color: #62ff94;">reward</span> <span style="color: #24f6d9;">=</span> 1.0
-            <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"Failed to parse gold solution: "</span>, sol<span style="color: #24f6d9;">)</span>
-        rewards.append<span style="color: #24f6d9;">(</span>reward<span style="color: #24f6d9;">)</span>
+                extraction_config<span style="color: #9AA2B1;">=</span><span style="color: #B49ADD;">[</span>
+                    LatexExtractionConfig<span style="color: #77BEB7;">(</span>
+                        normalization_config<span style="color: #9AA2B1;">=</span>NormalizationConfig<span style="color: #D8BE7B;">(</span>
+                            nits<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">False</span>,
+                            malformed_operators<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">False</span>,
+                            basic_latex<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">True</span>,
+                            equations<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">True</span>,
+                            boxed<span style="color: #9AA2B1;">=</span><span style="color: #8FBE83;">"all"</span>,
+                            units<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">True</span>,
+                        <span style="color: #D8BE7B;">)</span>,
+                        <span style="color: #697282;"># </span><span style="color: #9AA2B1; font-style: italic;">Ensures that boxed is tried first
+</span>                        boxed_match_priority<span style="color: #9AA2B1;">=</span>0,
+                        try_extract_without_anchor<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">False</span>,
+                    <span style="color: #77BEB7;">)</span>
+                <span style="color: #B49ADD;">]</span>,
+                extraction_mode<span style="color: #9AA2B1;">=</span><span style="color: #8FBE83;">"first_match"</span>,
+            <span style="color: #82A7E8;">)</span>
+            <span style="color: #697282;"># </span><span style="color: #9AA2B1; font-style: italic;">Reward 1 if the content is the same as the ground truth, 0 otherwise
+</span>            <span style="color: #D6D9E0;">reward</span> <span style="color: #9AA2B1;">=</span> <span style="color: #79B8D1;">float</span><span style="color: #82A7E8;">(</span>verify<span style="color: #B49ADD;">(</span>answer_parsed, gold_parsed<span style="color: #B49ADD;">)</span><span style="color: #82A7E8;">)</span>
+        <span style="color: #B49ADD;">else</span>:
+            <span style="color: #697282;"># </span><span style="color: #9AA2B1; font-style: italic;">If the gold solution is not parseable, we reward 1 to skip this example
+</span>            <span style="color: #D6D9E0;">reward</span> <span style="color: #9AA2B1;">=</span> 1.0
+            <span style="color: #79B8D1;">print</span><span style="color: #82A7E8;">(</span><span style="color: #8FBE83;">"Failed to parse gold solution: "</span>, sol<span style="color: #82A7E8;">)</span>
+        rewards.append<span style="color: #82A7E8;">(</span>reward<span style="color: #82A7E8;">)</span>
 
-    <span style="color: #c770ff; font-weight: bold;">return</span> rewards
+    <span style="color: #B49ADD;">return</span> rewards
 </code></pre>
 </div>
 </div>
@@ -577,12 +577,12 @@ GRPO: use <code>trl</code>'s standard implementation.
 <h3 id="orgc13f42c"><span class="section-number-3">4.2.</span> Format Reward</h3>
 <div class="outline-text-3" id="text-4-2">
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">format_reward</span><span style="color: #24f6d9;">(</span>completions, <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span>:
-    <span style="color: #8ca391; font-style: italic;">"""Reward function that checks if the completion has a specific format."""</span>
-    <span style="color: #62ff94;">pattern</span> <span style="color: #24f6d9;">=</span> r<span style="color: #1cc24b;">"^&lt;think&gt;.*?&lt;/think&gt;\s*&lt;answer&gt;.*?&lt;/answer&gt;$"</span>
-    <span style="color: #62ff94;">completion_contents</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span>completion<span style="color: #c770ff;">[</span>0<span style="color: #c770ff;">][</span><span style="color: #1cc24b;">"content"</span><span style="color: #c770ff;">]</span> <span style="color: #c770ff; font-weight: bold;">for</span> completion <span style="color: #c770ff; font-weight: bold;">in</span> completions<span style="color: #24f6d9;">]</span>
-    <span style="color: #62ff94;">matches</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span>re.<span style="color: #c770ff; font-weight: bold;">match</span><span style="color: #c770ff;">(</span>pattern, content, re.DOTALL <span style="color: #24f6d9;">|</span> re.MULTILINE<span style="color: #c770ff;">)</span> <span style="color: #c770ff; font-weight: bold;">for</span> content <span style="color: #c770ff; font-weight: bold;">in</span> completion_contents<span style="color: #24f6d9;">]</span>
-    <span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #24f6d9;">[</span>1.0 <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #c770ff; font-weight: bold;">match</span> <span style="color: #c770ff; font-weight: bold;">else</span> 0.0 <span style="color: #c770ff; font-weight: bold;">for</span> <span style="color: #c770ff; font-weight: bold;">match</span> <span style="color: #c770ff; font-weight: bold;">in</span> matches<span style="color: #24f6d9;">]</span>
+<pre class="src src-python"><code><span style="color: #B49ADD;">def</span> <span style="color: #79B8D1;">format_reward</span><span style="color: #82A7E8;">(</span>completions, <span style="color: #9AA2B1;">**</span>kwargs<span style="color: #82A7E8;">)</span>:
+    <span style="color: #9AA2B1;">"""Reward function that checks if the completion has a specific format."""</span>
+    <span style="color: #D6D9E0;">pattern</span> <span style="color: #9AA2B1;">=</span> r<span style="color: #8FBE83;">"^&lt;think&gt;.*?&lt;/think&gt;\s*&lt;answer&gt;.*?&lt;/answer&gt;$"</span>
+    <span style="color: #D6D9E0;">completion_contents</span> <span style="color: #9AA2B1;">=</span> <span style="color: #82A7E8;">[</span>completion<span style="color: #B49ADD;">[</span>0<span style="color: #B49ADD;">][</span><span style="color: #8FBE83;">"content"</span><span style="color: #B49ADD;">]</span> <span style="color: #B49ADD;">for</span> completion <span style="color: #B49ADD;">in</span> completions<span style="color: #82A7E8;">]</span>
+    <span style="color: #D6D9E0;">matches</span> <span style="color: #9AA2B1;">=</span> <span style="color: #82A7E8;">[</span>re.<span style="color: #B49ADD;">match</span><span style="color: #B49ADD;">(</span>pattern, content, re.DOTALL <span style="color: #9AA2B1;">|</span> re.MULTILINE<span style="color: #B49ADD;">)</span> <span style="color: #B49ADD;">for</span> content <span style="color: #B49ADD;">in</span> completion_contents<span style="color: #82A7E8;">]</span>
+    <span style="color: #B49ADD;">return</span> <span style="color: #82A7E8;">[</span>1.0 <span style="color: #B49ADD;">if</span> <span style="color: #B49ADD;">match</span> <span style="color: #B49ADD;">else</span> 0.0 <span style="color: #B49ADD;">for</span> <span style="color: #B49ADD;">match</span> <span style="color: #B49ADD;">in</span> matches<span style="color: #82A7E8;">]</span>
 </code></pre>
 </div>
 </div>
@@ -597,8 +597,8 @@ GRPO: use <code>trl</code>'s standard implementation.
 
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">reasoning_steps_reward</span><span style="color: #24f6d9;">(</span>completions, <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span>:
-    r<span style="color: #8ca391; font-style: italic;">"""Reward function that checks for clear step-by-step reasoning.
+<pre class="src src-python"><code><span style="color: #B49ADD;">def</span> <span style="color: #79B8D1;">reasoning_steps_reward</span><span style="color: #82A7E8;">(</span>completions, <span style="color: #9AA2B1;">**</span>kwargs<span style="color: #82A7E8;">)</span>:
+    r<span style="color: #9AA2B1;">"""Reward function that checks for clear step-by-step reasoning.
     Regex pattern:
         Step \d+: - matches "Step 1:", "Step 2:", etc.
         ^\d+\. - matches numbered lists like "1.", "2.", etc. at start of line
@@ -606,12 +606,12 @@ GRPO: use <code>trl</code>'s standard implementation.
         \n\* - matches bullet points with asterisks
         First,|Second,|Next,|Finally, - matches transition words
     """</span>
-    <span style="color: #62ff94;">pattern</span> <span style="color: #24f6d9;">=</span> r<span style="color: #1cc24b;">"(Step \d+:|^\d+\.|\n-|\n\*|First,|Second,|Next,|Finally,)"</span>
-    <span style="color: #62ff94;">completion_contents</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span>completion<span style="color: #c770ff;">[</span>0<span style="color: #c770ff;">][</span><span style="color: #1cc24b;">"content"</span><span style="color: #c770ff;">]</span> <span style="color: #c770ff; font-weight: bold;">for</span> completion <span style="color: #c770ff; font-weight: bold;">in</span> completions<span style="color: #24f6d9;">]</span>
-    <span style="color: #62ff94;">matches</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span><span style="color: #30b3ff;">len</span><span style="color: #c770ff;">(</span>re.findall<span style="color: #e6ff57;">(</span>pattern, content<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">)</span> <span style="color: #c770ff; font-weight: bold;">for</span> content <span style="color: #c770ff; font-weight: bold;">in</span> completion_contents<span style="color: #24f6d9;">]</span>
+    <span style="color: #D6D9E0;">pattern</span> <span style="color: #9AA2B1;">=</span> r<span style="color: #8FBE83;">"(Step \d+:|^\d+\.|\n-|\n\*|First,|Second,|Next,|Finally,)"</span>
+    <span style="color: #D6D9E0;">completion_contents</span> <span style="color: #9AA2B1;">=</span> <span style="color: #82A7E8;">[</span>completion<span style="color: #B49ADD;">[</span>0<span style="color: #B49ADD;">][</span><span style="color: #8FBE83;">"content"</span><span style="color: #B49ADD;">]</span> <span style="color: #B49ADD;">for</span> completion <span style="color: #B49ADD;">in</span> completions<span style="color: #82A7E8;">]</span>
+    <span style="color: #D6D9E0;">matches</span> <span style="color: #9AA2B1;">=</span> <span style="color: #82A7E8;">[</span><span style="color: #79B8D1;">len</span><span style="color: #B49ADD;">(</span>re.findall<span style="color: #77BEB7;">(</span>pattern, content<span style="color: #77BEB7;">)</span><span style="color: #B49ADD;">)</span> <span style="color: #B49ADD;">for</span> content <span style="color: #B49ADD;">in</span> completion_contents<span style="color: #82A7E8;">]</span>
 
-    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Magic nubmer 3 to encourage 3 steps and more, otherwise partial reward
-</span>    <span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #24f6d9;">[</span><span style="color: #30b3ff;">min</span><span style="color: #c770ff;">(</span>1.0, count <span style="color: #24f6d9;">/</span> 3<span style="color: #c770ff;">)</span> <span style="color: #c770ff; font-weight: bold;">for</span> count <span style="color: #c770ff; font-weight: bold;">in</span> matches<span style="color: #24f6d9;">]</span>
+    <span style="color: #697282;"># </span><span style="color: #9AA2B1; font-style: italic;">Magic nubmer 3 to encourage 3 steps and more, otherwise partial reward
+</span>    <span style="color: #B49ADD;">return</span> <span style="color: #82A7E8;">[</span><span style="color: #79B8D1;">min</span><span style="color: #B49ADD;">(</span>1.0, count <span style="color: #9AA2B1;">/</span> 3<span style="color: #B49ADD;">)</span> <span style="color: #B49ADD;">for</span> count <span style="color: #B49ADD;">in</span> matches<span style="color: #82A7E8;">]</span>
 </code></pre>
 </div>
 </div>
@@ -624,8 +624,8 @@ constrain the length of chain-of-thought.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">len_reward</span><span style="color: #24f6d9;">(</span>completions: <span style="color: #30b3ff;">list</span><span style="color: #c770ff;">[</span>Dict<span style="color: #e6ff57;">[</span><span style="color: #30b3ff;">str</span>, <span style="color: #30b3ff;">str</span><span style="color: #e6ff57;">]</span><span style="color: #c770ff;">]</span>, solutions: <span style="color: #30b3ff;">list</span><span style="color: #c770ff;">[</span><span style="color: #30b3ff;">str</span><span style="color: #c770ff;">]</span>, <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">-&gt;</span> <span style="color: #30b3ff;">float</span>:
-    <span style="color: #8ca391; font-style: italic;">"""Compute length-based rewards to discourage overthinking and promote token efficiency.
+<pre class="src src-python"><code><span style="color: #B49ADD;">def</span> <span style="color: #79B8D1;">len_reward</span><span style="color: #82A7E8;">(</span>completions: <span style="color: #79B8D1;">list</span><span style="color: #B49ADD;">[</span>Dict<span style="color: #77BEB7;">[</span><span style="color: #79B8D1;">str</span>, <span style="color: #79B8D1;">str</span><span style="color: #77BEB7;">]</span><span style="color: #B49ADD;">]</span>, solutions: <span style="color: #79B8D1;">list</span><span style="color: #B49ADD;">[</span><span style="color: #79B8D1;">str</span><span style="color: #B49ADD;">]</span>, <span style="color: #9AA2B1;">**</span>kwargs<span style="color: #82A7E8;">)</span> <span style="color: #9AA2B1;">-&gt;</span> <span style="color: #79B8D1;">float</span>:
+    <span style="color: #9AA2B1;">"""Compute length-based rewards to discourage overthinking and promote token efficiency.
 
     Taken from from the Kimi 1.5 tech report: https://arxiv.org/abs/2501.12599
 
@@ -638,63 +638,63 @@ constrain the length of chain-of-thought.
         - For correct answers: reward = 0.5 - (len - min_len)/(max_len - min_len)
         - For incorrect answers: reward = min(0, 0.5 - (len - min_len)/(max_len - min_len))
     """</span>
-    <span style="color: #62ff94;">contents</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span>completion<span style="color: #c770ff;">[</span>0<span style="color: #c770ff;">][</span><span style="color: #1cc24b;">"content"</span><span style="color: #c770ff;">]</span> <span style="color: #c770ff; font-weight: bold;">for</span> completion <span style="color: #c770ff; font-weight: bold;">in</span> completions<span style="color: #24f6d9;">]</span>
+    <span style="color: #D6D9E0;">contents</span> <span style="color: #9AA2B1;">=</span> <span style="color: #82A7E8;">[</span>completion<span style="color: #B49ADD;">[</span>0<span style="color: #B49ADD;">][</span><span style="color: #8FBE83;">"content"</span><span style="color: #B49ADD;">]</span> <span style="color: #B49ADD;">for</span> completion <span style="color: #B49ADD;">in</span> completions<span style="color: #82A7E8;">]</span>
 
-    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">First check correctness of answers
-</span>    <span style="color: #62ff94;">correctness</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[]</span>
-    <span style="color: #c770ff; font-weight: bold;">for</span> content, sol <span style="color: #c770ff; font-weight: bold;">in</span> <span style="color: #30b3ff;">zip</span><span style="color: #24f6d9;">(</span>contents, solutions<span style="color: #24f6d9;">)</span>:
-        <span style="color: #62ff94;">gold_parsed</span> <span style="color: #24f6d9;">=</span> parse<span style="color: #24f6d9;">(</span>
+    <span style="color: #697282;"># </span><span style="color: #9AA2B1; font-style: italic;">First check correctness of answers
+</span>    <span style="color: #D6D9E0;">correctness</span> <span style="color: #9AA2B1;">=</span> <span style="color: #82A7E8;">[]</span>
+    <span style="color: #B49ADD;">for</span> content, sol <span style="color: #B49ADD;">in</span> <span style="color: #79B8D1;">zip</span><span style="color: #82A7E8;">(</span>contents, solutions<span style="color: #82A7E8;">)</span>:
+        <span style="color: #D6D9E0;">gold_parsed</span> <span style="color: #9AA2B1;">=</span> parse<span style="color: #82A7E8;">(</span>
             sol,
-            extraction_mode<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"first_match"</span>,
-            extraction_config<span style="color: #24f6d9;">=</span><span style="color: #c770ff;">[</span>LatexExtractionConfig<span style="color: #e6ff57;">()</span><span style="color: #c770ff;">]</span>,
-        <span style="color: #24f6d9;">)</span>
-        <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #30b3ff;">len</span><span style="color: #24f6d9;">(</span>gold_parsed<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">==</span> 0:
-            <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Skip unparseable examples
-</span>            correctness.append<span style="color: #24f6d9;">(</span><span style="color: #ffa83d;">True</span><span style="color: #24f6d9;">)</span>  <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Treat as correct to avoid penalizing
-</span>            <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"Failed to parse gold solution: "</span>, sol<span style="color: #24f6d9;">)</span>
-            <span style="color: #c770ff; font-weight: bold;">continue</span>
+            extraction_mode<span style="color: #9AA2B1;">=</span><span style="color: #8FBE83;">"first_match"</span>,
+            extraction_config<span style="color: #9AA2B1;">=</span><span style="color: #B49ADD;">[</span>LatexExtractionConfig<span style="color: #77BEB7;">()</span><span style="color: #B49ADD;">]</span>,
+        <span style="color: #82A7E8;">)</span>
+        <span style="color: #B49ADD;">if</span> <span style="color: #79B8D1;">len</span><span style="color: #82A7E8;">(</span>gold_parsed<span style="color: #82A7E8;">)</span> <span style="color: #9AA2B1;">==</span> 0:
+            <span style="color: #697282;"># </span><span style="color: #9AA2B1; font-style: italic;">Skip unparseable examples
+</span>            correctness.append<span style="color: #82A7E8;">(</span><span style="color: #D5A06B;">True</span><span style="color: #82A7E8;">)</span>  <span style="color: #697282;"># </span><span style="color: #9AA2B1; font-style: italic;">Treat as correct to avoid penalizing
+</span>            <span style="color: #79B8D1;">print</span><span style="color: #82A7E8;">(</span><span style="color: #8FBE83;">"Failed to parse gold solution: "</span>, sol<span style="color: #82A7E8;">)</span>
+            <span style="color: #B49ADD;">continue</span>
 
-        <span style="color: #62ff94;">answer_parsed</span> <span style="color: #24f6d9;">=</span> parse<span style="color: #24f6d9;">(</span>
+        <span style="color: #D6D9E0;">answer_parsed</span> <span style="color: #9AA2B1;">=</span> parse<span style="color: #82A7E8;">(</span>
             content,
-            extraction_config<span style="color: #24f6d9;">=</span><span style="color: #c770ff;">[</span>
-                LatexExtractionConfig<span style="color: #e6ff57;">(</span>
-                    normalization_config<span style="color: #24f6d9;">=</span>NormalizationConfig<span style="color: #30b3ff;">(</span>
-                        nits<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
-                        malformed_operators<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
-                        basic_latex<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
-                        equations<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
-                        boxed<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
-                        units<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
-                    <span style="color: #30b3ff;">)</span>,
-                    boxed_match_priority<span style="color: #24f6d9;">=</span>0,
-                    try_extract_without_anchor<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
-                <span style="color: #e6ff57;">)</span>
-            <span style="color: #c770ff;">]</span>,
-            extraction_mode<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"first_match"</span>,
-        <span style="color: #24f6d9;">)</span>
-        correctness.append<span style="color: #24f6d9;">(</span>verify<span style="color: #c770ff;">(</span>answer_parsed, gold_parsed<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+            extraction_config<span style="color: #9AA2B1;">=</span><span style="color: #B49ADD;">[</span>
+                LatexExtractionConfig<span style="color: #77BEB7;">(</span>
+                    normalization_config<span style="color: #9AA2B1;">=</span>NormalizationConfig<span style="color: #D8BE7B;">(</span>
+                        nits<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">False</span>,
+                        malformed_operators<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">False</span>,
+                        basic_latex<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">True</span>,
+                        equations<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">True</span>,
+                        boxed<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">True</span>,
+                        units<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">True</span>,
+                    <span style="color: #D8BE7B;">)</span>,
+                    boxed_match_priority<span style="color: #9AA2B1;">=</span>0,
+                    try_extract_without_anchor<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">False</span>,
+                <span style="color: #77BEB7;">)</span>
+            <span style="color: #B49ADD;">]</span>,
+            extraction_mode<span style="color: #9AA2B1;">=</span><span style="color: #8FBE83;">"first_match"</span>,
+        <span style="color: #82A7E8;">)</span>
+        correctness.append<span style="color: #82A7E8;">(</span>verify<span style="color: #B49ADD;">(</span>answer_parsed, gold_parsed<span style="color: #B49ADD;">)</span><span style="color: #82A7E8;">)</span>
 
-    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Calculate lengths
-</span>    <span style="color: #62ff94;">lengths</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span><span style="color: #30b3ff;">len</span><span style="color: #c770ff;">(</span>content<span style="color: #c770ff;">)</span> <span style="color: #c770ff; font-weight: bold;">for</span> content <span style="color: #c770ff; font-weight: bold;">in</span> contents<span style="color: #24f6d9;">]</span>
-    <span style="color: #62ff94;">min_len</span> <span style="color: #24f6d9;">=</span> <span style="color: #30b3ff;">min</span><span style="color: #24f6d9;">(</span>lengths<span style="color: #24f6d9;">)</span>
-    <span style="color: #62ff94;">max_len</span> <span style="color: #24f6d9;">=</span> <span style="color: #30b3ff;">max</span><span style="color: #24f6d9;">(</span>lengths<span style="color: #24f6d9;">)</span>
+    <span style="color: #697282;"># </span><span style="color: #9AA2B1; font-style: italic;">Calculate lengths
+</span>    <span style="color: #D6D9E0;">lengths</span> <span style="color: #9AA2B1;">=</span> <span style="color: #82A7E8;">[</span><span style="color: #79B8D1;">len</span><span style="color: #B49ADD;">(</span>content<span style="color: #B49ADD;">)</span> <span style="color: #B49ADD;">for</span> content <span style="color: #B49ADD;">in</span> contents<span style="color: #82A7E8;">]</span>
+    <span style="color: #D6D9E0;">min_len</span> <span style="color: #9AA2B1;">=</span> <span style="color: #79B8D1;">min</span><span style="color: #82A7E8;">(</span>lengths<span style="color: #82A7E8;">)</span>
+    <span style="color: #D6D9E0;">max_len</span> <span style="color: #9AA2B1;">=</span> <span style="color: #79B8D1;">max</span><span style="color: #82A7E8;">(</span>lengths<span style="color: #82A7E8;">)</span>
 
-    <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">If all responses have the same length, return zero rewards
-</span>    <span style="color: #c770ff; font-weight: bold;">if</span> max_len <span style="color: #24f6d9;">==</span> min_len:
-        <span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #24f6d9;">[</span>0.0<span style="color: #24f6d9;">]</span> <span style="color: #24f6d9;">*</span> <span style="color: #30b3ff;">len</span><span style="color: #24f6d9;">(</span>completions<span style="color: #24f6d9;">)</span>
+    <span style="color: #697282;"># </span><span style="color: #9AA2B1; font-style: italic;">If all responses have the same length, return zero rewards
+</span>    <span style="color: #B49ADD;">if</span> max_len <span style="color: #9AA2B1;">==</span> min_len:
+        <span style="color: #B49ADD;">return</span> <span style="color: #82A7E8;">[</span>0.0<span style="color: #82A7E8;">]</span> <span style="color: #9AA2B1;">*</span> <span style="color: #79B8D1;">len</span><span style="color: #82A7E8;">(</span>completions<span style="color: #82A7E8;">)</span>
 
-    <span style="color: #62ff94;">rewards</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[]</span>
-    <span style="color: #c770ff; font-weight: bold;">for</span> length, is_correct <span style="color: #c770ff; font-weight: bold;">in</span> <span style="color: #30b3ff;">zip</span><span style="color: #24f6d9;">(</span>lengths, correctness<span style="color: #24f6d9;">)</span>:
-        <span style="color: #62ff94;">lambda_val</span> <span style="color: #24f6d9;">=</span> 0.5 <span style="color: #24f6d9;">-</span> <span style="color: #24f6d9;">(</span>length <span style="color: #24f6d9;">-</span> min_len<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">/</span> <span style="color: #24f6d9;">(</span>max_len <span style="color: #24f6d9;">-</span> min_len<span style="color: #24f6d9;">)</span>
+    <span style="color: #D6D9E0;">rewards</span> <span style="color: #9AA2B1;">=</span> <span style="color: #82A7E8;">[]</span>
+    <span style="color: #B49ADD;">for</span> length, is_correct <span style="color: #B49ADD;">in</span> <span style="color: #79B8D1;">zip</span><span style="color: #82A7E8;">(</span>lengths, correctness<span style="color: #82A7E8;">)</span>:
+        <span style="color: #D6D9E0;">lambda_val</span> <span style="color: #9AA2B1;">=</span> 0.5 <span style="color: #9AA2B1;">-</span> <span style="color: #82A7E8;">(</span>length <span style="color: #9AA2B1;">-</span> min_len<span style="color: #82A7E8;">)</span> <span style="color: #9AA2B1;">/</span> <span style="color: #82A7E8;">(</span>max_len <span style="color: #9AA2B1;">-</span> min_len<span style="color: #82A7E8;">)</span>
 
-        <span style="color: #c770ff; font-weight: bold;">if</span> is_correct:
-            <span style="color: #62ff94;">reward</span> <span style="color: #24f6d9;">=</span> lambda_val
-        <span style="color: #c770ff; font-weight: bold;">else</span>:
-            <span style="color: #62ff94;">reward</span> <span style="color: #24f6d9;">=</span> <span style="color: #30b3ff;">min</span><span style="color: #24f6d9;">(</span>0, lambda_val<span style="color: #24f6d9;">)</span>
+        <span style="color: #B49ADD;">if</span> is_correct:
+            <span style="color: #D6D9E0;">reward</span> <span style="color: #9AA2B1;">=</span> lambda_val
+        <span style="color: #B49ADD;">else</span>:
+            <span style="color: #D6D9E0;">reward</span> <span style="color: #9AA2B1;">=</span> <span style="color: #79B8D1;">min</span><span style="color: #82A7E8;">(</span>0, lambda_val<span style="color: #82A7E8;">)</span>
 
-        rewards.append<span style="color: #24f6d9;">(</span><span style="color: #30b3ff;">float</span><span style="color: #c770ff;">(</span>reward<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+        rewards.append<span style="color: #82A7E8;">(</span><span style="color: #79B8D1;">float</span><span style="color: #B49ADD;">(</span>reward<span style="color: #B49ADD;">)</span><span style="color: #82A7E8;">)</span>
 
-    <span style="color: #c770ff; font-weight: bold;">return</span> rewards
+    <span style="color: #B49ADD;">return</span> rewards
 </code></pre>
 </div>
 </div>
@@ -710,15 +710,15 @@ Longer incorrect solutions are penalized less than shorter ones.
 
 <div class="org-src-container">
 <pre class="src src-python"><code>
-<span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">get_cosine_scaled_reward</span><span style="color: #24f6d9;">(</span>
-    min_value_wrong: <span style="color: #30b3ff;">float</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">-</span>1.0,
-    max_value_wrong: <span style="color: #30b3ff;">float</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">-</span>0.5,
-    min_value_correct: <span style="color: #30b3ff;">float</span> <span style="color: #24f6d9;">=</span> 0.5,
-    max_value_correct: <span style="color: #30b3ff;">float</span> <span style="color: #24f6d9;">=</span> 1.0,
-    max_len: <span style="color: #30b3ff;">int</span> <span style="color: #24f6d9;">=</span> 1000,
-<span style="color: #24f6d9;">)</span>:
-    <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">cosine_scaled_reward</span><span style="color: #24f6d9;">(</span>completions, solution, <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span>:
-        <span style="color: #8ca391; font-style: italic;">"""Reward function that scales based on completion length using a cosine schedule.
+<span style="color: #B49ADD;">def</span> <span style="color: #79B8D1;">get_cosine_scaled_reward</span><span style="color: #82A7E8;">(</span>
+    min_value_wrong: <span style="color: #79B8D1;">float</span> <span style="color: #9AA2B1;">=</span> <span style="color: #9AA2B1;">-</span>1.0,
+    max_value_wrong: <span style="color: #79B8D1;">float</span> <span style="color: #9AA2B1;">=</span> <span style="color: #9AA2B1;">-</span>0.5,
+    min_value_correct: <span style="color: #79B8D1;">float</span> <span style="color: #9AA2B1;">=</span> 0.5,
+    max_value_correct: <span style="color: #79B8D1;">float</span> <span style="color: #9AA2B1;">=</span> 1.0,
+    max_len: <span style="color: #79B8D1;">int</span> <span style="color: #9AA2B1;">=</span> 1000,
+<span style="color: #82A7E8;">)</span>:
+    <span style="color: #B49ADD;">def</span> <span style="color: #79B8D1;">cosine_scaled_reward</span><span style="color: #82A7E8;">(</span>completions, solution, <span style="color: #9AA2B1;">**</span>kwargs<span style="color: #82A7E8;">)</span>:
+        <span style="color: #9AA2B1;">"""Reward function that scales based on completion length using a cosine schedule.
 
         Shorter correct solutions are rewarded more than longer ones.
         Longer incorrect solutions are penalized less than shorter ones.
@@ -734,56 +734,56 @@ Longer incorrect solutions are penalized less than shorter ones.
             max_value_correct: Maximum reward for correct answers
             max_len: Maximum length for scaling
         """</span>
-        <span style="color: #62ff94;">contents</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span>completion<span style="color: #c770ff;">[</span>0<span style="color: #c770ff;">][</span><span style="color: #1cc24b;">"content"</span><span style="color: #c770ff;">]</span> <span style="color: #c770ff; font-weight: bold;">for</span> completion <span style="color: #c770ff; font-weight: bold;">in</span> completions<span style="color: #24f6d9;">]</span>
-        <span style="color: #62ff94;">rewards</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[]</span>
+        <span style="color: #D6D9E0;">contents</span> <span style="color: #9AA2B1;">=</span> <span style="color: #82A7E8;">[</span>completion<span style="color: #B49ADD;">[</span>0<span style="color: #B49ADD;">][</span><span style="color: #8FBE83;">"content"</span><span style="color: #B49ADD;">]</span> <span style="color: #B49ADD;">for</span> completion <span style="color: #B49ADD;">in</span> completions<span style="color: #82A7E8;">]</span>
+        <span style="color: #D6D9E0;">rewards</span> <span style="color: #9AA2B1;">=</span> <span style="color: #82A7E8;">[]</span>
 
-        <span style="color: #c770ff; font-weight: bold;">for</span> content, sol <span style="color: #c770ff; font-weight: bold;">in</span> <span style="color: #30b3ff;">zip</span><span style="color: #24f6d9;">(</span>contents, solution<span style="color: #24f6d9;">)</span>:
-            <span style="color: #62ff94;">gold_parsed</span> <span style="color: #24f6d9;">=</span> parse<span style="color: #24f6d9;">(</span>sol, extraction_mode<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"first_match"</span>, extraction_config<span style="color: #24f6d9;">=</span><span style="color: #c770ff;">[</span>LatexExtractionConfig<span style="color: #e6ff57;">()</span><span style="color: #c770ff;">]</span><span style="color: #24f6d9;">)</span>
-            <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #30b3ff;">len</span><span style="color: #24f6d9;">(</span>gold_parsed<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">==</span> 0:
-                rewards.append<span style="color: #24f6d9;">(</span>1.0<span style="color: #24f6d9;">)</span>  <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Skip unparseable examples
-</span>                <span style="color: #30b3ff;">print</span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">"Failed to parse gold solution: "</span>, sol<span style="color: #24f6d9;">)</span>
-                <span style="color: #c770ff; font-weight: bold;">continue</span>
+        <span style="color: #B49ADD;">for</span> content, sol <span style="color: #B49ADD;">in</span> <span style="color: #79B8D1;">zip</span><span style="color: #82A7E8;">(</span>contents, solution<span style="color: #82A7E8;">)</span>:
+            <span style="color: #D6D9E0;">gold_parsed</span> <span style="color: #9AA2B1;">=</span> parse<span style="color: #82A7E8;">(</span>sol, extraction_mode<span style="color: #9AA2B1;">=</span><span style="color: #8FBE83;">"first_match"</span>, extraction_config<span style="color: #9AA2B1;">=</span><span style="color: #B49ADD;">[</span>LatexExtractionConfig<span style="color: #77BEB7;">()</span><span style="color: #B49ADD;">]</span><span style="color: #82A7E8;">)</span>
+            <span style="color: #B49ADD;">if</span> <span style="color: #79B8D1;">len</span><span style="color: #82A7E8;">(</span>gold_parsed<span style="color: #82A7E8;">)</span> <span style="color: #9AA2B1;">==</span> 0:
+                rewards.append<span style="color: #82A7E8;">(</span>1.0<span style="color: #82A7E8;">)</span>  <span style="color: #697282;"># </span><span style="color: #9AA2B1; font-style: italic;">Skip unparseable examples
+</span>                <span style="color: #79B8D1;">print</span><span style="color: #82A7E8;">(</span><span style="color: #8FBE83;">"Failed to parse gold solution: "</span>, sol<span style="color: #82A7E8;">)</span>
+                <span style="color: #B49ADD;">continue</span>
 
-            <span style="color: #62ff94;">answer_parsed</span> <span style="color: #24f6d9;">=</span> parse<span style="color: #24f6d9;">(</span>
+            <span style="color: #D6D9E0;">answer_parsed</span> <span style="color: #9AA2B1;">=</span> parse<span style="color: #82A7E8;">(</span>
                 content,
-                extraction_config<span style="color: #24f6d9;">=</span><span style="color: #c770ff;">[</span>
-                    LatexExtractionConfig<span style="color: #e6ff57;">(</span>
-                        normalization_config<span style="color: #24f6d9;">=</span>NormalizationConfig<span style="color: #30b3ff;">(</span>
-                            nits<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
-                            malformed_operators<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
-                            basic_latex<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
-                            equations<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
-                            boxed<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
-                            units<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span>,
-                        <span style="color: #30b3ff;">)</span>,
-                        boxed_match_priority<span style="color: #24f6d9;">=</span>0,
-                        try_extract_without_anchor<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">False</span>,
-                    <span style="color: #e6ff57;">)</span>
-                <span style="color: #c770ff;">]</span>,
-                extraction_mode<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">"first_match"</span>,
-            <span style="color: #24f6d9;">)</span>
+                extraction_config<span style="color: #9AA2B1;">=</span><span style="color: #B49ADD;">[</span>
+                    LatexExtractionConfig<span style="color: #77BEB7;">(</span>
+                        normalization_config<span style="color: #9AA2B1;">=</span>NormalizationConfig<span style="color: #D8BE7B;">(</span>
+                            nits<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">False</span>,
+                            malformed_operators<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">False</span>,
+                            basic_latex<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">True</span>,
+                            equations<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">True</span>,
+                            boxed<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">True</span>,
+                            units<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">True</span>,
+                        <span style="color: #D8BE7B;">)</span>,
+                        boxed_match_priority<span style="color: #9AA2B1;">=</span>0,
+                        try_extract_without_anchor<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">False</span>,
+                    <span style="color: #77BEB7;">)</span>
+                <span style="color: #B49ADD;">]</span>,
+                extraction_mode<span style="color: #9AA2B1;">=</span><span style="color: #8FBE83;">"first_match"</span>,
+            <span style="color: #82A7E8;">)</span>
 
-            <span style="color: #62ff94;">is_correct</span> <span style="color: #24f6d9;">=</span> verify<span style="color: #24f6d9;">(</span>answer_parsed, gold_parsed<span style="color: #24f6d9;">)</span>
-            <span style="color: #62ff94;">gen_len</span> <span style="color: #24f6d9;">=</span> <span style="color: #30b3ff;">len</span><span style="color: #24f6d9;">(</span>content<span style="color: #24f6d9;">)</span>
+            <span style="color: #D6D9E0;">is_correct</span> <span style="color: #9AA2B1;">=</span> verify<span style="color: #82A7E8;">(</span>answer_parsed, gold_parsed<span style="color: #82A7E8;">)</span>
+            <span style="color: #D6D9E0;">gen_len</span> <span style="color: #9AA2B1;">=</span> <span style="color: #79B8D1;">len</span><span style="color: #82A7E8;">(</span>content<span style="color: #82A7E8;">)</span>
 
-            <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Apply cosine scaling based on length
-</span>            <span style="color: #62ff94;">progress</span> <span style="color: #24f6d9;">=</span> gen_len <span style="color: #24f6d9;">/</span> max_len
-            <span style="color: #62ff94;">cosine</span> <span style="color: #24f6d9;">=</span> math.cos<span style="color: #24f6d9;">(</span>progress <span style="color: #24f6d9;">*</span> math.pi<span style="color: #24f6d9;">)</span>
+            <span style="color: #697282;"># </span><span style="color: #9AA2B1; font-style: italic;">Apply cosine scaling based on length
+</span>            <span style="color: #D6D9E0;">progress</span> <span style="color: #9AA2B1;">=</span> gen_len <span style="color: #9AA2B1;">/</span> max_len
+            <span style="color: #D6D9E0;">cosine</span> <span style="color: #9AA2B1;">=</span> math.cos<span style="color: #82A7E8;">(</span>progress <span style="color: #9AA2B1;">*</span> math.pi<span style="color: #82A7E8;">)</span>
 
-            <span style="color: #c770ff; font-weight: bold;">if</span> is_correct:
-                <span style="color: #62ff94;">min_value</span> <span style="color: #24f6d9;">=</span> min_value_correct
-                <span style="color: #62ff94;">max_value</span> <span style="color: #24f6d9;">=</span> max_value_correct
-            <span style="color: #c770ff; font-weight: bold;">else</span>:
-                <span style="color: #8ca391;"># </span><span style="color: #8ca391; font-style: italic;">Swap min/max for incorrect answers
-</span>                <span style="color: #62ff94;">min_value</span> <span style="color: #24f6d9;">=</span> max_value_wrong
-                <span style="color: #62ff94;">max_value</span> <span style="color: #24f6d9;">=</span> min_value_wrong
+            <span style="color: #B49ADD;">if</span> is_correct:
+                <span style="color: #D6D9E0;">min_value</span> <span style="color: #9AA2B1;">=</span> min_value_correct
+                <span style="color: #D6D9E0;">max_value</span> <span style="color: #9AA2B1;">=</span> max_value_correct
+            <span style="color: #B49ADD;">else</span>:
+                <span style="color: #697282;"># </span><span style="color: #9AA2B1; font-style: italic;">Swap min/max for incorrect answers
+</span>                <span style="color: #D6D9E0;">min_value</span> <span style="color: #9AA2B1;">=</span> max_value_wrong
+                <span style="color: #D6D9E0;">max_value</span> <span style="color: #9AA2B1;">=</span> min_value_wrong
 
-            <span style="color: #62ff94;">reward</span> <span style="color: #24f6d9;">=</span> min_value <span style="color: #24f6d9;">+</span> 0.5 <span style="color: #24f6d9;">*</span> <span style="color: #24f6d9;">(</span>max_value <span style="color: #24f6d9;">-</span> min_value<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">*</span> <span style="color: #24f6d9;">(</span>1.0 <span style="color: #24f6d9;">+</span> cosine<span style="color: #24f6d9;">)</span>
-            rewards.append<span style="color: #24f6d9;">(</span><span style="color: #30b3ff;">float</span><span style="color: #c770ff;">(</span>reward<span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span>
+            <span style="color: #D6D9E0;">reward</span> <span style="color: #9AA2B1;">=</span> min_value <span style="color: #9AA2B1;">+</span> 0.5 <span style="color: #9AA2B1;">*</span> <span style="color: #82A7E8;">(</span>max_value <span style="color: #9AA2B1;">-</span> min_value<span style="color: #82A7E8;">)</span> <span style="color: #9AA2B1;">*</span> <span style="color: #82A7E8;">(</span>1.0 <span style="color: #9AA2B1;">+</span> cosine<span style="color: #82A7E8;">)</span>
+            rewards.append<span style="color: #82A7E8;">(</span><span style="color: #79B8D1;">float</span><span style="color: #B49ADD;">(</span>reward<span style="color: #B49ADD;">)</span><span style="color: #82A7E8;">)</span>
 
-        <span style="color: #c770ff; font-weight: bold;">return</span> rewards
+        <span style="color: #B49ADD;">return</span> rewards
 
-    <span style="color: #c770ff; font-weight: bold;">return</span> cosine_scaled_reward
+    <span style="color: #B49ADD;">return</span> cosine_scaled_reward
 </code></pre>
 </div>
 </div>
@@ -792,8 +792,8 @@ Longer incorrect solutions are penalized less than shorter ones.
 <h3 id="orgbba15f8"><span class="section-number-3">4.6.</span> Repetition Penalty Reward (NOT Used in the Paper, but promising)</h3>
 <div class="outline-text-3" id="text-4-6">
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">get_repetition_penalty_reward</span><span style="color: #24f6d9;">(</span>ngram_size: <span style="color: #30b3ff;">int</span>, max_penalty: <span style="color: #30b3ff;">float</span><span style="color: #24f6d9;">)</span>:
-    <span style="color: #8ca391; font-style: italic;">"""
+<pre class="src src-python"><code><span style="color: #B49ADD;">def</span> <span style="color: #79B8D1;">get_repetition_penalty_reward</span><span style="color: #82A7E8;">(</span>ngram_size: <span style="color: #79B8D1;">int</span>, max_penalty: <span style="color: #79B8D1;">float</span><span style="color: #82A7E8;">)</span>:
+    <span style="color: #9AA2B1;">"""
     Computes N-gram repetition penalty as described in Appendix C.2 of https://arxiv.org/abs/2502.03373.
     Reference implementation from: https://github.com/eddycmu/demystify-long-cot/blob/release/openrlhf/openrlhf/reward/repetition.py
 
@@ -801,15 +801,15 @@ Longer incorrect solutions are penalized less than shorter ones.
     ngram_size: size of the n-grams
     max_penalty: Maximum (negative) penalty for wrong answers
     """</span>
-    <span style="color: #c770ff; font-weight: bold;">if</span> max_penalty <span style="color: #24f6d9;">&gt;</span> 0:
-        <span style="color: #c770ff; font-weight: bold;">raise</span> <span style="color: #e6ff57;">ValueError</span><span style="color: #24f6d9;">(</span>f<span style="color: #1cc24b;">"max_penalty </span>{max_penalty}<span style="color: #1cc24b;"> should not be positive"</span><span style="color: #24f6d9;">)</span>
+    <span style="color: #B49ADD;">if</span> max_penalty <span style="color: #9AA2B1;">&gt;</span> 0:
+        <span style="color: #B49ADD;">raise</span> <span style="color: #D8BE7B;">ValueError</span><span style="color: #82A7E8;">(</span>f<span style="color: #8FBE83;">"max_penalty </span>{max_penalty}<span style="color: #8FBE83;"> should not be positive"</span><span style="color: #82A7E8;">)</span>
 
-    <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">zipngram</span><span style="color: #24f6d9;">(</span>text: <span style="color: #30b3ff;">str</span>, ngram_size: <span style="color: #30b3ff;">int</span><span style="color: #24f6d9;">)</span>:
-        <span style="color: #62ff94;">words</span> <span style="color: #24f6d9;">=</span> text.lower<span style="color: #24f6d9;">()</span>.split<span style="color: #24f6d9;">()</span>
-        <span style="color: #c770ff; font-weight: bold;">return</span> <span style="color: #30b3ff;">zip</span><span style="color: #24f6d9;">(</span><span style="color: #24f6d9;">*</span><span style="color: #c770ff;">[</span>words<span style="color: #e6ff57;">[</span>i:<span style="color: #e6ff57;">]</span> <span style="color: #c770ff; font-weight: bold;">for</span> i <span style="color: #c770ff; font-weight: bold;">in</span> <span style="color: #30b3ff;">range</span><span style="color: #e6ff57;">(</span>ngram_size<span style="color: #e6ff57;">)</span><span style="color: #c770ff;">]</span><span style="color: #24f6d9;">)</span>
+    <span style="color: #B49ADD;">def</span> <span style="color: #79B8D1;">zipngram</span><span style="color: #82A7E8;">(</span>text: <span style="color: #79B8D1;">str</span>, ngram_size: <span style="color: #79B8D1;">int</span><span style="color: #82A7E8;">)</span>:
+        <span style="color: #D6D9E0;">words</span> <span style="color: #9AA2B1;">=</span> text.lower<span style="color: #82A7E8;">()</span>.split<span style="color: #82A7E8;">()</span>
+        <span style="color: #B49ADD;">return</span> <span style="color: #79B8D1;">zip</span><span style="color: #82A7E8;">(</span><span style="color: #9AA2B1;">*</span><span style="color: #B49ADD;">[</span>words<span style="color: #77BEB7;">[</span>i:<span style="color: #77BEB7;">]</span> <span style="color: #B49ADD;">for</span> i <span style="color: #B49ADD;">in</span> <span style="color: #79B8D1;">range</span><span style="color: #77BEB7;">(</span>ngram_size<span style="color: #77BEB7;">)</span><span style="color: #B49ADD;">]</span><span style="color: #82A7E8;">)</span>
 
-    <span style="color: #c770ff; font-weight: bold;">def</span> <span style="color: #24f6d9;">repetition_penalty_reward</span><span style="color: #24f6d9;">(</span>completions, <span style="color: #24f6d9;">**</span>kwargs<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">-&gt;</span> <span style="color: #30b3ff;">float</span>:
-        <span style="color: #8ca391; font-style: italic;">"""
+    <span style="color: #B49ADD;">def</span> <span style="color: #79B8D1;">repetition_penalty_reward</span><span style="color: #82A7E8;">(</span>completions, <span style="color: #9AA2B1;">**</span>kwargs<span style="color: #82A7E8;">)</span> <span style="color: #9AA2B1;">-&gt;</span> <span style="color: #79B8D1;">float</span>:
+        <span style="color: #9AA2B1;">"""
         reward function the penalizes repetitions
         ref implementation: https://github.com/eddycmu/demystify-long-cot/blob/release/openrlhf/openrlhf/reward/repetition.py
 
@@ -817,28 +817,28 @@ Longer incorrect solutions are penalized less than shorter ones.
             completions: List of model completions
         """</span>
 
-        <span style="color: #62ff94;">contents</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[</span>completion<span style="color: #c770ff;">[</span>0<span style="color: #c770ff;">][</span><span style="color: #1cc24b;">"content"</span><span style="color: #c770ff;">]</span> <span style="color: #c770ff; font-weight: bold;">for</span> completion <span style="color: #c770ff; font-weight: bold;">in</span> completions<span style="color: #24f6d9;">]</span>
-        <span style="color: #62ff94;">rewards</span> <span style="color: #24f6d9;">=</span> <span style="color: #24f6d9;">[]</span>
-        <span style="color: #c770ff; font-weight: bold;">for</span> completion <span style="color: #c770ff; font-weight: bold;">in</span> contents:
-            <span style="color: #c770ff; font-weight: bold;">if</span> completion <span style="color: #24f6d9;">==</span> <span style="color: #1cc24b;">""</span>:
-                rewards.append<span style="color: #24f6d9;">(</span>0.0<span style="color: #24f6d9;">)</span>
-                <span style="color: #c770ff; font-weight: bold;">continue</span>
-            <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #30b3ff;">len</span><span style="color: #24f6d9;">(</span>completion.split<span style="color: #c770ff;">()</span><span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">&lt;</span> ngram_size:
-                rewards.append<span style="color: #24f6d9;">(</span>0.0<span style="color: #24f6d9;">)</span>
-                <span style="color: #c770ff; font-weight: bold;">continue</span>
+        <span style="color: #D6D9E0;">contents</span> <span style="color: #9AA2B1;">=</span> <span style="color: #82A7E8;">[</span>completion<span style="color: #B49ADD;">[</span>0<span style="color: #B49ADD;">][</span><span style="color: #8FBE83;">"content"</span><span style="color: #B49ADD;">]</span> <span style="color: #B49ADD;">for</span> completion <span style="color: #B49ADD;">in</span> completions<span style="color: #82A7E8;">]</span>
+        <span style="color: #D6D9E0;">rewards</span> <span style="color: #9AA2B1;">=</span> <span style="color: #82A7E8;">[]</span>
+        <span style="color: #B49ADD;">for</span> completion <span style="color: #B49ADD;">in</span> contents:
+            <span style="color: #B49ADD;">if</span> completion <span style="color: #9AA2B1;">==</span> <span style="color: #8FBE83;">""</span>:
+                rewards.append<span style="color: #82A7E8;">(</span>0.0<span style="color: #82A7E8;">)</span>
+                <span style="color: #B49ADD;">continue</span>
+            <span style="color: #B49ADD;">if</span> <span style="color: #79B8D1;">len</span><span style="color: #82A7E8;">(</span>completion.split<span style="color: #B49ADD;">()</span><span style="color: #82A7E8;">)</span> <span style="color: #9AA2B1;">&lt;</span> ngram_size:
+                rewards.append<span style="color: #82A7E8;">(</span>0.0<span style="color: #82A7E8;">)</span>
+                <span style="color: #B49ADD;">continue</span>
 
-            <span style="color: #62ff94;">ngrams</span> <span style="color: #24f6d9;">=</span> <span style="color: #30b3ff;">set</span><span style="color: #24f6d9;">()</span>
-            <span style="color: #62ff94;">total</span> <span style="color: #24f6d9;">=</span> 0
-            <span style="color: #c770ff; font-weight: bold;">for</span> ng <span style="color: #c770ff; font-weight: bold;">in</span> zipngram<span style="color: #24f6d9;">(</span>completion, ngram_size<span style="color: #24f6d9;">)</span>:
-                ngrams.add<span style="color: #24f6d9;">(</span>ng<span style="color: #24f6d9;">)</span>
-                <span style="color: #62ff94;">total</span> <span style="color: #24f6d9;">+=</span> 1
+            <span style="color: #D6D9E0;">ngrams</span> <span style="color: #9AA2B1;">=</span> <span style="color: #79B8D1;">set</span><span style="color: #82A7E8;">()</span>
+            <span style="color: #D6D9E0;">total</span> <span style="color: #9AA2B1;">=</span> 0
+            <span style="color: #B49ADD;">for</span> ng <span style="color: #B49ADD;">in</span> zipngram<span style="color: #82A7E8;">(</span>completion, ngram_size<span style="color: #82A7E8;">)</span>:
+                ngrams.add<span style="color: #82A7E8;">(</span>ng<span style="color: #82A7E8;">)</span>
+                <span style="color: #D6D9E0;">total</span> <span style="color: #9AA2B1;">+=</span> 1
 
-            <span style="color: #62ff94;">scaling</span> <span style="color: #24f6d9;">=</span> 1 <span style="color: #24f6d9;">-</span> <span style="color: #30b3ff;">len</span><span style="color: #24f6d9;">(</span>ngrams<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">/</span> total
-            <span style="color: #62ff94;">reward</span> <span style="color: #24f6d9;">=</span> scaling <span style="color: #24f6d9;">*</span> max_penalty
-            rewards.append<span style="color: #24f6d9;">(</span>reward<span style="color: #24f6d9;">)</span>
-        <span style="color: #c770ff; font-weight: bold;">return</span> rewards
+            <span style="color: #D6D9E0;">scaling</span> <span style="color: #9AA2B1;">=</span> 1 <span style="color: #9AA2B1;">-</span> <span style="color: #79B8D1;">len</span><span style="color: #82A7E8;">(</span>ngrams<span style="color: #82A7E8;">)</span> <span style="color: #9AA2B1;">/</span> total
+            <span style="color: #D6D9E0;">reward</span> <span style="color: #9AA2B1;">=</span> scaling <span style="color: #9AA2B1;">*</span> max_penalty
+            rewards.append<span style="color: #82A7E8;">(</span>reward<span style="color: #82A7E8;">)</span>
+        <span style="color: #B49ADD;">return</span> rewards
 
-    <span style="color: #c770ff; font-weight: bold;">return</span> repetition_penalty_reward
+    <span style="color: #B49ADD;">return</span> repetition_penalty_reward
 </code></pre>
 </div>
 </div>
@@ -846,7 +846,7 @@ Longer incorrect solutions are penalized less than shorter ones.
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Sun Feb 16 11:02:16 2025</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Sun Feb 16 11:02:16 2025</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.1 (<a href="https://orgmode.org">Org</a> mode 9.8.7)</span> </div>
 </div>
 </body>
 </html>

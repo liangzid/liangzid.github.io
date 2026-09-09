@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-07-26 Sun 14:05 -->
+<!-- 2026-09-09 Wed 12:57 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>关于huggingface transformers NLG模块实现的基本思路</title>
@@ -210,13 +210,13 @@
 <li><a href="#orgce6a4dd">2.1. 语言模型的训练与测试的不同之处</a></li>
 <li><a href="#org2b01ae9">2.2. 训练环节</a>
 <ul>
-<li><a href="#orgba54031">2.2.1. 数据集封装形式</a></li>
+<li><a href="#orgf7d2d3f">2.2.1. 数据集封装形式</a></li>
 <li><a href="#org501371c">2.2.2. 微不足道的模型训练细节</a></li>
 </ul>
 </li>
 <li><a href="#org31d2789">2.3. 测试环节</a>
 <ul>
-<li><a href="#orgf7d2d3f">2.3.1. 数据集封装形式</a></li>
+<li><a href="#org5b87435">2.3.1. 数据集封装形式</a></li>
 <li><a href="#org14b1743">2.3.2. NLG生成细节</a></li>
 </ul>
 </li>
@@ -250,8 +250,8 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 <h3 id="org2b01ae9"><span class="section-number-3">2.2.</span> 训练环节</h3>
 <div class="outline-text-3" id="text-2-2">
 </div>
-<div id="outline-container-orgba54031" class="outline-4">
-<h4 id="orgba54031"><span class="section-number-4">2.2.1.</span> 数据集封装形式</h4>
+<div id="outline-container-orgf7d2d3f" class="outline-4">
+<h4 id="orgf7d2d3f"><span class="section-number-4">2.2.1.</span> 数据集封装形式</h4>
 <div class="outline-text-4" id="text-2-2-1">
 <p>
 一般而言，是数据等于标签的格式。以对话为例，可能就是"Q+[SEP]+A"这种。
@@ -266,10 +266,10 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #62ff94;">loss_func_cls</span> <span style="color: #24f6d9;">=</span> CrossEntropyLoss<span style="color: #24f6d9;">(</span>ignore_index<span style="color: #24f6d9;">=</span>PAD_ID, reduction<span style="color: #24f6d9;">=</span><span style="color: #1cc24b;">'sum'</span><span style="color: #24f6d9;">)</span>
-<span style="color: #62ff94;">output_distributions</span><span style="color: #24f6d9;">=</span>Decoder<span style="color: #24f6d9;">(</span>utterance_input<span style="color: #24f6d9;">)[</span>0<span style="color: #24f6d9;">]</span>
-<span style="color: #62ff94;">output_prediction</span><span style="color: #24f6d9;">=</span>output_distributions.permute<span style="color: #24f6d9;">(</span><span style="color: #c770ff;">[</span>0,2,1<span style="color: #c770ff;">]</span><span style="color: #24f6d9;">)</span>
-<span style="color: #62ff94;">loss_autoencoder</span><span style="color: #24f6d9;">=</span>loss_func_cls<span style="color: #24f6d9;">(</span>output_prediction,utterance_input<span style="color: #24f6d9;">)</span>
+<pre class="src src-python"><code><span style="color: #D6D9E0;">loss_func_cls</span> <span style="color: #9AA2B1;">=</span> CrossEntropyLoss<span style="color: #82A7E8;">(</span>ignore_index<span style="color: #9AA2B1;">=</span>PAD_ID, reduction<span style="color: #9AA2B1;">=</span><span style="color: #8FBE83;">'sum'</span><span style="color: #82A7E8;">)</span>
+<span style="color: #D6D9E0;">output_distributions</span><span style="color: #9AA2B1;">=</span>Decoder<span style="color: #82A7E8;">(</span>utterance_input<span style="color: #82A7E8;">)[</span>0<span style="color: #82A7E8;">]</span>
+<span style="color: #D6D9E0;">output_prediction</span><span style="color: #9AA2B1;">=</span>output_distributions.permute<span style="color: #82A7E8;">(</span><span style="color: #B49ADD;">[</span>0,2,1<span style="color: #B49ADD;">]</span><span style="color: #82A7E8;">)</span>
+<span style="color: #D6D9E0;">loss_autoencoder</span><span style="color: #9AA2B1;">=</span>loss_func_cls<span style="color: #82A7E8;">(</span>output_prediction,utterance_input<span style="color: #82A7E8;">)</span>
 </code></pre>
 </div>
 <p>
@@ -282,8 +282,8 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 <h3 id="org31d2789"><span class="section-number-3">2.3.</span> 测试环节</h3>
 <div class="outline-text-3" id="text-2-3">
 </div>
-<div id="outline-container-orgf7d2d3f" class="outline-4">
-<h4 id="orgf7d2d3f"><span class="section-number-4">2.3.1.</span> 数据集封装形式</h4>
+<div id="outline-container-org5b87435" class="outline-4">
+<h4 id="org5b87435"><span class="section-number-4">2.3.1.</span> 数据集封装形式</h4>
 <div class="outline-text-4" id="text-2-3-1">
 <p>
 测试环节的数据集同训练环节有所不同，因为在测试环节，相当于是基于一个prefix去生成后面的话。
@@ -302,7 +302,7 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 <li><a id="org3a83a4c"></a>贪婪生成方案<br>
 <div class="outline-text-5" id="text-2-3-2-1">
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #62ff94;">beam_outputs</span><span style="color: #24f6d9;">=</span>Decoder.generate<span style="color: #24f6d9;">(</span>input_ids<span style="color: #24f6d9;">=</span>utterance_input, max_length<span style="color: #24f6d9;">=</span>64<span style="color: #24f6d9;">)</span>
+<pre class="src src-python"><code><span style="color: #D6D9E0;">beam_outputs</span><span style="color: #9AA2B1;">=</span>Decoder.generate<span style="color: #82A7E8;">(</span>input_ids<span style="color: #9AA2B1;">=</span>utterance_input, max_length<span style="color: #9AA2B1;">=</span>64<span style="color: #82A7E8;">)</span>
 </code></pre>
 </div>
 <p>
@@ -313,9 +313,9 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 <li><a id="org79832a7"></a>beam search 方案<br>
 <div class="outline-text-5" id="text-2-3-2-2">
 <div class="org-src-container">
-<pre class="src src-python"><code><span style="color: #62ff94;">outputs</span><span style="color: #24f6d9;">=</span>Decoder.generate<span style="color: #24f6d9;">(</span>input_ids<span style="color: #24f6d9;">=</span>utterance_input, max_length<span style="color: #24f6d9;">=</span>64,
-                                                       num_beams<span style="color: #24f6d9;">=</span>5,
-                                                       num_return_sequences<span style="color: #24f6d9;">=</span>5, early_stopping<span style="color: #24f6d9;">=</span><span style="color: #ffa83d;">True</span><span style="color: #24f6d9;">)</span>
+<pre class="src src-python"><code><span style="color: #D6D9E0;">outputs</span><span style="color: #9AA2B1;">=</span>Decoder.generate<span style="color: #82A7E8;">(</span>input_ids<span style="color: #9AA2B1;">=</span>utterance_input, max_length<span style="color: #9AA2B1;">=</span>64,
+                                                       num_beams<span style="color: #9AA2B1;">=</span>5,
+                                                       num_return_sequences<span style="color: #9AA2B1;">=</span>5, early_stopping<span style="color: #9AA2B1;">=</span><span style="color: #D5A06B;">True</span><span style="color: #82A7E8;">)</span>
 </code></pre>
 </div>
 </div>
@@ -333,7 +333,7 @@ PLM的训练，依愚所见，多半是token级别groundtruth的思路，即预�
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: liangzid (<a href="mailto:2273067585@qq.com">2273067585@qq.com</a>)</span> <span class="date">Create Date: Wed Nov 17 19:40:30 2021</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: liangzid (<a href="mailto:2273067585@qq.com">2273067585@qq.com</a>)</span> <span class="date">Create Date: Wed Nov 17 19:40:30 2021</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.1 (<a href="https://orgmode.org">Org</a> mode 9.8.7)</span> </div>
 </div>
 </body>
 </html>

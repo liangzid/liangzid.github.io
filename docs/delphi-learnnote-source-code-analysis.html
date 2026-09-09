@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-07-26 Sun 14:05 -->
+<!-- 2026-09-09 Wed 12:57 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Delphi源码学习与分析</title>
@@ -228,7 +228,7 @@
 <ul>
 <li><a href="#orgf318a93">2.3.1. layers</a></li>
 <li><a href="#orgd3f28e4">2.3.2. tensors</a></li>
-<li><a href="#org6515755">2.3.3. others</a></li>
+<li><a href="#orgddfad0e">2.3.3. others</a></li>
 </ul>
 </li>
 <li><a href="#org5320e87">2.4. protocols-sys</a>
@@ -238,7 +238,7 @@
 <li><a href="#org95076f9">2.4.3. key_share</a></li>
 <li><a href="#org301433e">2.4.4. server_cg</a></li>
 <li><a href="#orgab18cd5">2.4.5. server_gen</a></li>
-<li><a href="#orgddfad0e">2.4.6. others</a></li>
+<li><a href="#orgf0185d6">2.4.6. others</a></li>
 </ul>
 </li>
 <li><a href="#org35a5ef2">2.5. protocols</a></li>
@@ -510,27 +510,27 @@ neural-network主要封装了：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><code><span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">enum</span> <span style="color: #e6ff57;">LinearLayer</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">F</span>, <span style="color: #e6ff57;">C</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #24f6d9;">{</span>
-    <span style="color: #e6ff57;">Conv2d</span> <span style="color: #c770ff;">{</span>
-          <span style="color: #62ff94;">dims</span>: <span style="color: #e6ff57;">LayerDims</span>,
-          <span style="color: #62ff94;">params</span>: <span style="color: #e6ff57;">Conv2dParams</span><span style="color: #e6ff57;">&lt;</span><span style="color: #e6ff57;">F</span>, <span style="color: #e6ff57;">C</span><span style="color: #e6ff57;">&gt;</span>,
-    <span style="color: #c770ff;">}</span>,
-    <span style="color: #e6ff57;">FullyConnected</span> <span style="color: #c770ff;">{</span>
-          <span style="color: #62ff94;">dims</span>: <span style="color: #e6ff57;">LayerDims</span>,
-          <span style="color: #62ff94;">params</span>: <span style="color: #e6ff57;">FullyConnectedParams</span><span style="color: #e6ff57;">&lt;</span><span style="color: #e6ff57;">F</span>, <span style="color: #e6ff57;">C</span><span style="color: #e6ff57;">&gt;</span>,
-    <span style="color: #c770ff;">}</span>,
-    <span style="color: #e6ff57;">FullyConnectedD</span> <span style="color: #c770ff;">{</span>
-          <span style="color: #62ff94;">dims</span>: <span style="color: #e6ff57;">LayerDims</span>,
-          <span style="color: #62ff94;">params</span>: <span style="color: #e6ff57;">FullyConnectedParamsD</span><span style="color: #e6ff57;">&lt;</span><span style="color: #e6ff57;">F</span>, <span style="color: #e6ff57;">C</span><span style="color: #e6ff57;">&gt;</span>,
-    <span style="color: #c770ff;">}</span>,
-    <span style="color: #e6ff57;">AvgPool</span> <span style="color: #c770ff;">{</span>
-          <span style="color: #62ff94;">dims</span>: <span style="color: #e6ff57;">LayerDims</span>,
-          <span style="color: #62ff94;">params</span>: <span style="color: #e6ff57;">AvgPoolParams</span><span style="color: #e6ff57;">&lt;</span><span style="color: #e6ff57;">F</span>, <span style="color: #e6ff57;">C</span><span style="color: #e6ff57;">&gt;</span>,
-    <span style="color: #c770ff;">}</span>,
-    <span style="color: #e6ff57;">Identity</span> <span style="color: #c770ff;">{</span>
-          <span style="color: #62ff94;">dims</span>: <span style="color: #e6ff57;">LayerDims</span>,
-    <span style="color: #c770ff;">}</span>,
-<span style="color: #24f6d9;">}</span>
+<pre class="src src-rust"><code><span style="color: #B49ADD;">pub</span> <span style="color: #B49ADD;">enum</span> <span style="color: #D8BE7B;">LinearLayer</span><span style="color: #82A7E8;">&lt;</span><span style="color: #D8BE7B;">F</span>, <span style="color: #D8BE7B;">C</span><span style="color: #82A7E8;">&gt;</span> <span style="color: #82A7E8;">{</span>
+    <span style="color: #D8BE7B;">Conv2d</span> <span style="color: #B49ADD;">{</span>
+          <span style="color: #D6D9E0;">dims</span>: <span style="color: #D8BE7B;">LayerDims</span>,
+          <span style="color: #D6D9E0;">params</span>: <span style="color: #D8BE7B;">Conv2dParams</span><span style="color: #77BEB7;">&lt;</span><span style="color: #D8BE7B;">F</span>, <span style="color: #D8BE7B;">C</span><span style="color: #77BEB7;">&gt;</span>,
+    <span style="color: #B49ADD;">}</span>,
+    <span style="color: #D8BE7B;">FullyConnected</span> <span style="color: #B49ADD;">{</span>
+          <span style="color: #D6D9E0;">dims</span>: <span style="color: #D8BE7B;">LayerDims</span>,
+          <span style="color: #D6D9E0;">params</span>: <span style="color: #D8BE7B;">FullyConnectedParams</span><span style="color: #77BEB7;">&lt;</span><span style="color: #D8BE7B;">F</span>, <span style="color: #D8BE7B;">C</span><span style="color: #77BEB7;">&gt;</span>,
+    <span style="color: #B49ADD;">}</span>,
+    <span style="color: #D8BE7B;">FullyConnectedD</span> <span style="color: #B49ADD;">{</span>
+          <span style="color: #D6D9E0;">dims</span>: <span style="color: #D8BE7B;">LayerDims</span>,
+          <span style="color: #D6D9E0;">params</span>: <span style="color: #D8BE7B;">FullyConnectedParamsD</span><span style="color: #77BEB7;">&lt;</span><span style="color: #D8BE7B;">F</span>, <span style="color: #D8BE7B;">C</span><span style="color: #77BEB7;">&gt;</span>,
+    <span style="color: #B49ADD;">}</span>,
+    <span style="color: #D8BE7B;">AvgPool</span> <span style="color: #B49ADD;">{</span>
+          <span style="color: #D6D9E0;">dims</span>: <span style="color: #D8BE7B;">LayerDims</span>,
+          <span style="color: #D6D9E0;">params</span>: <span style="color: #D8BE7B;">AvgPoolParams</span><span style="color: #77BEB7;">&lt;</span><span style="color: #D8BE7B;">F</span>, <span style="color: #D8BE7B;">C</span><span style="color: #77BEB7;">&gt;</span>,
+    <span style="color: #B49ADD;">}</span>,
+    <span style="color: #D8BE7B;">Identity</span> <span style="color: #B49ADD;">{</span>
+          <span style="color: #D6D9E0;">dims</span>: <span style="color: #D8BE7B;">LayerDims</span>,
+    <span style="color: #B49ADD;">}</span>,
+<span style="color: #82A7E8;">}</span>
 </code></pre>
 </div>
 
@@ -539,23 +539,23 @@ linear layer info包含如下：
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><code><span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">enum</span> <span style="color: #e6ff57;">LinearLayerInfo</span><span style="color: #24f6d9;">&lt;</span><span style="color: #e6ff57;">F</span>, <span style="color: #e6ff57;">C</span><span style="color: #24f6d9;">&gt;</span> <span style="color: #24f6d9;">{</span>
-    <span style="color: #e6ff57;">Conv2d</span> <span style="color: #c770ff;">{</span>
-          <span style="color: #62ff94;">kernel</span>: <span style="color: #e6ff57;">(</span><span style="color: #e6ff57;">usize</span>, <span style="color: #e6ff57;">usize</span>, <span style="color: #e6ff57;">usize</span>, <span style="color: #e6ff57;">usize</span><span style="color: #e6ff57;">)</span>,
-          <span style="color: #62ff94;">padding</span>: <span style="color: #e6ff57;">Padding</span>,
-          <span style="color: #62ff94;">stride</span>: <span style="color: #e6ff57;">usize</span>,
-    <span style="color: #c770ff;">}</span>,
-    <span style="color: #e6ff57;">FullyConnected</span>,
-    <span style="color: #e6ff57;">FullyConnectedD</span>,
-    <span style="color: #e6ff57;">AvgPool</span> <span style="color: #c770ff;">{</span>
-          <span style="color: #62ff94;">pool_h</span>: <span style="color: #e6ff57;">usize</span>,
-          <span style="color: #62ff94;">pool_w</span>: <span style="color: #e6ff57;">usize</span>,
-          <span style="color: #62ff94;">stride</span>: <span style="color: #e6ff57;">usize</span>,
-          <span style="color: #62ff94;">normalizer</span>: <span style="color: #e6ff57;">C</span>,
-          <span style="color: #62ff94;">_variable</span>: <span style="color: #e6ff57;">PhantomData</span><span style="color: #e6ff57;">&lt;</span><span style="color: #e6ff57;">F</span><span style="color: #e6ff57;">&gt;</span>,
-    <span style="color: #c770ff;">}</span>,
-    <span style="color: #e6ff57;">Identity</span>,
-<span style="color: #24f6d9;">}</span>
+<pre class="src src-rust"><code><span style="color: #B49ADD;">pub</span> <span style="color: #B49ADD;">enum</span> <span style="color: #D8BE7B;">LinearLayerInfo</span><span style="color: #82A7E8;">&lt;</span><span style="color: #D8BE7B;">F</span>, <span style="color: #D8BE7B;">C</span><span style="color: #82A7E8;">&gt;</span> <span style="color: #82A7E8;">{</span>
+    <span style="color: #D8BE7B;">Conv2d</span> <span style="color: #B49ADD;">{</span>
+          <span style="color: #D6D9E0;">kernel</span>: <span style="color: #77BEB7;">(</span><span style="color: #D8BE7B;">usize</span>, <span style="color: #D8BE7B;">usize</span>, <span style="color: #D8BE7B;">usize</span>, <span style="color: #D8BE7B;">usize</span><span style="color: #77BEB7;">)</span>,
+          <span style="color: #D6D9E0;">padding</span>: <span style="color: #D8BE7B;">Padding</span>,
+          <span style="color: #D6D9E0;">stride</span>: <span style="color: #D8BE7B;">usize</span>,
+    <span style="color: #B49ADD;">}</span>,
+    <span style="color: #D8BE7B;">FullyConnected</span>,
+    <span style="color: #D8BE7B;">FullyConnectedD</span>,
+    <span style="color: #D8BE7B;">AvgPool</span> <span style="color: #B49ADD;">{</span>
+          <span style="color: #D6D9E0;">pool_h</span>: <span style="color: #D8BE7B;">usize</span>,
+          <span style="color: #D6D9E0;">pool_w</span>: <span style="color: #D8BE7B;">usize</span>,
+          <span style="color: #D6D9E0;">stride</span>: <span style="color: #D8BE7B;">usize</span>,
+          <span style="color: #D6D9E0;">normalizer</span>: <span style="color: #D8BE7B;">C</span>,
+          <span style="color: #D6D9E0;">_variable</span>: <span style="color: #D8BE7B;">PhantomData</span><span style="color: #77BEB7;">&lt;</span><span style="color: #D8BE7B;">F</span><span style="color: #77BEB7;">&gt;</span>,
+    <span style="color: #B49ADD;">}</span>,
+    <span style="color: #D8BE7B;">Identity</span>,
+<span style="color: #82A7E8;">}</span>
 </code></pre>
 </div>
 
@@ -577,8 +577,8 @@ T的实例化一般就是share和AdditiveShare。
 </p>
 </div>
 </div>
-<div id="outline-container-org6515755" class="outline-4">
-<h4 id="org6515755"><span class="section-number-4">2.3.3.</span> others</h4>
+<div id="outline-container-orgddfad0e" class="outline-4">
+<h4 id="orgddfad0e"><span class="section-number-4">2.3.3.</span> others</h4>
 <div class="outline-text-4" id="text-2-3-3">
 <ol class="org-ol">
 <li>enum
@@ -671,10 +671,10 @@ protocols-sys定义了完整的密钥交换协议系统。主要包括：
 KeyShare. KeyShare便是C++版里的SerialCT,其定义为：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust"><code>    <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">struct</span> <span style="color: #e6ff57;">SerialCT</span> <span style="color: #24f6d9;">{</span>
-    <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #62ff94;">inner</span>: *<span style="color: #c770ff; font-weight: bold;">mut</span> ::<span style="color: #ffa83d;">std</span>::<span style="color: #ffa83d;">os</span>::<span style="color: #ffa83d;">raw</span>::c_char,
-    <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #62ff94;">size</span>: <span style="color: #e6ff57;">u64</span>,
-<span style="color: #24f6d9;">}</span>
+<pre class="src src-rust"><code>    <span style="color: #B49ADD;">pub</span> <span style="color: #B49ADD;">struct</span> <span style="color: #D8BE7B;">SerialCT</span> <span style="color: #82A7E8;">{</span>
+    <span style="color: #B49ADD;">pub</span> <span style="color: #D6D9E0;">inner</span>: *<span style="color: #B49ADD;">mut</span> ::<span style="color: #D5A06B;">std</span>::<span style="color: #D5A06B;">os</span>::<span style="color: #D5A06B;">raw</span>::c_char,
+    <span style="color: #B49ADD;">pub</span> <span style="color: #D6D9E0;">size</span>: <span style="color: #D8BE7B;">u64</span>,
+<span style="color: #82A7E8;">}</span>
 </code></pre>
 </div></li>
 </ol></li>
@@ -701,8 +701,8 @@ KeyShare. KeyShare便是C++版里的SerialCT,其定义为：
 </p>
 </div>
 </div>
-<div id="outline-container-orgddfad0e" class="outline-4">
-<h4 id="orgddfad0e"><span class="section-number-4">2.4.6.</span> others</h4>
+<div id="outline-container-orgf0185d6" class="outline-4">
+<h4 id="orgf0185d6"><span class="section-number-4">2.4.6.</span> others</h4>
 <div class="outline-text-4" id="text-2-4-6">
 <ol class="org-ol">
 <li>struct
@@ -711,10 +711,10 @@ KeyShare. KeyShare便是C++版里的SerialCT,其定义为：
 SealCT: SerialCT的rust封装，其格式类似于：
 </p>
 <div class="org-src-container">
-<pre class="src src-rust"><code><span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #c770ff; font-weight: bold;">struct</span> <span style="color: #e6ff57;">SerialCT</span> <span style="color: #24f6d9;">{</span>
-    <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #62ff94;">inner</span>: *<span style="color: #c770ff; font-weight: bold;">mut</span> ::<span style="color: #ffa83d;">std</span>::<span style="color: #ffa83d;">os</span>::<span style="color: #ffa83d;">raw</span>::c_char,
-    <span style="color: #c770ff; font-weight: bold;">pub</span> <span style="color: #62ff94;">size</span>: <span style="color: #e6ff57;">u64</span>,
-<span style="color: #24f6d9;">}</span>
+<pre class="src src-rust"><code><span style="color: #B49ADD;">pub</span> <span style="color: #B49ADD;">struct</span> <span style="color: #D8BE7B;">SerialCT</span> <span style="color: #82A7E8;">{</span>
+    <span style="color: #B49ADD;">pub</span> <span style="color: #D6D9E0;">inner</span>: *<span style="color: #B49ADD;">mut</span> ::<span style="color: #D5A06B;">std</span>::<span style="color: #D5A06B;">os</span>::<span style="color: #D5A06B;">raw</span>::c_char,
+    <span style="color: #B49ADD;">pub</span> <span style="color: #D6D9E0;">size</span>: <span style="color: #D8BE7B;">u64</span>,
+<span style="color: #82A7E8;">}</span>
 </code></pre>
 </div></li>
 <li>包含如下函数： en(de)crypt_vec，顾名思义，加解密一个向量</li>
@@ -734,7 +734,7 @@ SealCT: SerialCT的rust封装，其格式类似于：
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Feb  3 14:59:27 2023</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Fri Feb  3 14:59:27 2023</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.1 (<a href="https://orgmode.org">Org</a> mode 9.8.7)</span> </div>
 </div>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-07-26 Sun 14:05 -->
+<!-- 2026-09-09 Wed 12:57 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OpenClaw 代码乱读笔记 2</title>
@@ -369,7 +369,7 @@
 系统提示词里有一个 Safety 部分：
 </p>
 
-<pre class="example" id="org57e0751">
+<pre class="example" id="orgb16dd1b">
 ## Safety
 You have no independent goals: do not pursue self-preservation, replication, resource acquisition, or power-seeking; avoid long-term plans beyond the user's request.
 Prioritize safety and human oversight over completion; if instructions conflict, pause and ask; comply with stop/pause/audit requests and never bypass safeguards. (Inspired by Anthropic's constitution.)
@@ -388,7 +388,7 @@ Do not manipulate or persuade anyone to expand access or disable safeguards. Do 
 Skills 部分的提示词是这样的：
 </p>
 
-<pre class="example" id="org1fc98de">
+<pre class="example" id="orge920cb5">
 ## Skills (mandatory)
 Before replying: scan &lt;available_skills&gt; &lt;description&gt; entries.
 - If exactly one skill clearly applies: read its SKILL.md at &lt;location&gt; with `read`, then follow it.
@@ -416,7 +416,7 @@ Constraints: never read more than one skill up front; only read after selecting.
 Memory 部分的提示词：
 </p>
 
-<pre class="example" id="org93db2ab">
+<pre class="example" id="orgaa7c898">
 ## Memory Recall
 Before answering anything about prior work, decisions, dates, people, preferences, or todos: run memory_search on MEMORY.md + memory/*.md; then use memory_get to pull only the needed lines. If low confidence after search, say you checked.
 Citations: include Source: &lt;path#line&gt; when it helps the user verify memory snippets.
@@ -453,60 +453,60 @@ Citations: include Source: &lt;path#line&gt; when it helps the user verify memor
 </p>
 
 <div class="org-src-container">
-<pre class="src src-markdown"><code><span style="color: #8ca391;">---</span>
-<span style="color: #62ff94;">name</span><span style="color: #8ca391;">: </span><span style="color: #1cc24b;">weather</span>
-<span style="color: #62ff94;">description</span><span style="color: #8ca391;">: </span><span style="color: #1cc24b;">Get current weather and forecasts </span><span style="color: #24f6d9;">(</span><span style="color: #1cc24b;">no API key required</span><span style="color: #24f6d9;">)</span><span style="color: #1cc24b;">.</span>
-<span style="color: #62ff94;">homepage</span><span style="color: #8ca391;">: </span><span style="color: #1cc24b;">https://wttr.in/:help</span>
-<span style="color: #62ff94;">metadata</span><span style="color: #8ca391;">: </span><span style="color: #24f6d9;">{</span><span style="color: #1cc24b;"> "openclaw": </span><span style="color: #c770ff;">{</span><span style="color: #1cc24b;"> "emoji": "&#127780;&#65039;", "requires": </span><span style="color: #e6ff57;">{</span><span style="color: #1cc24b;"> "bins": </span><span style="color: #30b3ff;">[</span><span style="color: #1cc24b;">"curl"</span><span style="color: #30b3ff;">]</span><span style="color: #1cc24b;"> </span><span style="color: #e6ff57;">}</span><span style="color: #1cc24b;"> </span><span style="color: #c770ff;">}</span>
-<span style="color: #8ca391;">---</span>
+<pre class="src src-markdown"><code><span style="color: #697282;">---</span>
+<span style="color: #77BEB7;">name</span><span style="color: #697282;">: </span><span style="color: #9AA2B1;">weather</span>
+<span style="color: #77BEB7;">description</span><span style="color: #697282;">: </span><span style="color: #9AA2B1;">Get current weather and forecasts </span><span style="color: #82A7E8;">(</span><span style="color: #9AA2B1;">no API key required</span><span style="color: #82A7E8;">)</span><span style="color: #9AA2B1;">.</span>
+<span style="color: #77BEB7;">homepage</span><span style="color: #697282;">: </span><span style="color: #9AA2B1;">https://wttr.in/:help</span>
+<span style="color: #77BEB7;">metadata</span><span style="color: #697282;">: </span><span style="color: #82A7E8;">{</span><span style="color: #9AA2B1;"> "openclaw": </span><span style="color: #B49ADD;">{</span><span style="color: #9AA2B1;"> "emoji": "&#127780;&#65039;", "requires": </span><span style="color: #77BEB7;">{</span><span style="color: #9AA2B1;"> "bins": </span><span style="color: #D8BE7B;">[</span><span style="color: #9AA2B1;">"curl"</span><span style="color: #D8BE7B;">]</span><span style="color: #9AA2B1;"> </span><span style="color: #77BEB7;">}</span><span style="color: #9AA2B1;"> </span><span style="color: #B49ADD;">}</span>
+<span style="color: #697282;">---</span>
 
-<span style="color: #8ca391;"># </span><span style="color: #00efff; font-size: 140%; font-weight: bold;">Weather</span>
+<span style="color: #4C5461;"># </span><span style="color: #82A7E8; font-size: 128%; font-weight: bold;">Weather</span>
 
 Two free services, no API keys needed.
 
-<span style="color: #8ca391;">## </span><span style="color: #e6ff57; font-size: 130%; font-weight: bold;">wttr.in </span><span style="color: #c770ff; font-size: 130%; font-weight: bold;">(</span><span style="color: #e6ff57; font-size: 130%; font-weight: bold;">primary</span><span style="color: #c770ff; font-size: 130%; font-weight: bold;">)</span>
+<span style="color: #4C5461;">## </span><span style="color: #B49ADD; font-size: 118%; font-weight: bold;">wttr.in </span><span style="color: #B49ADD; font-size: 118%; font-weight: bold;">(</span><span style="color: #B49ADD; font-size: 118%; font-weight: bold;">primary</span><span style="color: #B49ADD; font-size: 118%; font-weight: bold;">)</span>
 
 Quick one-liner:
 
-<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
-</span><span style="background-color: #0e120e;">curl -s "wttr.in/London?format=3"
+<span style="color: #697282; background-color: #161920;">```</span><span style="color: #D8BE7B; background-color: #161920;">bash</span><span style="color: #D6D9E0; background-color: #161920;">
+</span><span style="color: #D6D9E0; background-color: #161920;">curl -s "wttr.in/London?format=3"
 # Output: London: &#9925;&#65039; +8&#176;C
-</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+</span><span style="color: #697282; background-color: #161920;">```</span><span style="color: #D6D9E0; background-color: #161920;">
 </span>
 Compact format:
 
-<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
-</span><span style="background-color: #0e120e;">curl -s "wttr.in/London?format=%l:+%c+%t+%h+%w"
+<span style="color: #697282; background-color: #161920;">```</span><span style="color: #D8BE7B; background-color: #161920;">bash</span><span style="color: #D6D9E0; background-color: #161920;">
+</span><span style="color: #D6D9E0; background-color: #161920;">curl -s "wttr.in/London?format=%l:+%c+%t+%h+%w"
 # Output: London: &#9925;&#65039; +8&#176;C 71% &#8601;5km/h
-</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+</span><span style="color: #697282; background-color: #161920;">```</span><span style="color: #D6D9E0; background-color: #161920;">
 </span>
 Full forecast:
 
-<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
-</span><span style="background-color: #0e120e;">curl -s "wttr.in/London?T"
-</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+<span style="color: #697282; background-color: #161920;">```</span><span style="color: #D8BE7B; background-color: #161920;">bash</span><span style="color: #D6D9E0; background-color: #161920;">
+</span><span style="color: #D6D9E0; background-color: #161920;">curl -s "wttr.in/London?T"
+</span><span style="color: #697282; background-color: #161920;">```</span><span style="color: #D6D9E0; background-color: #161920;">
 </span>
-Format codes: <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">%c</span><span style="color: #8ca391;">`</span> condition &#183; <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">%t</span><span style="color: #8ca391;">`</span> temp &#183; <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">%h</span><span style="color: #8ca391;">`</span> humidity &#183; <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">%w</span><span style="color: #8ca391;">`</span> wind &#183; <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">%l</span><span style="color: #8ca391;">`</span> location &#183; <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">%m</span><span style="color: #8ca391;">`</span> moon
+Format codes: <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">%c</span><span style="color: #697282;">`</span> condition &#183; <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">%t</span><span style="color: #697282;">`</span> temp &#183; <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">%h</span><span style="color: #697282;">`</span> humidity &#183; <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">%w</span><span style="color: #697282;">`</span> wind &#183; <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">%l</span><span style="color: #697282;">`</span> location &#183; <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">%m</span><span style="color: #697282;">`</span> moon
 
 Tips:
 
-<span style="color: #30b3ff;">-</span> URL-encode spaces: <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">wttr.in/New+York</span><span style="color: #8ca391;">`</span>
-<span style="color: #30b3ff;">-</span> Airport codes: <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">wttr.in/JFK</span><span style="color: #8ca391;">`</span>
-<span style="color: #30b3ff;">-</span> Units: <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">?m</span><span style="color: #8ca391;">`</span> <span style="color: #c770ff;">(</span>metric<span style="color: #c770ff;">)</span> <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">?u</span><span style="color: #8ca391;">`</span> <span style="color: #c770ff;">(</span>USCS<span style="color: #c770ff;">)</span>
-<span style="color: #30b3ff;">-</span> Today only: <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">?1</span><span style="color: #8ca391;">`</span> &#183; Current only: <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">?0</span><span style="color: #8ca391;">`</span>
-<span style="color: #30b3ff;">-</span> PNG: <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">curl -s "wttr.in/Berlin.png" -o /tmp/weather.png</span><span style="color: #8ca391;">`</span>
+<span style="color: #B49ADD;">-</span> URL-encode spaces: <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">wttr.in/New+York</span><span style="color: #697282;">`</span>
+<span style="color: #B49ADD;">-</span> Airport codes: <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">wttr.in/JFK</span><span style="color: #697282;">`</span>
+<span style="color: #B49ADD;">-</span> Units: <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">?m</span><span style="color: #697282;">`</span> <span style="color: #B49ADD;">(</span>metric<span style="color: #B49ADD;">)</span> <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">?u</span><span style="color: #697282;">`</span> <span style="color: #B49ADD;">(</span>USCS<span style="color: #B49ADD;">)</span>
+<span style="color: #B49ADD;">-</span> Today only: <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">?1</span><span style="color: #697282;">`</span> &#183; Current only: <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">?0</span><span style="color: #697282;">`</span>
+<span style="color: #B49ADD;">-</span> PNG: <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">curl -s "wttr.in/Berlin.png" -o /tmp/weather.png</span><span style="color: #697282;">`</span>
 
-<span style="color: #8ca391;">## </span><span style="color: #e6ff57; font-size: 130%; font-weight: bold;">Open-Meteo </span><span style="color: #c770ff; font-size: 130%; font-weight: bold;">(</span><span style="color: #e6ff57; font-size: 130%; font-weight: bold;">fallback, JSON</span><span style="color: #c770ff; font-size: 130%; font-weight: bold;">)</span>
+<span style="color: #4C5461;">## </span><span style="color: #B49ADD; font-size: 118%; font-weight: bold;">Open-Meteo </span><span style="color: #B49ADD; font-size: 118%; font-weight: bold;">(</span><span style="color: #B49ADD; font-size: 118%; font-weight: bold;">fallback, JSON</span><span style="color: #B49ADD; font-size: 118%; font-weight: bold;">)</span>
 
 Free, no key, good for programmatic use:
 
-<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
-</span><span style="background-color: #0e120e;">curl -s "https://api.open-meteo.com/v1/forecast?latitude=51.5&amp;longitude=-0.12&amp;current_weather=true"
-</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+<span style="color: #697282; background-color: #161920;">```</span><span style="color: #D8BE7B; background-color: #161920;">bash</span><span style="color: #D6D9E0; background-color: #161920;">
+</span><span style="color: #D6D9E0; background-color: #161920;">curl -s "https://api.open-meteo.com/v1/forecast?latitude=51.5&amp;longitude=-0.12&amp;current_weather=true"
+</span><span style="color: #697282; background-color: #161920;">```</span><span style="color: #D6D9E0; background-color: #161920;">
 </span>
 Find coordinates for a city, then query. Returns JSON with temp, windspeed, weathercode.
 
-Docs: <span style="color: #30b3ff; text-decoration: underline;">https://open-meteo.com/en/docs</span>
+Docs: <span style="color: #82A7E8; text-decoration: underline;">https://open-meteo.com/en/docs</span>
 </code></pre>
 </div>
 
@@ -533,83 +533,83 @@ Docs: <span style="color: #30b3ff; text-decoration: underline;">https://open-met
 </p>
 
 <div class="org-src-container">
-<pre class="src src-markdown"><code><span style="color: #8ca391;">---</span>
-<span style="color: #62ff94;">name</span><span style="color: #8ca391;">: </span><span style="color: #1cc24b;">github</span>
-<span style="color: #62ff94;">description</span><span style="color: #8ca391;">: </span><span style="color: #1cc24b;">"Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries."</span>
-<span style="color: #62ff94;">metadata</span><span style="color: #8ca391;">:</span>
-  <span style="color: #24f6d9;">{</span>
+<pre class="src src-markdown"><code><span style="color: #697282;">---</span>
+<span style="color: #77BEB7;">name</span><span style="color: #697282;">: </span><span style="color: #9AA2B1;">github</span>
+<span style="color: #77BEB7;">description</span><span style="color: #697282;">: </span><span style="color: #9AA2B1;">"Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries."</span>
+<span style="color: #77BEB7;">metadata</span><span style="color: #697282;">:</span>
+  <span style="color: #82A7E8;">{</span>
     "openclaw":
-      <span style="color: #c770ff;">{</span>
+      <span style="color: #B49ADD;">{</span>
         "emoji": "&#128025;",
-        "requires": <span style="color: #e6ff57;">{</span> "bins": <span style="color: #30b3ff;">[</span>"gh"<span style="color: #30b3ff;">]</span> <span style="color: #e6ff57;">}</span>,
+        "requires": <span style="color: #77BEB7;">{</span> "bins": <span style="color: #D8BE7B;">[</span>"gh"<span style="color: #D8BE7B;">]</span> <span style="color: #77BEB7;">}</span>,
         "install":
-          <span style="color: #e6ff57;">[</span>
-            <span style="color: #30b3ff;">{</span>
+          <span style="color: #77BEB7;">[</span>
+            <span style="color: #D8BE7B;">{</span>
               "id": "brew",
               "kind": "brew",
               "formula": "gh",
-              "bins": <span style="color: #ffa83d;">[</span>"gh"<span style="color: #ffa83d;">]</span>,
-              "label": "Install GitHub CLI <span style="color: #ffa83d;">(</span>brew<span style="color: #ffa83d;">)</span>",
-            <span style="color: #30b3ff;">}</span>,
-            <span style="color: #30b3ff;">{</span>
+              "bins": <span style="color: #79B8D1;">[</span>"gh"<span style="color: #79B8D1;">]</span>,
+              "label": "Install GitHub CLI <span style="color: #79B8D1;">(</span>brew<span style="color: #79B8D1;">)</span>",
+            <span style="color: #D8BE7B;">}</span>,
+            <span style="color: #D8BE7B;">{</span>
               "id": "apt",
               "kind": "apt",
               "package": "gh",
-              "bins": <span style="color: #ffa83d;">[</span>"gh"<span style="color: #ffa83d;">]</span>,
-              "label": "Install GitHub CLI <span style="color: #ffa83d;">(</span>apt<span style="color: #ffa83d;">)</span>",
-            <span style="color: #30b3ff;">}</span>,
-          <span style="color: #e6ff57;">]</span>,
-      <span style="color: #c770ff;">}</span>,
-  <span style="color: #24f6d9;">}</span>
-<span style="color: #8ca391;">---</span>
+              "bins": <span style="color: #79B8D1;">[</span>"gh"<span style="color: #79B8D1;">]</span>,
+              "label": "Install GitHub CLI <span style="color: #79B8D1;">(</span>apt<span style="color: #79B8D1;">)</span>",
+            <span style="color: #D8BE7B;">}</span>,
+          <span style="color: #77BEB7;">]</span>,
+      <span style="color: #B49ADD;">}</span>,
+  <span style="color: #82A7E8;">}</span>
+<span style="color: #697282;">---</span>
 
-<span style="color: #8ca391;"># </span><span style="color: #00efff; font-size: 140%; font-weight: bold;">GitHub Skill</span>
+<span style="color: #4C5461;"># </span><span style="color: #82A7E8; font-size: 128%; font-weight: bold;">GitHub Skill</span>
 
-Use the <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">gh</span><span style="color: #8ca391;">`</span> CLI to interact with GitHub. Always specify <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">--repo owner/repo</span><span style="color: #8ca391;">`</span> when not in a git directory, or use URLs directly.
+Use the <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">gh</span><span style="color: #697282;">`</span> CLI to interact with GitHub. Always specify <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">--repo owner/repo</span><span style="color: #697282;">`</span> when not in a git directory, or use URLs directly.
 
-<span style="color: #8ca391;">## </span><span style="color: #e6ff57; font-size: 130%; font-weight: bold;">Pull Requests</span>
+<span style="color: #4C5461;">## </span><span style="color: #B49ADD; font-size: 118%; font-weight: bold;">Pull Requests</span>
 
 Check CI status on a PR:
 
-<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
-</span><span style="background-color: #0e120e;">gh pr checks 55 --repo owner/repo
-</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+<span style="color: #697282; background-color: #161920;">```</span><span style="color: #D8BE7B; background-color: #161920;">bash</span><span style="color: #D6D9E0; background-color: #161920;">
+</span><span style="color: #D6D9E0; background-color: #161920;">gh pr checks 55 --repo owner/repo
+</span><span style="color: #697282; background-color: #161920;">```</span><span style="color: #D6D9E0; background-color: #161920;">
 </span>
 List recent workflow runs:
 
-<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
-</span><span style="background-color: #0e120e;">gh run list --repo owner/repo --limit 10
-</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+<span style="color: #697282; background-color: #161920;">```</span><span style="color: #D8BE7B; background-color: #161920;">bash</span><span style="color: #D6D9E0; background-color: #161920;">
+</span><span style="color: #D6D9E0; background-color: #161920;">gh run list --repo owner/repo --limit 10
+</span><span style="color: #697282; background-color: #161920;">```</span><span style="color: #D6D9E0; background-color: #161920;">
 </span>
 View a run and see which steps failed:
 
-<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
-</span><span style="background-color: #0e120e;">gh run view &lt;run-id&gt; --repo owner/repo
-</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+<span style="color: #697282; background-color: #161920;">```</span><span style="color: #D8BE7B; background-color: #161920;">bash</span><span style="color: #D6D9E0; background-color: #161920;">
+</span><span style="color: #D6D9E0; background-color: #161920;">gh run view &lt;run-id&gt; --repo owner/repo
+</span><span style="color: #697282; background-color: #161920;">```</span><span style="color: #D6D9E0; background-color: #161920;">
 </span>
 View logs for failed steps only:
 
-<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
-</span><span style="background-color: #0e120e;">gh run view &lt;run-id&gt; --repo owner/repo --log-failed
-</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+<span style="color: #697282; background-color: #161920;">```</span><span style="color: #D8BE7B; background-color: #161920;">bash</span><span style="color: #D6D9E0; background-color: #161920;">
+</span><span style="color: #D6D9E0; background-color: #161920;">gh run view &lt;run-id&gt; --repo owner/repo --log-failed
+</span><span style="color: #697282; background-color: #161920;">```</span><span style="color: #D6D9E0; background-color: #161920;">
 </span>
-<span style="color: #8ca391;">## </span><span style="color: #e6ff57; font-size: 130%; font-weight: bold;">API for Advanced Queries</span>
+<span style="color: #4C5461;">## </span><span style="color: #B49ADD; font-size: 118%; font-weight: bold;">API for Advanced Queries</span>
 
-The <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">gh api</span><span style="color: #8ca391;">`</span> command is useful for accessing data not available through other subcommands.
+The <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">gh api</span><span style="color: #697282;">`</span> command is useful for accessing data not available through other subcommands.
 
 Get PR with specific fields:
 
-<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
-</span><span style="background-color: #0e120e;">gh api repos/owner/repo/pulls/55 --jq '.title, .state, .user.login'
-</span><span style="color: #8ca391; background-color: #0e120e;">```</span><span style="background-color: #0e120e;">
+<span style="color: #697282; background-color: #161920;">```</span><span style="color: #D8BE7B; background-color: #161920;">bash</span><span style="color: #D6D9E0; background-color: #161920;">
+</span><span style="color: #D6D9E0; background-color: #161920;">gh api repos/owner/repo/pulls/55 --jq '.title, .state, .user.login'
+</span><span style="color: #697282; background-color: #161920;">```</span><span style="color: #D6D9E0; background-color: #161920;">
 </span>
-<span style="color: #8ca391;">## </span><span style="color: #e6ff57; font-size: 130%; font-weight: bold;">JSON Output</span>
+<span style="color: #4C5461;">## </span><span style="color: #B49ADD; font-size: 118%; font-weight: bold;">JSON Output</span>
 
-Most commands support <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">--json</span><span style="color: #8ca391;">`</span> for structured output. You can use <span style="color: #8ca391;">`</span><span style="color: #1cc24b; background-color: #0e120e;">--jq</span><span style="color: #8ca391;">`</span> to filter:
+Most commands support <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">--json</span><span style="color: #697282;">`</span> for structured output. You can use <span style="color: #697282;">`</span><span style="color: #8FBE83; background-color: #161920;">--jq</span><span style="color: #697282;">`</span> to filter:
 
-<span style="color: #8ca391; background-color: #0e120e;">```</span><span style="color: #e6ff57; background-color: #0e120e;">bash</span><span style="background-color: #0e120e;">
-</span><span style="background-color: #0e120e;">gh issue list --repo owner/repo --json number,title --jq '.</span><span style="color: #24f6d9; background-color: #0e120e;">[]</span><span style="background-color: #0e120e;"> | "\</span><span style="color: #24f6d9; background-color: #0e120e;">(</span><span style="background-color: #0e120e;">.number</span><span style="color: #24f6d9; background-color: #0e120e;">)</span><span style="background-color: #0e120e;">: \</span><span style="color: #24f6d9; background-color: #0e120e;">(</span><span style="background-color: #0e120e;">.title</span><span style="color: #24f6d9; background-color: #0e120e;">)</span><span style="background-color: #0e120e;">"'
-</span><span style="color: #8ca391; background-color: #0e120e;">```</span>
+<span style="color: #697282; background-color: #161920;">```</span><span style="color: #D8BE7B; background-color: #161920;">bash</span><span style="color: #D6D9E0; background-color: #161920;">
+</span><span style="color: #D6D9E0; background-color: #161920;">gh issue list --repo owner/repo --json number,title --jq '.</span><span style="color: #82A7E8; background-color: #161920;">[]</span><span style="color: #D6D9E0; background-color: #161920;"> | "\</span><span style="color: #82A7E8; background-color: #161920;">(</span><span style="color: #D6D9E0; background-color: #161920;">.number</span><span style="color: #82A7E8; background-color: #161920;">)</span><span style="color: #D6D9E0; background-color: #161920;">: \</span><span style="color: #82A7E8; background-color: #161920;">(</span><span style="color: #D6D9E0; background-color: #161920;">.title</span><span style="color: #82A7E8; background-color: #161920;">)</span><span style="color: #D6D9E0; background-color: #161920;">"'
+</span><span style="color: #697282; background-color: #161920;">```</span>
 </code></pre>
 </div>
 
@@ -1394,7 +1394,7 @@ export type PluginManifest = {
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Feb 19 18:29:19 2026</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Feb 19 18:29:19 2026</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.1 (<a href="https://orgmode.org">Org</a> mode 9.8.7)</span> </div>
 </div>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-07-26 Sun 14:05 -->
+<!-- 2026-09-09 Wed 12:57 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OpenClaw 代码乱读笔记1</title>
@@ -347,7 +347,7 @@
 先 <code>ls -la</code> 一下（我只列重要的）：
 </p>
 
-<pre class="example" id="orga3564ae">
+<pre class="example" id="org2c020cb">
 openclaw/
 ├── src/              ← 这个看起来是主要代码
 ├── apps/             ← 看来还有手机/电脑客户端
@@ -457,7 +457,7 @@ openclaw/
 让我们 <code>ls src/</code> 看看（我挑重要的列）：
 </p>
 
-<pre class="example" id="orgb9b5536">
+<pre class="example" id="org085305c">
 src/
 ├── agents/            ← AI 代理相关？
 ├── auto-reply/        ← 自动回复？
@@ -547,29 +547,29 @@ src/
 </p>
 
 <div class="org-src-container">
-<pre class="src src-javascript"><code><span style="color: #8ca391; font-style: italic;">#!/usr/bin/env node
+<pre class="src src-javascript"><code><span style="color: #9AA2B1; font-style: italic;">#!/usr/bin/env node
 </span>
-<span style="color: #c770ff; font-weight: bold;">import</span> module from <span style="color: #1cc24b;">"node:module"</span>;
+<span style="color: #B49ADD;">import</span> module from <span style="color: #8FBE83;">"node:module"</span>;
 
-<span style="color: #8ca391;">// </span><span style="color: #8ca391; font-style: italic;">&#21551;&#29992;&#32534;&#35793;&#32531;&#23384;
-</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #24f6d9;">(</span>module.enableCompileCache &amp;&amp; !process.env.NODE_DISABLE_COMPILE_CACHE<span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">{</span>
-  <span style="color: #c770ff; font-weight: bold;">try</span> <span style="color: #c770ff;">{</span>
-    module.enableCompileCache<span style="color: #e6ff57;">()</span>;
-  <span style="color: #c770ff;">}</span> <span style="color: #c770ff; font-weight: bold;">catch</span> <span style="color: #c770ff;">{</span>
-    <span style="color: #8ca391;">// </span><span style="color: #8ca391; font-style: italic;">Ignore errors
-</span>  <span style="color: #c770ff;">}</span>
-<span style="color: #24f6d9;">}</span>
+<span style="color: #697282;">// </span><span style="color: #9AA2B1; font-style: italic;">&#21551;&#29992;&#32534;&#35793;&#32531;&#23384;
+</span><span style="color: #B49ADD;">if</span> <span style="color: #82A7E8;">(</span>module.enableCompileCache &amp;&amp; !process.env.NODE_DISABLE_COMPILE_CACHE<span style="color: #82A7E8;">)</span> <span style="color: #82A7E8;">{</span>
+  <span style="color: #B49ADD;">try</span> <span style="color: #B49ADD;">{</span>
+    module.enableCompileCache<span style="color: #77BEB7;">()</span>;
+  <span style="color: #B49ADD;">}</span> <span style="color: #B49ADD;">catch</span> <span style="color: #B49ADD;">{</span>
+    <span style="color: #697282;">// </span><span style="color: #9AA2B1; font-style: italic;">Ignore errors
+</span>  <span style="color: #B49ADD;">}</span>
+<span style="color: #82A7E8;">}</span>
 
-<span style="color: #8ca391;">// </span><span style="color: #8ca391; font-style: italic;">... &#19968;&#20123;&#35686;&#21578;&#36807;&#28388;&#30340;&#20195;&#30721; ...
+<span style="color: #697282;">// </span><span style="color: #9AA2B1; font-style: italic;">... &#19968;&#20123;&#35686;&#21578;&#36807;&#28388;&#30340;&#20195;&#30721; ...
 </span>
-<span style="color: #8ca391;">// </span><span style="color: #8ca391; font-style: italic;">&#23581;&#35797;&#23548;&#20837;&#32534;&#35793;&#21518;&#30340;&#20837;&#21475;&#25991;&#20214;
-</span><span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">await</span> tryImport<span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"./dist/entry.js"</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">{</span>
-  <span style="color: #8ca391;">// </span><span style="color: #8ca391; font-style: italic;">OK
-</span><span style="color: #24f6d9;">}</span> <span style="color: #c770ff; font-weight: bold;">else</span> <span style="color: #c770ff; font-weight: bold;">if</span> <span style="color: #24f6d9;">(</span><span style="color: #c770ff; font-weight: bold;">await</span> tryImport<span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"./dist/entry.mjs"</span><span style="color: #c770ff;">)</span><span style="color: #24f6d9;">)</span> <span style="color: #24f6d9;">{</span>
-  <span style="color: #8ca391;">// </span><span style="color: #8ca391; font-style: italic;">OK
-</span><span style="color: #24f6d9;">}</span> <span style="color: #c770ff; font-weight: bold;">else</span> <span style="color: #24f6d9;">{</span>
-  <span style="color: #c770ff; font-weight: bold;">throw</span> <span style="color: #c770ff; font-weight: bold;">new</span> <span style="color: #e6ff57;">Error</span><span style="color: #c770ff;">(</span><span style="color: #1cc24b;">"openclaw: missing dist/entry.(m)js (build output)."</span><span style="color: #c770ff;">)</span>;
-<span style="color: #24f6d9;">}</span>
+<span style="color: #697282;">// </span><span style="color: #9AA2B1; font-style: italic;">&#23581;&#35797;&#23548;&#20837;&#32534;&#35793;&#21518;&#30340;&#20837;&#21475;&#25991;&#20214;
+</span><span style="color: #B49ADD;">if</span> <span style="color: #82A7E8;">(</span><span style="color: #B49ADD;">await</span> tryImport<span style="color: #B49ADD;">(</span><span style="color: #8FBE83;">"./dist/entry.js"</span><span style="color: #B49ADD;">)</span><span style="color: #82A7E8;">)</span> <span style="color: #82A7E8;">{</span>
+  <span style="color: #697282;">// </span><span style="color: #9AA2B1; font-style: italic;">OK
+</span><span style="color: #82A7E8;">}</span> <span style="color: #B49ADD;">else</span> <span style="color: #B49ADD;">if</span> <span style="color: #82A7E8;">(</span><span style="color: #B49ADD;">await</span> tryImport<span style="color: #B49ADD;">(</span><span style="color: #8FBE83;">"./dist/entry.mjs"</span><span style="color: #B49ADD;">)</span><span style="color: #82A7E8;">)</span> <span style="color: #82A7E8;">{</span>
+  <span style="color: #697282;">// </span><span style="color: #9AA2B1; font-style: italic;">OK
+</span><span style="color: #82A7E8;">}</span> <span style="color: #B49ADD;">else</span> <span style="color: #82A7E8;">{</span>
+  <span style="color: #B49ADD;">throw</span> <span style="color: #B49ADD;">new</span> <span style="color: #D8BE7B;">Error</span><span style="color: #B49ADD;">(</span><span style="color: #8FBE83;">"openclaw: missing dist/entry.(m)js (build output)."</span><span style="color: #B49ADD;">)</span>;
+<span style="color: #82A7E8;">}</span>
 </code></pre>
 </div>
 
@@ -1299,7 +1299,7 @@ WebSocket 是 Gateway 的主要通信方式。毕竟 HTTP 是一问一答，而 
 在 OpenClaw 中，每个渠道都是相对独立的模块，但它们共享一些公共的抽象。先看看渠道相关的目录：
 </p>
 
-<pre class="example" id="orgb9292b4">
+<pre class="example" id="orgaab9055">
 src/
 ├── channels/           # 渠道抽象和公共代码
 ├── discord/            # Discord 具体实现
@@ -1332,7 +1332,7 @@ WhatsApp 是通过 WhatsApp Web 实现的，用的是 <code>@whiskeysockets/bail
 先看看 <code>src/web/</code> 的目录结构：
 </p>
 
-<pre class="example" id="org1dadf3a">
+<pre class="example" id="org8d01e86">
 src/web/
 ├── inbound/              # 入站消息处理
 │   ├── access-control.ts # 访问控制！这个很重要
@@ -1768,7 +1768,7 @@ export type SecurityAuditReport = {
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Feb 19 11:59:55 2026</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Feb 19 11:59:55 2026</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.1 (<a href="https://orgmode.org">Org</a> mode 9.8.7)</span> </div>
 </div>
 </body>
 </html>

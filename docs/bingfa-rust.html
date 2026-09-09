@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-07-26 Sun 14:05 -->
+<!-- 2026-09-09 Wed 12:57 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>【低质量】rust是如何适配并发的？</title>
@@ -241,24 +241,24 @@
 
 
 <div class="org-src-container">
-<pre class="src src-rust"><code><span style="color: #c770ff; font-weight: bold;">use</span> <span style="color: #ffa83d;">std</span>::thread;
-<span style="color: #c770ff; font-weight: bold;">use</span> <span style="color: #ffa83d;">std</span>::<span style="color: #ffa83d;">time</span>::<span style="color: #e6ff57;">Duration</span>;
+<pre class="src src-rust"><code><span style="color: #B49ADD;">use</span> <span style="color: #D5A06B;">std</span>::thread;
+<span style="color: #B49ADD;">use</span> <span style="color: #D5A06B;">std</span>::<span style="color: #D5A06B;">time</span>::<span style="color: #D8BE7B;">Duration</span>;
 
-<span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span> <span style="color: #24f6d9;">{</span>
-         <span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">handle</span> = <span style="color: #ffa83d;">thread</span>::spawn<span style="color: #c770ff;">(</span>|| <span style="color: #e6ff57;">{</span>
-             <span style="color: #c770ff; font-weight: bold;">for</span> <span style="color: #62ff94;">i</span> <span style="color: #c770ff; font-weight: bold;">in</span> 1..10 <span style="color: #30b3ff;">{</span>
-                 <span style="color: #30b3ff;">println!</span><span style="color: #ffa83d;">(</span><span style="color: #1cc24b;">"hi number </span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;"> from the spawned thread!"</span>, i<span style="color: #ffa83d;">)</span>;
-                 <span style="color: #ffa83d;">thread</span>::sleep<span style="color: #ffa83d;">(</span><span style="color: #e6ff57;">Duration</span>::from_millis<span style="color: #1cc24b;">(</span>1<span style="color: #1cc24b;">)</span><span style="color: #ffa83d;">)</span>;
-             <span style="color: #30b3ff;">}</span>
-         <span style="color: #e6ff57;">}</span><span style="color: #c770ff;">)</span>;
+<span style="color: #B49ADD;">fn</span> <span style="color: #79B8D1;">main</span><span style="color: #82A7E8;">()</span> <span style="color: #82A7E8;">{</span>
+         <span style="color: #B49ADD;">let</span> <span style="color: #D6D9E0;">handle</span> = <span style="color: #D5A06B;">thread</span>::spawn<span style="color: #B49ADD;">(</span>|| <span style="color: #77BEB7;">{</span>
+             <span style="color: #B49ADD;">for</span> <span style="color: #D6D9E0;">i</span> <span style="color: #B49ADD;">in</span> 1..10 <span style="color: #D8BE7B;">{</span>
+                 <span style="color: #79B8D1;">println!</span><span style="color: #79B8D1;">(</span><span style="color: #8FBE83;">"hi number </span><span style="color: #8FBE83; font-style: italic;">{}</span><span style="color: #8FBE83;"> from the spawned thread!"</span>, i<span style="color: #79B8D1;">)</span>;
+                 <span style="color: #D5A06B;">thread</span>::sleep<span style="color: #79B8D1;">(</span><span style="color: #D8BE7B;">Duration</span>::from_millis<span style="color: #D5A06B;">(</span>1<span style="color: #D5A06B;">)</span><span style="color: #79B8D1;">)</span>;
+             <span style="color: #D8BE7B;">}</span>
+         <span style="color: #77BEB7;">}</span><span style="color: #B49ADD;">)</span>;
 
-         handle.join<span style="color: #c770ff;">()</span>.unwrap<span style="color: #c770ff;">()</span>;
+         handle.join<span style="color: #B49ADD;">()</span>.unwrap<span style="color: #B49ADD;">()</span>;
 
-         <span style="color: #c770ff; font-weight: bold;">for</span> <span style="color: #62ff94;">i</span> <span style="color: #c770ff; font-weight: bold;">in</span> 1..5 <span style="color: #c770ff;">{</span>
-             <span style="color: #30b3ff;">println!</span><span style="color: #e6ff57;">(</span><span style="color: #1cc24b;">"hi number </span><span style="color: #1cc24b; font-style: italic;">{}</span><span style="color: #1cc24b;"> from the main thread!"</span>, i<span style="color: #e6ff57;">)</span>;
-             <span style="color: #ffa83d;">thread</span>::sleep<span style="color: #e6ff57;">(</span><span style="color: #e6ff57;">Duration</span>::from_millis<span style="color: #30b3ff;">(</span>1<span style="color: #30b3ff;">)</span><span style="color: #e6ff57;">)</span>;
-         <span style="color: #c770ff;">}</span>
-<span style="color: #24f6d9;">}</span>
+         <span style="color: #B49ADD;">for</span> <span style="color: #D6D9E0;">i</span> <span style="color: #B49ADD;">in</span> 1..5 <span style="color: #B49ADD;">{</span>
+             <span style="color: #79B8D1;">println!</span><span style="color: #77BEB7;">(</span><span style="color: #8FBE83;">"hi number </span><span style="color: #8FBE83; font-style: italic;">{}</span><span style="color: #8FBE83;"> from the main thread!"</span>, i<span style="color: #77BEB7;">)</span>;
+             <span style="color: #D5A06B;">thread</span>::sleep<span style="color: #77BEB7;">(</span><span style="color: #D8BE7B;">Duration</span>::from_millis<span style="color: #D8BE7B;">(</span>1<span style="color: #D8BE7B;">)</span><span style="color: #77BEB7;">)</span>;
+         <span style="color: #B49ADD;">}</span>
+<span style="color: #82A7E8;">}</span>
 </code></pre>
 </div>
 <p>
@@ -273,16 +273,16 @@
 </p>
 
 <div class="org-src-container">
-<pre class="src src-rust"><code>   <span style="color: #c770ff; font-weight: bold;">use</span> <span style="color: #ffa83d;">std</span>::thread;
-<span style="color: #c770ff; font-weight: bold;">fn</span> <span style="color: #24f6d9;">main</span><span style="color: #24f6d9;">()</span> <span style="color: #24f6d9;">{</span>
-    <span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">v</span> = <span style="color: #ffa83d;">vec!</span><span style="color: #c770ff;">[</span>1, 2, 3<span style="color: #c770ff;">]</span>;
+<pre class="src src-rust"><code>   <span style="color: #B49ADD;">use</span> <span style="color: #D5A06B;">std</span>::thread;
+<span style="color: #B49ADD;">fn</span> <span style="color: #79B8D1;">main</span><span style="color: #82A7E8;">()</span> <span style="color: #82A7E8;">{</span>
+    <span style="color: #B49ADD;">let</span> <span style="color: #D6D9E0;">v</span> = <span style="color: #CA8FAF;">vec!</span><span style="color: #B49ADD;">[</span>1, 2, 3<span style="color: #B49ADD;">]</span>;
 
-    <span style="color: #c770ff; font-weight: bold;">let</span> <span style="color: #62ff94;">handle</span> = <span style="color: #ffa83d;">thread</span>::spawn<span style="color: #c770ff;">(</span><span style="color: #c770ff; font-weight: bold;">move</span> || <span style="color: #e6ff57;">{</span>
-        <span style="color: #30b3ff;">println!</span><span style="color: #30b3ff;">(</span><span style="color: #1cc24b;">"Here's a vector: </span><span style="color: #1cc24b; font-style: italic;">{:?}</span><span style="color: #1cc24b;">"</span>, v<span style="color: #30b3ff;">)</span>;
-    <span style="color: #e6ff57;">}</span><span style="color: #c770ff;">)</span>;
+    <span style="color: #B49ADD;">let</span> <span style="color: #D6D9E0;">handle</span> = <span style="color: #D5A06B;">thread</span>::spawn<span style="color: #B49ADD;">(</span><span style="color: #B49ADD;">move</span> || <span style="color: #77BEB7;">{</span>
+        <span style="color: #79B8D1;">println!</span><span style="color: #D8BE7B;">(</span><span style="color: #8FBE83;">"Here's a vector: </span><span style="color: #8FBE83; font-style: italic;">{:?}</span><span style="color: #8FBE83;">"</span>, v<span style="color: #D8BE7B;">)</span>;
+    <span style="color: #77BEB7;">}</span><span style="color: #B49ADD;">)</span>;
 
-    handle.join<span style="color: #c770ff;">()</span>.unwrap<span style="color: #c770ff;">()</span>;
-<span style="color: #24f6d9;">}</span>
+    handle.join<span style="color: #B49ADD;">()</span>.unwrap<span style="color: #B49ADD;">()</span>;
+<span style="color: #82A7E8;">}</span>
 </code></pre>
 </div>
 <p>
@@ -312,7 +312,7 @@
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Sat Nov 20 09:19:26 2021</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.90 (<a href="https://orgmode.org">Org</a> mode 9.8.5)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:liangzid@stu.xjtu.edu.cn">liangzid@stu.xjtu.edu.cn</a>)</span> <span class="date">Create Date: Sat Nov 20 09:19:26 2021</span> <span class="date">Last modified: 2026-05-12 Tue 20:20</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.1 (<a href="https://orgmode.org">Org</a> mode 9.8.7)</span> </div>
 </div>
 </body>
 </html>
