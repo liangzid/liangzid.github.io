@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-09-10 Thu 15:49 -->
+<!-- 2026-09-10 Thu 16:00 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>一分钟学会量子计算（二）传统密码学是如何被攻破的</title>
@@ -236,16 +236,16 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org4310576">1. 计算不可行问题 或 困难问题</a></li>
-<li><a href="#org939ce8c">2. Shor算法</a></li>
+<li><a href="#org3893229">1. 计算不可行问题 或 困难问题</a></li>
+<li><a href="#org77a9be4">2. Shor算法</a></li>
 </ul>
 </div>
 </div>
 <p>
 如果你对量子计算的符号不熟悉，可参看上一篇文字： <a href="1mintue-QC-1.html">这里</a>
 </p>
-<div id="outline-container-org4310576" class="outline-2">
-<h2 id="org4310576"><span class="section-number-2">1.</span> 计算不可行问题 或 困难问题</h2>
+<div id="outline-container-org3893229" class="outline-2">
+<h2 id="org3893229"><span class="section-number-2">1.</span> 计算不可行问题 或 困难问题</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 密码学的核心思路是对数字在有限域下进行可逆变换，并使得正向的该变换在无key的情况下其试错成本在计算上不可行。
@@ -285,8 +285,8 @@
 </p>
 </div>
 </div>
-<div id="outline-container-org939ce8c" class="outline-2">
-<h2 id="org939ce8c"><span class="section-number-2">2.</span> Shor算法</h2>
+<div id="outline-container-org77a9be4" class="outline-2">
+<h2 id="org77a9be4"><span class="section-number-2">2.</span> Shor算法</h2>
 <div class="outline-text-2" id="text-2">
 <ol class="org-ol">
 <li>首先，由于我们最多需要尝试N次，所以我们定义一个含有M个量子比特的寄存器 which contain the numbers much larger than N^2. 除此之外，我们还要有一个存储计算之后的f(x)函数值的寄存器，大小相同（实际上不需要。只需要存在N个数即可）。即：
@@ -315,11 +315,22 @@
 <p>
 总结：shor算法有效的核心是因为RSA这样一个困难求解的密码学问题可以被转化为一个困难的周期性函数求频率的问题，而这个问题的最关键一步（构建数值序列）可以被量子计算快速处理。
 </p>
+
+
+<p>
+AI对我的补充我觉得很有道理。除了map,还有reduce这一步：
+</p>
+
+<blockquote>
+<p>
+不过这里有一个关键的细微认知需要修正（也是很多刚接触量子计算的学者最容易陷入的误区）：“通过量子计算可以一次性获得极大次数的输入输出 pair” —— 这在量子计算中被称为量子并行性（Quantum Parallelism）。但是，你不能直接“读取”这极大数量的 pair！关键瓶颈：量子测量塌缩（Measurement Collapse）如果你构造了一个叠加态：\[\frac{1}{\sqrt{2^N}} \sum_{x=0}^{2^N-1} \vert{}x, f(x)\rangle\]这个状态确实隐式地“包含”了 \(2^N\) 个 \((x, f(x))\) 的 pair。然而，一旦你对其进行测量，整个叠加态会瞬间塌缩，你只能随机获得 \(\mathbf{1}\) 个 pair，其余 \(2^N-1\) 个信息全部彻底毁灭。因此，Shor 算法真正的伟大之处不是“得到了很多 pair”，而是在测量之前，利用量子傅里叶变换（QFT）让这些 pair 在相位上发生全局干涉。它就像做了一次“离散傅里叶变换”，把分散在 \(2^N\) 个状态里的周期信息，挤压凝聚到了极少数几个具有特定周期的状态上。最后测量时，才能以极高概率直接命中那个周期 \(r\)。意识到这一点，对于你想构思 Crypto / Eurocrypt 级别的 Idea 至关重要——任何直接试图从叠加态里“抽样/读取”海量数据的 Idea 都是行不通的，Idea 的精髓必须在于“如何在测量前设计干涉/提取全局代数特征”。
+</p>
+</blockquote>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Sep 10 13:32:09 2026</span> <span class="date">Last modified: 2026-09-10 Thu 15:48</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.1 (<a href="https://orgmode.org">Org</a> mode 9.8.7)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Sep 10 13:32:09 2026</span> <span class="date">Last modified: 2026-09-10 Thu 15:59</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.1 (<a href="https://orgmode.org">Org</a> mode 9.8.7)</span> </div>
 </div>
 </body>
 </html>
