@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-09-10 Thu 13:22 -->
+<!-- 2026-09-10 Thu 13:30 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>一分钟重新理解傅里叶变换</title>
@@ -236,22 +236,22 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org1cde2e8">1. 总览</a></li>
-<li><a href="#orge5bcb7e">2. 理解 \(e^{ix}\)</a></li>
-<li><a href="#orgff0f40d">3. 理解 \(e^{2\pi ikx/Q}\)</a></li>
-<li><a href="#orgb3c5aef">4. 理解傅里叶变换</a></li>
+<li><a href="#orgc392377">1. 总览</a></li>
+<li><a href="#orga96eb20">2. 理解 \(e^{ix}\)</a></li>
+<li><a href="#org9d3efe7">3. 理解 \(e^{2\pi ikx/Q}\)</a></li>
+<li><a href="#org6cac476">4. 理解傅里叶变换</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org1cde2e8" class="outline-2">
-<h2 id="org1cde2e8"><span class="section-number-2">1.</span> 总览</h2>
+<div id="outline-container-orgc392377" class="outline-2">
+<h2 id="orgc392377"><span class="section-number-2">1.</span> 总览</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 傅里叶变换一般是指如下的公式：
 </p>
 
 <p>
-\(f'(k)=\sum_{x=a}^{x<b}f(x)\cdot e^{-2\pi ik(x-a)/(b-a)}\)
+\(f'(k)=\sum_{x=a}^{b-1}{f(x)\cdot e^{-2\pi ik(x-a)/(b-a)}}\)
 </p>
 
 <p>
@@ -283,7 +283,7 @@ where:
 </p>
 
 <p>
-\(x'=F_{N}x\), with \(F_{N}=\) 为一个特殊的可逆矩阵，in which \(F_{N}_{mn}=e^{-2\pi i mn /N}\).
+\(x'=F_{N}x\), with \(F_{N}=\) 为一个特殊的可逆矩阵，in which \(F_{N,mn}=e^{-2\pi i mn /N}\).
 </p>
 
 <p>
@@ -299,8 +299,8 @@ where:
 </p>
 </div>
 </div>
-<div id="outline-container-orge5bcb7e" class="outline-2">
-<h2 id="orge5bcb7e"><span class="section-number-2">2.</span> 理解 \(e^{ix}\)</h2>
+<div id="outline-container-orga96eb20" class="outline-2">
+<h2 id="orga96eb20"><span class="section-number-2">2.</span> 理解 \(e^{ix}\)</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 理解上述的任何一个公式都需要理解为何要引入一个奇怪的指数项 \(e^{ix}\) 以及这个指数项代表着什么。
@@ -454,8 +454,8 @@ where:
 </p>
 </div>
 </div>
-<div id="outline-container-orgff0f40d" class="outline-2">
-<h2 id="orgff0f40d"><span class="section-number-2">3.</span> 理解 \(e^{2\pi ikx/Q}\)</h2>
+<div id="outline-container-org9d3efe7" class="outline-2">
+<h2 id="org9d3efe7"><span class="section-number-2">3.</span> 理解 \(e^{2\pi ikx/Q}\)</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 在上述理解的基础上，就可以开始思考傅里叶变换里最重要的一坨东西 \(e^{2\pi ikx/(b-a)}\) 了。这个公式按照物理含义最容易理解的表达应该是：
@@ -484,21 +484,54 @@ where:
 </p>
 </div>
 </div>
-<div id="outline-container-orgb3c5aef" class="outline-2">
-<h2 id="orgb3c5aef"><span class="section-number-2">4.</span> 理解傅里叶变换</h2>
+<div id="outline-container-org6cac476" class="outline-2">
+<h2 id="org6cac476"><span class="section-number-2">4.</span> 理解傅里叶变换</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 现在回到傅里叶变换的公式：
 </p>
 
 <p>
-\(f'(k)=\sum_{x=a}^{x<b}f(x)\cdot e^{-2\pi ikx/(b-a)}\) <sup><a id="fnr.zhu" class="footref" href="#fn.zhu" role="doc-backlink">1</a></sup>
+\(f'(k)=\sum_{x=a}^{b-1}{f(x)\cdot e^{-2\pi ik(x-a)/(b-a)}}\) <sup><a id="fnr.zhu" class="footref" href="#fn.zhu" role="doc-backlink">1</a></sup>
 </p>
 
 <p>
 这个公式就代表：说对于一个旋转速度的控制比率k, 对f(x)这一个向量的所有数值进行叠加，然而这种叠加是有方向的，方向由这些元素在f(x)存在的位置（即x）与k共同决定。
 但是即使这样，一个人还是无法理解傅里叶变换为什么被提出，以及这个公式为什么要这样写，以及为何要有一个负号。
 </p>
+
+<p>
+试解答之。
+</p>
+
+<p>
+现在考虑一个问题：一个函数g(x)的序列是一个复数序列，其中似乎蕴含着某个周期性规律但未知。换句话说，我们仅仅能观察到g(x)的幅值随着时间的变动规律，并且记录之为f(x)，但是我们想探究g(x)的这个序列里面是否隐藏着一个近似或类似于$e^{ix}$的波形式，即周期性函数形式。
+</p>
+
+<p>
+为此，当我们采集了g(x)的一段振动幅度序列之后，我们可以做的方式便是使用不同的拆分周期k/(b-a)来猜测其内可能的波（们）的周期，然后将这一段波里的每一个点的角度找到，然后加负号以逆向旋转（即顺时针旋转）到x+坐标轴上（更确切地说，应该是以a处的初始相位作为初始相加轴的一个奇怪的轴）再相加。这样，相加的数值就反映了f(x)体内蕴含的周期性函数与我们所设计的这个 \(e^{ik/(b-a)2\pi x}\) 的这个k为常数x为变量的周期性函数二者之间的契合程度。由此其实也就变相地逆向推导出了以 \(f(x)\) 为振动幅度的隐而不见的复数函数g(x)的周期性——也就是其频率。
+</p>
+
+<p>
+由此，通过傅里叶变换和控制k，我们就可以提取到f(x)里面那些处在同一个频率规律下周期性振动的结果。
+</p>
+
+<p>
+对于其线性代数形式：
+</p>
+
+<p>
+\(x'=F_{N}x\), with \(F_{N}\) 为一个特殊的可逆矩阵，in which \(F_{N,mn}=e^{-2\pi i mn /N}\).
+</p>
+
+<p>
+这里也是同一个道理。此处的i便是上面的k, 此处的j便是上面的x.
+</p>
+
+<p>
+由此，傅里叶变换构造了一个极其特殊的旋转矩阵来对空间做可逆的变换。
+</p>
+
 
 <p>
 然而不幸的是，f(x)其实未必一定要充当一个幅值函数。 这种想法主要是由于经典物理里确实不存在虚数。
@@ -512,45 +545,13 @@ where:
 
 <div class="footdef"><sup><a id="fn.zhu" class="footnum" href="#fnr.zhu" role="doc-backlink">1</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
 此处写的公式里本来是 \((x-a)/(b-a)\) 而非 \(x/(b-a)\). 前者更规范，代表去掉初始的相位差，认为开始处为0.
-</p>
-
-<p class="footpara">
-试解答之。
-</p>
-
-<p class="footpara">
-现在考虑一个问题：一个函数g(x)的序列是一个复数序列，其中似乎蕴含着某个周期性规律但未知。换句话说，我们仅仅能观察到g(x)的幅值随着时间的变动规律，并且记录之为f(x)，但是我们想探究g(x)的这个序列里面是否隐藏着一个近似或类似于$e^{ix}$的波形式，即周期性函数形式。
-</p>
-
-<p class="footpara">
-为此，当我们采集了g(x)的一段振动幅度序列之后，我们可以做的方式便是使用不同的拆分周期k/(b-a)来猜测其内可能的波（们）的周期，然后将这一段波里的每一个点的角度找到，然后加负号以逆向旋转（即顺时针旋转）到x+坐标轴上（更确切地说，应该是以a处的初始相位作为初始相加轴的一个奇怪的轴）再相加。这样，相加的数值就反映了f(x)体内蕴含的周期性函数与我们所设计的这个 \(e^{ik/(b-a)2\pi x}\) 的这个k为常数x为变量的周期性函数二者之间的契合程度。由此其实也就变相地逆向推导出了以 \(f(x)\) 为振动幅度的隐而不见的复数函数g(x)的周期性——也就是其频率。
-</p>
-
-<p class="footpara">
-由此，通过傅里叶变换和控制k，我们就可以提取到f(x)里面那些处在同一个频率规律下周期性振动的结果。
-</p>
-
-<p class="footpara">
-对于其线性代数形式：
-</p>
-
-<p class="footpara">
-\(x'=F_{N}x\), with \(F_{N}\) 为一个特殊的可逆矩阵，in which \(F_{N}_{mn}=e^{-2\pi i mn /N}\).
-</p>
-
-<p class="footpara">
-这里也是同一个道理。此处的i便是上面的k, 此处的j便是上面的x.
-</p>
-
-<p class="footpara">
-由此，傅里叶变换构造了一个极其特殊的旋转矩阵来对空间做可逆的变换。
 </p></div></div>
 
 
 </div>
 </div></div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Sep 10 10:12:28 2026</span> <span class="date">Last modified: 2026-09-10 Thu 13:22</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.1 (<a href="https://orgmode.org">Org</a> mode 9.8.7)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Thu Sep 10 10:12:28 2026</span> <span class="date">Last modified: 2026-09-10 Thu 13:30</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.1 (<a href="https://orgmode.org">Org</a> mode 9.8.7)</span> </div>
 </div>
 </body>
 </html>

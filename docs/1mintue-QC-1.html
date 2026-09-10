@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-09-10 Thu 13:22 -->
+<!-- 2026-09-10 Thu 13:30 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>1分钟学会量子计算（一）</title>
@@ -236,21 +236,21 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd7a8363">1. 核心公式</a>
+<li><a href="#orgb74d0e8">1. 核心公式</a>
 <ul>
-<li><a href="#orgd1bec27">1.1. N是什么？</a></li>
-<li><a href="#org2727b49">1.2. x是什么？或者说 \(|x\rangle\) 是什么？</a></li>
-<li><a href="#org55bf24c">1.3. $c_{x}$是什么？</a></li>
-<li><a href="#org6d320cd">1.4. “+”（这里的加法）是什么？</a></li>
-<li><a href="#org96d8913">1.5. \(|\Psi\rangle\) 是什么？</a></li>
+<li><a href="#org371bcf8">1.1. N是什么？</a></li>
+<li><a href="#org6e86527">1.2. x是什么？或者说 \(|x\rangle\) 是什么？</a></li>
+<li><a href="#org8724989">1.3. \(c_{x}\) 是什么？</a></li>
+<li><a href="#org8f976ca">1.4. “+”（这里的加法）是什么？</a></li>
+<li><a href="#org449c1a7">1.5. \(|\Psi\rangle\) 是什么？</a></li>
 </ul>
 </li>
-<li><a href="#orga88100a">2. 物理含义</a>
+<li><a href="#orgf86d1b0">2. 物理含义</a>
 <ul>
-<li><a href="#org4b33612">2.1. 薛定谔的猫</a></li>
-<li><a href="#orgba8b46f">2.2. 双缝干涉实验</a></li>
-<li><a href="#org1d4cc43">2.3. 时间的相对性</a></li>
-<li><a href="#org295e861">2.4. 所有的量子现象，本质上就是概率幅在空间和时间上的相对相位差。</a></li>
+<li><a href="#org5343f43">2.1. 薛定谔的猫</a></li>
+<li><a href="#org5fdfb72">2.2. 双缝干涉实验</a></li>
+<li><a href="#org7104de4">2.3. 时间的相对性</a></li>
+<li><a href="#orgca7228a">2.4. 所有的量子现象，本质上就是概率幅在空间和时间上的相对相位差。</a></li>
 </ul>
 </li>
 </ul>
@@ -259,8 +259,8 @@
 <p>
 今天和朋友聊了一下量子计算与密码学，如此竟然发现了新的大陆。于是决定要开始理解和学习量子计算。这个系列都将是相关的笔记。
 </p>
-<div id="outline-container-orgd7a8363" class="outline-2">
-<h2 id="orgd7a8363"><span class="section-number-2">1.</span> 核心公式</h2>
+<div id="outline-container-orgb74d0e8" class="outline-2">
+<h2 id="orgb74d0e8"><span class="section-number-2">1.</span> 核心公式</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 量子计算的核心公式是
@@ -274,35 +274,35 @@
 本文的目标就是理解这个公式。
 </p>
 </div>
-<div id="outline-container-orgd1bec27" class="outline-3">
-<h3 id="orgd1bec27"><span class="section-number-3">1.1.</span> N是什么？</h3>
+<div id="outline-container-org371bcf8" class="outline-3">
+<h3 id="org371bcf8"><span class="section-number-3">1.1.</span> N是什么？</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
-N是（量子）比特数。它规定了$x$作为索引的总数量\(2^N\).
+N是（量子）比特数。它规定了 \(x\) 作为索引的总数量\(2^N\).
 </p>
 </div>
 </div>
-<div id="outline-container-org2727b49" class="outline-3">
-<h3 id="org2727b49"><span class="section-number-3">1.2.</span> x是什么？或者说 \(|x\rangle\) 是什么？</h3>
+<div id="outline-container-org6e86527" class="outline-3">
+<h3 id="org6e86527"><span class="section-number-3">1.2.</span> x是什么？或者说 \(|x\rangle\) 是什么？</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
-\(|x\rangle\) 代表一个量子态。可以忽视量子这个称谓，理解之为一个态。所谓的态就是指的概率论里某个空间中的一个离散的事件。由于存在$2^N$个这样的态，所以这$2^N$个态其实可以被视作线性空间中的一组基，即他们构成了一个$2^N\(维度的线性空间。因此，可以（虽然不是必定）将这些态用最经典的one-hot vector来表达，如\)[0,&hellip;,0,1,0,&hellip;,0]^T$, 即只有在对应index的维度上为1其他为0.
+\(|x\rangle\) 代表一个量子态。可以忽视量子这个称谓，理解之为一个态。所谓的态就是指的概率论里某个空间中的一个离散的事件。由于存在 \(2^N\) 个这样的态，所以这 \(2^N\) 个态其实可以被视作线性空间中的一组基，即他们构成了一个 \(2^N\) 维度的线性空间。因此，可以（虽然不是必定）将这些态用最经典的one-hot vector来表达，如\([0,...,0,1,0,...,0]^T\), 即只有在对应index的维度上为1其他为0.
 </p>
 </div>
 </div>
-<div id="outline-container-org55bf24c" class="outline-3">
-<h3 id="org55bf24c"><span class="section-number-3">1.3.</span> $c_{x}$是什么？</h3>
+<div id="outline-container-org8724989" class="outline-3">
+<h3 id="org8724989"><span class="section-number-3">1.3.</span> \(c_{x}\) 是什么？</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
-$c_{x}$是对于态$x$的一个系数，描述了该态以何种强度存在。
+\(c_{x}\) 是对于态 \(x\) 的一个系数，描述了该态以何种强度存在。
 </p>
 
 <p>
-具体地，$c_{x}$是一个二维向量。鉴于量子力学的物理性，$c_{x}$可以被表达为一个复数。即，它既可以被表达为包含一个实部和一个虚部的复数，也可以被表达为包含一个模长（即该二维向量在二维空间中表达的长度）与一个相位角（即该向量与$x_+$轴的夹角（更具体地，是从该轴移动到该向量的方向性时的总角度））。
+具体地， \(c_{x}\) 是一个二维向量。鉴于量子力学的物理性， \(c_{x}\) 可以被表达为一个复数。即，它既可以被表达为包含一个实部和一个虚部的复数，也可以被表达为包含一个模长（即该二维向量在二维空间中表达的长度）与一个相位角（即该向量与 \(x_+\) 轴的夹角（更具体地，是从该轴移动到该向量的方向性时的总角度））。
 </p>
 
 <p>
-由此，$c_{x}$的模长反映了$x$索引的量子态将会以何种概率出现（平方关系），这是一个"绝对"<sup><a id="fnr.absolute" class="footref" href="#fn.absolute" role="doc-backlink">1</a></sup>（即单个自我比较有意义）的变量，同时收到概率论里和为1的约束，即：
+由此， \(c_{x}\) 的模长反映了 \(x\) 索引的量子态将会以何种概率出现（平方关系），这是一个"绝对"<sup><a id="fnr.absolute" class="footref" href="#fn.absolute" role="doc-backlink">1</a></sup>（即单个自我比较有意义）的变量，同时收到概率论里和为1的约束，即：
 </p>
 
 <p>
@@ -310,27 +310,27 @@ $c_{x}$是对于态$x$的一个系数，描述了该态以何种强度存在。
 </p>
 
 <p>
-与之对应，$c_{x}$的相位角则反映了该量子态出现的时机。这是一个相对的概念，因为角度的形成其实就是需要两条边（当没有对比物时，x+轴便是）。
+与之对应， \(c_{x}\) 的相位角则反映了该量子态出现的时机。这是一个相对的概念，因为角度的形成其实就是需要两条边（当没有对比物时，x+轴便是）。
 </p>
 </div>
 </div>
-<div id="outline-container-org6d320cd" class="outline-3">
-<h3 id="org6d320cd"><span class="section-number-3">1.4.</span> “+”（这里的加法）是什么？</h3>
+<div id="outline-container-org8f976ca" class="outline-3">
+<h3 id="org8f976ca"><span class="section-number-3">1.4.</span> “+”（这里的加法）是什么？</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 即答：这里的加法就是最朴素的向量里的加法。
 </p>
 
 <p>
-$&forall; i,j &isin; [0, 2^{N}-1],$ given two reasonable complex number \(\alpha, \beta\), what is \(\alpha|x_{i}\rangle+\beta|x_{j}\rangle\)?
+\(\forall i, j \in [0, 2^{N}-1]\), given two reasonable complex number \(\alpha, \beta\), what is \(\alpha|x_{i}\rangle+\beta|x_{j}\rangle\)?
 </p>
 
 <p>
-We can denote it as \(|\Psi\rangle_{ij}=\alpha|x_{i}_{}\rangle+\beta|x_{j}_{}\rangle\).
+We can denote it as \(|\Psi\rangle_{ij}=\alpha |x_{i}\rangle+\beta|x_{j}\rangle\) .
 </p>
 
 <p>
-首先可以断定所得到的这个\(|\Psi\rangle_{ij}\) 一定是也是一个量子态，即它应该共享与$|x_{i}&rang;$相同的模式。换句话说，加法的结果也是一个2^N 维度的向量，该且该向量同样会拥有一个长度（即强度，幅度，概率）和一个出现的相位（即方向性）。
+首先可以断定所得到的这个 \(|\Psi\rangle_{ij}\) 一定是也是一个量子态，即它应该共享与 \(|x_{i}\rangle\) 相同的模式。换句话说，加法的结果也是一个2^N 维度的向量，该且该向量同样会拥有一个长度（即强度，幅度，概率）和一个出现的相位（即方向性）。
 </p>
 
 <p>
@@ -354,11 +354,11 @@ We can denote it as \(|\Psi\rangle_{ij}=\alpha|x_{i}_{}\rangle+\beta|x_{j}_{}\ra
 </p>
 </div>
 </div>
-<div id="outline-container-org96d8913" class="outline-3">
-<h3 id="org96d8913"><span class="section-number-3">1.5.</span> \(|\Psi\rangle\) 是什么？</h3>
+<div id="outline-container-org449c1a7" class="outline-3">
+<h3 id="org449c1a7"><span class="section-number-3">1.5.</span> \(|\Psi\rangle\) 是什么？</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
-可以注意到，一个$|&Psi;&rang;$其实是上述如此定义的一个2^N 空间的一个极大线性无关组进行了一个线性组合，其中系数便是c_x 所组成的向量（即坐标值们）。所以这个符号表示了该空间中的一个点，即一个向量。
+可以注意到，一个 \(|\Psi\rangle\) 其实是上述如此定义的一个2^N 空间的一个极大线性无关组进行了一个线性组合，其中系数便是c_x 所组成的向量（即坐标值们）。所以这个符号表示了该空间中的一个点，即一个向量。
 </p>
 
 <p>
@@ -367,12 +367,12 @@ We can denote it as \(|\Psi\rangle_{ij}=\alpha|x_{i}_{}\rangle+\beta|x_{j}_{}\ra
 </div>
 </div>
 </div>
-<div id="outline-container-orga88100a" class="outline-2">
-<h2 id="orga88100a"><span class="section-number-2">2.</span> 物理含义</h2>
+<div id="outline-container-orgf86d1b0" class="outline-2">
+<h2 id="orgf86d1b0"><span class="section-number-2">2.</span> 物理含义</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-org4b33612" class="outline-3">
-<h3 id="org4b33612"><span class="section-number-3">2.1.</span> 薛定谔的猫</h3>
+<div id="outline-container-org5343f43" class="outline-3">
+<h3 id="org5343f43"><span class="section-number-3">2.1.</span> 薛定谔的猫</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 考虑一个数学上 被封闭定义的场景：某人在盒子里放了一只猫，送给了另外一个人。这个人需要打开盒子看看猫是否存活。
@@ -396,8 +396,8 @@ We can denote it as \(|\Psi\rangle_{ij}=\alpha|x_{i}_{}\rangle+\beta|x_{j}_{}\ra
 </p>
 </div>
 </div>
-<div id="outline-container-orgba8b46f" class="outline-3">
-<h3 id="orgba8b46f"><span class="section-number-3">2.2.</span> 双缝干涉实验</h3>
+<div id="outline-container-org5fdfb72" class="outline-3">
+<h3 id="org5fdfb72"><span class="section-number-3">2.2.</span> 双缝干涉实验</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 一个粒子喷出器持续发射出某种具有量子性质的粒子。这些粒子首先会被一个无法通过的隔板挡住，幸运地，隔板上开出了两条缝隙，A和B,而后在隔板后制造一个收集器，来收集被发射出的粒子。
@@ -428,7 +428,7 @@ We can denote it as \(|\Psi\rangle_{ij}=\alpha|x_{i}_{}\rangle+\beta|x_{j}_{}\ra
 </p>
 
 <p>
-\(e^{i\theta}=e^{i(kL-\omega t)}\) 
+\[e^{i\theta}=e^{i (kL-\omega t)}\] 
 </p>
 
 <p>
@@ -440,7 +440,7 @@ We can denote it as \(|\Psi\rangle_{ij}=\alpha|x_{i}_{}\rangle+\beta|x_{j}_{}\ra
 </p>
 
 <p>
-\(e^{}^{}^{}^{i(k(M-N))}\)
+\(e^{i(k(M-N))}\)
 </p>
 
 <p>
@@ -452,7 +452,7 @@ We can denote it as \(|\Psi\rangle_{ij}=\alpha|x_{i}_{}\rangle+\beta|x_{j}_{}\ra
 </p>
 
 
-<div id="orge008803" class="figure">
+<div id="org65e9a74" class="figure">
 <p><img src="./images/screenshot_20260909_192543.png" alt="screenshot_20260909_192543.png">
 </p>
 </div>
@@ -472,8 +472,8 @@ We can denote it as \(|\Psi\rangle_{ij}=\alpha|x_{i}_{}\rangle+\beta|x_{j}_{}\ra
 </ol>
 </div>
 </div>
-<div id="outline-container-org1d4cc43" class="outline-3">
-<h3 id="org1d4cc43"><span class="section-number-3">2.3.</span> 时间的相对性</h3>
+<div id="outline-container-org7104de4" class="outline-3">
+<h3 id="org7104de4"><span class="section-number-3">2.3.</span> 时间的相对性</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 当A与B谈论时间时，一般会默认存在一个绝对的时间参考系。
@@ -491,8 +491,8 @@ We can denote it as \(|\Psi\rangle_{ij}=\alpha|x_{i}_{}\rangle+\beta|x_{j}_{}\ra
 </ul>
 </div>
 </div>
-<div id="outline-container-org295e861" class="outline-3">
-<h3 id="org295e861"><span class="section-number-3">2.4.</span> 所有的量子现象，本质上就是概率幅在空间和时间上的相对相位差。</h3>
+<div id="outline-container-orgca7228a" class="outline-3">
+<h3 id="orgca7228a"><span class="section-number-3">2.4.</span> 所有的量子现象，本质上就是概率幅在空间和时间上的相对相位差。</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 这句话是费曼说的。
@@ -512,7 +512,7 @@ We can denote it as \(|\Psi\rangle_{ij}=\alpha|x_{i}_{}\rangle+\beta|x_{j}_{}\ra
 </div>
 </div></div>
 <div id="postamble" class="status">
-<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Wed Sep  9 17:53:31 2026</span> <span class="date">Last modified: 2026-09-09 Wed 19:48</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.1 (<a href="https://orgmode.org">Org</a> mode 9.8.7)</span> </div>
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Wed Sep  9 17:53:31 2026</span> <span class="date">Last modified: 2026-09-10 Thu 13:27</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.1 (<a href="https://orgmode.org">Org</a> mode 9.8.7)</span> </div>
 </div>
 </body>
 </html>

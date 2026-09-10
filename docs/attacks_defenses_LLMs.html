@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2026-09-10 Thu 13:22 -->
+<!-- 2026-09-10 Thu 13:30 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Attacks and Defenses of LLMs: 大型语言模型的攻击与防御</title>
@@ -237,38 +237,38 @@
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#orgb88f2bb">1. Backgrounds: LM &amp;LLM</a></li>
-<li><a href="#orgbcb9f1d">2. Background: LM &amp; LLM</a></li>
-<li><a href="#org488ccc4">3. Background: LM &amp; LLM</a></li>
-<li><a href="#org9b5d216">4. Background: LM &amp; LLM</a></li>
+<li><a href="#org9b5d216">2. Background: LM &amp; LLM</a></li>
+<li><a href="#orgc4a0783">3. Background: LM &amp; LLM</a></li>
+<li><a href="#orgc882fb6">4. Background: LM &amp; LLM</a></li>
 <li><a href="#orgd593269">5. Contents</a></li>
-<li><a href="#orgfebed37">6. Ethical and social risks of harm from Language Models</a></li>
-<li><a href="#org57ef703">7. Ethical and social risks of harm from Language Models</a></li>
-<li><a href="#org89bb4d0">8. Predictability and Surprise in Large Generative Models</a></li>
-<li><a href="#orgad1bbf2">9. Predictability and Surprise in Large Generative Models</a></li>
-<li><a href="#orgfa81c6d">10. Predictability and Surprise in Large Generative Models</a></li>
+<li><a href="#org57ef703">6. Ethical and social risks of harm from Language Models</a></li>
+<li><a href="#org420ee02">7. Ethical and social risks of harm from Language Models</a></li>
+<li><a href="#orgfa81c6d">8. Predictability and Surprise in Large Generative Models</a></li>
+<li><a href="#org0cc8f55">9. Predictability and Surprise in Large Generative Models</a></li>
+<li><a href="#orgc9a316f">10. Predictability and Surprise in Large Generative Models</a></li>
 <li><a href="#org6235f2c">11. On the Opportunities and Risks of Foundation Models</a></li>
 <li><a href="#orgc318692">12. HELM(Holistic Evaluation of LMs)</a></li>
-<li><a href="#orgb110857">13. RL from Human Feedback (RLHF)</a></li>
-<li><a href="#orgaf9ebe8">14. RL from Human Feedback (RLHF)</a></li>
+<li><a href="#orgaf9ebe8">13. RL from Human Feedback (RLHF)</a></li>
+<li><a href="#org4bf4ff5">14. RL from Human Feedback (RLHF)</a></li>
 <li><a href="#org0725dd3">15. Corpus</a></li>
-<li><a href="#org27616cc">16. Results</a></li>
-<li><a href="#orgd53cce5">17. Sparrow</a></li>
-<li><a href="#orgc88b694">18. Sparrow</a></li>
-<li><a href="#orgfd6b303">19. Self-Correction of LLMs</a></li>
-<li><a href="#org4d96fa3">20. Self-Correction of LLMs</a></li>
-<li><a href="#org9a5bc66">21. Self-Correction of LLMs</a></li>
-<li><a href="#orgf4429c7">22. Self-Correction of LLMs</a></li>
-<li><a href="#orgcc07a19">23. Self-Correction of LLMs</a></li>
+<li><a href="#orgd0bfac7">16. Results</a></li>
+<li><a href="#orgc88b694">17. Sparrow</a></li>
+<li><a href="#org7ef25ca">18. Sparrow</a></li>
+<li><a href="#orgcc07a19">19. Self-Correction of LLMs</a></li>
+<li><a href="#orgba745f6">20. Self-Correction of LLMs</a></li>
+<li><a href="#org2da9c8f">21. Self-Correction of LLMs</a></li>
+<li><a href="#orgca6d701">22. Self-Correction of LLMs</a></li>
+<li><a href="#orgdc9ec9d">23. Self-Correction of LLMs</a></li>
 <li><a href="#org2a18ee1">24. Constitutional AI (CAI): RL with AI Feedback (RLAIF)</a></li>
 <li><a href="#org2db8246">25. SL-CAI</a></li>
 <li><a href="#org1ccf66d">26. RL with AI Feedback (RLAIF)</a></li>
-<li><a href="#orgd8fd68a">27. Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks</a></li>
-<li><a href="#org7ed362b">28. Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks</a></li>
+<li><a href="#org7ed362b">27. Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks</a></li>
+<li><a href="#org65872a7">28. Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks</a></li>
 <li><a href="#org5f157c4">29. LLMs Behave Like Programs</a></li>
-<li><a href="#org084dcfe">30. Attack mechanisms</a></li>
-<li><a href="#org6630ee9">31. Attack mechanisms</a></li>
-<li><a href="#org86ca37d">32. Attack mechanisms</a></li>
-<li><a href="#orgd0bfac7">33. Results</a></li>
+<li><a href="#org86ca37d">30. Attack mechanisms</a></li>
+<li><a href="#org5260aeb">31. Attack mechanisms</a></li>
+<li><a href="#org1697a21">32. Attack mechanisms</a></li>
+<li><a href="#org69397e6">33. Results</a></li>
 <li><a href="#org2258bc1">34. Generation Quality &amp;Economic Benefits</a></li>
 <li><a href="#org7f58cf5">35. Conclusion &amp; Future works</a></li>
 </ul>
@@ -282,7 +282,7 @@
 <h2 id="orgb88f2bb"><span class="section-number-2">1.</span> Backgrounds: LM &amp;LLM</h2>
 <div class="outline-text-2" id="text-1">
 
-<div id="orga3e32f0" class="figure">
+<div id="orgfad5cf9" class="figure">
 <p><img src="./images/screenshot_20230228_085719.png" alt="screenshot_20230228_085719.png">
 </p>
 </div>
@@ -294,27 +294,27 @@
 </ul>
 </div>
 </div>
-<div id="outline-container-orgbcb9f1d" class="outline-2">
-<h2 id="orgbcb9f1d"><span class="section-number-2">2.</span> Background: LM &amp; LLM</h2>
+<div id="outline-container-org9b5d216" class="outline-2">
+<h2 id="org9b5d216"><span class="section-number-2">2.</span> Background: LM &amp; LLM</h2>
 <div class="outline-text-2" id="text-2">
 
-<div id="orge15d46c" class="figure">
+<div id="orga544ac3" class="figure">
 <p><img src="./images/screenshot_20230228_085755.png" alt="screenshot_20230228_085755.png">
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org488ccc4" class="outline-2">
-<h2 id="org488ccc4"><span class="section-number-2">3.</span> Background: LM &amp; LLM</h2>
+<div id="outline-container-orgc4a0783" class="outline-2">
+<h2 id="orgc4a0783"><span class="section-number-2">3.</span> Background: LM &amp; LLM</h2>
 <div class="outline-text-2" id="text-3">
 
-<div id="org0b03803" class="figure">
+<div id="org33ff11d" class="figure">
 <p><img src="./images/screenshot_20230228_085835.png" alt="screenshot_20230228_085835.png">
 </p>
 </div>
 
 
-<div id="org7fbe3f3" class="figure">
+<div id="orgb7cc826" class="figure">
 <p><img src="./images/screenshot_20230228_085840.png" alt="screenshot_20230228_085840.png">
 </p>
 </div>
@@ -324,17 +324,17 @@ refer: <a href="https://yaofu.notion.site/GPT-3-5-360081d91ec245f29029d37b545737
 </p>
 </div>
 </div>
-<div id="outline-container-org9b5d216" class="outline-2">
-<h2 id="org9b5d216"><span class="section-number-2">4.</span> Background: LM &amp; LLM</h2>
+<div id="outline-container-orgc882fb6" class="outline-2">
+<h2 id="orgc882fb6"><span class="section-number-2">4.</span> Background: LM &amp; LLM</h2>
 <div class="outline-text-2" id="text-4">
 
-<div id="org6051e3e" class="figure">
+<div id="org82ff5ce" class="figure">
 <p><img src="./images/screenshot_20230228_085912.png" alt="screenshot_20230228_085912.png">
 </p>
 </div>
 
 
-<div id="org29b3da2" class="figure">
+<div id="org556733c" class="figure">
 <p><img src="./images/screenshot_20230228_085917.png" alt="screenshot_20230228_085917.png">
 </p>
 </div>
@@ -370,8 +370,8 @@ ref: Deep Ganguli, et.al. Predictability and Surprise in Large Generative Models
 </ul>
 </div>
 </div>
-<div id="outline-container-orgfebed37" class="outline-2">
-<h2 id="orgfebed37"><span class="section-number-2">6.</span> Ethical and social risks of harm from Language Models</h2>
+<div id="outline-container-org57ef703" class="outline-2">
+<h2 id="org57ef703"><span class="section-number-2">6.</span> Ethical and social risks of harm from Language Models</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 Risks area:
@@ -392,18 +392,18 @@ ref: Laura Weidinger, et.al. Ethical and social risks of harm from Language Mode
 </ul>
 </div>
 </div>
-<div id="outline-container-org57ef703" class="outline-2">
-<h2 id="org57ef703"><span class="section-number-2">7.</span> Ethical and social risks of harm from Language Models</h2>
+<div id="outline-container-org420ee02" class="outline-2">
+<h2 id="org420ee02"><span class="section-number-2">7.</span> Ethical and social risks of harm from Language Models</h2>
 <div class="outline-text-2" id="text-7">
 
-<div id="org720b8ff" class="figure">
+<div id="org33d9c63" class="figure">
 <p><img src="./images/screenshot_20230228_090227.png" alt="screenshot_20230228_090227.png">
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org89bb4d0" class="outline-2">
-<h2 id="org89bb4d0"><span class="section-number-2">8.</span> Predictability and Surprise in Large Generative Models</h2>
+<div id="outline-container-orgfa81c6d" class="outline-2">
+<h2 id="orgfa81c6d"><span class="section-number-2">8.</span> Predictability and Surprise in Large Generative Models</h2>
 <div class="outline-text-2" id="text-8">
 <ul class="org-ul">
 <li>highlight a counterintuitive property of LLMs and discuss the policy implications of this property</li>
@@ -415,7 +415,7 @@ ref: Laura Weidinger, et.al. Ethical and social risks of harm from Language Mode
 </ul>
 
 
-<div id="org4d0202a" class="figure">
+<div id="orgaa7d8e6" class="figure">
 <p><img src="./images/screenshot_20230228_090331.png" alt="screenshot_20230228_090331.png">
 </p>
 </div>
@@ -425,15 +425,15 @@ ref: Deep Ganguli, et.al. Predictability and Surprise in Large Generative Models
 </p>
 </div>
 </div>
-<div id="outline-container-orgad1bbf2" class="outline-2">
-<h2 id="orgad1bbf2"><span class="section-number-2">9.</span> Predictability and Surprise in Large Generative Models</h2>
+<div id="outline-container-org0cc8f55" class="outline-2">
+<h2 id="org0cc8f55"><span class="section-number-2">9.</span> Predictability and Surprise in Large Generative Models</h2>
 <div class="outline-text-2" id="text-9">
 <p>
 Surprise on some specific tasks:
 </p>
 
 
-<div id="org1bfdf54" class="figure">
+<div id="org25c9e23" class="figure">
 <p><img src="./images/screenshot_20230228_090423.png" alt="screenshot_20230228_090423.png">
 </p>
 </div>
@@ -443,21 +443,21 @@ ref: Deep Ganguli, et.al. Predictability and Surprise in Large Generative Models
 </p>
 </div>
 </div>
-<div id="outline-container-orgfa81c6d" class="outline-2">
-<h2 id="orgfa81c6d"><span class="section-number-2">10.</span> Predictability and Surprise in Large Generative Models</h2>
+<div id="outline-container-orgc9a316f" class="outline-2">
+<h2 id="orgc9a316f"><span class="section-number-2">10.</span> Predictability and Surprise in Large Generative Models</h2>
 <div class="outline-text-2" id="text-10">
 <p>
 Surprise from <code>open-ended</code> :
 </p>
 
 
-<div id="orgd5d328d" class="figure">
+<div id="orgc345848" class="figure">
 <p><img src="./images/screenshot_20230228_090522.png" alt="screenshot_20230228_090522.png">
 </p>
 </div>
 
 
-<div id="org335ac57" class="figure">
+<div id="orgbf3f13f" class="figure">
 <p><img src="./images/screenshot_20230228_090529.png" alt="screenshot_20230228_090529.png">
 </p>
 </div>
@@ -500,25 +500,25 @@ Metrics Type: Accuracy, Calibration, Robustness, Fairness, Bias, Toxicity, Effic
 </p>
 
 
-<div id="org186f5b1" class="figure">
+<div id="orgcb9233b" class="figure">
 <p><img src="./images/screenshot_20230228_090658.png" alt="screenshot_20230228_090658.png">
 </p>
 </div>
 
 
-<div id="org33c90ab" class="figure">
+<div id="orgc8fe1d2" class="figure">
 <p><img src="./images/screenshot_20230228_090704.png" alt="screenshot_20230228_090704.png">
 </p>
 </div>
 
 
-<div id="orgafa67a2" class="figure">
+<div id="org9f4e51f" class="figure">
 <p><img src="./images/screenshot_20230228_090709.png" alt="screenshot_20230228_090709.png">
 </p>
 </div>
 
 
-<div id="orga2821d6" class="figure">
+<div id="org5cd5bcd" class="figure">
 <p><img src="./images/screenshot_20230228_090716.png" alt="screenshot_20230228_090716.png">
 </p>
 </div>
@@ -528,8 +528,8 @@ ref: <a href="https://crfm.stanford.edu/helm/v0.1.0/">https://crfm.stanford.edu/
 </p>
 </div>
 </div>
-<div id="outline-container-orgb110857" class="outline-2">
-<h2 id="orgb110857"><span class="section-number-2">13.</span> RL from Human Feedback (RLHF)</h2>
+<div id="outline-container-orgaf9ebe8" class="outline-2">
+<h2 id="orgaf9ebe8"><span class="section-number-2">13.</span> RL from Human Feedback (RLHF)</h2>
 <div class="outline-text-2" id="text-13">
 <ul class="org-ul">
 <li>Target: Improve both helpful and harmless of dialogue models.</li>
@@ -537,7 +537,7 @@ ref: <a href="https://crfm.stanford.edu/helm/v0.1.0/">https://crfm.stanford.edu/
 </ul>
 
 
-<div id="org90174ba" class="figure">
+<div id="org1e44fbf" class="figure">
 <p><img src="./images/screenshot_20230228_090746.png" alt="screenshot_20230228_090746.png">
 </p>
 </div>
@@ -547,8 +547,8 @@ ref: Yuntao Bai, et.al.Training a Helpful and Harmless Assistant with Reinforcem
 </p>
 </div>
 </div>
-<div id="outline-container-orgaf9ebe8" class="outline-2">
-<h2 id="orgaf9ebe8"><span class="section-number-2">14.</span> RL from Human Feedback (RLHF)</h2>
+<div id="outline-container-org4bf4ff5" class="outline-2">
+<h2 id="org4bf4ff5"><span class="section-number-2">14.</span> RL from Human Feedback (RLHF)</h2>
 <div class="outline-text-2" id="text-14">
 <ul class="org-ul">
 <li>Target: Improve both helpful and harmless of dialogue models.</li>
@@ -564,14 +564,14 @@ RLHF-Finetuned Models  \(\rightarrow\) 22k
 </p>
 
 
-<div id="org92858fe" class="figure">
+<div id="orge413fb1" class="figure">
 <p><img src="./images/screenshot_20230228_090914.png" alt="screenshot_20230228_090914.png"> 
 </p>
 </div></li>
 </ul>
 
 
-<div id="orgc834c53" class="figure">
+<div id="orgd42b2c6" class="figure">
 <p><img src="./images/screenshot_20230228_090918.png" alt="screenshot_20230228_090918.png"> 
 </p>
 </div>
@@ -585,7 +585,7 @@ ref: Yuntao Bai, et.al.Training a Helpful and Harmless Assistant with Reinforcem
 <h2 id="org0725dd3"><span class="section-number-2">15.</span> Corpus</h2>
 <div class="outline-text-2" id="text-15">
 
-<div id="orgdd00a61" class="figure">
+<div id="org29054ab" class="figure">
 <p><img src="./images/screenshot_20230228_090932.png" alt="screenshot_20230228_090932.png">
 </p>
 </div>
@@ -595,11 +595,11 @@ ref: Yuntao Bai, et.al.Training a Helpful and Harmless Assistant with Reinforcem
 </p>
 </div>
 </div>
-<div id="outline-container-org27616cc" class="outline-2">
-<h2 id="org27616cc"><span class="section-number-2">16.</span> Results</h2>
+<div id="outline-container-orgd0bfac7" class="outline-2">
+<h2 id="orgd0bfac7"><span class="section-number-2">16.</span> Results</h2>
 <div class="outline-text-2" id="text-16">
 
-<div id="org45f3827" class="figure">
+<div id="org970b77a" class="figure">
 <p><img src="./images/screenshot_20230228_090957.png" alt="screenshot_20230228_090957.png">
 </p>
 </div>
@@ -609,28 +609,28 @@ ref: Yuntao Bai, et.al.Training a Helpful and Harmless Assistant with Reinforcem
 </p>
 </div>
 </div>
-<div id="outline-container-orgd53cce5" class="outline-2">
-<h2 id="orgd53cce5"><span class="section-number-2">17.</span> Sparrow</h2>
+<div id="outline-container-orgc88b694" class="outline-2">
+<h2 id="orgc88b694"><span class="section-number-2">17.</span> Sparrow</h2>
 <div class="outline-text-2" id="text-17">
 
-<div id="org51b7d15" class="figure">
+<div id="org1b6d0a3" class="figure">
 <p><img src="./images/screenshot_20230228_091017.png" alt="screenshot_20230228_091017.png">
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-orgc88b694" class="outline-2">
-<h2 id="orgc88b694"><span class="section-number-2">18.</span> Sparrow</h2>
+<div id="outline-container-org7ef25ca" class="outline-2">
+<h2 id="org7ef25ca"><span class="section-number-2">18.</span> Sparrow</h2>
 <div class="outline-text-2" id="text-18">
 
-<div id="orgbf86974" class="figure">
+<div id="org45f51ac" class="figure">
 <p><img src="./images/screenshot_20230228_091028.png" alt="screenshot_20230228_091028.png">
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-orgfd6b303" class="outline-2">
-<h2 id="orgfd6b303"><span class="section-number-2">19.</span> Self-Correction of LLMs</h2>
+<div id="outline-container-orgcc07a19" class="outline-2">
+<h2 id="orgcc07a19"><span class="section-number-2">19.</span> Self-Correction of LLMs</h2>
 <div class="outline-text-2" id="text-19">
 <p>
 Findings:
@@ -642,7 +642,7 @@ Improve Safety by “Prompt”:
 </p>
 
 
-<div id="orgc2b7744" class="figure">
+<div id="orga41ae52" class="figure">
 <p><img src="./images/screenshot_20230228_091058.png" alt="screenshot_20230228_091058.png"> 
 </p>
 </div>
@@ -653,8 +653,8 @@ ref: Deep Ganguli, et.al. The Capacity for Moral Self-Correction in Large Langua
 </ul>
 </div>
 </div>
-<div id="outline-container-org4d96fa3" class="outline-2">
-<h2 id="org4d96fa3"><span class="section-number-2">20.</span> Self-Correction of LLMs</h2>
+<div id="outline-container-orgba745f6" class="outline-2">
+<h2 id="orgba745f6"><span class="section-number-2">20.</span> Self-Correction of LLMs</h2>
 <div class="outline-text-2" id="text-20">
 <p>
 Benchmark:
@@ -676,14 +676,14 @@ CoT:  Chain of Thoughts
 </p>
 
 
-<div id="org2c3fa31" class="figure">
+<div id="org439e4d6" class="figure">
 <p><img src="./images/screenshot_20230228_091210.png" alt="screenshot_20230228_091210.png"> 
 </p>
 </div></li>
 </ul>
 
 
-<div id="org3b7a723" class="figure">
+<div id="orgf319b70" class="figure">
 <p><img src="./images/screenshot_20230228_091215.png" alt="screenshot_20230228_091215.png"> 
 </p>
 </div>
@@ -693,8 +693,8 @@ ref: Deep Ganguli, et.al. The Capacity for Moral Self-Correction in Large Langua
 </p>
 </div>
 </div>
-<div id="outline-container-org9a5bc66" class="outline-2">
-<h2 id="org9a5bc66"><span class="section-number-2">21.</span> Self-Correction of LLMs</h2>
+<div id="outline-container-org2da9c8f" class="outline-2">
+<h2 id="org2da9c8f"><span class="section-number-2">21.</span> Self-Correction of LLMs</h2>
 <div class="outline-text-2" id="text-21">
 <p>
 Methods: 
@@ -706,7 +706,7 @@ Methods:
 </ul>
 
 
-<div id="org39934bb" class="figure">
+<div id="orgc6e557d" class="figure">
 <p><img src="./images/screenshot_20230228_091243.png" alt="screenshot_20230228_091243.png">
 </p>
 </div>
@@ -717,8 +717,8 @@ ref: Deep Ganguli, et.al. The Capacity for Moral Self-Correction in Large Langua
 </p>
 </div>
 </div>
-<div id="outline-container-orgf4429c7" class="outline-2">
-<h2 id="orgf4429c7"><span class="section-number-2">22.</span> Self-Correction of LLMs</h2>
+<div id="outline-container-orgca6d701" class="outline-2">
+<h2 id="orgca6d701"><span class="section-number-2">22.</span> Self-Correction of LLMs</h2>
 <div class="outline-text-2" id="text-22">
 <p>
 Methods: 
@@ -730,7 +730,7 @@ Methods:
 </ul>
 
 
-<div id="org5a42dbf" class="figure">
+<div id="orgdc31cbb" class="figure">
 <p><img src="./images/screenshot_20230228_091302.png" alt="screenshot_20230228_091302.png">
 </p>
 </div>
@@ -740,11 +740,11 @@ ref: Deep Ganguli, et.al. The Capacity for Moral Self-Correction in Large Langua
 </p>
 </div>
 </div>
-<div id="outline-container-orgcc07a19" class="outline-2">
-<h2 id="orgcc07a19"><span class="section-number-2">23.</span> Self-Correction of LLMs</h2>
+<div id="outline-container-orgdc9ec9d" class="outline-2">
+<h2 id="orgdc9ec9d"><span class="section-number-2">23.</span> Self-Correction of LLMs</h2>
 <div class="outline-text-2" id="text-23">
 
-<div id="orgbeec017" class="figure">
+<div id="org44120d1" class="figure">
 <p><img src="./images/screenshot_20230228_091315.png" alt="screenshot_20230228_091315.png">
 </p>
 </div>
@@ -778,7 +778,7 @@ ref: Deep Ganguli, et.al. The Capacity for Moral Self-Correction in Large Langua
 </ol>
 
 
-<div id="org0ee3f4f" class="figure">
+<div id="orgcf35c67" class="figure">
 <p><img src="./images/screenshot_20230228_091509.png" alt="screenshot_20230228_091509.png">
 </p>
 </div>
@@ -792,7 +792,7 @@ ref: Yuntao Bai, et.al. Constitutional AI: Harmlessness from AI Feedback. CoRR a
 <h2 id="org2db8246"><span class="section-number-2">25.</span> SL-CAI</h2>
 <div class="outline-text-2" id="text-25">
 
-<div id="orgf75c66f" class="figure">
+<div id="org706dd39" class="figure">
 <p><img src="./images/screenshot_20230228_091613.png" alt="screenshot_20230228_091613.png">
 </p>
 </div>
@@ -806,7 +806,7 @@ ref: Yuntao Bai, et.al. Constitutional AI: Harmlessness from AI Feedback. CoRR a
 <h2 id="org1ccf66d"><span class="section-number-2">26.</span> RL with AI Feedback (RLAIF)</h2>
 <div class="outline-text-2" id="text-26">
 
-<div id="org8701bf2" class="figure">
+<div id="org2827ce1" class="figure">
 <p><img src="./images/screenshot_20230228_091633.png" alt="screenshot_20230228_091633.png">
 </p>
 </div>
@@ -816,8 +816,8 @@ ref: Yuntao Bai, et.al. Constitutional AI: Harmlessness from AI Feedback. CoRR a
 </p>
 </div>
 </div>
-<div id="outline-container-orgd8fd68a" class="outline-2">
-<h2 id="orgd8fd68a"><span class="section-number-2">27.</span> Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks</h2>
+<div id="outline-container-org7ed362b" class="outline-2">
+<h2 id="org7ed362b"><span class="section-number-2">27.</span> Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks</h2>
 <div class="outline-text-2" id="text-27">
 <ul class="org-ul">
 <li>Background: Instruction-following LLMs have a potential for dual-use, where their language generation capabilities are used for malicious or nefarious ends.</li>
@@ -831,7 +831,7 @@ ref: Yuntao Bai, et.al. Constitutional AI: Harmlessness from AI Feedback. CoRR a
 </ul>
 
 
-<div id="org9eeaf49" class="figure">
+<div id="org0454cb7" class="figure">
 <p><img src="./images/screenshot_20230228_091719.png" alt="screenshot_20230228_091719.png">
 </p>
 </div>
@@ -842,8 +842,8 @@ ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsun
 </p>
 </div>
 </div>
-<div id="outline-container-org7ed362b" class="outline-2">
-<h2 id="org7ed362b"><span class="section-number-2">28.</span> Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks</h2>
+<div id="outline-container-org65872a7" class="outline-2">
+<h2 id="org65872a7"><span class="section-number-2">28.</span> Exploiting Programmatic Behavior of LLMs: Dual-Use Through Standard Security Attacks</h2>
 <div class="outline-text-2" id="text-28">
 <ul class="org-ul">
 <li>Background: Instruction-following LLMs have a potential for dual-use, where their language generation capabilities are used for malicious or nefarious ends.</li>
@@ -858,7 +858,7 @@ ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsun
 
 
 
-<div id="orgf96ca02" class="figure">
+<div id="org18d8f21" class="figure">
 <p><img src="./images/screenshot_20230228_091719.png" alt="screenshot_20230228_091719.png">
 </p>
 </div>
@@ -881,7 +881,7 @@ ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsun
 
 
 
-<div id="org0beb002" class="figure">
+<div id="orge40f5df" class="figure">
 <p><img src="./images/screenshot_20230228_091849.png" alt="screenshot_20230228_091849.png">
 </p>
 </div>
@@ -891,8 +891,8 @@ ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsun
 </p>
 </div>
 </div>
-<div id="outline-container-org084dcfe" class="outline-2">
-<h2 id="org084dcfe"><span class="section-number-2">30.</span> Attack mechanisms</h2>
+<div id="outline-container-org86ca37d" class="outline-2">
+<h2 id="org86ca37d"><span class="section-number-2">30.</span> Attack mechanisms</h2>
 <div class="outline-text-2" id="text-30">
 <ul class="org-ul">
 <li>Obfuscation (混淆)</li>
@@ -902,7 +902,7 @@ ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsun
 
 
 
-<div id="org767f876" class="figure">
+<div id="org2fb22a3" class="figure">
 <p><img src="./images/screenshot_20230228_091911.png" alt="screenshot_20230228_091911.png">
 </p>
 </div>
@@ -913,8 +913,8 @@ ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsun
 </p>
 </div>
 </div>
-<div id="outline-container-org6630ee9" class="outline-2">
-<h2 id="org6630ee9"><span class="section-number-2">31.</span> Attack mechanisms</h2>
+<div id="outline-container-org5260aeb" class="outline-2">
+<h2 id="org5260aeb"><span class="section-number-2">31.</span> Attack mechanisms</h2>
 <div class="outline-text-2" id="text-31">
 <ul class="org-ul">
 <li>Obfuscation (混淆)</li>
@@ -924,7 +924,7 @@ ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsun
 </p>
 
 
-<div id="org46c3b6a" class="figure">
+<div id="orge923baa" class="figure">
 <p><img src="./images/screenshot_20230228_092009.png" alt="screenshot_20230228_092009.png"> 
 </p>
 </div></li>
@@ -936,17 +936,17 @@ ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsun
 </p>
 </div>
 </div>
-<div id="outline-container-org86ca37d" class="outline-2">
-<h2 id="org86ca37d"><span class="section-number-2">32.</span> Attack mechanisms</h2>
+<div id="outline-container-org1697a21" class="outline-2">
+<h2 id="org1697a21"><span class="section-number-2">32.</span> Attack mechanisms</h2>
 <div class="outline-text-2" id="text-32">
 
-<div id="org65caf13" class="figure">
+<div id="org84bbbdb" class="figure">
 <p><img src="./images/screenshot_20230228_092022.png" alt="screenshot_20230228_092022.png">
 </p>
 </div>
 
 
-<div id="org712f28b" class="figure">
+<div id="org788cb7c" class="figure">
 <p><img src="./images/screenshot_20230228_092032.png" alt="screenshot_20230228_092032.png">
 </p>
 </div>
@@ -956,8 +956,8 @@ ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsun
 </p>
 </div>
 </div>
-<div id="outline-container-orgd0bfac7" class="outline-2">
-<h2 id="orgd0bfac7"><span class="section-number-2">33.</span> Results</h2>
+<div id="outline-container-org69397e6" class="outline-2">
+<h2 id="org69397e6"><span class="section-number-2">33.</span> Results</h2>
 <div class="outline-text-2" id="text-33">
 <ul class="org-ul">
 <li>Domain: Generating hate speech, conspiracy theory promotion, phishing attacks, scams, and product astroturfing.</li>
@@ -966,7 +966,7 @@ ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsun
 </ul>
 
 
-<div id="org27ca3e6" class="figure">
+<div id="org49c8993" class="figure">
 <p><img src="./images/screenshot_20230228_092119.png" alt="screenshot_20230228_092119.png">
 </p>
 </div>
@@ -980,7 +980,7 @@ ref: Daniel Kang, Xuechen Li, Ion Stoica, Carlos Guestrin, Matei Zaharia, Tatsun
 <h2 id="org2258bc1"><span class="section-number-2">34.</span> Generation Quality &amp;Economic Benefits</h2>
 <div class="outline-text-2" id="text-34">
 
-<div id="org060cd63" class="figure">
+<div id="orgefa3f5c" class="figure">
 <p><img src="./images/screenshot_20230228_092139.png" alt="screenshot_20230228_092139.png">
 </p>
 </div>
@@ -996,7 +996,7 @@ Email Generation:
 </ul>
 
 
-<div id="org62ccbb2" class="figure">
+<div id="org9f907fd" class="figure">
 <p><img src="./images/screenshot_20230228_092158.png" alt="screenshot_20230228_092158.png">
 </p>
 </div>
