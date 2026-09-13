@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- 2026-09-13 Sun 18:50 -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>密码学中的多元二次方程（MQ, Multivariate Quadratic Problem）问题与对应的Unbalanced Oil and Vinegar （UOV） 及其变体的攻击思路思考</title>
+<meta name="author" content="Zi Liang" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-c:before { content: 'C'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'JavaScript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="/css/styles.css" /> <link rel="stylesheet" type="text/css" href="/css/htmlize.css" /> <script src="/scripts/script.js"></script> <script src="/scripts/toc.js"></script>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="preamble" class="status">
+<nav class="nav"> <a href="/index.html" class="button">Home</a> <a href="/about.html" class="button">About</a> <a href="/sitemap.html" class="button">Sitemaps</a> </nav> <hr>
+</div>
+<div id="content" class="content">
+<h1 class="title">密码学中的多元二次方程（MQ, Multivariate Quadratic Problem）问题与对应的Unbalanced Oil and Vinegar （UOV） 及其变体的攻击思路思考</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org43e1600">1. Multivariate Quadratic Problem</a></li>
+<li><a href="#org7aa40c7">2. 密码学里的签名与认证</a></li>
+<li><a href="#org2b9bbe2">3. 基于MQ的签名系统。</a></li>
+<li><a href="#orgf69a14c">4. UOV: Unbalanced Oil and Vinegar: 不平衡的油与醋</a>
+<ul>
+<li><a href="#orgc9c76de">4.1. MQ问题的利用：如何把一个非MQ问题伪装成MQ问题（或：如何寻找一个特殊的MQ问题）</a></li>
+<li><a href="#orge2a23a9">4.2. 油与醋：一种trapdoor的设计思路</a></li>
+<li><a href="#orga5844c6">4.3. UOV中的其他处理</a>
+<ul>
+<li><a href="#org0b1fd90">4.3.1. 关于“混淆”</a></li>
+<li><a href="#org708edd0">4.3.2. 关于U：unbalanced？</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+之前曾经提及过，现代密码学的核心在于寻找到一个在理论上可行但是实现这种计算极难（即计算不可行）的困难问题。
+</p>
+
+<p>
+多元二次方程问题（Multivariate Quadratic Problem）就是经典的这样的问题。
+</p>
+<div id="outline-container-org43e1600" class="outline-2">
+<h2 id="org43e1600"><span class="section-number-2">1.</span> Multivariate Quadratic Problem</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+给定一个n维空间下（每一维q个变量）的有限域 \(\mathbb{F}_{q}^{n}\), 定义一个未知数 \(\mathbf{x}\in \mathbb{F}_{q}^{n}\),
+那么所谓的多元二次函数本质上就是包含了x的二次项和一次项和零次项（一个常数项）的函数：
+</p>
+
+<p>
+\[p_{k}({\bf x})={\bf x}^{T}{\bf A}_{k}{\bf x}+{\bf b}_{k}^{T}{\bf x}+c_{k}\]
+</p>
+
+<p>
+其中 $A_{k}&isin; \mathbb{F}_{q}^{n&times; n}$是一个二次项系数的方阵， \(b_{k}\) 是一个对应维度的列向量， \(c_{k}\) 是一个常数数值。假设 \(k\in [1,2,...,m]\), 即有m个这样的函数，这其实就构成了一个 \(\mathbb{F}_{q}^{n}\rightarrow \mathbb{F}_{q}^{m}\) 的映射函数 \(\mathbf{P}(x)\). 一般来说， 此处的n要比m大，即输入的变量的个数大于方程组的个数。这也代表这种方程在vanilla的情况下根据y求解x会得到许多的解。
+</p>
+
+<p>
+假设已知 \(\mathbb{P}({\bf x})={\bf y}\) 其中 \(\mathbb{y}\in \mathbb{F}_q^m\) , 那么求解这个x就是一个困难问题。
+</p>
+</div>
+</div>
+<div id="outline-container-org7aa40c7" class="outline-2">
+<h2 id="org7aa40c7"><span class="section-number-2">2.</span> 密码学里的签名与认证</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+这个问题被寄希望于替代传统密码学中已经被量子计算攻破的一些基于非对称加密的签名问题。
+</p>
+
+<p>
+签名问题与传统的签名一样，是指想要去验证一条消息是否是由本人发生。
+</p>
+
+<p>
+具体地，该人物可以发布一个公钥（所有人都能看到，用来进行验证的），然后自己私自持有一个私钥。
+在每次发布、发行一个message时，该人物可以基于他的公钥对这个message做处理得到一个签名s, 并把签名
+和消息放在一起发给别人。其他人看到了这条消息，就可以用自己的公钥验证s是否是由message得到的。由此就能知道这个message不是被伪造发出的。这就是签名。
+</p>
+</div>
+</div>
+<div id="outline-container-org2b9bbe2" class="outline-2">
+<h2 id="org2b9bbe2"><span class="section-number-2">3.</span> 基于MQ的签名系统。</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+在上述流程下，可以以MQ问题为蓝本设计一个密码学里的签名系统！思路：
+</p>
+<ul class="org-ul">
+<li>把因变量，即y作为message</li>
+<li>把参数作为密钥</li>
+<li>把自变量x作为签名</li>
+</ul>
+
+<p>
+如果能够实现以上的步骤，那么验证者只需要 P(x) 一下就能够得到消息message, 这样验证（正向计算）起来非常快，但是其他人想破解（反向计算）却很难（因为是NP问题）。
+</p>
+
+<p>
+这时候就发现不对劲了。因为这个问题有点过于难了。
+即：无法通过任何方式基于y反推出x是多少——即使是在知道该方程所有系数的前提下。换句话说，这个问题足够难所以可以被使用，但是又过于难了所以无法被使用。
+</p>
+
+<p>
+所以一个真正实用的后量子时代的密码学签名系统需要寻找上述的MQ问题下的一个特殊的线性结构。
+</p>
+</div>
+</div>
+<div id="outline-container-orgf69a14c" class="outline-2">
+<h2 id="orgf69a14c"><span class="section-number-2">4.</span> UOV: Unbalanced Oil and Vinegar: 不平衡的油与醋</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+UOV几乎在所有细节上都与MQ一致，除了UOV引入了一个更特殊的几何结构，使得面对 \(\mathbf{P}(x)=y\) 方程组已知y 在知道P的一部分结构的前提下快速解出x变得可能。
+</p>
+</div>
+<div id="outline-container-orgc9c76de" class="outline-3">
+<h3 id="orgc9c76de"><span class="section-number-3">4.1.</span> MQ问题的利用：如何把一个非MQ问题伪装成MQ问题（或：如何寻找一个特殊的MQ问题）</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+在考虑要进行逆向的多元二次函数 \(P(x)\) 之前，可以先考虑另外一个特殊的多元二次函数 \(F(x)\) 其中F 拥有和 P 一样的shape.
+但是问题是，求解F的逆运算，即试图求解 \(x=F^{-1}(y)\) 并非一个NP hard 问题。
+</p>
+
+<p>
+倘若找到了这么一个函数F, 那么只要我们通过一些方式把这个F混淆成一个P的难度，问题也就解决了。
+换句话说：
+</p>
+<ol class="org-ol">
+<li>使得私有的人士（即进行签名的人）求解的是F的逆运算。</li>
+<li>使得公有的人（即进行验证的人）求解的是P的正运算。</li>
+<li>使得试图破解的人（即攻击者，也就是我）求解的是P的逆运算。</li>
+</ol>
+
+<p>
+如果能够达到三点，尤其是找到一个合适的trapdoor F 使得混淆之后F无法被还原或者找到，一切就ok了。
+</p>
+
+<p>
+那么问题来了：怎么构造这个trapdoor, 又怎么进行混淆呢？
+</p>
+
+<p>
+先考虑第二个问题，因为简单。
+</p>
+
+<p>
+假设
+</p>
+
+<p>
+\[\mathbf{P} = \mathbf{T} \circ \mathbf{F} \circ \mathbf{S}\]
+</p>
+
+<p>
+其中 S T 是两个仿射变换。 降低求逆问题的难度的思路便是将此处的F改为一个特殊的trapdoor，即很容易逆向运算的特殊二次型。然后再将此处的S和T两个函数构建为普普通通的可逆的线性变换以进行混淆来遮盖住这里的trapdoor, 使得得到的P和寻常的P没有 significant difference, 那么这样一切就非常完美了。这就是所有试图通过MQ来构建密码学协议的算法的做法。
+</p>
+
+<p>
+注：这里的 \(\circ\) 就是指的经典矩阵乘法，反映在函数层面就是一个函数的复合操作，即 \(P(x)=T(F(S(x)))\).
+</p>
+
+<p>
+好了，现在已经知道 S 和 T 是对输入空间x和输出空间y的仿射变换，即二者都是分别包含一个可逆矩阵乘法矩阵（来旋转）和一个常数向量（来平移）的东西。
+现在的核心点回到了：如何去设计这个中间的trapdoor, 即 F 函数。
+</p>
+
+<p>
+Before diving into the design of \(F\), we can now summarize the whole procedure again:
+</p>
+<ul class="org-ul">
+<li></li>
+</ul>
+<p>
+公钥就是三个矩阵乘在一起的结果，即这个P函数。
+</p>
+<ul class="org-ul">
+<li>私钥就是这个S, F, T 三个子函数。</li>
+<li>签名的过程就是：对于一条message y, 逆运算T, 然后F, 然后S, 得到signature x 并发布出去。</li>
+<li>验证的过程就是： 正向运算 P(x) 看是否等于 y.</li>
+<li>攻击这个密码学系统的思路就是：如何根据P,根据一定量的x y pair, 能够推断出 S F T</li>
+<li>设计这个密码学系统的关键就是：如何构建这个F函数，使得</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orge2a23a9" class="outline-3">
+<h3 id="orge2a23a9"><span class="section-number-3">4.2.</span> 油与醋：一种trapdoor的设计思路</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+首先记 \(y'=F_k(x)=x^TF_k\cdot x\).
+</p>
+
+<p>
+我们现在所探究的问题是：如何设计矩阵 \(F_k\in \mathbb{F}_q^{n\times n}\) 使得 当给出 \(m\) 个上述公式之后在已知所有 \(F_K\) 的前提下上述公式可逆求。
+</p>
+
+<p>
+为此，UOV设计了一种包含oil和vinegar的思路:
+</p>
+
+<p>
+首先，由于输入空间（x的空间）远远大于输出空间，即n&gt;m， 所以UOV在物理意义上将这n维分成两部分，即一个m维表示油（代表很重要，与输出一一对应），还有一个n-m维度，作为醋（代表没那么重要用来打掩护）：由此输入向量x本质上是oil vector \(\mathbf{o}\) 与vinegar向量 \(\mathbf{v}\) 的拼接：
+\[{\bf x}=[{\bf v};{\bf o}]\].
+</p>
+
+<p>
+如此，那么其实二次型矩阵（作为一个对称矩阵，对称是因为交叉项在实数空间表现为矩阵（也就是系数）的对称性）也可以拆解为四个子矩阵：
+\[\mathbf{F}_k = \begin{bmatrix} \mathbf{V}_k & \mathbf{M}_k \\ \mathbf{M}_k^T & \mathbf{O_k} \end{bmatrix}\]
+</p>
+
+<p>
+其中：
+</p>
+<ul class="org-ul">
+<li>$\mathbf{V}_k &isin; \mathbb{F}_q^{v &times; v}$：Vinegar 与 Vinegar 相互作用的系数矩阵（\(\boldsymbol{v}^T \mathbf{V}_k \boldsymbol{v}\)）。</li>
+<li>$\mathbf{M}_k &isin; \mathbb{F}_q^{v &times; m}$：Vinegar 与 Oil 交叉作用的系数矩阵（\(\boldsymbol{v}^T \mathbf{M}_k \boldsymbol{o}\)）。</li>
+<li>$\mathbf{O}_k &isin; \mathbb{F}_q^{m &times; m}$： Oil 与 Oil 相互作用的系数矩阵（\(\boldsymbol{o}^T \mathbf{O}_k \boldsymbol{o}\)）。</li>
+</ul>
+
+<p>
+<b>然后UOV设计这里的油与油的作用的系数矩阵，也就是 \({\bf O}_k\) 是一个0矩阵，也就是不存在这个二次项。</b>
+</p>
+
+<p>
+这就代表： 对于一个n维向量，里面有m个维度是完全线性的，非二次型的。
+</p>
+
+<p>
+这也就代表：对这一部分的向量逆运算就跟一个线性运算的逆运算是一样的，没有丝毫难度。
+</p>
+
+<p>
+这就是UOV设计trapdoor的核心思路：维持输出空间大小的 “线性运算” 并隐藏在二次型之中。
+</p>
+</div>
+</div>
+<div id="outline-container-orga5844c6" class="outline-3">
+<h3 id="orga5844c6"><span class="section-number-3">4.3.</span> UOV中的其他处理</h3>
+<div class="outline-text-3" id="text-4-3">
+</div>
+<div id="outline-container-org0b1fd90" class="outline-4">
+<h4 id="org0b1fd90"><span class="section-number-4">4.3.1.</span> 关于“混淆”</h4>
+<div class="outline-text-4" id="text-4-3-1">
+<p>
+由于UOV二次型矩阵也是随机生成的，仅仅是添加了一个约束，oil分量对应的部分的子方阵强行置0, 所以UOV仅仅保留了输入的混淆S, 然后没有添加输出的混淆T.
+</p>
+
+<p>
+这里可以延伸询问一下：
+</p>
+<ol class="org-ol">
+<li>可否保留T, 去除S矩阵？ 我认为是可以的。但是这时的F矩阵不应该存在一个很明显的0分区，而是对F矩阵的维度index做permutation.</li>
+<li>去除掉T, 是否存在混淆上的损失，相比较于之前？</li>
+</ol>
+<p>
+我认为应该是没有。这个可以通过展开SFT的表达式来查看。此处不再推导。
+</p>
+</div>
+</div>
+<div id="outline-container-org708edd0" class="outline-4">
+<h4 id="org708edd0"><span class="section-number-4">4.3.2.</span> 关于U：unbalanced？</h4>
+<div class="outline-text-4" id="text-4-3-2">
+<p>
+起初UOV并不是UOV,而是OV. 但是因为OV被攻破了，所以改名叫UOV了。
+</p>
+
+<p>
+那么，OV是怎么被攻破的呢？
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<hr class="Solid"> <div class="info"> <span class="author">Author: Zi Liang (<a href="mailto:zi1415926.liang@connect.polyu.hk">zi1415926.liang@connect.polyu.hk</a>)</span> <span class="date">Create Date: Sun Sep 13 15:27:29 2026</span> <span class="date">Last modified: 2026-09-13 Sun 18:49</span> <span>Creator: <a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.1 (<a href="https://orgmode.org">Org</a> mode 9.8.7)</span> </div>
+</div>
+</body>
+</html>
